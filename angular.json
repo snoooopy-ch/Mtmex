@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Mtmex"
+    }
+  },
+  "defaultProject": "Mtmex",
+  "cli": {
+    "analytics": "4d034e64-fb2a-41e7-9c25-901fadb57fef"
+  }
 }

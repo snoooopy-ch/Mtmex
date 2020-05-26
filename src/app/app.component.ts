@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ResService} from './res.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Mtmex';
+  constructor(private resService: ResService) {}
 }

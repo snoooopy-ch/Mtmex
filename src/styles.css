@@ -1,1 +1,563 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Yu Gothic UI", "Microsoft Sans Serif", "Yu Gothic", "MS PGothic",  sans-serif !important;
+  font-weight: 400 !important;
+  color: #000;
+  font-size: 11px;
+}
+
+a {
+  text-decoration: none;
+}
+
+* a {
+  text-decoration: none;
+  color: unset;
+}
+
+img {
+  display: block;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+h3 {
+  font-size: 15px;
+}
+
+button {
+  margin: 0 1px;
+  height: 30px;
+  background: #e1e1e1;
+  border: 1px solid #adadad;
+  font-size: 8.25pt;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e5f1fb;
+  border: 1px solid #0078d7;
+}
+
+input {
+  border: 1px solid #adadad;
+}
+
+input[type="text"] {
+  height: 30px;
+}
+
+label {
+  font-size: 11px;
+  margin: 0 5px;
+}
+
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.container app-left-panel {
+  width: calc(100% - 230px);
+  padding: 5px 0 5px 5px;
+}
+
+.container app-left-panel button {
+  border: 1px solid #000;
+}
+
+.container app-left-panel button:hover {
+  border: 1px solid #000;
+}
+
+.container app-left-panel button:focus {
+  border: 1px solid #000;
+}
+
+.container app-left-panel app-header .add-tab {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 2px 0;
+}
+
+.container app-left-panel app-header .add-tab .new-tab {
+  width: 150px;
+  height: 29px;
+  background-color: #ffd280;
+  text-align: left;
+  padding: 0 10px;
+}
+
+.container app-left-panel app-header .extract {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.container app-left-panel app-header .extract .btn-long {
+  min-width: 271px;
+  width: 30%;
+  height: 29px;
+}
+
+.container app-left-panel app-header .extract input {
+  min-width: 353px;
+  width: 30%;
+  height: 29px;
+}
+
+.container app-left-panel app-header #btn-plus {
+  height: 29px;
+  width: 29px;
+  background: #fff;
+}
+
+.container app-left-panel app-header #btn-plus:hover {
+  background: #e3e3e3;
+}
+
+.container app-left-panel app-header #btn-plus:active {
+  border: 2px solid #000;
+}
+
+.container app-left-panel app-header #btn-plus:focus-within {
+  border: 2px solid #000;
+}
+
+.container app-left-panel app-header #btn-all {
+  height: 29px;
+  width: 29px;
+}
+
+.container app-left-panel app-header #btn-context {
+  height: 29px;
+  width: 29px;
+}
+
+.container app-left-panel app-content {
+  display: block;
+  width: 100%;
+  padding: 18px 5px 5px 19px;
+}
+
+.container app-left-panel app-content h3 {
+  color: red;
+  font-size: 16px;
+  margin: 0 0 19px 0;
+}
+
+.container app-left-panel app-content .content-url {
+  display: none;
+}
+
+.container app-left-panel app-content input[type="text"] {
+  width: 90%;
+  height: 26px;
+}
+
+.container app-left-panel app-content .res-content {
+  overflow-y: scroll;
+  width: 100%;
+  height: calc(100vh - 176px);
+}
+
+.container app-left-panel app-content .res-content app-res {
+  display: block;
+  padding: 11px;
+}
+
+.container app-left-panel app-content .res-content app-res:hover {
+  background-color: #f0e68c;
+}
+
+.container app-left-panel app-content .res-content app-res div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 2px 0;
+}
+
+.container app-left-panel app-content .res-content app-res div h4 {
+  font-size: 12px;
+  text-align: center;
+}
+
+.container app-left-panel app-content .res-content app-res div .label-res-id-num {
+  width: 35px;
+  height: 15px;
+  text-align: left;
+}
+
+.container app-left-panel app-content .res-content app-res div .label-res-cal1 {
+  width: 60px;
+  height: 15px;
+  color: red;
+}
+
+.container app-left-panel app-content .res-content app-res div .radio-container {
+  margin: 0 5px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.container app-left-panel app-content .res-content app-res div .label-res-name {
+  color: green;
+  font-size: 14px;
+  margin: 0 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.container app-left-panel app-content .res-content app-res div .res-date {
+  color: grey;
+  min-width: 125px;
+}
+
+.container app-left-panel app-content .res-content app-res div .label-res-id {
+  width: 18px;
+}
+
+.container app-left-panel app-content .res-content app-res div .res-id {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-move {
+  width: 32px;
+  height: 32px;
+}
+
+.container app-left-panel app-content .res-content app-res div label span {
+  margin: 0 10px;
+  width: 11px;
+  height: 11px;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-1 {
+  background-color: #db7093;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-2 {
+  background-color: #800080;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-3 {
+  background-color: #a52a2a;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-4 {
+  background-color: #ffa500;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-5 {
+  background-color: #008000;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-6 {
+  background-color: #0000cd;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-7 {
+  background-color: #dc143c;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-8 {
+  background-color: #ff0000;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-9 {
+  background-color: #996666;
+}
+
+.container app-left-panel app-content .res-content app-res div .color-10 {
+  background-color: #4b6b73;
+}
+
+.container app-left-panel app-content .res-content app-res div button {
+  padding: 6px;
+}
+
+.container app-left-panel app-content .res-content app-res div .tree {
+  background-color: #fce4d6;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-cancel-tree {
+  background-color: #ddebf7;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-white {
+  background-color: #fff;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-cancel-tree {
+  width: 55px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-catch-id1 {
+  width: 61px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-catch-id2 {
+  width: 68px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-catch-id3 {
+  width: 68px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-cancel-selected-id {
+  width: 77px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-cancel-only-catch-id {
+  width: 80px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-cancel-select-and-catch-id {
+  width: 143px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-hide-res {
+  width: 76px;
+}
+
+.container app-left-panel app-content .res-content app-res div .btn-copy-res {
+  width: 49px;
+}
+
+.container app-left-panel app-content .res-content app-res .row-2 button {
+  margin: 0 5px 0 0;
+  border: 1px solid #adadad;
+}
+
+.container app-left-panel app-content .res-content app-res .row-4 {
+  display: block;
+  color: red;
+  font-size: 19px;
+}
+
+.container app-left-panel app-content .res-content app-res .row-4 img {
+  width: 148px;
+  height: 108px;
+}
+
+.container app-left-panel app-content .res-content app-res .row-4 a.res-link {
+  text-decoration: underline;
+  color: #3981e6;
+}
+
+.container app-left-panel app-content .res-content app-res .row-4 a.res-img-link {
+  text-decoration: underline;
+  color: #3981e6;
+}
+
+.container app-left-panel app-status {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  bottom: 2px;
+  border: 1px solid lightgrey;
+  width: calc(100% - 236px);
+  padding: 5px;
+}
+
+.container app-left-panel app-status h3 {
+  text-align: center;
+  margin: 0 5px;
+  border: 1px solid lightgrey;
+  padding: 0 10px;
+  font-size: 18px;
+}
+
+.container app-left-panel app-status #lbl-sts-main-of-toal {
+  color: red;
+}
+
+.container app-right-panel {
+  min-width: 230px;
+  max-width: 230px;
+  padding: 9px 11px 9px 3px;
+}
+
+.container app-right-panel input[type="text"] {
+  height: 18px;
+}
+
+.container app-right-panel .width-100 input {
+  width: 100%;
+}
+
+.container app-right-panel .width-100 button {
+  width: 100%;
+  height: 49px;
+  margin: 2px 0 0;
+}
+
+.container app-right-panel .width-100 textarea {
+  width: 100%;
+}
+
+.container app-right-panel .res-order {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 18px 0 8px;
+}
+
+.container app-right-panel .res-order .width-60 div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.container app-right-panel .res-order .width-60 div label {
+  margin: 0;
+  line-height: 2em;
+  font-size: 11px;
+}
+
+.container app-right-panel .move-res div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 5px -1px;
+}
+
+.container app-right-panel .move-res div button {
+  width: 50%;
+  height: 39px;
+}
+
+.container app-right-panel .move-res .res-count {
+  padding: 9px 1px 0;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.container app-right-panel .move-res .res-count h3 {
+  border: 1px solid lightgray;
+  width: 24%;
+  text-align: center;
+}
+
+.container app-right-panel .move-res .res-count #lbl-main-of-toal {
+  width: 50%;
+  color: red;
+}
+
+.container app-right-panel .width-60 {
+  display: block;
+  width: calc(100% - 67px);
+}
+
+.container app-right-panel .width-40 {
+  width: 66px;
+}
+
+.container app-right-panel .save-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0 -1px;
+}
+
+.container app-right-panel .save-container button {
+  width: 50%;
+  height: 35px;
+}
+
+.container app-right-panel .setting-panel {
+  margin: 5px 0 0 0;
+  padding: 2px 23px 10px;
+  border: 1px solid lightgrey;
+  text-align: center;
+}
+
+.container app-right-panel .setting-panel table {
+  width: 100%;
+}
+
+.container app-right-panel .setting-panel table td {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 50%;
+  padding: 1px 0;
+}
+
+.container app-right-panel .setting-panel table td .canel-radio {
+  color: dodgerblue;
+}
+
+.container app-right-panel #btn-located-dat {
+  width: 66px;
+  height: 63px;
+}
+
+.container app-right-panel #txt-html-tag {
+  height: 80px;
+}
+
+.container app-right-panel #btn-copy-tag {
+  height: 22px;
+  margin: 2px 0;
+  padding: 0;
+}
+
+.container app-right-panel #btn-print-html-tag {
+  height: 58px;
+  background-color: lightsalmon;
+}
+
+.container app-right-panel #btn-set {
+  width: 162px;
+  height: 32px;
+}
+
+app-res {
+  width: 100%;
+}
+
+img.popup-image{
+  border:0px;
+  width: 400px;
+	box-shadow: 2px 2px 3px #555562;
+}
+#preview{
+	position: absolute;
+  background: #fff;
+  padding: 0px;
+  display: none;
+  color: #fff;
+  box-shadow: rgba(0, 0, 0, .6) 1px 1px;
+}
