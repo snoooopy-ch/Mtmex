@@ -1,0 +1,55 @@
+
+  <div class="row-1">
+    <h4 class="label-res-id-num">{{item.num}}</h4>
+    <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
+    <label class="radio-container">
+      <input type="radio" name="res-select-{{item.num}}" [ngModel]="resSelect" value="select" checked>選択</label>
+    <label class="radio-container">
+      <input type="radio" name="res-select-{{item.num}}" [ngModel]="resSelect" value="candi1">予1</label>
+    <label class="radio-container">
+      <input type="radio" name="res-select-{{item.num}}" [ngModel]="resSelect" value="candi2">予2</label>
+    <h4 class="label-res-name">{{item.name}}</h4>
+    <h4 class="res-date">{{item.date}}</h4>
+    <h4 class="label-res-id">ID:</h4>
+    <h4 class="res-id">{{item.id}}</h4>
+    <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
+  </div>
+  <div class="row-2">
+    <button class="btn-move">↑</button>
+    <button class="btn-move">↓</button>
+    <label class="radio-container" *ngFor="let sizeItem of resSizeList">
+      <input type="radio" name="res-font-{{item.num}}" [(ngModel)]="resFontSize" value="{{sizeItem.value}}" (change)="sizeChangeHandler(sizeItem)">{{sizeItem.name}}
+    </label>
+    <label *ngIf="resFontSize=='27px'">true</label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}" checked>なし </label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-1"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-2"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-3"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-4"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-5"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-6"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-7"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-8"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-9"> </span></label>
+    <label class="radio-container"><input type="radio" name="res-color-{{item.num}}"><span class="color-10"> </span></label>
+    <button class="btn-move">▲</button>
+    <button class="btn-move">▼</button>
+  </div >
+  <div class="row-3">
+    <button class="tree btn-tree-main">T選択</button>
+    <button class="tree btn-tree-candi1">T1</button>
+    <button class="tree btn-tree-candi2">T2</button>
+    <button class="btn-cancel-tree">T解除</button>
+    <button class="btn-white btn-catch-id1">ID選択1</button>
+    <button class="btn-white btn-catch-id2">ID選択2</button>
+    <button class="btn-white btn-catch-id3">ID選択3</button>
+    <button class="btn-cancel-selected-id">ID解除</button>
+    <button class="btn-cancel-only-catch-id">ID色消</button>
+    <button class="btn-cancel-select-and-catch-id">ID解除＆ID色消</button>
+    <button class="btn-white btn-hide-res">非表示</button>
+    <button class="btn-white btn-copy-res">複</button>
+    <button class="btn-white btn-edit-text">編集</button>
+  </div>
+  <div class="row-4" [innerHTML]="item.content" [ngStyle]="{fontSize: resFontSize}">
+
+  </div>

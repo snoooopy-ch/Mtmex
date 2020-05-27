@@ -1,0 +1,96 @@
+<div class="width-100">
+  <input type="text" [(ngModel)]="txtUrl">
+  <button (click)="onLoadUrl(txtUrl,isResSort, isMultiAnchor, isReplaceRes)">datファイル読み込み実行</button>
+</div>
+<div class="res-order">
+  <div class="width-60">
+    <div>
+       <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替える</label>
+    </div>
+    <div>
+       <label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort">複数アンカーを分割する</label>
+    </div>
+    <div>
+       <label><input type="checkbox" [(ngModel)]="isReplaceRes">>>1へのレスを入れ替える</label>
+    </div>
+  </div>
+  <div class="width-40">
+    <button id="btn-located-dat">指定<br>dat</button>
+  </div>
+</div>
+<div class="move-res">
+  <div>
+    <button id="btn-top-res-list">▲</button>
+    <button id="btn-bottom-res-list">▼</button>
+  </div>
+  <div>
+    <button id="btn-top-selected-list">△<br>選択 TOP</button>
+    <button id="btn-bottom-lelected-list">▽<br>選択END</button>
+  </div>
+  <div class="res-count">
+    <h3 id="lbl-main-of-toal">1234/1234</h3>
+    <h3 id="lbl-candi-1">1234</h3>
+    <h3 id="lbl-candi-2">1234</h3>
+  </div>
+</div>
+<div class="width-100">
+  <button id="btn-print-html-tag">タグ発行</button>
+  <button id="btn-copy-tag">コピー</button>
+  <textarea id="txt-html-tag"></textarea>
+</div>
+<div class="save-container">
+  <button id="btn-save">保存</button>
+  <button id="btn-load">復元</button>
+</div>
+<div class="setting-panel">
+  <table>
+    <tr>
+      <td>
+        <input type="radio" id="rdo-select" name="opt-select" checked><label for="rdo-select">選択</label>
+      </td>
+      <td>
+        <input type="radio" id="rdo-select-image" name="opt-select-image" checked><label for="rdo-select-image">画像選択</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="radio" id="rdo-candi1" name="opt-select"><label for="rdo-candi1">予備1</label>
+      </td>
+      <td>
+        <input type="radio" id="rdo-image-candi1" name="opt-select"><label for="rdo-image-candi1">画像予備1</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="radio" id="rdo-candi2" name="opt-select"><label for="rdo-candi2">予備2</label>
+      </td>
+      <td>
+        <input type="radio" id="rdo-image-candi2" name="opt-select"><label for="rdo-image-candi2">画像予備2</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="radio" id="rdo-cancel-select" name="opt-select"><label class="canel-radio" for="rdo-cancel-select">選択解除</label>
+      </td>
+      <td>
+        <input type="radio" id="rdo-cancel-candi1" name="opt-select"><label class="canel-radio"  for="rdo-cancel-candi1">予備1 解除</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+        <input type="radio" id="rdo-cancel-candi2" name="opt-select"><label class="canel-radio"  for="rdo-cancel-candi2">予備2 解除</label>
+      </td>
+    </tr>
+  </table>
+  <button>実行 (対象は表示中のレス) </button>
+</div>
+<div class="width-100">
+  <span>注意レス</span>
+  <input type="text">
+  <span>非表示レス</span>
+  <input type="text">
+  <label>非表示のID</label>
+  <div></div>
+</div>

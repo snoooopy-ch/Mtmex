@@ -1,0 +1,10 @@
+
+  <h3>New Tab</h3>
+  <div class="content-url">
+    <label>URL</label>
+    <input type="text">
+  </div>
+  <div cdkDropList class="res-content"  (cdkDropListDropped)="drop($event)" >
+    <app-res [item]="resItem"  [ngClass]="{'anchor-res': resItem.isAdded}" *ngFor="let resItem of resList" cdkDrag> </app-res>
+  </div>
+
