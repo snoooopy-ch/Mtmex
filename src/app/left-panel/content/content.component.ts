@@ -17,4 +17,5 @@ export class ContentComponent implements OnInit {
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.resList, event.previousIndex, event.currentIndex);
   }
+ 
 }

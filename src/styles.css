@@ -183,7 +183,8 @@ label {
 }
 
 .container app-left-panel app-content .res-content app-res:hover {
-  background-color: #f0e68c;
+  /* background-color: #f0e68c;*/
+  background-color: #cecece63;
 }
 
 .container app-left-panel app-content .res-content app-res div {
@@ -384,6 +385,7 @@ label {
   border: 1px solid lightgrey;
   width: calc(100% - 236px);
   padding: 5px;
+  max-width: 956px;
 }
 
 .container app-left-panel app-status h3 {
