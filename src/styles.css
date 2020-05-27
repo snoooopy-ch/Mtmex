@@ -10,6 +10,7 @@ body {
   font-weight: 400 !important;
   color: #000;
   font-size: 11px;
+  overflow: hidden;
 }
 
 a {
@@ -68,6 +69,7 @@ label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  max-width: 1197px;
 }
 
 .container app-left-panel {
@@ -559,5 +561,6 @@ img.popup-image{
   padding: 0px;
   display: none;
   color: #fff;
+  z-index: 100;
   box-shadow: rgba(0, 0, 0, .6) 1px 1px;
 }

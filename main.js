@@ -11,6 +11,7 @@ function createWindow () {
   win = new BrowserWindow({
     width: 1213,
     height: 948,
+    minWidth: 1213,
     backgroundColor: '#ffffff',
     icon: `file://${__dirname}/dist/assets/logo.png`,
     webPreferences: {
@@ -22,7 +23,7 @@ function createWindow () {
   win.loadURL(`file://${__dirname}/dist/Mtmex/index.html`)
 
   //// uncomment below to open the DevTools.
-  win.webContents.openDevTools()
+  //win.webContents.openDevTools()
 
   // Event when the window is closed.
   win.on('closed', function () {
