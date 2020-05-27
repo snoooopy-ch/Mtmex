@@ -177,40 +177,40 @@ label {
   height: calc(100vh - 176px);
 }
 
-.container app-left-panel app-content .res-content app-res {
+app-res {
   display: block;
   padding: 11px;
 }
 
-.container app-left-panel app-content .res-content app-res:hover {
+app-res:hover {
   background-color: #f0e68c;
 }
 
-.container app-left-panel app-content .res-content app-res div {
+app-res div {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   padding: 2px 0;
 }
 
-.container app-left-panel app-content .res-content app-res div h4 {
+app-res div h4 {
   font-size: 12px;
   text-align: center;
 }
 
-.container app-left-panel app-content .res-content app-res div .label-res-id-num {
+app-res div .label-res-id-num {
   width: 35px;
   height: 15px;
   text-align: left;
 }
 
-.container app-left-panel app-content .res-content app-res div .label-res-cal1 {
+app-res div .label-res-cal1 {
   width: 60px;
   height: 15px;
   color: red;
 }
 
-.container app-left-panel app-content .res-content app-res div .radio-container {
+app-res div .radio-container {
   margin: 0 5px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -220,7 +220,7 @@ label {
   align-items: center;
 }
 
-.container app-left-panel app-content .res-content app-res div .label-res-name {
+app-res div .label-res-name {
   color: green;
   font-size: 14px;
   margin: 0 5px;
@@ -230,147 +230,147 @@ label {
   max-width: 200px;
 }
 
-.container app-left-panel app-content .res-content app-res div .res-date {
+app-res div .res-date {
   color: grey;
   min-width: 125px;
 }
 
-.container app-left-panel app-content .res-content app-res div .label-res-id {
+app-res div .label-res-id {
   width: 18px;
 }
 
-.container app-left-panel app-content .res-content app-res div .res-id {
+app-res div .res-id {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 100px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-move {
+app-res div .btn-move {
   width: 32px;
   height: 32px;
 }
 
-.container app-left-panel app-content .res-content app-res div label span {
+app-res div label span {
   margin: 0 10px;
   width: 11px;
   height: 11px;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-1 {
+app-res div .color-1 {
   background-color: #db7093;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-2 {
+app-res div .color-2 {
   background-color: #800080;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-3 {
+app-res div .color-3 {
   background-color: #a52a2a;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-4 {
+app-res div .color-4 {
   background-color: #ffa500;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-5 {
+app-res div .color-5 {
   background-color: #008000;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-6 {
+app-res div .color-6 {
   background-color: #0000cd;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-7 {
+app-res div .color-7 {
   background-color: #dc143c;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-8 {
+app-res div .color-8 {
   background-color: #ff0000;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-9 {
+app-res div .color-9 {
   background-color: #996666;
 }
 
-.container app-left-panel app-content .res-content app-res div .color-10 {
+app-res div .color-10 {
   background-color: #4b6b73;
 }
 
-.container app-left-panel app-content .res-content app-res div button {
+app-res div button {
   padding: 6px;
 }
 
-.container app-left-panel app-content .res-content app-res div .tree {
+app-res div .tree {
   background-color: #fce4d6;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-cancel-tree {
+app-res div .btn-cancel-tree {
   background-color: #ddebf7;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-white {
+app-res div .btn-white {
   background-color: #fff;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-cancel-tree {
+app-res div .btn-cancel-tree {
   width: 55px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-catch-id1 {
+app-res div .btn-catch-id1 {
   width: 61px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-catch-id2 {
+app-res div .btn-catch-id2 {
   width: 68px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-catch-id3 {
+app-res div .btn-catch-id3 {
   width: 68px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-cancel-selected-id {
+app-res div .btn-cancel-selected-id {
   width: 77px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-cancel-only-catch-id {
+app-res div .btn-cancel-only-catch-id {
   width: 80px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-cancel-select-and-catch-id {
+app-res div .btn-cancel-select-and-catch-id {
   width: 143px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-hide-res {
+app-res div .btn-hide-res {
   width: 76px;
 }
 
-.container app-left-panel app-content .res-content app-res div .btn-copy-res {
+app-res div .btn-copy-res {
   width: 49px;
 }
 
-.container app-left-panel app-content .res-content app-res .row-2 button {
+app-res .row-2 button {
   margin: 0 5px 0 0;
   border: 1px solid #adadad;
 }
 
-.container app-left-panel app-content .res-content app-res .row-4 {
+app-res .row-4 {
   display: block;
   color: red;
   font-size: 19px;
 }
 
-.container app-left-panel app-content .res-content app-res .row-4 img {
+app-res .row-4 img {
   width: 148px;
   height: 108px;
 }
 
-.container app-left-panel app-content .res-content app-res .row-4 a.res-link {
+app-res .row-4 a.res-link {
   text-decoration: underline;
   color: #3981e6;
 }
 
-.container app-left-panel app-content .res-content app-res .row-4 a.res-img-link {
+app-res .row-4 a.res-img-link {
   text-decoration: underline;
   color: #3981e6;
 }
