@@ -25,7 +25,7 @@ export class LeftPanelComponent implements OnInit {
   addTab() {
     this.tabs.push('New');
     this.resLists.push([]);
-    this.selected.setValue(this.tabs.length - 1);
+    this.selected.setValue(this.tabs.length);
   }
 
   removeTab(index: number) {
