@@ -5,6 +5,8 @@
     <input type="text">
   </div>
   <div cdkDropList class="res-content"  (cdkDropListDropped)="drop($event)" >
-    <app-res [item]="resItem"  [ngClass]="{'anchor-res': resItem.isAdded}" *ngFor="let resItem of resList" cdkDrag> </app-res>
+    <app-res [item]="resItem"  [ngClass]="{'anchor-res': resItem.isAdded}" *ngFor="let resItem of resList" cdkDrag>
+<!--      <div cdkDragHandle></div>-->
+    </app-res>
   </div>
 
