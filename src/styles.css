@@ -565,3 +565,6 @@ img.popup-image{
   z-index: 100;
   box-shadow: rgba(0, 0, 0, .6) 1px 1px;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
