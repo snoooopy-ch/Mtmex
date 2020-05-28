@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -11,12 +12,12 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const TabGroup = (<any>window).require('electron-tabs');
-    const tabGroup = new TabGroup({
-      newTab: {
-        title: 'New Tab'
-      }
-    });
+    // const TabGroup = (<any>window).require('electron-tabs');
+    // const tabGroup = new TabGroup({
+    //   newTab: {
+    //     title: 'New Tab'
+    //   }
+    // });
   }
 
 }

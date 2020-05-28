@@ -1,6 +1,21 @@
-
+<mat-tab-group [selectedIndex]="selected.value"
+               (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms">
+  <mat-tab disabled>
+    <ng-template mat-tab-label>
+      <button id="btn-plus" (click)="addTab()">+</button>
+    </ng-template>
+  </mat-tab>
+  <mat-tab *ngFor="let tab of tabs; let index = index; " [label]="tab">
+    <button
+            class="example-delete-tab-button"
+            [disabled]="tabs.length === 1"
+            (click)="removeTab(index)">
+      Delete Tab
+    </button>
   <app-header></app-header>
-  <app-content [resList]="resList"></app-content>
-  <p id='preview'><img class='popup-image' src='' alt='Image preview' /></p>
-  <app-status [resTotal]="resList.length"></app-status>
+  <app-content [resList]="resLists[index]"></app-content>
+  <app-status [resTotal]="resLists[index].length"></app-status>
+  </mat-tab>
+</mat-tab-group>
 
+<p id='preview'><img class='popup-image' src='' alt='Image preview' /></p>
