@@ -2,16 +2,16 @@
                (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms">
   <mat-tab disabled>
     <ng-template mat-tab-label>
-      <button id="btn-plus" (click)="addTab()">+</button>
+      <button id="btn-plus" (click)="addTab()" class="add-tab">+</button>
     </ng-template>
   </mat-tab>
-  <mat-tab *ngFor="let tab of tabs; let index = index; " [label]="tab">
-    <button
-            class="example-delete-tab-button"
-            [disabled]="tabs.length === 1"
-            (click)="removeTab(index)">
-      Delete Tab
-    </button>
+  <mat-tab *ngFor="let tab of tabs; let index = index;">
+    <ng-template mat-tab-label>
+      <div class="col" style="margin-right: 20px;">{{tab}}</div>
+      <button mat-icon-button [disabled]="tabs.length === 1" (click)="removeTab(index)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </ng-template>
   <app-header></app-header>
   <app-content [resList]="resLists[index]"></app-content>
   <app-status [resTotal]="resLists[index].length"></app-status>

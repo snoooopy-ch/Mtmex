@@ -26,3 +26,24 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
 // that you are using.
 @include angular-material-theme($Mtmex-theme);
 
+.mat-ink-bar{
+  display: none;
+}
+.mat-tab-label {
+  width: 150px;
+  height: 29px !important;
+  background-color: #ffd280;
+  text-align: left !important;
+  min-width: unset !important;
+
+}
+.mat-tab-label.mat-tab-disabled{
+  width: 29px;
+  background: transparent;
+  padding: 0;
+  button{
+    width: 29px;
+    height: 29px;
+    background: #fff;
+  }
+}

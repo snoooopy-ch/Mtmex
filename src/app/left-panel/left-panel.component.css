@@ -1,0 +1,14 @@
+/*::ng-deep .mat-ink-bar {*/
+/*  display: none;*/
+/*}*/
+::ng-deep .mat-tab-label {
+/*  min-width: 25px !important;*/
+/*  padding: 5px;*/
+/*  background-color: transparent; */
+/*  font-weight: 700;*/
+width: 150px;
+height: 29px;
+background-color: #ffd280;
+text-align: left;
+padding: 0 10px;
+}

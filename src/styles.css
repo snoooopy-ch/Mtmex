@@ -122,7 +122,7 @@ label {
   height: 29px;
 }
 
-.container app-left-panel app-header #btn-plus {
+.container app-left-panel #btn-plus {
   height: 29px;
   width: 29px;
   background: #fff;
