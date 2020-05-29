@@ -7,7 +7,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   styleUrls: ['./content.component.css']
 })
 export class ContentComponent implements OnInit {
-
+  @Input() tabName = 'New Tab';
   @Input() resList: [];
   constructor() { }
 
@@ -17,5 +17,5 @@ export class ContentComponent implements OnInit {
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.resList, event.previousIndex, event.currentIndex);
   }
- 
+
 }

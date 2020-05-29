@@ -174,7 +174,7 @@ label {
 .container app-left-panel app-content .res-content {
   overflow-y: scroll;
   width: 100%;
-  height: calc(100vh - 176px);
+  height: calc(100vh - 178px);
 }
 
 app-res {
@@ -379,10 +379,9 @@ app-res .row-4 a.res-img-link {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  position: absolute;
   bottom: 2px;
   border: 1px solid lightgrey;
-  width: calc(100% - 236px);
+  width: 100%;
   padding: 5px;
   max-width: 956px;
 }

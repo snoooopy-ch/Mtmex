@@ -7,13 +7,13 @@
   </mat-tab>
   <mat-tab *ngFor="let tab of tabs; let index = index;">
     <ng-template mat-tab-label>
-      <div class="col" style="margin-right: 20px;">{{tab}}</div>
-      <button mat-icon-button [disabled]="tabs.length === 1" (click)="removeTab(index)">
+      <div class="col" >{{tab}}</div>
+      <button mat-icon-button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">
         <mat-icon>close</mat-icon>
       </button>
     </ng-template>
-  <app-header></app-header>
-  <app-content [resList]="resLists[index]"></app-content>
+  <app-header ></app-header>
+  <app-content [resList]="resLists[index]" [tabName]="tab"></app-content>
   <app-status [resTotal]="resLists[index].length"></app-status>
   </mat-tab>
 </mat-tab-group>

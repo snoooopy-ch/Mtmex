@@ -21,10 +21,12 @@ $Mtmex-warn: mat-palette($mat-red);
 // Create the theme object (a Sass map containing all of the palettes).
 $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
 
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($Mtmex-theme);
+
 
 .mat-ink-bar{
   display: none;
@@ -32,15 +34,32 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
 .mat-tab-label {
   width: 150px;
   height: 29px !important;
-  background-color: #ffd280;
+  background-color: #e1e1e1;
   text-align: left !important;
   min-width: unset !important;
-
+  border: 1px solid;
+  margin: 0 1px;
+  padding: 0 5px !important;
+  .mat-tab-label-content{
+    width: 100%;
+    justify-content: space-between !important;
+  }
+  .close-tab{
+    border: 0;
+    background: transparent;
+    &:hover{
+      border: 0;
+    }
+  }
+}
+.mat-tab-label.mat-tab-label-active{
+  background: #ffa500;
 }
 .mat-tab-label.mat-tab-disabled{
   width: 29px;
   background: transparent;
-  padding: 0;
+  padding: 0 !important;
+  border: 0;
   button{
     width: 29px;
     height: 29px;

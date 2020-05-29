@@ -11,8 +11,8 @@ import { ResComponent } from './left-panel/res/res.component';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatIconModule} from "@angular/material/icon";
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
