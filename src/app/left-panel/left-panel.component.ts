@@ -8,24 +8,25 @@ import {FormControl} from '@angular/forms';
   styleUrls: ['./left-panel.component.css']
 })
 export class LeftPanelComponent implements OnInit {
-  resLists: [any[], any[]];
+  resLists: [any[]];
   tabs = ['New Tab'];
   selected = new FormControl(1);
   constructor(private resService: ResService, private cdr: ChangeDetectorRef) {
-    this.resLists = [[], []];
+    this.resLists = [[]];
   }
 
   ngOnInit(): void {
     this.resService.resList.subscribe((value) => {
       this.resLists[this.selected.value - 1] = value;
-      console.log(this.resLists);
-      this.tabs[this.selected.value - 1] = 'テストタイトル';
+      // console.log(this.selected.value);
+      // console.log(this.resLists);
+      // this.tabs[this.selected.value - 1] = 'テストタイトル';
       this.cdr.detectChanges();
     });
   }
 
   addTab() {
-    this.tabs.push('New Tab');
+    this.tabs.push('テストタイトル');
     this.resLists.push([]);
     this.selected.setValue(this.tabs.length);
   }
@@ -33,6 +34,7 @@ export class LeftPanelComponent implements OnInit {
   removeTab(index: number) {
     this.resLists.splice(index, 1);
     this.tabs.splice(index, 1);
+    console.log(index);
     console.log(this.resLists);
   }
 }

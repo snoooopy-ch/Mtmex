@@ -27,7 +27,6 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
 // that you are using.
 @include angular-material-theme($Mtmex-theme);
 
-
 .mat-ink-bar{
   display: none;
 }

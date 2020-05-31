@@ -1,5 +1,4 @@
-<mat-tab-group [selectedIndex]="selected.value"
-               (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms">
+<mat-tab-group [selectedIndex]="selected.value" animationDuration="0ms">
   <mat-tab disabled>
     <ng-template mat-tab-label>
       <button id="btn-plus" (click)="addTab()" class="add-tab">+</button>
