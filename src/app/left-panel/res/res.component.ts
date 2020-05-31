@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit, } from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output,} from '@angular/core';
 import {Item} from '../../models/item';
 import {RES_FONT_SIZE} from '../../models/res-size-data';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -15,6 +15,7 @@ export class ResComponent implements OnInit {
   @Input() item;
   @Input() resIndex;
   @Input() tabIndex;
+  @Output() duplicateIndex = new EventEmitter<string>();
   resSelect = 'select';
   resSizeList: Item[] = RES_FONT_SIZE;
   resFontSize = '19px';
@@ -57,7 +58,7 @@ export class ResComponent implements OnInit {
   }
   handleEditShow() {
     this.isEdit = !this.isEdit;
-    if(this.isEdit){
+    if (this.isEdit){
       this.resContent = this.item.content;
     }
     this.cdRef.detectChanges();
@@ -69,7 +70,6 @@ export class ResComponent implements OnInit {
     this.resContent = this.resContent.replace( /(<figure[^<]+>)/ig, '');
     this.resContent = this.resContent.replace( /<\/figure>/ig, '');
     this.resContent = this.resContent.replace( /&nbsp;/ig, '');
-    console.log(this.resContent);
     this.item.content = this.resContent;
     this.isEdit = false;
     this.cdRef.detectChanges();
@@ -78,5 +78,9 @@ export class ResComponent implements OnInit {
   handleCancelEdit() {
     this.isEdit = false;
     this.cdRef.detectChanges();
+  }
+
+  handleDuplicate() {
+    this.duplicateIndex.emit(this.resIndex);
   }
 }

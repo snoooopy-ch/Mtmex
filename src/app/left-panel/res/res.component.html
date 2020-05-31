@@ -47,7 +47,7 @@
     <button class="btn-cancel-only-catch-id">ID色消</button>
     <button class="btn-cancel-select-and-catch-id">ID解除＆ID色消</button>
     <button class="btn-white btn-hide-res">非表示</button>
-    <button class="btn-white btn-copy-res">複</button>
+    <button class="btn-white btn-copy-res" (click)="handleDuplicate()">複</button>
     <button class="btn-white btn-edit-text" (click)="handleEditShow()" >編集</button>
   </div>
   <div class="row-4" *ngIf="isEdit">

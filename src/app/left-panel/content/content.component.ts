@@ -1,4 +1,4 @@
-import { Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -10,7 +10,8 @@ export class ContentComponent implements OnInit {
   @Input() tabName = 'New Tab';
   @Input() resList: [];
   @Input() tabIndex;
-  constructor() { }
+
+  constructor(private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
 
@@ -19,4 +20,8 @@ export class ContentComponent implements OnInit {
     moveItemInArray(this.resList, event.previousIndex, event.currentIndex);
   }
 
+  duplicateRes($event: any) {
+    this.resList.splice($event + 1, 0, this.resList[$event]);
+    this.cdRef.detectChanges();
+  }
 }
