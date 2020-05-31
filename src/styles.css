@@ -358,6 +358,7 @@ app-res .row-4 {
   display: block;
   color: red;
   font-size: 19px;
+  line-height: 1.2em;
 }
 
 app-res .row-4 img {
@@ -365,12 +366,7 @@ app-res .row-4 img {
   height: 108px;
 }
 
-app-res .row-4 a.res-link {
-  text-decoration: underline;
-  color: #3981e6;
-}
-
-app-res .row-4 a.res-img-link {
+app-res .row-4 a {
   text-decoration: underline;
   color: #3981e6;
 }
@@ -567,3 +563,23 @@ img.popup-image{
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.ck.ck-reset_all, .ck.ck-reset_all *{
+  display: none;
+}
+.ck.ck-editor__main{
+  width: 100%;
+}
+.ck.ck-content{
+  width: 100%;
+  display: block;
+}
+.ck.ck-content .image{
+  width: 148px;
+  height: 108px;
+  margin: 0;
+}
+.ck.ck-content a{
+  text-decoration: underline;
+  color: #3981e6;
+}

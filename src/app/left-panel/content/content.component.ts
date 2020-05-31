@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -9,6 +9,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class ContentComponent implements OnInit {
   @Input() tabName = 'New Tab';
   @Input() resList: [];
+  @Input() tabIndex;
   constructor() { }
 
   ngOnInit(): void {

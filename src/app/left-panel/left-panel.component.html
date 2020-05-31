@@ -12,7 +12,7 @@
       </button>
     </ng-template>
   <app-header ></app-header>
-  <app-content [resList]="resLists[index]" [tabName]="tab"></app-content>
+  <app-content [resList]="resLists[index]" [tabName]="tab" [tabIndex]="index"></app-content>
   <app-status [resTotal]="resLists[index].length"></app-status>
   </mat-tab>
 </mat-tab-group>

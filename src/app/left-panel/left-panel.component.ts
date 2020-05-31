@@ -34,7 +34,5 @@ export class LeftPanelComponent implements OnInit {
   removeTab(index: number) {
     this.resLists.splice(index, 1);
     this.tabs.splice(index, 1);
-    console.log(index);
-    console.log(this.resLists);
   }
 }

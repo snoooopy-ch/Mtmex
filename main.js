@@ -277,7 +277,7 @@ function readLines(line) {
           || tmp_item.endsWith("png")
           || tmp_item.endsWith("bmp")
         ){
-          tmp_item = `<img src="${tmp_item}"><a tooltip="tooltip" placement="right" show-delay="500" class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
+          tmp_item = `<img src="${tmp_item}"><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
         }else{
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
         }
