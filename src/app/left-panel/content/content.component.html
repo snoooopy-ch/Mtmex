@@ -4,10 +4,14 @@
     <label>URL</label>
     <input type="text">
   </div>
-  <div cdkDropList class="res-content"  (cdkDropListDropped)="drop($event)" >
+  <div #resListContainer cdkDropList class="res-content"  (cdkDropListDropped)="drop($event)" >
     <app-res [item]="resItem" [resIndex]="index"
-             (duplicateIndex)="duplicateRes($event)"
-             (hideId)="hideRes($event)"
+             (duplicateResEmitter)="duplicateRes($event)"
+             (hideResEmitter)="hideRes($event)"
+             (upResEmitter)="upRes($event)"
+             (downResEmitter)="downRes($event)"
+             (toTopResEmitter)="toTopRes($event,resListContainer)"
+             (toBottomResEmitter)="toBottomRes($event,resListContainer)"
              [tabIndex]="tabIndex" [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
              *ngFor="let resItem of resList; let index = index;" cdkDrag>
     </app-res>

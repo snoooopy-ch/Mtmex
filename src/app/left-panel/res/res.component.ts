@@ -16,8 +16,12 @@ export class ResComponent implements OnInit {
   @Input() item;
   @Input() resIndex;
   @Input() tabIndex;
-  @Output() duplicateIndex = new EventEmitter<string>();
-  @Output() hideId = new EventEmitter<string>();
+  @Output() duplicateResEmitter = new EventEmitter<string>();
+  @Output() hideResEmitter = new EventEmitter<string>();
+  @Output() upResEmitter = new EventEmitter<number>();
+  @Output() downResEmitter = new EventEmitter<number>();
+  @Output() toTopResEmitter = new EventEmitter<number>();
+  @Output() toBottomResEmitter = new EventEmitter<number>();
   resSelect = '';
   resSizeList: Item[] = RES_FONT_SIZE;
   resFontSize = '19px';
@@ -85,10 +89,26 @@ export class ResComponent implements OnInit {
   }
 
   duplicateHandler() {
-    this.duplicateIndex.emit(this.resIndex);
+    this.duplicateResEmitter.emit(this.resIndex);
   }
 
   hideHandler() {
-    this.hideId.emit(this.item.id);
+    this.hideResEmitter.emit(this.item.id);
+  }
+
+  upOneHandler() {
+    this.upResEmitter.emit(this.resIndex);
+  }
+
+  downOneHandler() {
+    this.downResEmitter.emit(this.resIndex);
+  }
+
+  toTopHandler() {
+    this.toTopResEmitter.emit(this.resIndex);
+  }
+
+  toBottomHandler() {
+    this.toBottomResEmitter.emit(this.resIndex);
   }
 }

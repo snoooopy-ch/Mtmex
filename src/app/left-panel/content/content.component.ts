@@ -44,4 +44,34 @@ export class ContentComponent implements OnInit {
     this.hiddenIds.push($event);
     this.resService.setHiddenIds(this.hiddenIds);
   }
+
+  upRes($event: number) {
+    const tmpRes = Object.assign({}, this.resList[$event - 1]);
+    this.resList[$event - 1] = this.resList[$event];
+    this.resList[$event] = tmpRes;
+    this.cdRef.detectChanges();
+  }
+
+  downRes($event: number) {
+    const tmpRes = Object.assign({}, this.resList[$event + 1]);
+    this.resList[$event + 1] = this.resList[$event];
+    this.resList[$event] = tmpRes;
+    this.cdRef.detectChanges();
+  }
+
+  toTopRes($event: number, el: HTMLDivElement) {
+    const tmpRes = Object.assign({}, this.resList[$event]);
+    this.resList.splice($event, 1);
+    this.resList.splice(0, 0, tmpRes);
+    this.cdRef.detectChanges();
+    el.scrollTop = 0;
+  }
+
+  toBottomRes($event: number, el: HTMLDivElement) {
+    const tmpRes = Object.assign({}, this.resList[$event]);
+    this.resList.splice($event, 1);
+    this.resList.push(tmpRes);
+    this.cdRef.detectChanges();
+    el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
+  }
 }

@@ -14,8 +14,8 @@
     <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
   </div>
   <div class="row-2">
-    <button class="btn-move">↑</button>
-    <button class="btn-move">↓</button>
+    <button class="btn-move" (click)="upOneHandler()">↑</button>
+    <button class="btn-move" (click)="downOneHandler()">↓</button>
     <label class="radio-container" *ngFor="let sizeItem of resSizeList">
       <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="resFontSize"
              value="{{sizeItem.value}}" (change)="sizeChangeHandler()">{{sizeItem.name}}
@@ -32,8 +32,8 @@
       <span [className]="colorItem.name"></span>
     </label>
 
-    <button class="btn-move">▲</button>
-    <button class="btn-move">▼</button>
+    <button class="btn-move" (click)="toTopHandler()">▲</button>
+    <button class="btn-move" (click)="toBottomHandler()">▼</button>
   </div >
   <div class="row-3">
     <button class="tree btn-tree-main">T選択</button>
