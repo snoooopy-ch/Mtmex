@@ -17,21 +17,21 @@
     <button class="btn-move">↑</button>
     <button class="btn-move">↓</button>
     <label class="radio-container" *ngFor="let sizeItem of resSizeList">
-<!--      <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="resFontSize" value="{{sizeItem.value}}" (change)="sizeChangeHandler(sizeItem)">{{sizeItem.name}}-->
-      <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="resFontSize" value="{{sizeItem.value}}" >{{sizeItem.name}}
+      <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="resFontSize"
+             value="{{sizeItem.value}}" (change)="sizeChangeHandler()">{{sizeItem.name}}
     </label>
-    <label *ngIf="resFontSize=='27px'">true</label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}" checked>なし </label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-1"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-2"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-3"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-4"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-5"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-6"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-7"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-8"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-9"> </span></label>
-    <label class="radio-container"><input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"><span class="color-10"> </span></label>
+
+    <label class="radio-container">
+      <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
+             [(ngModel)]="resColor" [checked]=true (change)="colorChangeHandler()" value="#f00">
+      なし
+    </label>
+    <label class="radio-container" *ngFor="let colorItem of resColorList">
+      <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
+             [(ngModel)]="resColor" (change)="colorChangeHandler()" [value]="colorItem.value">
+      <span [className]="colorItem.name"></span>
+    </label>
+
     <button class="btn-move">▲</button>
     <button class="btn-move">▼</button>
   </div >
@@ -47,16 +47,16 @@
     <button class="btn-cancel-only-catch-id">ID色消</button>
     <button class="btn-cancel-select-and-catch-id">ID解除＆ID色消</button>
     <button class="btn-white btn-hide-res">非表示</button>
-    <button class="btn-white btn-copy-res" (click)="handleDuplicate()">複</button>
-    <button class="btn-white btn-edit-text" (click)="handleEditShow()" >編集</button>
+    <button class="btn-white btn-copy-res" (click)="duplicateHandler()">複</button>
+    <button class="btn-white btn-edit-text" (click)="editShowHandler()" >編集</button>
   </div>
   <div class="row-4" *ngIf="isEdit">
     <ckeditor class="row-4" [editor]="Editor"
               [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar'] }"
               [(ngModel)]="resContent" >
     </ckeditor>
-    <button class="btn-save" (click)="handleSaveRes()">保存する</button>
-    <button class="btn-cancel" (click)="handleCancelEdit()">キャンセル</button>
+    <button class="btn-save" (click)="saveResHandler()">保存する</button>
+    <button class="btn-cancel" (click)="cancelEditHandler()">キャンセル</button>
   </div>
-  <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content" [ngStyle]="{fontSize: resFontSize}"> </div>
+  <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content" [ngStyle]="{'font-size': resFontSize, 'color': resColor}"> </div>
 <!--  <div class="cdk-drag-handle" cdkDragHandle>drag here</div>-->

@@ -1,7 +1,8 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output,} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
 import {Item} from '../../models/item';
 import {RES_FONT_SIZE} from '../../models/res-size-data';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {RES_COLOR} from "../../models/res-color-data";
 declare  var jQuery: any;
 declare  var $: any;
 
@@ -19,6 +20,8 @@ export class ResComponent implements OnInit {
   resSelect = 'select';
   resSizeList: Item[] = RES_FONT_SIZE;
   resFontSize = '19px';
+  resColor = '#f00';
+  resColorList: Item[] = RES_COLOR;
   isEdit = false;
   resContent = '';
 
@@ -26,24 +29,25 @@ export class ResComponent implements OnInit {
     this.resSizeList = RES_FONT_SIZE;
   }
 
-  // sizeChangeHandler(selectedItem) {
-  //   this.resFontSize = selectedItem.value;
-  //   console.log(this.resFontSize);
-  // }
+  sizeChangeHandler() {
+    this.cdRef.detectChanges();
+  }
 
-
+  colorChangeHandler() {
+    this.cdRef.detectChanges();
+  }
 
   ngOnInit(): void {
     this.resContent = this.item.content;
     $(document).ready(function(){
-      let xOffset = 150;
-      let yOffset = 40;
-      let imgPop = $('#preview img');
+      const xOffset = 150;
+      const yOffset = 40;
+      const imgPop = $('#preview img');
       $('a.res-img-link').hover(function(e){
         this.t = this.href;
         this.title = '';
         imgPop.attr('src', this.href);
-        let c = (this.t != '') ? '<br/>' + this.t : '';
+        const c = (this.t != '') ? '<br/>' + this.t : '';
         $('#preview').css('display', 'block');
         $('#preview')
             .css('top', (e.pageY - xOffset) + 'px')
@@ -56,7 +60,7 @@ export class ResComponent implements OnInit {
     });
 
   }
-  handleEditShow() {
+  editShowHandler() {
     this.isEdit = !this.isEdit;
     if (this.isEdit){
       this.resContent = this.item.content;
@@ -64,7 +68,7 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  handleSaveRes() {
+  saveResHandler() {
     this.resContent = this.resContent.replace( /(<p>)/ig, '');
     this.resContent = this.resContent.replace( /(<\/p>)/ig, '');
     this.resContent = this.resContent.replace( /(<figure[^<]+>)/ig, '');
@@ -75,12 +79,12 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  handleCancelEdit() {
+  cancelEditHandler() {
     this.isEdit = false;
     this.cdRef.detectChanges();
   }
 
-  handleDuplicate() {
+  duplicateHandler() {
     this.duplicateIndex.emit(this.resIndex);
   }
 }
