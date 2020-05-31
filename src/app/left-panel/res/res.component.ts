@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, } fro
 import {Item} from '../../models/item';
 import {RES_FONT_SIZE} from '../../models/res-size-data';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {RES_COLOR} from "../../models/res-color-data";
+import {RES_COLOR} from '../../models/res-color-data';
 declare  var jQuery: any;
 declare  var $: any;
 
@@ -17,7 +17,8 @@ export class ResComponent implements OnInit {
   @Input() resIndex;
   @Input() tabIndex;
   @Output() duplicateIndex = new EventEmitter<string>();
-  resSelect = 'select';
+  @Output() hideId = new EventEmitter<string>();
+  resSelect = '';
   resSizeList: Item[] = RES_FONT_SIZE;
   resFontSize = '19px';
   resColor = '#f00';
@@ -26,7 +27,6 @@ export class ResComponent implements OnInit {
   resContent = '';
 
   constructor(private cdRef: ChangeDetectorRef) {
-    this.resSizeList = RES_FONT_SIZE;
   }
 
   sizeChangeHandler() {
@@ -86,5 +86,9 @@ export class ResComponent implements OnInit {
 
   duplicateHandler() {
     this.duplicateIndex.emit(this.resIndex);
+  }
+
+  hideHandler() {
+    this.hideId.emit(this.item.id);
   }
 }

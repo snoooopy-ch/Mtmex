@@ -4,3 +4,29 @@
 .btn-cancel{
   width: 147px;
 }
+div h4 {
+  font-size: 12px;
+  text-align: center;
+}
+.row-1 .label-res-name {
+  color: green;
+  font-size: 14px;
+  margin: 0 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+.row-1 .res-date {
+  color: grey;
+  min-width: 125px;
+}
+.row-1 .label-res-id {
+  width: 18px;
+}
+.row-1 .res-id {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}

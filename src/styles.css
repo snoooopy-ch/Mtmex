@@ -38,6 +38,10 @@ h3 {
   font-size: 15px;
 }
 
+.mat-h4, .mat-subheading-1, .mat-typography h4{
+  margin: 0;
+}
+
 button {
   margin: 0 1px;
   height: 30px;
@@ -193,11 +197,6 @@ app-res div {
   padding: 2px 0;
 }
 
-app-res div h4 {
-  font-size: 12px;
-  text-align: center;
-}
-
 app-res div .label-res-id-num {
   width: 35px;
   height: 15px;
@@ -220,31 +219,6 @@ app-res div .radio-container {
   align-items: center;
 }
 
-app-res div .label-res-name {
-  color: green;
-  font-size: 14px;
-  margin: 0 5px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-width: 200px;
-}
-
-app-res div .res-date {
-  color: grey;
-  min-width: 125px;
-}
-
-app-res div .label-res-id {
-  width: 18px;
-}
-
-app-res div .res-id {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-width: 100px;
-}
 
 app-res div .btn-move {
   width: 32px;
@@ -583,3 +557,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   text-decoration: underline;
   color: #3981e6;
 }
+

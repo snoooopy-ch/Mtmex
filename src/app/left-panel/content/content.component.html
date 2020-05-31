@@ -7,7 +7,8 @@
   <div cdkDropList class="res-content"  (cdkDropListDropped)="drop($event)" >
     <app-res [item]="resItem" [resIndex]="index"
              (duplicateIndex)="duplicateRes($event)"
-             [tabIndex]="tabIndex" [ngClass]="{'anchor-res': resItem.isAdded}"
+             (hideId)="hideRes($event)"
+             [tabIndex]="tabIndex" [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
              *ngFor="let resItem of resList; let index = index;" cdkDrag>
     </app-res>
   </div>

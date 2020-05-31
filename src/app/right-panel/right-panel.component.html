@@ -92,5 +92,7 @@
   <span>非表示レス</span>
   <input type="text">
   <label>非表示のID</label>
-  <div></div>
+  <div class="hidden-ids-container">
+    <button class="btn-show-id" *ngFor="let id of hiddenIds;" (click)="ShowIdHandler(id)">[X]{{id}}</button>
+  </div>
 </div>
