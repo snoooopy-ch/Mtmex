@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ResItem} from '../../models/res-item';
 import {ResService} from '../../res.service';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-content',
@@ -14,6 +15,8 @@ export class ContentComponent implements OnInit {
   @Input() resList: ResItem[];
   @Input() tabIndex;
   hiddenIds: string [];
+  private selectedIndex;
+  @ViewChild('resListContainer') virtualScroller: CdkVirtualScrollViewport;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -22,6 +25,7 @@ export class ContentComponent implements OnInit {
   ngOnInit(): void {
     this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
+
       for (let i = 0; i < this.resList.length; i++){
         this.resList[i].show = this.hiddenIds.indexOf(this.resList[i].id) === -1;
       }
@@ -29,46 +33,50 @@ export class ContentComponent implements OnInit {
     });
   }
   drop(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.resList, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.resList, this.selectedIndex,
+      this.selectedIndex + (event.currentIndex - event.previousIndex));
+    this.resList = [...this.resList];
   }
 
-  duplicateRes($event: any) {
-    this.resList.splice($event + 1, 0, this.resList[$event]);
-    this.cdRef.detectChanges();
+  duplicateRes(index: number) {
+    this.resList.splice(index + 1, 0, this.resList[index]);
+    this.resList = [...this.resList];
+    // this.cdRef.detectChanges();
   }
 
-  hideRes($event: any) {
-    this.hiddenIds.push($event);
+  hideRes(resId: string) {
+    this.hiddenIds = [...this.hiddenIds, resId];
     this.resService.setHiddenIds(this.hiddenIds);
   }
 
-  upRes($event: number) {
-    const tmpRes = Object.assign({}, this.resList[$event - 1]);
-    this.resList[$event - 1] = this.resList[$event];
-    this.resList[$event] = tmpRes;
-    this.cdRef.detectChanges();
+  upRes(index: number) {
+    moveItemInArray(this.resList, index, index - 1);
+    this.resList = [...this.resList];
   }
 
-  downRes($event: number) {
-    const tmpRes = Object.assign({}, this.resList[$event + 1]);
-    this.resList[$event + 1] = this.resList[$event];
-    this.resList[$event] = tmpRes;
-    this.cdRef.detectChanges();
+  downRes(index: number) {
+    moveItemInArray(this.resList, index, index + 1);
+    this.resList = [...this.resList];
   }
 
-  toTopRes($event: number, el: HTMLDivElement) {
-    const tmpRes = Object.assign({}, this.resList[$event]);
-    this.resList.splice($event, 1);
+  toTopRes(index: number) {
+    const tmpRes = Object.assign({}, this.resList[index]);
+    this.resList.splice(index, 1);
     this.resList.splice(0, 0, tmpRes);
-    this.cdRef.detectChanges();
-    el.scrollTop = 0;
+    this.resList = [...this.resList];
+    this.virtualScroller.scrollToIndex(0);
   }
 
-  toBottomRes($event: number, el: HTMLDivElement) {
-    const tmpRes = Object.assign({}, this.resList[$event]);
-    this.resList.splice($event, 1);
+  toBottomRes(index: number) {
+    const tmpRes = Object.assign({}, this.resList[index]);
+    this.resList.splice(index, 1);
     this.resList.push(tmpRes);
-    this.cdRef.detectChanges();
-    el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
+    this.resList = [...this.resList];
+    this.virtualScroller.scrollToIndex(this.resList.length);
   }
+
+  dragStarted($event: CdkDragStart, index: number) {
+    this.selectedIndex = index;
+  }
+
 }
