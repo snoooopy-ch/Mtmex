@@ -17,11 +17,12 @@ export class LeftPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.resService.resList.subscribe((value) => {
+      console.log(Date.now());
       this.resLists[this.selected.value - 1] = value;
-      // console.log(this.selected.value);
-      // console.log(this.resLists);
+      console.log(Date.now());
       // this.tabs[this.selected.value - 1] = 'テストタイトル';
       this.cdr.detectChanges();
+      console.log(Date.now());
     });
   }
 

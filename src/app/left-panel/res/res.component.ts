@@ -1,10 +1,11 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output,} from '@angular/core';
 import {Item} from '../../models/item';
 import {RES_FONT_SIZE} from '../../models/res-size-data';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {RES_COLOR} from '../../models/res-color-data';
-declare  var jQuery: any;
-declare  var $: any;
+
+declare var jQuery: any;
+declare var $: any;
 
 @Component({
   selector: 'app-res',
@@ -43,41 +44,42 @@ export class ResComponent implements OnInit {
 
   ngOnInit(): void {
     this.resContent = this.item.content;
-    $(document).ready(function(){
+    $(document).ready(function () {
       const xOffset = 150;
       const yOffset = 40;
       const imgPop = $('#preview img');
-      $('a.res-img-link').hover(function(e){
+      $('a.res-img-link').hover(function (e) {
         this.t = this.href;
         this.title = '';
         imgPop.attr('src', this.href);
         const c = (this.t != '') ? '<br/>' + this.t : '';
         $('#preview').css('display', 'block');
         $('#preview')
-            .css('top', (e.pageY - xOffset) + 'px')
-            .css('left', (e.pageX + yOffset) + 'px')
-            .fadeIn('slow');
-      }, function(){
+          .css('top', (e.pageY - xOffset) + 'px')
+          .css('left', (e.pageX + yOffset) + 'px')
+          .fadeIn('slow');
+      }, function () {
         this.title = this.t;
         $('#preview').css('display', 'none');
       });
     });
 
   }
+
   editShowHandler() {
     this.isEdit = !this.isEdit;
-    if (this.isEdit){
+    if (this.isEdit) {
       this.resContent = this.item.content;
     }
     this.cdRef.detectChanges();
   }
 
   saveResHandler() {
-    this.resContent = this.resContent.replace( /(<p>)/ig, '');
-    this.resContent = this.resContent.replace( /(<\/p>)/ig, '');
-    this.resContent = this.resContent.replace( /(<figure[^<]+>)/ig, '');
-    this.resContent = this.resContent.replace( /<\/figure>/ig, '');
-    this.resContent = this.resContent.replace( /&nbsp;/ig, '');
+    this.resContent = this.resContent.replace(/(<p>)/ig, '');
+    this.resContent = this.resContent.replace(/(<\/p>)/ig, '');
+    this.resContent = this.resContent.replace(/(<figure[^<]+>)/ig, '');
+    this.resContent = this.resContent.replace(/<\/figure>/ig, '');
+    this.resContent = this.resContent.replace(/&nbsp;/ig, '');
     this.item.content = this.resContent;
     this.isEdit = false;
     this.cdRef.detectChanges();
@@ -110,5 +112,32 @@ export class ResComponent implements OnInit {
 
   toBottomHandler() {
     this.toBottomResEmitter.emit(this.resIndex);
+  }
+
+  selectClickHandler() {
+    if (this.resSelect === 'select') {
+      this.resSelect = '';
+    } else {
+      this.resSelect = 'select';
+    }
+    this.cdRef.detectChanges();
+  }
+
+  candi1ClickHandler() {
+    if (this.resSelect === 'candi1') {
+      this.resSelect = '';
+    } else {
+      this.resSelect = 'candi1';
+    }
+    this.cdRef.detectChanges();
+  }
+
+  candi2ClickHandler() {
+    if (this.resSelect === 'candi2') {
+      this.resSelect = '';
+    } else {
+      this.resSelect = 'candi2';
+    }
+    this.cdRef.detectChanges();
   }
 }
