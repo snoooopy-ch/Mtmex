@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 @NgModule({
   declarations: [
@@ -26,16 +27,17 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     StatusComponent,
     ResComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    DragDropModule,
-    BrowserAnimationsModule,
-    MatTabsModule,
-    MatIconModule,
-    CKEditorModule,
-    ReactiveFormsModule,
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        DragDropModule,
+        BrowserAnimationsModule,
+        MatTabsModule,
+        MatIconModule,
+        CKEditorModule,
+        ReactiveFormsModule,
+        ScrollingModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

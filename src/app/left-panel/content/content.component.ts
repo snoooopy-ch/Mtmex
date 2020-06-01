@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {ResItem} from '../../models/res-item';
 import {ResService} from '../../res.service';
@@ -6,7 +6,8 @@ import {ResService} from '../../res.service';
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  styleUrls: ['./content.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit {
   @Input() tabName = 'New Tab';
@@ -22,11 +23,7 @@ export class ContentComponent implements OnInit {
     this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
       for (let i = 0; i < this.resList.length; i++){
-        if (this.hiddenIds.indexOf(this.resList[i].id) !== -1){
-          this.resList[i].show = false;
-        }else{
-          this.resList[i].show = true;
-        }
+        this.resList[i].show = this.hiddenIds.indexOf(this.resList[i].id) === -1;
       }
       this.cdRef.detectChanges();
     });
