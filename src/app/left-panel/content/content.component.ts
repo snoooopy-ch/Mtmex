@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ResItem} from '../../models/res-item';
 import {ResService} from '../../res.service';
@@ -10,7 +18,7 @@ import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
   styleUrls: ['./content.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContentComponent implements OnInit {
+export class ContentComponent implements OnInit, AfterViewInit {
   @Input() tabName = 'New Tab';
   @Input() resList: ResItem[];
   @Input() tabIndex;
@@ -31,7 +39,26 @@ export class ContentComponent implements OnInit {
       }
       this.cdRef.detectChanges();
     });
+
+    this.resService.scrollPos.subscribe((scrollPos) => {
+        console.log('-----------set scroll----------');
+        console.log(scrollPos);
+        console.log(this.tabIndex);
+        if (scrollPos.index === this.tabIndex){
+          this.virtualScroller.scrollToOffset(scrollPos.pos);
+        }
+
+    });
   }
+
+
+  ngAfterViewInit(): void{
+    this.virtualScroller.elementScrolled()
+      .subscribe(event => {
+        this.resService.setScrollPos({index: this.tabIndex, pos: this.virtualScroller.measureScrollOffset('top')});
+      });
+  }
+
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.resList, this.selectedIndex,
       this.selectedIndex + (event.currentIndex - event.previousIndex));

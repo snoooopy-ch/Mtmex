@@ -50,7 +50,7 @@ app.on('activate', function () {
   }
 })
 function getResList(url,isResSort, isMultiAnchor, isReplaceRes) {
-  console.time('load-res');
+
   fs.open(url, 'r', (err, fd) => {
     if (err) {
       if (err.code === 'ENOENT') {
@@ -93,10 +93,7 @@ function getResList(url,isResSort, isMultiAnchor, isReplaceRes) {
     if (remaining.length > 0) {
       resList.push(readLines(remaining));
     }
-    console.timeEnd('load-res');
-    console.time('adjust')
     adjustResList(isResSort, isMultiAnchor, isReplaceRes);
-    console.timeEnd('adjust');
     win.webContents.send("getResResponse", resList);
   });
 }
