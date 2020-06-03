@@ -14,6 +14,11 @@ export class ResService {
   scrollPos = this.scrollPosSource.asObservable();
   selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0});
   selectedRes = this.selectedResSource.asObservable();
+  selectedTabSource = new BehaviorSubject<number>(1);
+  selectedTab = this.selectedTabSource.asObservable();
+  moveResSource = new BehaviorSubject<any>({tabIndex: 1, moveKind: ''});
+  moveRes = this.moveResSource.asObservable();
+
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, resList) => {
       this.resList.next(resList);
@@ -24,16 +29,23 @@ export class ResService {
     electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes);
   }
 
-  setHiddenIds(hiddenIds: string[]) {
-    this.hideIdSource.next(hiddenIds);
+  setHiddenIds(value: string[]) {
+    this.hideIdSource.next(value);
   }
 
-  setScrollPos(scrollPos: any){
-    this.scrollPosSource.next(scrollPos);
+  setScrollPos(value: any){
+    this.scrollPosSource.next(value);
   }
 
-  setSelectedRes(selectedRes: any){
-    this.selectedResSource.next(selectedRes);
+  setSelectedRes(value: any){
+    this.selectedResSource.next(value);
   }
 
+  setSelectedTab(value: number){
+    this.selectedTabSource.next(value);
+  }
+
+  setMoveRes(value: any){
+    this.moveResSource.next(value);
+  }
 }

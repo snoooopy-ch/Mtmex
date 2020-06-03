@@ -20,15 +20,15 @@
 </div>
 <div class="move-res">
   <div>
-    <button id="btn-top-res-list">▲</button>
-    <button id="btn-bottom-res-list">▼</button>
+    <button id="btn-top-res-list" (click)="moveResHandler('top')">▲</button>
+    <button id="btn-bottom-res-list" (click)="moveResHandler('bottom')">▼</button>
   </div>
   <div>
-    <button id="btn-top-selected-list">△<br>選択 TOP</button>
-    <button id="btn-bottom-lelected-list">▽<br>選択END</button>
+    <button id="btn-top-selected-list" (click)="moveResHandler('selected-top')">△<br>選択 TOP</button>
+    <button id="btn-bottom-selected-list" (click)="moveResHandler('selected-bottom')">▽<br>選択END</button>
   </div>
   <div class="res-count">
-    <h3 id="lbl-main-of-toal">1234/1234</h3>
+    <h3 id="lbl-main-of-total">1234/1234</h3>
     <h3 id="lbl-candi-1">1234</h3>
     <h3 id="lbl-candi-2">1234</h3>
   </div>
@@ -46,41 +46,41 @@
   <table>
     <tr>
       <td>
-        <input type="radio" id="rdo-select" name="opt-select" checked><label for="rdo-select">選択</label>
+        <label><input type="radio" name="opt-select">選択</label>
       </td>
       <td>
-        <input type="radio" id="rdo-select-image" name="opt-select-image" checked><label for="rdo-select-image">画像選択</label>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <input type="radio" id="rdo-candi1" name="opt-select"><label for="rdo-candi1">予備1</label>
-      </td>
-      <td>
-        <input type="radio" id="rdo-image-candi1" name="opt-select"><label for="rdo-image-candi1">画像予備1</label>
+        <label><input type="radio" name="opt-select">画像選択</label>
       </td>
     </tr>
     <tr>
       <td>
-        <input type="radio" id="rdo-candi2" name="opt-select"><label for="rdo-candi2">予備2</label>
+        <label><input type="radio" name="opt-select">予備1</label>
       </td>
       <td>
-        <input type="radio" id="rdo-image-candi2" name="opt-select"><label for="rdo-image-candi2">画像予備2</label>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <input type="radio" id="rdo-cancel-select" name="opt-select"><label class="canel-radio" for="rdo-cancel-select">選択解除</label>
-      </td>
-      <td>
-        <input type="radio" id="rdo-cancel-candi1" name="opt-select"><label class="canel-radio"  for="rdo-cancel-candi1">予備1 解除</label>
+        <label><input type="radio" name="opt-select">画像予備1</label>
       </td>
     </tr>
     <tr>
       <td>
+        <label><input type="radio" name="opt-select">予備2</label>
       </td>
       <td>
-        <input type="radio" id="rdo-cancel-candi2" name="opt-select"><label class="canel-radio"  for="rdo-cancel-candi2">予備2 解除</label>
+        <label><input type="radio" name="opt-select">画像予備2</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label class="canel-radio"><input type="radio" name="opt-select">選択解除</label>
+      </td>
+      <td>
+        <label class="canel-radio"><input type="radio" name="opt-select">予備1 解除</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+        <label class="canel-radio"><input type="radio" name="opt-select">予備2 解除</label>
       </td>
     </tr>
   </table>

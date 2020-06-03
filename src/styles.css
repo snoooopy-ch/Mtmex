@@ -439,7 +439,7 @@ app-res .row-4 a {
   text-align: center;
 }
 
-.container app-right-panel .move-res .res-count #lbl-main-of-toal {
+.container app-right-panel .move-res .res-count #lbl-main-of-total {
   width: 50%;
   color: red;
 }

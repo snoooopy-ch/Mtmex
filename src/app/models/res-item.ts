@@ -16,6 +16,6 @@ export class ResItem{
   resColor: string;
   resFontSize: string;
   resSelect: string;
-  resBackgroundColor = '#fff';
+  resBackgroundColor = 'transparent';
   idBackgroundColor = '#fff';
 }

@@ -12,6 +12,7 @@ export class RightPanelComponent implements OnInit {
   isMultiAnchor = false;
   isReplaceRes = false;
   hiddenIds: string[];
+  tabIndex: number;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) {
     this.hiddenIds = [];
@@ -21,6 +22,9 @@ export class RightPanelComponent implements OnInit {
     this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
       this.cdRef.detectChanges();
+    });
+    this.resService.selectedTabSource.subscribe((value ) => {
+      this.tabIndex = value;
     });
   }
 
@@ -42,4 +46,12 @@ export class RightPanelComponent implements OnInit {
       this.resService.setHiddenIds(this.hiddenIds);
     }
   }
+
+  moveResHandler(value: string) {
+    this.resService.setMoveRes({
+      tabIndex: this.tabIndex,
+      moveKind: value
+    });
+  }
+
 }

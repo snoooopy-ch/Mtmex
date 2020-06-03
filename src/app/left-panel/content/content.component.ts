@@ -44,6 +44,12 @@ export class ContentComponent implements OnInit, AfterViewInit {
           this.virtualScroller.scrollToOffset(scrollPos.pos);
         }
     });
+
+    this.resService.moveRes.subscribe((value) => {
+      if (value.tabIndex - 1 === this.tabIndex){
+        this.moveScroller(value.moveKind);
+      }
+    });
   }
 
 
@@ -56,6 +62,38 @@ export class ContentComponent implements OnInit, AfterViewInit {
       });
   }
 
+  moveScroller(moveKind: string){
+    switch (moveKind) {
+      case 'top':
+        this.virtualScroller.scrollToIndex(0);
+        break;
+      case 'bottom':
+        // this.virtualScroller.scrollToIndex(this.resList.length);
+        this.virtualScroller.scrollTo({ bottom: 0, behavior: 'auto' });
+        break;
+      case 'selected-top':
+        let index = 0;
+        for (const item of this.resList){
+          if (item.resSelect === '1'){
+            break;
+          }
+          index++;
+        }
+        console.log(index);
+        this.virtualScroller.scrollToIndex(index);
+        break;
+      case 'selected-bottom':
+        let i = this.resList.length - 1;
+        for (i > 0; i--;){
+            if (this.resList[i].resSelect === '1') {
+              break;
+            }
+        }
+        this.virtualScroller.scrollToIndex(i);
+        console.log(i);
+        break;
+    }
+  }
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.resList, this.selectedIndex,
       this.selectedIndex + (event.currentIndex - event.previousIndex));

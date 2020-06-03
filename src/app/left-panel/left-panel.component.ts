@@ -44,6 +44,7 @@ export class LeftPanelComponent implements OnInit {
 
   tabChangedHandler($event: MatTabChangeEvent) {
     this.selectedTabIndex = $event.index;
+    this.resService.setSelectedTab($event.index);
     const pos = {
       index: $event.index,
       pos: this.scrollPos[$event.index - 1],
