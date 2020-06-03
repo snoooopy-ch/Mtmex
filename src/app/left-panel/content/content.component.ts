@@ -104,4 +104,36 @@ export class ContentComponent implements OnInit, AfterViewInit {
     this.selectedIndex = index;
   }
 
+  selectedRes(index: number, $event: any) {
+    this.resList[index].select = $event.select;
+    this.resList[index].candi1 = $event.candi1;
+    this.resList[index].candi2 = $event.candi2;
+    this.resList = [...this.resList];
+    this.resService.setSelectedRes({
+      select: this.resList.filter(item => item.select).length,
+      candi1: this.resList.filter(item => item.candi1).length,
+      candi2: this.resList.filter(item => item.candi2).length,
+    });
+  }
+
+  selectedId(id: any, $event: any) {
+    for (const res of this.resList){
+      if (res.id === id){
+        res.idBackgroundColor = $event.idBackgroundColor;
+        if ($event.isSelect) {
+          res.resBackgroundColor = $event.resBackgroundColor;
+          res.resSelect = '1';
+          res.select = true;
+          res.candi1 = false;
+          res.candi2 = false;
+        }
+      }
+    }
+  }
+
+  selectedTreeRes(index: number, $event: any) {
+    for (const res of this.resList){
+      if(res.anchors)
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output,} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output,} from '@angular/core';
 import {Item} from '../../models/item';
 import {RES_FONT_SIZE} from '../../models/res-size-data';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -23,15 +23,17 @@ export class ResComponent implements OnInit {
   @Output() downResEmitter = new EventEmitter();
   @Output() toTopResEmitter = new EventEmitter();
   @Output() toBottomResEmitter = new EventEmitter();
-  resSelect = '';
+  @Output() selectedResEmitter = new EventEmitter();
+  @Output() selectedIdEmitter = new EventEmitter();
+  private backgroundColors = ['#fff', '#ffecd9', '#e0ffff', '#ffb6c1'];
+  private idBackgroundColors = ['#fff', '#dddddd', '#1e64bd', '#ff00ff'];
   resSizeList: Item[] = RES_FONT_SIZE;
-  resFontSize = '19px';
-  resColor = '#f00';
   resColorList: Item[] = RES_COLOR;
   isEdit = false;
   resContent = '';
 
-  constructor(private cdRef: ChangeDetectorRef) {
+  constructor(private cdRef: ChangeDetectorRef, private ref: ElementRef) {
+
   }
 
   sizeChangeHandler() {
@@ -44,6 +46,9 @@ export class ResComponent implements OnInit {
 
   ngOnInit(): void {
     this.resContent = this.item.content;
+    this.item.resColor = '#f00';
+    this.item.resFontSize = '19px';
+    this.item.resSelect = '0';
     $(document).ready(function () {
       const xOffset = 150;
       const yOffset = 40;
@@ -115,29 +120,98 @@ export class ResComponent implements OnInit {
   }
 
   selectClickHandler() {
-    if (this.resSelect === 'select') {
-      this.resSelect = '';
+    if (this.item.resSelect === '1') {
+      this.item.resSelect = '0';
     } else {
-      this.resSelect = 'select';
+      this.item.resSelect = '1';
     }
+    this.item.resBackgroundColor = this.backgroundColors[this.item.resSelect];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[this.item.resSelect];
+    this.selectedResEmitter.emit({
+        select: this.item.resSelect !== '0',
+        candi1: false,
+        candi2: false
+      });
     this.cdRef.detectChanges();
   }
 
   candi1ClickHandler() {
-    if (this.resSelect === 'candi1') {
-      this.resSelect = '';
+    if (this.item.resSelect === '2') {
+      this.item.resSelect = '0';
     } else {
-      this.resSelect = 'candi1';
+      this.item.resSelect = '2';
     }
+    this.item.resBackgroundColor = this.backgroundColors[this.item.resSelect];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[this.item.resSelect];
+    this.selectedResEmitter.emit({
+      select: false,
+      candi1: this.item.resSelect !== '0',
+      candi2: false
+    });
     this.cdRef.detectChanges();
   }
 
   candi2ClickHandler() {
-    if (this.resSelect === 'candi2') {
-      this.resSelect = '';
+    if (this.item.resSelect === '3') {
+      this.item.resSelect = '0';
     } else {
-      this.resSelect = 'candi2';
+      this.item.resSelect = '3';
     }
+    this.item.resBackgroundColor = this.backgroundColors[this.item.resSelect];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[this.item.resSelect];
+    this.selectedResEmitter.emit({
+      select: false,
+      candi1: false,
+      candi2: this.item.resSelect !== '0',
+    });
     this.cdRef.detectChanges();
+  }
+
+  catchIdHandler(buttonIndex: number) {
+    this.item.idBackgroundColor = this.idBackgroundColors[buttonIndex];
+    this.selectedIdEmitter.emit({
+      isSelect: true,
+      idBackgroundColor: this.idBackgroundColors[buttonIndex],
+      resBackgroundColor: this.backgroundColors[1]
+    });
+  }
+
+  cancelSelectedIdHandler() {
+    if (this.item.resSelect === '1') {
+      this.cancelSelectedId();
+    }
+  }
+
+  cancelSelectedId(){
+    this.item.resSelect = '0';
+    this.item.resBackgroundColor = this.backgroundColors[0];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[0];
+    this.selectedResEmitter.emit({
+      select: false,
+      candi1: false,
+      candi2: false
+    });
+  }
+
+  cancelOnlyCatchIdHandler() {
+    this.selectedIdEmitter.emit({
+      isSelect: false,
+      idBackgroundColor: this.idBackgroundColors[0],
+      resBackgroundColor: this.backgroundColors[0]
+    });
+  }
+
+  cancelSelectAndCatchIdHandler() {
+    if (this.item.resSelect === '1') {
+      this.cancelSelectedId();
+    }
+    this.selectedIdEmitter.emit({
+      isSelect: false,
+      idBackgroundColor: this.idBackgroundColors[0],
+    });
+  }
+
+  treeSelectHandler(selectKind: number) {
+
   }
 }

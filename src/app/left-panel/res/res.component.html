@@ -3,35 +3,35 @@
     <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
     <label class="radio-container">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="resSelect" value="select" (click)="selectClickHandler()">選択</label>
+             [(ngModel)]="item.resSelect" value="1" (click)="selectClickHandler()">選択</label>
     <label class="radio-container">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="resSelect" value="candi1" (click)="candi1ClickHandler()">予1</label>
+             [(ngModel)]="item.resSelect" value="2" (click)="candi1ClickHandler()">予1</label>
     <label class="radio-container">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="resSelect" value="candi2" (click)="candi2ClickHandler()">予2</label>
+             [(ngModel)]="item.resSelect" value="3" (click)="candi2ClickHandler()">予2</label>
     <h4 class="label-res-name">{{item.name}}</h4>
     <h4 class="res-date">{{item.date}}</h4>
     <h4 class="label-res-id">ID:</h4>
-    <h4 class="res-id">{{item.id}}</h4>
+    <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor}">{{item.id}}</h4>
     <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
   </div>
   <div class="row-2">
     <button class="btn-move" (click)="upOneHandler()">↑</button>
     <button class="btn-move" (click)="downOneHandler()">↓</button>
     <label class="radio-container" *ngFor="let sizeItem of resSizeList">
-      <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="resFontSize"
+      <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resFontSize"
              value="{{sizeItem.value}}" (change)="sizeChangeHandler()">{{sizeItem.name}}
     </label>
 
     <label class="radio-container">
       <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="resColor" [checked]=true (change)="colorChangeHandler()" value="#f00">
+             [(ngModel)]="item.resColor" [checked]=true (change)="colorChangeHandler()" value="#f00">
       なし
     </label>
     <label class="radio-container" *ngFor="let colorItem of resColorList">
       <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="resColor" (change)="colorChangeHandler()" [value]="colorItem.value">
+             [(ngModel)]="item.resColor" (change)="colorChangeHandler()" [value]="colorItem.value">
       <span [className]="colorItem.name"></span>
     </label>
 
@@ -39,16 +39,16 @@
     <button class="btn-move" (click)="toBottomHandler()">▼</button>
   </div >
   <div class="row-3">
-    <button class="tree btn-tree-main">T選択</button>
-    <button class="tree btn-tree-candi1">T1</button>
-    <button class="tree btn-tree-candi2">T2</button>
-    <button class="btn-cancel-tree">T解除</button>
-    <button class="btn-white btn-catch-id1">ID選択1</button>
-    <button class="btn-white btn-catch-id2">ID選択2</button>
-    <button class="btn-white btn-catch-id3">ID選択3</button>
-    <button class="btn-cancel-selected-id">ID解除</button>
-    <button class="btn-cancel-only-catch-id">ID色消</button>
-    <button class="btn-cancel-select-and-catch-id">ID解除＆ID色消</button>
+    <button class="tree btn-tree-main" (click)="treeSelectHandler(1)">T選択</button>
+    <button class="tree btn-tree-candi1" (click)="treeSelectHandler(2)">T1</button>
+    <button class="tree btn-tree-candi2" (click)="treeSelectHandler(3)">T2</button>
+    <button class="btn-cancel-tree" (click)="treeSelectHandler(0)">T解除</button>
+    <button class="btn-white btn-catch-id1" (click)="catchIdHandler(1)">ID選択1</button>
+    <button class="btn-white btn-catch-id2" (click)="catchIdHandler(2)">ID選択2</button>
+    <button class="btn-white btn-catch-id3" (click)="catchIdHandler(3)">ID選択3</button>
+    <button class="btn-cancel-selected-id" (click)="cancelSelectedIdHandler()">ID解除</button>
+    <button class="btn-cancel-only-catch-id" (click)="cancelOnlyCatchIdHandler()">ID色消</button>
+    <button class="btn-cancel-select-and-catch-id" (click)="cancelSelectAndCatchIdHandler()">ID解除＆ID色消</button>
     <button class="btn-white btn-hide-res" (click)="hideHandler()">非表示</button>
     <button class="btn-white btn-copy-res" (click)="duplicateHandler()">複</button>
     <button class="btn-white btn-edit-text" (click)="editShowHandler()" >編集</button>
@@ -61,5 +61,5 @@
     <button class="btn-save" (click)="saveResHandler()">保存する</button>
     <button class="btn-cancel" (click)="cancelEditHandler()">キャンセル</button>
   </div>
-  <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content" [ngStyle]="{'font-size': resFontSize, 'color': resColor}"> </div>
+  <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
 <!--  <div class="cdk-drag-handle" cdkDragHandle>drag here</div>-->
