@@ -10,7 +10,7 @@ export class ResService {
   resList = new BehaviorSubject<[]>([]);
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
-  scrollPosSource = new BehaviorSubject<any>({index: 0, pos: 0});
+  scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
   scrollPos = this.scrollPosSource.asObservable();
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, resList) => {

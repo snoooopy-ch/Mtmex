@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ResService} from '../res.service';
-import {FormControl} from '@angular/forms';
 import {MatTabChangeEvent} from '@angular/material/tabs';
 
 @Component({
@@ -24,12 +23,9 @@ export class LeftPanelComponent implements OnInit {
       this.cdr.detectChanges();
     });
     this.resService.scrollPos.subscribe((value) => {
-      console.log('-----------get scroll array----------');
-      console.log(this.selectedTabIndex - 1);
       if (this.selectedTabIndex - 1 === value.index) {
         this.scrollPos[this.selectedTabIndex - 1] = value.pos;
       }
-      console.log(this.scrollPos);
     });
   }
 
@@ -47,13 +43,11 @@ export class LeftPanelComponent implements OnInit {
   }
 
   tabChangedHandler($event: MatTabChangeEvent) {
-    console.log('-----------tabchange----------');
-    console.log($event.index);
-    console.log(this.scrollPos[$event.index - 1]);
     this.selectedTabIndex = $event.index;
     const pos = {
       index: $event.index,
-      pos: this.scrollPos[$event.index - 1]
+      pos: this.scrollPos[$event.index - 1],
+      isTab: true
     };
 
     // @ts-ignore

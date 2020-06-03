@@ -41,13 +41,9 @@ export class ContentComponent implements OnInit, AfterViewInit {
     });
 
     this.resService.scrollPos.subscribe((scrollPos) => {
-        console.log('-----------set scroll----------');
-        console.log(scrollPos);
-        console.log(this.tabIndex);
-        if (scrollPos.index === this.tabIndex){
+         if (scrollPos.index - 1 === this.tabIndex && scrollPos.isTab){
           this.virtualScroller.scrollToOffset(scrollPos.pos);
         }
-
     });
   }
 
@@ -55,7 +51,9 @@ export class ContentComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void{
     this.virtualScroller.elementScrolled()
       .subscribe(event => {
-        this.resService.setScrollPos({index: this.tabIndex, pos: this.virtualScroller.measureScrollOffset('top')});
+        this.resService.setScrollPos({index: this.tabIndex,
+          pos: this.virtualScroller.measureScrollOffset('top'),
+          isTab: false});
       });
   }
 
