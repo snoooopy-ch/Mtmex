@@ -33,7 +33,6 @@ export class ContentComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
-
       for (let i = 0; i < this.resList.length; i++){
         this.resList[i].show = this.hiddenIds.indexOf(this.resList[i].id) === -1;
       }
@@ -129,11 +128,66 @@ export class ContentComponent implements OnInit, AfterViewInit {
         }
       }
     }
+    this.resService.setSelectedRes({
+      select: this.resList.filter(item => item.select).length,
+      candi1: this.resList.filter(item => item.candi1).length,
+      candi2: this.resList.filter(item => item.candi2).length,
+    });
   }
 
   selectedTreeRes(index: number, $event: any) {
-    for (const res of this.resList){
-      if(res.anchors)
+
+    if (index < this.resList.length - 1) {
+      if (this.resList[index + 1].isAdded &&
+        this.resList[index + 1].anchors.indexOf(this.resList[index].num) !== -1){
+        this.resList[index].resSelect = $event.select.toString();
+        this.resList[index].resBackgroundColor = $event.resBackgroundColor;
+        this.calcSelectedRes($event.select, this.resList[index]);
+        if (this.resList[index].isAdded){
+          for (let i = index - 1; i > 0; i--){
+            this.resList[i].resSelect = $event.select.toString();
+            this.resList[i].resBackgroundColor = $event.resBackgroundColor;
+            this.calcSelectedRes($event.select, this.resList[i]);
+            if (!this.resList[i].isAdded) { break; }
+          }
+        }
+        for (let i = index + 1; i < this.resList.length; i++){
+          if (!this.resList[i].isAdded) { break; }
+          this.resList[i].resSelect = $event.select.toString();
+          this.resList[i].resBackgroundColor = $event.resBackgroundColor;
+          this.calcSelectedRes($event.select, this.resList[i]);
+        }
+      }
+    }
+    this.resService.setSelectedRes({
+      select: this.resList.filter(item => item.select).length,
+      candi1: this.resList.filter(item => item.candi1).length,
+      candi2: this.resList.filter(item => item.candi2).length,
+    });
+  }
+
+  calcSelectedRes(selectKind: number, item: ResItem){
+    switch (selectKind) {
+      case 0:
+        item.select = false;
+        item.candi1 = false;
+        item.candi2 = false;
+        break;
+      case 1:
+        item.select = true;
+        item.candi1 = false;
+        item.candi2 = false;
+        break;
+      case 2:
+        item.select = false;
+        item.candi1 = true;
+        item.candi2 = false;
+        break;
+      case 3:
+        item.select = false;
+        item.candi1 = false;
+        item.candi2 = true;
+        break;
     }
   }
 }

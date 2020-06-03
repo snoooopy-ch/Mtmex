@@ -19,7 +19,7 @@
              (toBottomResEmitter)="toBottomRes(index)"
              (selectedResEmitter)="selectedRes(index, $event)"
              (selectedIdEmitter) = "selectedId(resItem.id, $event)"
-             (SelectedTreeResEmitter) = "selectedTreeRes(index, $event)"
+             (selectedTreeResEmitter) = "selectedTreeRes(index, $event)"
              [tabIndex]="tabIndex" [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
              *cdkVirtualFor="let resItem of resList; let index = index;" cdkDrag
              (cdkDragStarted)="dragStarted($event, index)">

@@ -25,8 +25,10 @@ export class ResComponent implements OnInit {
   @Output() toBottomResEmitter = new EventEmitter();
   @Output() selectedResEmitter = new EventEmitter();
   @Output() selectedIdEmitter = new EventEmitter();
+  @Output() selectedTreeResEmitter = new EventEmitter();
+
   private backgroundColors = ['#fff', '#ffecd9', '#e0ffff', '#ffb6c1'];
-  private idBackgroundColors = ['#fff', '#dddddd', '#1e64bd', '#ff00ff'];
+  private idBackgroundColors = ['transparent', '#dddddd', '#1e64bd', '#ff00ff'];
   resSizeList: Item[] = RES_FONT_SIZE;
   resColorList: Item[] = RES_COLOR;
   isEdit = false;
@@ -212,6 +214,10 @@ export class ResComponent implements OnInit {
   }
 
   treeSelectHandler(selectKind: number) {
-
+    console.log()
+    this.selectedTreeResEmitter.emit({
+      select: selectKind,
+      resBackgroundColor: this.backgroundColors[selectKind]
+    });
   }
 }

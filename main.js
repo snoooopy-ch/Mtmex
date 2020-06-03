@@ -233,6 +233,14 @@ function readLines(line) {
     isAdded: false,
     parent: 0,
     show: true,
+    select: false,
+    candi1: false,
+    candi2: false,
+    resColor: '#f00',
+    resFontSize: '19px',
+    resSelect: '0',
+    resBackgroundColor:'#fff',
+    idBackgroundColor:  'transparent'
   };
 
   num++;
