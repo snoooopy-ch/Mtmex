@@ -17,13 +17,13 @@ function createWindow () {
     webPreferences: {
       nodeIntegration: true
     }
-  })
+  });
 
 
-  win.loadURL(`file://${__dirname}/dist/Mtmex/index.html`)
+  win.loadURL(`file://${__dirname}/dist/Mtmex/index.html`);
 
   //// uncomment below to open the DevTools.
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools();
 
   // Event when the window is closed.
   win.on('closed', function () {
@@ -32,7 +32,7 @@ function createWindow () {
 }
 
 // Create window on electron intialization
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -41,14 +41,14 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
+});
 
 app.on('activate', function () {
   // macOS specific close process
   if (win === null) {
     createWindow()
   }
-})
+});
 function getResList(url,isResSort, isMultiAnchor, isReplaceRes) {
 
   fs.open(url, 'r', (err, fd) => {
@@ -115,12 +115,11 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes){
     let tmpResList = [];
     if(isResSort || isReplaceRes){
       for(let i=0; i<resList.length; i++){
-        let hasAnchor = false;
         if(resList[i].anchors.length >0) {
           if(!isReplaceRes && resList[i].anchors.indexOf(1) !== -1){
             continue;
           }
-          tmpResList.push(resList[i])
+          tmpResList.push(resList[i]);
           resList.splice(i,1);
           i--;
         }
@@ -287,7 +286,7 @@ function readLines(line) {
           || tmp_item.endsWith("png")
           || tmp_item.endsWith("bmp")
         ){
-          tmp_item = `<img src="${tmp_item}"><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
+          tmp_item = `<img src="${tmp_item}" alt=""><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
         }else{
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
         }
