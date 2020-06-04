@@ -11,29 +11,34 @@ export class LeftPanelComponent implements OnInit {
   resLists: [any[]];
   tabs = ['New Tab'];
   scrollPos = [0];
-  selectedTabIndex = 1;
+  selectedTabIndex = 0;
+
   constructor(private resService: ResService, private cdr: ChangeDetectorRef) {
     this.resLists = [[]];
   }
 
   ngOnInit(): void {
+
     this.resService.resList.subscribe((value) => {
-      this.resLists[this.selectedTabIndex - 1] = value;
-      // this.tabs[this.selected.value - 1] = 'テストタイトル';
+
+      this.resLists[this.selectedTabIndex] = value;
+      if (value.length > 0 ) {
+        this.tabs[this.selectedTabIndex] = 'テストタイトル';
+      }
       this.cdr.detectChanges();
     });
     this.resService.scrollPos.subscribe((value) => {
-      if (this.selectedTabIndex - 1 === value.index) {
-        this.scrollPos[this.selectedTabIndex - 1] = value.pos;
+      if (this.selectedTabIndex === value.index) {
+        this.scrollPos[this.selectedTabIndex] = value.pos;
       }
     });
   }
 
   addTab() {
-    this.tabs.push('テストタイトル');
+    this.tabs.push('New Tab');
     this.resLists.push([]);
     this.scrollPos.push(0);
-    this.selectedTabIndex = this.tabs.length;
+    this.selectedTabIndex = this.tabs.length - 1;
   }
 
   removeTab(index: number) {
@@ -47,7 +52,7 @@ export class LeftPanelComponent implements OnInit {
     this.resService.setSelectedTab($event.index);
     const pos = {
       index: $event.index,
-      pos: this.scrollPos[$event.index - 1],
+      pos: this.scrollPos[$event.index],
       isTab: true
     };
 

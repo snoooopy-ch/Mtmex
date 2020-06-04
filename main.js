@@ -238,7 +238,7 @@ function readLines(line) {
     candi2: false,
     resColor: '#f00',
     resFontSize: '19px',
-    resSelect: '0',
+    resSelect: 'none',
     resBackgroundColor:'#fff',
     idBackgroundColor:  'transparent'
   };

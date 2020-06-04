@@ -23,8 +23,9 @@ export class ContentComponent implements OnInit, AfterViewInit {
   @Input() resList: ResItem[];
   @Input() tabIndex;
   hiddenIds: string [];
-  private selectedIndex;
+  private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: CdkVirtualScrollViewport;
+
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -40,13 +41,13 @@ export class ContentComponent implements OnInit, AfterViewInit {
     });
 
     this.resService.scrollPos.subscribe((scrollPos) => {
-         if (scrollPos.index - 1 === this.tabIndex && scrollPos.isTab){
+         if (scrollPos.index === this.tabIndex && scrollPos.isTab){
           this.virtualScroller.scrollToOffset(scrollPos.pos);
         }
     });
 
     this.resService.moveRes.subscribe((value) => {
-      if (value.tabIndex - 1 === this.tabIndex){
+      if (value.tabIndex === this.tabIndex){
         this.moveScroller(value.moveKind);
       }
     });
@@ -63,47 +64,45 @@ export class ContentComponent implements OnInit, AfterViewInit {
   }
 
   moveScroller(moveKind: string){
+
     switch (moveKind) {
       case 'top':
         this.virtualScroller.scrollToIndex(0);
         break;
       case 'bottom':
-        // this.virtualScroller.scrollToIndex(this.resList.length);
-        this.virtualScroller.scrollTo({ bottom: 0, behavior: 'auto' });
+        this.virtualScroller.elementRef.nativeElement.scrollTop = this.virtualScroller.elementRef.nativeElement.scrollHeight;
         break;
       case 'selected-top':
         let index = 0;
         for (const item of this.resList){
-          if (item.resSelect === '1'){
+          if (item.resSelect === 'select'){
+            this.virtualScroller.scrollToIndex(index);
             break;
           }
           index++;
         }
-        console.log(index);
-        this.virtualScroller.scrollToIndex(index);
+
         break;
       case 'selected-bottom':
         let i = this.resList.length - 1;
         for (i > 0; i--;){
-            if (this.resList[i].resSelect === '1') {
+            if (this.resList[i].resSelect === 'select') {
+              this.virtualScroller.scrollToIndex(i);
               break;
             }
         }
-        this.virtualScroller.scrollToIndex(i);
-        console.log(i);
         break;
     }
   }
   drop(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.resList, this.selectedIndex,
-      this.selectedIndex + (event.currentIndex - event.previousIndex));
+    moveItemInArray(this.resList, this.selectedResIndex,
+      this.selectedResIndex + (event.currentIndex - event.previousIndex));
     this.resList = [...this.resList];
   }
 
   duplicateRes(index: number) {
     this.resList.splice(index + 1, 0, this.resList[index]);
     this.resList = [...this.resList];
-    // this.cdRef.detectChanges();
   }
 
   hideRes(resId: string) {
@@ -138,13 +137,14 @@ export class ContentComponent implements OnInit, AfterViewInit {
   }
 
   dragStarted($event: CdkDragStart, index: number) {
-    this.selectedIndex = index;
+    this.selectedResIndex = index;
   }
 
   selectedRes(index: number, $event: any) {
     this.resList[index].select = $event.select;
     this.resList[index].candi1 = $event.candi1;
     this.resList[index].candi2 = $event.candi2;
+    this.resList[index].resSelect = $event.selected;
     this.resList = [...this.resList];
     this.resService.setSelectedRes({
       select: this.resList.filter(item => item.select).length,
@@ -159,7 +159,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         res.idBackgroundColor = $event.idBackgroundColor;
         if ($event.isSelect) {
           res.resBackgroundColor = $event.resBackgroundColor;
-          res.resSelect = '1';
+          res.resSelect = 'select';
           res.select = true;
           res.candi1 = false;
           res.candi2 = false;

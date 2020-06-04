@@ -130,17 +130,18 @@ label {
   height: 29px;
   width: 29px;
   background: #fff;
+  position: fixed;
 }
 
-.container app-left-panel app-header #btn-plus:hover {
+.container app-left-panel #btn-plus:hover {
   background: #e3e3e3;
 }
 
-.container app-left-panel app-header #btn-plus:active {
+.container app-left-panel #btn-plus:active {
   border: 2px solid #000;
 }
 
-.container app-left-panel app-header #btn-plus:focus-within {
+.container app-left-panel #btn-plus:focus-within {
   border: 2px solid #000;
 }
 

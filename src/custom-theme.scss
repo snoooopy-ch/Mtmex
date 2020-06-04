@@ -65,3 +65,7 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
     background: #fff;
   }
 }
+.mat-tab-header{
+  left: 30px;
+  width: calc(100% - 31px);
+}

@@ -38,19 +38,11 @@ export class ResComponent implements OnInit {
 
   }
 
-  sizeChangeHandler() {
-    this.cdRef.detectChanges();
-  }
-
-  colorChangeHandler() {
-    this.cdRef.detectChanges();
-  }
-
   ngOnInit(): void {
     this.resContent = this.item.content;
     this.item.resColor = '#f00';
     this.item.resFontSize = '19px';
-    this.item.resSelect = '0';
+
     $(document).ready(function () {
       const xOffset = 150;
       const yOffset = 40;
@@ -73,6 +65,13 @@ export class ResComponent implements OnInit {
 
   }
 
+  sizeChangeHandler() {
+    this.cdRef.detectChanges();
+  }
+
+  colorChangeHandler() {
+    this.cdRef.detectChanges();
+  }
   editShowHandler() {
     this.isEdit = !this.isEdit;
     if (this.isEdit) {
@@ -122,49 +121,52 @@ export class ResComponent implements OnInit {
   }
 
   selectClickHandler() {
-    if (this.item.resSelect === '1') {
-      this.item.resSelect = '0';
+    if (this.item.resSelect === 'select') {
+      this.item.resSelect = 'none';
     } else {
-      this.item.resSelect = '1';
+      this.item.resSelect = 'select';
     }
-    this.item.resBackgroundColor = this.backgroundColors[this.item.resSelect];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[this.item.resSelect];
+    this.item.resBackgroundColor = this.backgroundColors[1];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[1];
     this.selectedResEmitter.emit({
-        select: this.item.resSelect !== '0',
+        select: this.item.resSelect !== 'none',
         candi1: false,
-        candi2: false
+        candi2: false,
+        selected: 'select'
       });
     this.cdRef.detectChanges();
   }
 
   candi1ClickHandler() {
-    if (this.item.resSelect === '2') {
-      this.item.resSelect = '0';
+    if (this.item.resSelect === 'candi1') {
+      this.item.resSelect = 'none';
     } else {
-      this.item.resSelect = '2';
+      this.item.resSelect = 'candi1';
     }
-    this.item.resBackgroundColor = this.backgroundColors[this.item.resSelect];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[this.item.resSelect];
+    this.item.resBackgroundColor = this.backgroundColors[2];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[2];
     this.selectedResEmitter.emit({
       select: false,
-      candi1: this.item.resSelect !== '0',
-      candi2: false
+      candi1: this.item.resSelect !== 'none',
+      candi2: false,
+      selected: 'candi1'
     });
     this.cdRef.detectChanges();
   }
 
   candi2ClickHandler() {
-    if (this.item.resSelect === '3') {
-      this.item.resSelect = '0';
+    if (this.item.resSelect === 'candi2') {
+      this.item.resSelect = 'none';
     } else {
-      this.item.resSelect = '3';
+      this.item.resSelect = 'candi2';
     }
-    this.item.resBackgroundColor = this.backgroundColors[this.item.resSelect];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[this.item.resSelect];
+    this.item.resBackgroundColor = this.backgroundColors[3];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[3];
     this.selectedResEmitter.emit({
       select: false,
       candi1: false,
-      candi2: this.item.resSelect !== '0',
+      candi2: this.item.resSelect !== 'none',
+      selected: 'candi2'
     });
     this.cdRef.detectChanges();
   }
@@ -179,13 +181,13 @@ export class ResComponent implements OnInit {
   }
 
   cancelSelectedIdHandler() {
-    if (this.item.resSelect === '1') {
+    if (this.item.resSelect === 'select') {
       this.cancelSelectedId();
     }
   }
 
   cancelSelectedId(){
-    this.item.resSelect = '0';
+    this.item.resSelect = 'none';
     this.item.resBackgroundColor = this.backgroundColors[0];
     this.ref.nativeElement.style.backgroundColor = this.backgroundColors[0];
     this.selectedResEmitter.emit({
@@ -204,7 +206,7 @@ export class ResComponent implements OnInit {
   }
 
   cancelSelectAndCatchIdHandler() {
-    if (this.item.resSelect === '1') {
+    if (this.item.resSelect === 'select') {
       this.cancelSelectedId();
     }
     this.selectedIdEmitter.emit({
@@ -214,7 +216,6 @@ export class ResComponent implements OnInit {
   }
 
   treeSelectHandler(selectKind: number) {
-    console.log()
     this.selectedTreeResEmitter.emit({
       select: selectKind,
       resBackgroundColor: this.backgroundColors[selectKind]
