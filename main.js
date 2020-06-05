@@ -6,12 +6,14 @@ let win;
 let num = 0;
 let ids = [];
 let resList = [];
+let sreTitle ='';
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
     width: 1213,
     height: 948,
     minWidth: 1213,
+    title: 'スレ編集',
     backgroundColor: '#ffffff',
     icon: `file://${__dirname}/dist/assets/logo.png`,
     webPreferences: {
@@ -28,7 +30,17 @@ function createWindow () {
   // Event when the window is closed.
   win.on('closed', function () {
     win = null
-  })
+  });
+
+  let handleRedirect = (e, url) => {
+    if(url !== win.webContents.getURL()) {
+      e.preventDefault();
+      require('electron').shell.openExternal(url);
+    }
+  };
+
+  win.webContents.on('will-navigate', handleRedirect)
+  win.webContents.on('new-window', handleRedirect)
 }
 
 // Create window on electron intialization
@@ -94,7 +106,8 @@ function getResList(url,isResSort, isMultiAnchor, isReplaceRes) {
       resList.push(readLines(remaining));
     }
     adjustResList(isResSort, isMultiAnchor, isReplaceRes);
-    win.webContents.send("getResResponse", resList);
+    console.log(sreTitle);
+    win.webContents.send("getResResponse", {resList: resList, sreTitle:sreTitle});
   });
 }
 ipcMain.on("loadRes", (event, url,isResSort, isMultiAnchor, isReplaceRes) => {
@@ -219,6 +232,9 @@ function addAnchorRes(index, item, anchor,isMultiAnchor){
 }
 function readLines(line) {
   let words = line.split('<>');
+  if (words.length > 4 && resList.length === 0){
+    sreTitle = words[4];
+  }
   let date_and_id = words[2].split(' ID:');
   let resItem = {
     num: -1,

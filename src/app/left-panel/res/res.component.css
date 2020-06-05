@@ -33,3 +33,12 @@ div h4 {
   text-overflow: ellipsis;
   max-width: 100px;
 }
+
+.drag-handle {
+  margin: 0 0 0 auto;
+  color: #999;
+  cursor: move;
+  width: 29px;
+  height: 29px;
+  float: right;
+}

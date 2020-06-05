@@ -26,6 +26,7 @@ export class ResComponent implements OnInit {
   @Output() selectedResEmitter = new EventEmitter();
   @Output() selectedIdEmitter = new EventEmitter();
   @Output() selectedTreeResEmitter = new EventEmitter();
+  @Output() setDraggableEmitter = new EventEmitter();
 
   private backgroundColors = ['#fff', '#ffecd9', '#e0ffff', '#ffb6c1'];
   private idBackgroundColors = ['transparent', '#dddddd', '#1e64bd', '#ff00ff'];
@@ -220,5 +221,9 @@ export class ResComponent implements OnInit {
       select: selectKind,
       resBackgroundColor: this.backgroundColors[selectKind]
     });
+  }
+
+  setDraggable(value: boolean) {
+    this.setDraggableEmitter.emit(value);
   }
 }

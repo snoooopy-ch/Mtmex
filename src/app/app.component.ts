@@ -7,6 +7,6 @@ import {ResService} from './res.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Mtmex';
+  title = 'スレ編集';
   constructor(private resService: ResService) {}
 }

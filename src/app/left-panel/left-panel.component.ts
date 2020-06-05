@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ResService} from '../res.service';
 import {MatTabChangeEvent} from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-left-panel',
@@ -13,20 +14,21 @@ export class LeftPanelComponent implements OnInit {
   scrollPos = [0];
   selectedTabIndex = 0;
 
-  constructor(private resService: ResService, private cdr: ChangeDetectorRef) {
+  constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
 
   ngOnInit(): void {
 
-    this.resService.resList.subscribe((value) => {
+    this.resService.resData.subscribe((value) => {
 
-      this.resLists[this.selectedTabIndex] = value;
-      if (value.length > 0 ) {
-        this.tabs[this.selectedTabIndex] = 'テストタイトル';
+      this.resLists[this.selectedTabIndex] = value.resList;
+      if (value.resList.length > 0 ) {
+        this.tabs[this.selectedTabIndex] = value.sreTitle;
+        this.titleService.setTitle(`${this.tabs[this.selectedTabIndex]} - スレ編集`);
         this.resService.setTotalRes({
           tabIndex: this.selectedTabIndex,
-          totalCount: value.length
+          totalCount: value.resList.length
         });
       }
       this.cdr.detectChanges();
@@ -53,6 +55,7 @@ export class LeftPanelComponent implements OnInit {
 
   tabChangedHandler($event: MatTabChangeEvent) {
     this.selectedTabIndex = $event.index;
+    this.titleService.setTitle(`${this.tabs[this.selectedTabIndex]} - スレ編集`);
     this.resService.setSelectedTab({
       select: this.resLists[$event.index].filter(item => item.select).length,
       candi1: this.resLists[$event.index].filter(item => item.candi1).length,

@@ -7,7 +7,7 @@ const electron = (window as any).require('electron');
   providedIn: 'root'
 })
 export class ResService {
-  resList = new BehaviorSubject<[]>([]);
+  resData = new BehaviorSubject<any>({resList: [], sreTitle: ''});
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
@@ -22,8 +22,8 @@ export class ResService {
   totalRes = this.totalResSource.asObservable();
 
   constructor() {
-    electron.ipcRenderer.on('getResResponse', (event, resList) => {
-      this.resList.next(resList);
+    electron.ipcRenderer.on('getResResponse', (event, value) => {
+      this.resData.next(value);
     });
   }
 

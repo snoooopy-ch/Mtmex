@@ -28,6 +28,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: CdkVirtualScrollViewport;
   hovered: number;
+  draggable: number;
   hoveredColor = '#cecece';
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
@@ -272,5 +273,17 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   mouseLeaveHandler() {
     this.hovered = -1;
+  }
+
+  getDraggable(index: number) {
+    return this.draggable !== index;
+  }
+
+  setDraggable(index: number, $event: any) {
+    if ($event){
+      this.draggable = index;
+    }else{
+      this.draggable = -1;
+    }
   }
 }
