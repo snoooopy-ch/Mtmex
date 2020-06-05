@@ -13,6 +13,10 @@ export class RightPanelComponent implements OnInit {
   isReplaceRes = false;
   hiddenIds: string[];
   tabIndex: number;
+  selectCount = 0;
+  candi1Count = 0;
+  candi2Count = 0;
+  totalCount = 0;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) {
     this.hiddenIds = [];
@@ -23,8 +27,27 @@ export class RightPanelComponent implements OnInit {
       this.hiddenIds = hiddenIds;
       this.cdRef.detectChanges();
     });
-    this.resService.selectedTabSource.subscribe((value ) => {
-      this.tabIndex = value;
+    this.resService.selectedTab.subscribe((value ) => {
+      this.tabIndex = value.tabIndex;
+      this.selectCount = value.select;
+      this.candi1Count = value.candi1;
+      this.candi2Count = value.candi2;
+      this.totalCount = value.totalCount;
+    });
+
+    this.resService.selectedRes.subscribe(value => {
+      if (this.tabIndex === value.tabIndex) {
+        this.selectCount = value.select;
+        this.candi1Count = value.candi1;
+        this.candi2Count = value.candi2;
+        this.cdRef.detectChanges();
+      }
+    });
+
+    this.resService.totalRes.subscribe(value => {
+      if (this.tabIndex === value.tabIndex){
+        this.totalCount = value.totalCount;
+      }
     });
   }
 

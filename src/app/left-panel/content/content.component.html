@@ -7,10 +7,10 @@
 <!--  <cdk-virtual-scroll-viewport itemSize="50" class="res-content"  #resListContainer-->
 <!--                               cdkDropList [cdkDropListData]="resList"-->
 <!--                               (cdkDropListDropped)="drop($event)">  -->
-    <cdk-virtual-scroll-viewport itemSize="50" class="res-content"  #resListContainer>
+    <cdk-virtual-scroll-viewport itemSize="50" class="res-content" #resListContainer>
   <div cdkDropList (cdkDropListDropped)="drop($event)" >
     <app-res [item]="resItem" [resIndex]="index"
-             [ngStyle]="{'background-color':resItem.resBackgroundColor}"
+             [ngStyle]="{'background-color':hovered !== index ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor)}"
              (duplicateResEmitter)="duplicateRes(index)"
              (hideResEmitter)="hideRes(resItem.id)"
              (upResEmitter)="upRes(index)"
@@ -21,12 +21,12 @@
              (selectedIdEmitter) = "selectedId(resItem.id, $event)"
              (selectedTreeResEmitter) = "selectedTreeRes(index, $event)"
              [tabIndex]="tabIndex" [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
+             (mouseenter)="mouseEnterHandler(index)"
+             (mouseleave)="mouseLeaveHandler()"
              *cdkVirtualFor="let resItem of resList; let index = index;" cdkDrag
              (cdkDragStarted)="dragStarted($event, index)">
     </app-res>
   </div>
   </cdk-virtual-scroll-viewport>
-<!--  (backgroundColorEmitter)="changeResBackgroundColor($event)"-->
-<!--  (toTopResEmitter)="toTopRes($event,resListContainer)"-->
-<!--  (toBottomResEmitter)="toBottomRes($event,resListContainer)"-->
-  <!--             *cdkVirtualFor="let resItem of resList; let index = index;" cdkDrag>-->
+
+

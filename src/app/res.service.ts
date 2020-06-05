@@ -12,12 +12,14 @@ export class ResService {
   LoadHiddenIds = this.hideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
   scrollPos = this.scrollPosSource.asObservable();
-  selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0});
+  selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, tabIndex: 0});
   selectedRes = this.selectedResSource.asObservable();
-  selectedTabSource = new BehaviorSubject<number>(1);
+  selectedTabSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, totalCount: 0, tabIndex: 0});
   selectedTab = this.selectedTabSource.asObservable();
-  moveResSource = new BehaviorSubject<any>({tabIndex: 1, moveKind: ''});
+  moveResSource = new BehaviorSubject<any>({tabIndex: 0, moveKind: ''});
   moveRes = this.moveResSource.asObservable();
+  totalResSource = new BehaviorSubject<any>({tabIndex: 0, totalCount: 0});
+  totalRes = this.totalResSource.asObservable();
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, resList) => {
@@ -41,11 +43,15 @@ export class ResService {
     this.selectedResSource.next(value);
   }
 
-  setSelectedTab(value: number){
+  setSelectedTab(value: any){
     this.selectedTabSource.next(value);
   }
 
   setMoveRes(value: any){
     this.moveResSource.next(value);
+  }
+
+  setTotalRes(value: any){
+    this.totalResSource.next(value);
   }
 }

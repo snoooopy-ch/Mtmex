@@ -8,7 +8,8 @@ import {ResService} from '../../res.service';
 })
 export class StatusComponent implements OnInit {
 
-  @Input() resTotal;
+  @Input() totalCount;
+  @Input() tabIndex;
   selectCount = 0;
   candi1Count = 0;
   candi2Count = 0;
@@ -16,10 +17,17 @@ export class StatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.resService.selectedRes.subscribe(value => {
-      this.selectCount = value.select;
-      this.candi1Count = value.candi1;
-      this.candi2Count = value.candi2;
-      this.cdRef.detectChanges();
+      if (this.tabIndex === value.tabIndex) {
+        this.selectCount = value.select;
+        this.candi1Count = value.candi1;
+        this.candi2Count = value.candi2;
+        this.cdRef.detectChanges();
+      }
+    });
+    this.resService.totalRes.subscribe(value => {
+      if (this.tabIndex === value.tabIndex){
+        this.totalCount = value.totalCount;
+      }
     });
   }
 

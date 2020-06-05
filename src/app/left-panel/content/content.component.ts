@@ -11,6 +11,8 @@ import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop
 import {ResItem} from '../../models/res-item';
 import {ResService} from '../../res.service';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import { normal } from 'color-blend';
+
 
 @Component({
   selector: 'app-content',
@@ -25,7 +27,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
   hiddenIds: string [];
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: CdkVirtualScrollViewport;
-
+  hovered: number;
+  hoveredColor = '#cecece';
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -103,6 +106,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
   duplicateRes(index: number) {
     this.resList.splice(index + 1, 0, this.resList[index]);
     this.resList = [...this.resList];
+    this.resService.setTotalRes({
+      tabIndex: this.tabIndex,
+      totalCount: this.resList.length
+    });
   }
 
   hideRes(resId: string) {
@@ -150,6 +157,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       select: this.resList.filter(item => item.select).length,
       candi1: this.resList.filter(item => item.candi1).length,
       candi2: this.resList.filter(item => item.candi2).length,
+      tabIndex: this.tabIndex
     });
   }
 
@@ -170,6 +178,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       select: this.resList.filter(item => item.select).length,
       candi1: this.resList.filter(item => item.candi1).length,
       candi2: this.resList.filter(item => item.candi2).length,
+      tabIndex: this.tabIndex
     });
   }
 
@@ -201,6 +210,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       select: this.resList.filter(item => item.select).length,
       candi1: this.resList.filter(item => item.candi1).length,
       candi2: this.resList.filter(item => item.candi2).length,
+      tabIndex: this.tabIndex
     });
   }
 
@@ -227,5 +237,40 @@ export class ContentComponent implements OnInit, AfterViewInit {
         item.candi2 = true;
         break;
     }
+  }
+
+  mouseEnterHandler(index: number) {
+    this.hovered = index;
+  }
+
+  getHoverColor(resBackgroundColor: string) {
+    if (resBackgroundColor === '#fff' || resBackgroundColor === '#ffffff') {
+      return this.hoveredColor;
+    }
+    let rgbs = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(resBackgroundColor);
+    const backgroundRGB = rgbs ? {
+      r: parseInt(rgbs[1], 16),
+      g: parseInt(rgbs[2], 16),
+      b: parseInt(rgbs[3], 16),
+      a: 1
+    } : {
+      r: 255,
+      g: 255,
+      b: 255,
+      a: 1
+    };
+    rgbs = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(this.hoveredColor);
+    const hoveredRGB = {
+      r: parseInt(rgbs[1], 16),
+      g: parseInt(rgbs[2], 16),
+      b: parseInt(rgbs[3], 16),
+      a: 0.3
+    };
+    const mixedColor = normal(backgroundRGB, hoveredRGB);
+    return `#${mixedColor.r.toString(16)}${mixedColor.g.toString(16)}${mixedColor.b.toString(16)}`;
+  }
+
+  mouseLeaveHandler() {
+    this.hovered = -1;
   }
 }

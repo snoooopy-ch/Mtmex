@@ -23,7 +23,7 @@ function createWindow () {
   win.loadURL(`file://${__dirname}/dist/Mtmex/index.html`);
 
   //// uncomment below to open the DevTools.
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools();
 
   // Event when the window is closed.
   win.on('closed', function () {
@@ -238,7 +238,7 @@ function readLines(line) {
     resColor: '#f00',
     resFontSize: '19px',
     resSelect: 'none',
-    resBackgroundColor:'#fff',
+    resBackgroundColor:'#ffffff',
     idBackgroundColor:  'transparent'
   };
 

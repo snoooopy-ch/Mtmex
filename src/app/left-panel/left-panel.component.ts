@@ -24,6 +24,10 @@ export class LeftPanelComponent implements OnInit {
       this.resLists[this.selectedTabIndex] = value;
       if (value.length > 0 ) {
         this.tabs[this.selectedTabIndex] = 'テストタイトル';
+        this.resService.setTotalRes({
+          tabIndex: this.selectedTabIndex,
+          totalCount: value.length
+        });
       }
       this.cdr.detectChanges();
     });
@@ -49,7 +53,13 @@ export class LeftPanelComponent implements OnInit {
 
   tabChangedHandler($event: MatTabChangeEvent) {
     this.selectedTabIndex = $event.index;
-    this.resService.setSelectedTab($event.index);
+    this.resService.setSelectedTab({
+      select: this.resLists[$event.index].filter(item => item.select).length,
+      candi1: this.resLists[$event.index].filter(item => item.candi1).length,
+      candi2: this.resLists[$event.index].filter(item => item.candi2).length,
+      totalCount: this.resLists[$event.index].length,
+      tabIndex: $event.index
+    });
     const pos = {
       index: $event.index,
       pos: this.scrollPos[$event.index],
