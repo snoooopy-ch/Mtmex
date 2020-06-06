@@ -178,7 +178,7 @@ label {
 .container app-left-panel app-content .res-content {
   overflow-y: scroll;
   width: 100%;
-  height: calc(100vh - 210px);
+  min-height: calc(100vh - 209px);
 }
 
 app-res {
@@ -369,9 +369,10 @@ app-res .row-4 a {
 }
 
 .container app-right-panel {
-  min-width: 230px;
-  max-width: 230px;
-  padding: 9px 11px 9px 3px;
+  min-width: 240px;
+  max-width: 240px;
+  padding: 9px 10px 9px 0px;
+  margin: 0 5px;
 }
 
 .container app-right-panel input[type="text"] {
