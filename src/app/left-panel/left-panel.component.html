@@ -1,5 +1,5 @@
 <button id="btn-plus" (click)="addTab()" class="add-tab">+</button>
-<mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="0ms" (selectedTabChange)="tabChangedHandler($event);">
+<mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="0ms" (selectedTabChange)="tabChangedHandler($event);" disableRipple>
   <mat-tab *ngFor="let tab of tabs; let index = index;" >
     <ng-template mat-tab-label>
       <div class="col" >{{tab}}</div>

@@ -46,45 +46,45 @@
   <table>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select">選択</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select">選択</label>
       </td>
       <td>
-        <label><input type="radio" name="opt-select">画像選択</label>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label><input type="radio" name="opt-select">予備1</label>
-      </td>
-      <td>
-        <label><input type="radio" name="opt-select">画像予備1</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select-image">画像選択</label>
       </td>
     </tr>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select">予備2</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi1">予備1</label>
       </td>
       <td>
-        <label><input type="radio" name="opt-select">画像予備2</label>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="canel-radio"><input type="radio" name="opt-select">選択解除</label>
-      </td>
-      <td>
-        <label class="canel-radio"><input type="radio" name="opt-select">予備1 解除</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi1-image">画像予備1</label>
       </td>
     </tr>
     <tr>
       <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi2">予備2</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select">予備2 解除</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi2-image">画像予備2</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-select">選択解除</label>
+      </td>
+      <td>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-candi1">予備1 解除</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-candi2">予備2 解除</label>
       </td>
     </tr>
   </table>
-  <button>実行 (対象は表示中のレス) </button>
+  <button (click)="selectResHandler()">実行 (対象は表示中のレス) </button>
 </div>
 <div class="width-100">
   <span>注意レス</span>

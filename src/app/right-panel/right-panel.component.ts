@@ -17,6 +17,7 @@ export class RightPanelComponent implements OnInit {
   candi1Count = 0;
   candi2Count = 0;
   totalCount = 0;
+  selectCommand = '';
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) {
     this.hiddenIds = [];
@@ -77,4 +78,7 @@ export class RightPanelComponent implements OnInit {
     });
   }
 
+  selectResHandler() {
+    this.selectCommand = '';
+  }
 }

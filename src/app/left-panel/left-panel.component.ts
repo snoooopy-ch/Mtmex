@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ResService} from '../res.service';
 import {MatTabChangeEvent} from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-left-panel',
   templateUrl: './left-panel.component.html',
-  styleUrls: ['./left-panel.component.css']
+  styleUrls: ['./left-panel.component.css'],
 })
 export class LeftPanelComponent implements OnInit {
   resLists: [any[]];
@@ -23,6 +23,7 @@ export class LeftPanelComponent implements OnInit {
     this.resService.resData.subscribe((value) => {
 
       this.resLists[this.selectedTabIndex] = value.resList;
+      this.cdr.detectChanges();
       if (value.resList.length > 0 ) {
         this.tabs[this.selectedTabIndex] = value.sreTitle;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex]} - スレ編集`);
@@ -31,7 +32,7 @@ export class LeftPanelComponent implements OnInit {
           totalCount: value.resList.length
         });
       }
-      this.cdr.detectChanges();
+
     });
     this.resService.scrollPos.subscribe((value) => {
       if (this.selectedTabIndex === value.index) {
@@ -68,8 +69,9 @@ export class LeftPanelComponent implements OnInit {
       pos: this.scrollPos[$event.index],
       isTab: true
     };
-
+    this.cdr.detectChanges();
     // @ts-ignore
     this.resService.setScrollPos(pos);
   }
+
 }

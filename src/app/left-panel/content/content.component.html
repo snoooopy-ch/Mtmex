@@ -1,34 +1,33 @@
+<h3>{{tabName}}</h3>
+<div class="content-url">
+  <label>URL</label>
+  <input type="text">
+</div>
 
-  <h3>{{tabName}}</h3>
-  <div class="content-url">
-    <label>URL</label>
-    <input type="text">
-  </div>
-<!--  <cdk-virtual-scroll-viewport itemSize="50" class="res-content"  #resListContainer-->
-<!--                               cdkDropList [cdkDropListData]="resList"-->
-<!--                               (cdkDropListDropped)="drop($event)">  -->
-    <cdk-virtual-scroll-viewport itemSize="50" class="res-content" #resListContainer>
-  <div cdkDropList (cdkDropListDropped)="drop($event)" >
-    <app-res [item]="resItem" [resIndex]="index"
-             [ngStyle]="{'background-color':hovered !== index ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor)}"
-             (duplicateResEmitter)="duplicateRes(index)"
+<!--<cdk-virtual-scroll-viewport itemSize="50" class="res-content" #resListContainer-->
+<!--                             (scrolledIndexChange)=" scrolledIndexChangeHandler($event)">-->
+<virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
+                  cdkDropList (cdkDropListDropped)="drop($event)">
+    <app-res [item]="resItem" [resIndex]="index + resListContainer.viewPortInfo.startIndex"
+             [ngStyle]="{'background-color':hovered !== (index + resListContainer.viewPortInfo.startIndex) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor)}"
+             (duplicateResEmitter)="duplicateRes(index + resListContainer.viewPortInfo.startIndex)"
              (hideResEmitter)="hideRes(resItem.id)"
-             (upResEmitter)="upRes(index)"
-             (downResEmitter)="downRes(index)"
-             (toTopResEmitter)="toTopRes(index)"
-             (toBottomResEmitter)="toBottomRes(index)"
-             (selectedResEmitter)="selectedRes(index, $event)"
-             (selectedIdEmitter) = "selectedId(resItem.id, $event)"
-             (selectedTreeResEmitter) = "selectedTreeRes(index, $event)"
-             (setDraggableEmitter)="setDraggable(index, $event)"
+             (upResEmitter)="upRes(index + resListContainer.viewPortInfo.startIndex)"
+             (downResEmitter)="downRes(index + resListContainer.viewPortInfo.startIndex)"
+             (toTopResEmitter)="toTopRes(index + resListContainer.viewPortInfo.startIndex)"
+             (toBottomResEmitter)="toBottomRes(index + resListContainer.viewPortInfo.startIndex)"
+             (selectedResEmitter)="selectedRes(index + resListContainer.viewPortInfo.startIndex, $event)"
+             (selectedIdEmitter)="selectedId(resItem.id, $event)"
+             (selectedTreeResEmitter)="selectedTreeRes(index + resListContainer.viewPortInfo.startIndex, $event)"
+             (setDraggableEmitter)="setDraggable(index + resListContainer.viewPortInfo.startIndex, $event)"
              [tabIndex]="tabIndex" [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
-             (mouseenter)="mouseEnterHandler(index)"
+             (mouseenter)="mouseEnterHandler(index + resListContainer.viewPortInfo.startIndex)"
              (mouseleave)="mouseLeaveHandler()"
-             *cdkVirtualFor="let resItem of resList; let index = index;"
-             (cdkDragStarted)="dragStarted($event, index)"
-             [cdkDragDisabled]="getDraggable(index)"  cdkDrag>
-    </app-res>
-  </div>
-  </cdk-virtual-scroll-viewport>
+             *ngFor="let resItem of resListContainer.viewPortItems; let index = index ;"
+             (cdkDragStarted)="dragStarted($event, index + resListContainer.viewPortInfo.startIndex)"
+             [cdkDragDisabled]="getDraggable(index + resListContainer.viewPortInfo.startIndex)" cdkDrag>
 
-<!--  cdkDrag-->
+    </app-res>
+<!--  </div>-->
+<!--</cdk-virtual-scroll-viewport>-->
+</virtual-scroller>

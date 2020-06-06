@@ -20,6 +20,8 @@ export class ResService {
   moveRes = this.moveResSource.asObservable();
   totalResSource = new BehaviorSubject<any>({tabIndex: 0, totalCount: 0});
   totalRes = this.totalResSource.asObservable();
+  selectCommandSource = new BehaviorSubject<any>({tabIndex: 0, command: ''});
+  selectCommand = this.selectCommandSource.asObservable();
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
@@ -53,5 +55,9 @@ export class ResService {
 
   setTotalRes(value: any){
     this.totalResSource.next(value);
+  }
+
+  setSelectCommand(value: any){
+    this.selectCommandSource.next(value);
   }
 }

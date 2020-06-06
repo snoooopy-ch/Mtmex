@@ -15,6 +15,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         CKEditorModule,
         ReactiveFormsModule,
         ScrollingModule,
+        VirtualScrollerModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

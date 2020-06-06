@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -10,8 +9,8 @@ import {
 import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ResItem} from '../../models/res-item';
 import {ResService} from '../../res.service';
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import { normal } from 'color-blend';
+import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 
 
 @Component({
@@ -20,16 +19,18 @@ import { normal } from 'color-blend';
   styleUrls: ['./content.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContentComponent implements OnInit, AfterViewInit {
+export class ContentComponent implements OnInit {
   @Input() tabName = 'New Tab';
   @Input() resList: ResItem[];
   @Input() tabIndex;
   hiddenIds: string [];
   private selectedResIndex;
-  @ViewChild('resListContainer') virtualScroller: CdkVirtualScrollViewport;
+  @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
   hovered: number;
   draggable: number;
   hoveredColor = '#cecece';
+  viewStart: number;
+  viewLength: number;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -46,7 +47,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
     this.resService.scrollPos.subscribe((scrollPos) => {
          if (scrollPos.index === this.tabIndex && scrollPos.isTab){
-          this.virtualScroller.scrollToOffset(scrollPos.pos);
+          this.virtualScroller.scrollToIndex(scrollPos.pos);
         }
     });
 
@@ -55,17 +56,16 @@ export class ContentComponent implements OnInit, AfterViewInit {
         this.moveScroller(value.moveKind);
       }
     });
+
+    this.resService.selectCommand.subscribe((value) => {
+      if (value.tabIndex === this.tabIndex){
+
+      }
+    });
   }
 
 
-  ngAfterViewInit(): void{
-    this.virtualScroller.elementScrolled()
-      .subscribe(event => {
-        this.resService.setScrollPos({index: this.tabIndex,
-          pos: this.virtualScroller.measureScrollOffset('top'),
-          isTab: false});
-      });
-  }
+
 
   moveScroller(moveKind: string){
 
@@ -74,7 +74,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         this.virtualScroller.scrollToIndex(0);
         break;
       case 'bottom':
-        this.virtualScroller.elementRef.nativeElement.scrollTop = this.virtualScroller.elementRef.nativeElement.scrollHeight;
+        this.virtualScroller.scrollToIndex(this.resList.length);
         break;
       case 'selected-top':
         let index = 0;
@@ -88,12 +88,13 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
         break;
       case 'selected-bottom':
-        let i = this.resList.length - 1;
-        for (i > 0; i--;){
+        if (this.resList.length > 0) {
+          for (let i = this.resList.length - 1; i > 0; i--) {
             if (this.resList[i].resSelect === 'select') {
               this.virtualScroller.scrollToIndex(i);
               break;
             }
+          }
         }
         break;
     }
@@ -160,6 +161,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       candi2: this.resList.filter(item => item.candi2).length,
       tabIndex: this.tabIndex
     });
+    this.cdRef.detectChanges();
   }
 
   selectedId(id: any, $event: any) {
@@ -285,5 +287,15 @@ export class ContentComponent implements OnInit, AfterViewInit {
     }else{
       this.draggable = -1;
     }
+  }
+
+  multiSelection(command: string){
+  }
+
+
+  usUpdateHandler($event: any[]) {
+    this.resService.setScrollPos({index: this.tabIndex,
+      pos: this.virtualScroller.viewPortInfo.startIndex,
+      isTab: false});
   }
 }

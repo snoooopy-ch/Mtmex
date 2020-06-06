@@ -178,7 +178,7 @@ label {
 .container app-left-panel app-content .res-content {
   overflow-y: scroll;
   width: 100%;
-  height: calc(100vh - 178px);
+  height: calc(100vh - 210px);
 }
 
 app-res {

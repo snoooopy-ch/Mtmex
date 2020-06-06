@@ -122,52 +122,59 @@ export class ResComponent implements OnInit {
   }
 
   selectClickHandler() {
+
+    let colorIndex = 0;
     if (this.item.resSelect === 'select') {
       this.item.resSelect = 'none';
     } else {
       this.item.resSelect = 'select';
+      colorIndex = 1;
     }
-    this.item.resBackgroundColor = this.backgroundColors[1];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[1];
+    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
     this.selectedResEmitter.emit({
         select: this.item.resSelect !== 'none',
         candi1: false,
         candi2: false,
-        selected: 'select'
+        selected: colorIndex === 0 ? 'none' : 'select'
       });
     this.cdRef.detectChanges();
   }
 
   candi1ClickHandler() {
+    let colorIndex = 0;
     if (this.item.resSelect === 'candi1') {
       this.item.resSelect = 'none';
     } else {
       this.item.resSelect = 'candi1';
+      colorIndex = 2;
     }
-    this.item.resBackgroundColor = this.backgroundColors[2];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[2];
+    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
     this.selectedResEmitter.emit({
       select: false,
       candi1: this.item.resSelect !== 'none',
       candi2: false,
-      selected: 'candi1'
+      selected: colorIndex === 0 ? 'none' : 'candi1'
     });
     this.cdRef.detectChanges();
   }
 
   candi2ClickHandler() {
+    let colorIndex = 0;
     if (this.item.resSelect === 'candi2') {
       this.item.resSelect = 'none';
     } else {
       this.item.resSelect = 'candi2';
+      colorIndex = 3;
     }
-    this.item.resBackgroundColor = this.backgroundColors[3];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[3];
+    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
     this.selectedResEmitter.emit({
       select: false,
       candi1: false,
       candi2: this.item.resSelect !== 'none',
-      selected: 'candi2'
+      selected: colorIndex === 0 ? 'none' : 'candi2'
     });
     this.cdRef.detectChanges();
   }

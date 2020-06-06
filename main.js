@@ -106,7 +106,6 @@ function getResList(url,isResSort, isMultiAnchor, isReplaceRes) {
       resList.push(readLines(remaining));
     }
     adjustResList(isResSort, isMultiAnchor, isReplaceRes);
-    console.log(sreTitle);
     win.webContents.send("getResResponse", {resList: resList, sreTitle:sreTitle});
   });
 }
