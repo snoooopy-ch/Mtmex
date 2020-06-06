@@ -79,6 +79,10 @@ export class RightPanelComponent implements OnInit {
   }
 
   selectResHandler() {
+    this.resService.setSelectCommand({
+      tabIndex: this.tabIndex,
+      command: this.selectCommand
+    });
     this.selectCommand = '';
   }
 }

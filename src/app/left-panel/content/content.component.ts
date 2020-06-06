@@ -29,8 +29,7 @@ export class ContentComponent implements OnInit {
   hovered: number;
   draggable: number;
   hoveredColor = '#cecece';
-  viewStart: number;
-  viewLength: number;
+  private backgroundColors = ['#fff', '#ffecd9', '#e0ffff', '#ffb6c1'];
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -59,14 +58,15 @@ export class ContentComponent implements OnInit {
 
     this.resService.selectCommand.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
-
+         this.multiSelection(value.command);
       }
     });
   }
 
-
-
-
+  /**
+   * Move the scroll of res list
+   * @param moveKind: 'top', 'bottom', 'selected-top', 'selected-bottom'
+   */
   moveScroller(moveKind: string){
 
     switch (moveKind) {
@@ -99,6 +99,11 @@ export class ContentComponent implements OnInit {
         break;
     }
   }
+
+  /**
+   * drop event for moving res
+   * @param event: cdkdragdrop
+   */
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.resList, this.selectedResIndex,
       this.selectedResIndex + (event.currentIndex - event.previousIndex));
@@ -155,13 +160,17 @@ export class ContentComponent implements OnInit {
     this.resList[index].candi2 = $event.candi2;
     this.resList[index].resSelect = $event.selected;
     this.resList = [...this.resList];
+    this.changeStatus();
+    this.cdRef.detectChanges();
+  }
+
+  changeStatus(){
     this.resService.setSelectedRes({
       select: this.resList.filter(item => item.select).length,
       candi1: this.resList.filter(item => item.candi1).length,
       candi2: this.resList.filter(item => item.candi2).length,
       tabIndex: this.tabIndex
     });
-    this.cdRef.detectChanges();
   }
 
   selectedId(id: any, $event: any) {
@@ -177,12 +186,7 @@ export class ContentComponent implements OnInit {
         }
       }
     }
-    this.resService.setSelectedRes({
-      select: this.resList.filter(item => item.select).length,
-      candi1: this.resList.filter(item => item.candi1).length,
-      candi2: this.resList.filter(item => item.candi2).length,
-      tabIndex: this.tabIndex
-    });
+    this.changeStatus();
   }
 
   selectedTreeRes(index: number, $event: any) {
@@ -209,12 +213,7 @@ export class ContentComponent implements OnInit {
         }
       }
     }
-    this.resService.setSelectedRes({
-      select: this.resList.filter(item => item.select).length,
-      candi1: this.resList.filter(item => item.candi1).length,
-      candi2: this.resList.filter(item => item.candi2).length,
-      tabIndex: this.tabIndex
-    });
+    this.changeStatus();
   }
 
   calcSelectedRes(selectKind: number, item: ResItem){
@@ -290,12 +289,87 @@ export class ContentComponent implements OnInit {
   }
 
   multiSelection(command: string){
+    for (let i = this.virtualScroller.viewPortInfo.startIndex; i < this.virtualScroller.viewPortInfo.endIndex; i++){
+      switch (command) {
+        case 'select':
+          this.resList[i].resSelect = 'select';
+          this.resList[i].select = true;
+          this.resList[i].candi1 = false;
+          this.resList[i].candi2 = false;
+          this.resList[i].resBackgroundColor = this.backgroundColors[1];
+          break;
+        case 'candi1':
+          this.resList[i].resSelect = 'candi1';
+          this.resList[i].select = false;
+          this.resList[i].candi1 = true;
+          this.resList[i].candi2 = false;
+          this.resList[i].resBackgroundColor = this.backgroundColors[2];
+          break;
+        case 'candi2':
+          this.resList[i].resSelect = 'candi2';
+          this.resList[i].select = false;
+          this.resList[i].candi1 = false;
+          this.resList[i].candi2 = true;
+          this.resList[i].resBackgroundColor = this.backgroundColors[3];
+          break;
+        case 'select-image':
+          if (this.resList[i].hasImage) {
+            this.resList[i].resSelect = 'select';
+            this.resList[i].select = true;
+            this.resList[i].candi1 = false;
+            this.resList[i].candi2 = false;
+            this.resList[i].resBackgroundColor = this.backgroundColors[1];
+          }
+          break;
+        case 'candi1-image':
+          if (this.resList[i].hasImage) {
+            this.resList[i].resSelect = 'candi1';
+            this.resList[i].select = false;
+            this.resList[i].candi1 = true;
+            this.resList[i].candi2 = false;
+            this.resList[i].resBackgroundColor = this.backgroundColors[2];
+          }
+          break;
+        case 'candi2-image':
+          if (this.resList[i].hasImage) {
+            this.resList[i].resSelect = 'candi2';
+            this.resList[i].select = false;
+            this.resList[i].candi1 = false;
+            this.resList[i].candi2 = true;
+            this.resList[i].resBackgroundColor = this.backgroundColors[3];
+          }
+          break;
+        case 'cancel-select':
+          if (this.resList[i].resSelect === 'select') {
+            this.resList[i].resSelect = 'none';
+            this.resList[i].select = false;
+            this.resList[i].resBackgroundColor = this.backgroundColors[0];
+          }
+          break;
+        case 'cancel-candi1':
+          if (this.resList[i].resSelect === 'candi1') {
+            this.resList[i].resSelect = 'none';
+            this.resList[i].candi1 = false;
+            this.resList[i].resBackgroundColor = this.backgroundColors[0];
+          }
+          break;
+        case 'cancel-candi2':
+          if (this.resList[i].resSelect === 'candi2') {
+            this.resList[i].resSelect = 'none';
+            this.resList[i].candi2 = false;
+            this.resList[i].resBackgroundColor = this.backgroundColors[0];
+          }
+          break;
+      }
+    }
+    this.cdRef.detectChanges();
+    this.changeStatus();
   }
-
 
   usUpdateHandler($event: any[]) {
     this.resService.setScrollPos({index: this.tabIndex,
       pos: this.virtualScroller.viewPortInfo.startIndex,
-      isTab: false});
+      isTab: false
+    });
   }
 }

@@ -254,7 +254,8 @@ function readLines(line) {
     resFontSize: '19px',
     resSelect: 'none',
     resBackgroundColor:'#ffffff',
-    idBackgroundColor:  'transparent'
+    idBackgroundColor:  'transparent',
+    hasImage: false,
   };
 
   num++;
@@ -302,6 +303,7 @@ function readLines(line) {
           || tmp_item.endsWith("bmp")
         ){
           tmp_item = `<img src="${tmp_item}" alt=""><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
+          resItem.hasImage = true;
         }else{
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
         }

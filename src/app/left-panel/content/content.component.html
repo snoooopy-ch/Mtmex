@@ -4,8 +4,6 @@
   <input type="text">
 </div>
 
-<!--<cdk-virtual-scroll-viewport itemSize="50" class="res-content" #resListContainer-->
-<!--                             (scrolledIndexChange)=" scrolledIndexChangeHandler($event)">-->
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
                   cdkDropList (cdkDropListDropped)="drop($event)">
     <app-res [item]="resItem" [resIndex]="index + resListContainer.viewPortInfo.startIndex"
@@ -28,6 +26,4 @@
              [cdkDragDisabled]="getDraggable(index + resListContainer.viewPortInfo.startIndex)" cdkDrag>
 
     </app-res>
-<!--  </div>-->
-<!--</cdk-virtual-scroll-viewport>-->
 </virtual-scroller>
