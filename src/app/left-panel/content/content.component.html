@@ -7,7 +7,8 @@
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
                   cdkDropList (cdkDropListDropped)="drop($event)">
     <app-res [item]="resItem" [resIndex]="index + resListContainer.viewPortInfo.startIndex"
-             [ngStyle]="{'background-color':hovered !== (index + resListContainer.viewPortInfo.startIndex) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor)}"
+             [ngStyle]="{'background-color':hovered !== (index + resListContainer.viewPortInfo.startIndex) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
+             'border-left': resItem.isAdded ? leftBorder : ''}"
              (duplicateResEmitter)="duplicateRes(index + resListContainer.viewPortInfo.startIndex)"
              (hideResEmitter)="hideRes(resItem.id)"
              (upResEmitter)="upRes(index + resListContainer.viewPortInfo.startIndex)"
@@ -18,10 +19,13 @@
              (selectedIdEmitter)="selectedId(resItem.id, $event)"
              (selectedTreeResEmitter)="selectedTreeRes(index + resListContainer.viewPortInfo.startIndex, $event)"
              (setDraggableEmitter)="setDraggable(index + resListContainer.viewPortInfo.startIndex, $event)"
-             [tabIndex]="tabIndex" [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
+             [tabIndex]="tabIndex"
+             [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
              (mouseenter)="mouseEnterHandler(index + resListContainer.viewPortInfo.startIndex)"
              (mouseleave)="mouseLeaveHandler()"
              *ngFor="let resItem of resListContainer.viewPortItems; let index = index ;"
+             [characterColors] = 'characterColors'
+             [backgroundColors] = 'backgroundColors'
              (cdkDragStarted)="dragStarted($event, index + resListContainer.viewPortInfo.startIndex)"
              [cdkDragDisabled]="getDraggable(index + resListContainer.viewPortInfo.startIndex)" cdkDrag>
 

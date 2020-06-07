@@ -8,5 +8,8 @@ import {ResService} from './res.service';
 })
 export class AppComponent {
   title = 'スレ編集';
-  constructor(private resService: ResService) {}
+  settings: any;
+  constructor(private resService: ResService) {
+    this.resService.loadSettings();
+  }
 }

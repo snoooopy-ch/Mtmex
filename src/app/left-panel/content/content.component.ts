@@ -28,8 +28,10 @@ export class ContentComponent implements OnInit {
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
   hovered: number;
   draggable: number;
-  hoveredColor = '#cecece';
-  private backgroundColors = ['#fff', '#ffecd9', '#e0ffff', '#ffb6c1'];
+  @Input() hoveredColor;
+  @Input() backgroundColors;
+  @Input() characterColors;
+  @Input() leftBorder;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];

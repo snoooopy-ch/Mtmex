@@ -8,6 +8,7 @@ const electron = (window as any).require('electron');
 })
 export class ResService {
   resData = new BehaviorSubject<any>({resList: [], sreTitle: ''});
+  settings = new BehaviorSubject<any>({});
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
@@ -27,10 +28,17 @@ export class ResService {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
       this.resData.next(value);
     });
+    electron.ipcRenderer.on('getSettings', (event, value) => {
+      this.settings.next(value);
+    });
   }
 
   loadRes(url, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean) {
     electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes);
+  }
+
+  loadSettings(){
+    electron.ipcRenderer.send('loadSettings');
   }
 
   setHiddenIds(value: string[]) {

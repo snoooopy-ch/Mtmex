@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {ResService} from '../res.service';
 import {MatTabChangeEvent} from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -13,12 +13,24 @@ export class LeftPanelComponent implements OnInit {
   tabs = ['New Tab'];
   scrollPos = [0];
   selectedTabIndex = 0;
+  settings;
+  backgroundColors;
+  leftBorder;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
 
   ngOnInit(): void {
+
+    this.resService.settings.subscribe((value) => {
+      this.settings = value;
+      this.backgroundColors = [this.settings.Back_color,
+        this.settings.Sentaku_back,
+        this.settings.YobiSentaku1_back,
+        this.settings.YobiSentaku2_back];
+      this.leftBorder = `6px solid ${this.settings.Left_border}`;
+    });
 
     this.resService.resData.subscribe((value) => {
 

@@ -35,10 +35,10 @@
              [(ngModel)]="item.resColor" [checked]=true (change)="colorChangeHandler()" value="#f00">
       なし
     </label>
-    <label class="radio-container" *ngFor="let colorItem of resColorList">
+    <label class="radio-container" *ngFor="let colorItem of characterColors">
       <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="item.resColor" (change)="colorChangeHandler()" [value]="colorItem.value">
-      <span [className]="colorItem.name"></span>
+             [(ngModel)]="item.resColor" (change)="colorChangeHandler()" [value]="colorItem">
+      <span [ngStyle]="{'background-color':colorItem}"></span>
     </label>
 
     <button class="btn-move" (click)="toTopHandler()">▲</button>

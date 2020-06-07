@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {ResService} from '../res.service';
 
 @Component({
@@ -18,6 +18,7 @@ export class RightPanelComponent implements OnInit {
   candi2Count = 0;
   totalCount = 0;
   selectCommand = '';
+  settings;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) {
     this.hiddenIds = [];
@@ -28,6 +29,16 @@ export class RightPanelComponent implements OnInit {
       this.hiddenIds = hiddenIds;
       this.cdRef.detectChanges();
     });
+
+    this.resService.settings.subscribe((value) => {
+      this.settings = value;
+      this.txtUrl = this.settings.dataPath;
+      this.isReplaceRes = this.settings.isReplaceRes;
+      this.isMultiAnchor = this.settings.isMultiAnchor;
+      this.isResSort = this.settings.isResSort;
+      this.cdRef.detectChanges();
+    });
+
     this.resService.selectedTab.subscribe((value ) => {
       this.tabIndex = value.tabIndex;
       this.selectCount = value.select;
@@ -84,5 +95,9 @@ export class RightPanelComponent implements OnInit {
       command: this.selectCommand
     });
     this.selectCommand = '';
+  }
+
+  setDefaultPathHandler($event: MouseEvent) {
+    this.txtUrl = this.settings.defaultPath;
   }
 }

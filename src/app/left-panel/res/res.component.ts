@@ -28,12 +28,12 @@ export class ResComponent implements OnInit {
   @Output() selectedTreeResEmitter = new EventEmitter();
   @Output() setDraggableEmitter = new EventEmitter();
 
-  private backgroundColors = ['#fff', '#ffecd9', '#e0ffff', '#ffb6c1'];
+  @Input() backgroundColors;
   private idBackgroundColors = ['transparent', '#dddddd', '#1e64bd', '#ff00ff'];
   resSizeList: Item[] = RES_FONT_SIZE;
-  resColorList: Item[] = RES_COLOR;
   isEdit = false;
   resContent = '';
+  @Input() characterColors;
 
   constructor(private cdRef: ChangeDetectorRef, private ref: ElementRef) {
 

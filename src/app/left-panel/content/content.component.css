@@ -1,6 +1,6 @@
 .anchor-res{
   margin-left: 16px;
-  border-left: 6px solid #666666;
+  /*border-left: 6px solid #666666;*/
   width: calc(100% - 16px);
 }
 .hide-res{
