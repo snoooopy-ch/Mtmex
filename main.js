@@ -394,10 +394,11 @@ function readLines(line) {
     candi1: false,
     candi2: false,
     resColor: '#f00',
-    resFontSize: '19px',
+    resFontSize: '14px',
     resSelect: 'none',
     resBackgroundColor: '#ffffff',
     idBackgroundColor: 'transparent',
+    idColor: '#000',
     hasImage: false,
   };
 

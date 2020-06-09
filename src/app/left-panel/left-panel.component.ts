@@ -16,6 +16,9 @@ export class LeftPanelComponent implements OnInit {
   settings;
   backgroundColors;
   leftBorder;
+  idStyles;
+  resSizeList;
+  tabWidth;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
@@ -30,6 +33,28 @@ export class LeftPanelComponent implements OnInit {
         this.settings.YobiSentaku1_back,
         this.settings.YobiSentaku2_back];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
+      this.idStyles = [{color: '#000', background: 'transparent'},
+          {color: this.settings.ID1_moji, background: this.settings.ID1_back},
+          {color: this.settings.ID2_moji, background: this.settings.ID2_back},
+          {color: this.settings.ID3_moji, background: this.settings.ID3_back}];
+      this.resSizeList = [
+        {
+          name: '小',
+          value: `${this.settings['font-size1']}px`,
+          selected: true
+        },
+        {
+          name: '中',
+          value: `${this.settings['font-size2']}px`,
+          selected: false
+        },
+        {
+          name: '大',
+          value: `${this.settings['font-size3']}px`,
+          selected: false
+        }
+      ];
+      this.tabWidth = `${this.settings.tab_haba}px`;
     });
 
     this.resService.resData.subscribe((value) => {

@@ -18,5 +18,6 @@ export class ResItem{
   resSelect: string;
   resBackgroundColor = 'transparent';
   idBackgroundColor = '#fff';
+  idColor = '#000';
   hasImage = false;
 }

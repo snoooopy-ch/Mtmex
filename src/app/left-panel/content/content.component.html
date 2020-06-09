@@ -26,6 +26,8 @@
              *ngFor="let resItem of resListContainer.viewPortItems; let index = index ;"
              [characterColors] = 'characterColors'
              [backgroundColors] = 'backgroundColors'
+             [idStyles] = "idStyles"
+             [resSizeList] = "resSizeList"
              (cdkDragStarted)="dragStarted($event, index + resListContainer.viewPortInfo.startIndex)"
              [cdkDragDisabled]="getDraggable(index + resListContainer.viewPortInfo.startIndex)" cdkDrag>
 

@@ -13,7 +13,7 @@
     <h4 class="label-res-name">{{item.name}}</h4>
     <h4 class="res-date">{{item.date}}</h4>
     <h4 class="label-res-id">ID:</h4>
-    <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor}">{{item.id}}</h4>
+    <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}">{{item.id}}</h4>
     <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
     <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)">
       <svg width="24px" fill="currentColor" viewBox="0 0 24 24">

@@ -32,6 +32,8 @@ export class ContentComponent implements OnInit {
   @Input() backgroundColors;
   @Input() characterColors;
   @Input() leftBorder;
+  @Input() idStyles;
+  @Input() resSizeList;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -179,6 +181,7 @@ export class ContentComponent implements OnInit {
     for (const res of this.resList){
       if (res.id === id){
         res.idBackgroundColor = $event.idBackgroundColor;
+        res.idColor = $event.idColor;
         if ($event.isSelect) {
           res.resBackgroundColor = $event.resBackgroundColor;
           res.resSelect = 'select';

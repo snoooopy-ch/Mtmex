@@ -1,8 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output,} from '@angular/core';
-import {Item} from '../../models/item';
-import {RES_FONT_SIZE} from '../../models/res-size-data';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {RES_COLOR} from '../../models/res-color-data';
+
 
 declare var jQuery: any;
 declare var $: any;
@@ -28,9 +26,10 @@ export class ResComponent implements OnInit {
   @Output() selectedTreeResEmitter = new EventEmitter();
   @Output() setDraggableEmitter = new EventEmitter();
 
+
   @Input() backgroundColors;
-  private idBackgroundColors = ['transparent', '#dddddd', '#1e64bd', '#ff00ff'];
-  resSizeList: Item[] = RES_FONT_SIZE;
+  @Input() idStyles;
+  @Input() resSizeList;
   isEdit = false;
   resContent = '';
   @Input() characterColors;
@@ -180,10 +179,12 @@ export class ResComponent implements OnInit {
   }
 
   catchIdHandler(buttonIndex: number) {
-    this.item.idBackgroundColor = this.idBackgroundColors[buttonIndex];
+    this.item.idBackgroundColor = this.idStyles[buttonIndex].background;
+    this.item.idColor = this.idStyles[buttonIndex].color;
     this.selectedIdEmitter.emit({
       isSelect: true,
-      idBackgroundColor: this.idBackgroundColors[buttonIndex],
+      idBackgroundColor: this.idStyles[buttonIndex].background,
+      idColor: this.idStyles[buttonIndex].color,
       resBackgroundColor: this.backgroundColors[1]
     });
   }
@@ -208,7 +209,8 @@ export class ResComponent implements OnInit {
   cancelOnlyCatchIdHandler() {
     this.selectedIdEmitter.emit({
       isSelect: false,
-      idBackgroundColor: this.idBackgroundColors[0],
+      idBackgroundColor: this.idStyles[0].background,
+      idColor: this.idStyles[0].color,
       resBackgroundColor: this.backgroundColors[0]
     });
   }
@@ -219,7 +221,8 @@ export class ResComponent implements OnInit {
     }
     this.selectedIdEmitter.emit({
       isSelect: false,
-      idBackgroundColor: this.idBackgroundColors[0],
+      idBackgroundColor: this.idStyles[0].background,
+      idColor: this.idStyles[0].color,
     });
   }
 
