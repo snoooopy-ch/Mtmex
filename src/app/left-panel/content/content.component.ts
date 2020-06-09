@@ -294,7 +294,7 @@ export class ContentComponent implements OnInit {
   }
 
   multiSelection(command: string){
-    for (let i = this.virtualScroller.viewPortInfo.startIndex; i < this.virtualScroller.viewPortInfo.endIndex; i++){
+    for (let i = this.virtualScroller.viewPortInfo.startIndex; i <= this.virtualScroller.viewPortInfo.endIndex; i++){
       switch (command) {
         case 'select':
           this.resList[i].resSelect = 'select';

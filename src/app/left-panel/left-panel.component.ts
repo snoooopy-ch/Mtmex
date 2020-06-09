@@ -54,7 +54,7 @@ export class LeftPanelComponent implements OnInit {
           selected: false
         }
       ];
-      this.tabWidth = `${this.settings.tab_haba}px`;
+      this.tabWidth = `${this.settings.tab_haba - 37}px`;
     });
 
     this.resService.resData.subscribe((value) => {
