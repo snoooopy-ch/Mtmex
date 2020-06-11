@@ -93,38 +93,6 @@ label {
   border: 1px solid #000;
 }
 
-.container app-left-panel app-header .add-tab {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 2px 0;
-}
-
-.container app-left-panel app-header .add-tab .new-tab {
-  width: 150px;
-  height: 29px;
-  background-color: #ffd280;
-  text-align: left;
-  padding: 0 10px;
-}
-
-.container app-left-panel app-header .extract {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.container app-left-panel app-header .extract .btn-long {
-  min-width: 271px;
-  width: 30%;
-  height: 29px;
-}
-
-.container app-left-panel app-header .extract input {
-  min-width: 353px;
-  width: 30%;
-  height: 29px;
-}
 
 .container app-left-panel #btn-plus {
   height: 29px;
@@ -145,12 +113,12 @@ label {
   border: 2px solid #000;
 }
 
-.container app-left-panel app-header #btn-all {
+.container app-left-panel app-content #btn-all {
   height: 29px;
   width: 29px;
 }
 
-.container app-left-panel app-header #btn-context {
+.container app-left-panel app-content #btn-context {
   height: 29px;
   width: 29px;
 }
@@ -178,6 +146,24 @@ label {
 .container app-left-panel app-content .res-content {
   width: 100%;
   height: calc(100vh - 209px);
+}
+
+.container app-left-panel app-content .extract {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.container app-left-panel app-content .extract .btn-long {
+  min-width: 260px;
+  width: 28%;
+  height: 29px;
+}
+
+.container app-left-panel app-content .extract input[type="text"] {
+  min-width: 353px;
+  width: 30%;
+  height: 29px;
 }
 
 app-res {

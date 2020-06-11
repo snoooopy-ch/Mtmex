@@ -1,9 +1,28 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output,} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {DomSanitizer} from '@angular/platform-browser';
 
 
 declare var jQuery: any;
 declare var $: any;
+
+@Pipe({ name: 'safeHtml'})
+export class SafeHtmlPipe implements PipeTransform  {
+  constructor(private sanitized: DomSanitizer) {}
+  transform(value) {
+    return this.sanitized.bypassSecurityTrustHtml(value);
+  }
+}
 
 @Component({
   selector: 'app-res',
@@ -25,7 +44,7 @@ export class ResComponent implements OnInit {
   @Output() selectedIdEmitter = new EventEmitter();
   @Output() selectedTreeResEmitter = new EventEmitter();
   @Output() setDraggableEmitter = new EventEmitter();
-
+  @Output() selectedNumEmitter = new EventEmitter();
 
   @Input() backgroundColors;
   @Input() idStyles;
@@ -43,11 +62,11 @@ export class ResComponent implements OnInit {
     this.item.resColor = '#f00';
     this.item.resFontSize = '19px';
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       const xOffset = 150;
       const yOffset = 40;
       const imgPop = $('#preview img');
-      $('a.res-img-link').hover(function (e) {
+      $('a.res-img-link').hover(function(e) {
         this.t = this.href;
         this.title = '';
         imgPop.attr('src', this.href);
@@ -57,7 +76,7 @@ export class ResComponent implements OnInit {
           .css('top', (e.pageY - xOffset) + 'px')
           .css('left', (e.pageX + yOffset) + 'px')
           .fadeIn('slow');
-      }, function () {
+      }, function() {
         this.title = this.t;
         $('#preview').css('display', 'none');
       });
@@ -235,5 +254,9 @@ export class ResComponent implements OnInit {
 
   setDraggable(value: boolean) {
     this.setDraggableEmitter.emit(value);
+  }
+
+  selectedNumHandler() {
+    this.selectedNumEmitter.emit();
   }
 }

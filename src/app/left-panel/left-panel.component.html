@@ -2,12 +2,12 @@
 <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="0ms" (selectedTabChange)="tabChangedHandler($event);" disableRipple>
   <mat-tab *ngFor="let tab of tabs; let index = index;" >
     <ng-template mat-tab-label>
-      <div class="col" [ngStyle]="{'width':tabWidth}">{{tab}}</div>
+      <div [ngStyle]="{'width':tabWidth}" [ngClass]="{'filtered-tab':isFiltered[index],'col':true}">{{tab}}</div>
       <button mat-icon-button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">
         <mat-icon>close</mat-icon>
       </button>
     </ng-template>
-  <app-header ></app-header>
+<!--  <app-header ></app-header>-->
   <app-content [resList]="resLists[index]"
                [tabName]="tab"
                [characterColors] = "settings.characterColors"
@@ -15,6 +15,8 @@
                [backgroundColors] = "backgroundColors"
                [leftBorder] = "leftBorder"
                [idStyles] = "idStyles"
+               [hitColor] = "hitColor"
+               (filteredEmitter)="filteredHandler(index,$event)"
                [resSizeList] = "resSizeList"
                [tabIndex]="index">
   </app-content>

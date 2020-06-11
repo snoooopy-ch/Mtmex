@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, EventEmitter,
   Input,
-  OnInit,
+  OnInit, Output, Pipe, PipeTransform,
   ViewChild
 } from '@angular/core';
 import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -11,6 +11,8 @@ import {ResItem} from '../../models/res-item';
 import {ResService} from '../../res.service';
 import { normal } from 'color-blend';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
+import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
+import {DomSanitizer} from '@angular/platform-browser';
 
 
 @Component({
@@ -26,6 +28,7 @@ export class ContentComponent implements OnInit {
   hiddenIds: string [];
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
+  @ViewChild('btnSearch') btnSearch: MatButtonToggle;
   hovered: number;
   draggable: number;
   @Input() hoveredColor;
@@ -34,6 +37,13 @@ export class ContentComponent implements OnInit {
   @Input() leftBorder;
   @Input() idStyles;
   @Input() resSizeList;
+  @Input() hitColor;
+  @Output() filteredEmitter = new EventEmitter();
+  searchOption = 'context';
+  searchKeyword = '';
+  search = '';
+  important: '';
+  backupResList;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -114,8 +124,13 @@ export class ContentComponent implements OnInit {
     this.resList = [...this.resList];
   }
 
-  duplicateRes(index: number) {
-    this.resList.splice(index + 1, 0, this.resList[index]);
+  dragStarted($event: CdkDragStart, item) {
+    this.selectedResIndex = this.resList.indexOf(item);
+  }
+
+  duplicateRes(item: any) {
+    const index = this.resList.indexOf(item);
+    this.resList.splice(index + 1, 0, item);
     this.resList = [...this.resList];
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
@@ -128,41 +143,43 @@ export class ContentComponent implements OnInit {
     this.resService.setHiddenIds(this.hiddenIds);
   }
 
-  upRes(index: number) {
+  upRes(item: any) {
+    const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index - 1);
     this.resList = [...this.resList];
   }
 
-  downRes(index: number) {
+  downRes(item: any) {
+    const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index + 1);
     this.resList = [...this.resList];
   }
 
-  toTopRes(index: number) {
-    const tmpRes = Object.assign({}, this.resList[index]);
+  toTopRes(item: any) {
+    const index = this.resList.indexOf(item);
+    const tmpRes = Object.assign({}, item);
     this.resList.splice(index, 1);
     this.resList.splice(0, 0, tmpRes);
     this.resList = [...this.resList];
     this.virtualScroller.scrollToIndex(0);
   }
 
-  toBottomRes(index: number) {
-    const tmpRes = Object.assign({}, this.resList[index]);
+  toBottomRes(item: any) {
+    const index = this.resList.indexOf(item);
+    const tmpRes = Object.assign({}, item);
     this.resList.splice(index, 1);
     this.resList.push(tmpRes);
     this.resList = [...this.resList];
     this.virtualScroller.scrollToIndex(this.resList.length);
   }
 
-  dragStarted($event: CdkDragStart, index: number) {
-    this.selectedResIndex = index;
-  }
 
-  selectedRes(index: number, $event: any) {
-    this.resList[index].select = $event.select;
-    this.resList[index].candi1 = $event.candi1;
-    this.resList[index].candi2 = $event.candi2;
-    this.resList[index].resSelect = $event.selected;
+
+  selectedRes(item: any, $event: any) {
+    item.select = $event.select;
+    item.candi1 = $event.candi1;
+    item.candi2 = $event.candi2;
+    item.resSelect = $event.selected;
     this.resList = [...this.resList];
     this.changeStatus();
     this.cdRef.detectChanges();
@@ -376,5 +393,80 @@ export class ContentComponent implements OnInit {
       pos: this.virtualScroller.viewPortInfo.startIndex,
       isTab: false
     });
+  }
+
+  searchTextHandler() {
+    if (this.btnSearch.checked){
+      if (this.searchKeyword.length === 0) {
+        this.btnSearch.checked = false;
+      }else{
+        this.backupResList = Object.assign([], this.resList);
+        let tmpResList = [];
+        const re = new RegExp(this.searchKeyword, 'gi');
+        const replacers = this.searchKeyword.split('|');
+        let index = 0;
+        for (const res of this.resList){
+          if (this.searchOption === 'context'){
+            if (res.content.match(re)){
+              for (const replace of replacers){
+                const regExp = new RegExp(replace, 'gi');
+                res.content = res.content.replace(regExp, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
+              }
+              res.isFiltered = true;
+              res.originalIndex = index;
+              tmpResList = [...tmpResList, res];
+            }
+          }else{
+            if (res.content.match(re) || res.name.match(re) || res.id.match(re)){
+
+              for (const replace of replacers){
+                const regExp = new RegExp(replace, 'gi');
+                res.content = res.content.replace(regExp, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
+                res.id = res.id.replace(replace, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
+                res.name = res.name.replace(replace, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
+              }
+              res.isFiltered = true;
+              res.originalIndex = index;
+              tmpResList = [...tmpResList, res];
+            }
+          }
+          index++;
+        }
+        this.resList = [];
+        this.resList = tmpResList;
+        this.changeStatus();
+        this.resService.setTotalRes({
+          tabIndex: this.tabIndex,
+          totalCount: this.resList.length
+        });
+      }
+    }else{
+      for (const res of this.resList){
+        res.content = res.content.replace(/(<span[^<]+>)/ig, '');
+        res.content = res.content.replace(/<\/span>/ig, '');
+        if (this.searchOption === 'all'){
+          res.id = res.id.replace(/(<span[^<]+>)/ig, '');
+          res.id = res.id.replace(/<\/span>/ig, '');
+          res.name = res.name.replace(/(<span[^<]+>)/ig, '');
+          res.name = res.name.replace(/<\/span>/ig, '');
+        }
+      }
+      this.resList = Object.assign([], this.backupResList);
+      this.changeStatus();
+      this.resService.setTotalRes({
+        tabIndex: this.tabIndex,
+        totalCount: this.resList.length
+      });
+    }
+    this.filteredEmitter.emit(this.btnSearch.checked);
+  }
+
+  selectedNum(resItem: ResItem) {
+    if (resItem.originalIndex !== null) {
+      moveItemInArray(this.backupResList, resItem.originalIndex, 0);
+    }
+    this.btnSearch.checked = false;
+    this.searchTextHandler();
+    this.virtualScroller.scrollToIndex(0);
   }
 }

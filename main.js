@@ -11,6 +11,7 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換', '#投稿日・IDの置換'];
 let curComment='';
 let yesnokey = ['AutoSave','shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
+let settings;
 
 function createWindow() {
   // Create the browser window.
@@ -75,7 +76,7 @@ app.on('activate', function () {
  * @param isReplaceRes
  */
 function getResList(url, isResSort, isMultiAnchor, isReplaceRes) {
-
+  console.log(settings);
   fs.open(url, 'r', (err, fd) => {
     if (err) {
       if (err.code === 'ENOENT') {
@@ -148,7 +149,7 @@ function getSettings() {
 
   let input = fs.createReadStream(settingPath);
   let remaining = '';
-  let settings = {
+  settings = {
     dataPath: '',
     defaultPath: '',
     isResSort: false,
@@ -400,6 +401,7 @@ function readLines(line) {
     idBackgroundColor: 'transparent',
     idColor: '#000',
     hasImage: false,
+    isFiltered: false,
   };
 
   num++;

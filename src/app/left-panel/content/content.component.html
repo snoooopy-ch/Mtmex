@@ -1,3 +1,16 @@
+<div class="extract">
+  <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption">
+    <mat-button-toggle value="all">all</mat-button-toggle>
+    <mat-button-toggle value="context">本</mat-button-toggle>
+  </mat-button-toggle-group>
+  <input type="text" [(ngModel)]="searchKeyword">
+  <mat-button-toggle-group name="btn-search" [multiple]="true">
+    <mat-button-toggle class="btn-long" (change)="searchTextHandler()" #btnSearch>抽出</mat-button-toggle>
+  </mat-button-toggle-group>
+  <mat-button-toggle-group name="btn-important" >
+    <mat-button-toggle class="btn-long" value="selected">注目レス</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
 <h3>{{tabName}}</h3>
 <div class="content-url">
   <label>URL</label>
@@ -7,29 +20,30 @@
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
                   cdkDropList (cdkDropListDropped)="drop($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
     <app-res [item]="resItem" [resIndex]="index + resListContainer.viewPortInfo.startIndex - 5"
-             [ngStyle]="{'background-color':hovered !== (index + resListContainer.viewPortInfo.startIndex) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
+             [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
              'border-left': resItem.isAdded ? leftBorder : ''}"
-             (duplicateResEmitter)="duplicateRes(index + resListContainer.viewPortInfo.startIndex -5)"
+             (duplicateResEmitter)="duplicateRes(resItem)"
              (hideResEmitter)="hideRes(resItem.id)"
-             (upResEmitter)="upRes(index + resListContainer.viewPortInfo.startIndex - 5)"
-             (downResEmitter)="downRes(index + resListContainer.viewPortInfo.startIndex - 5)"
-             (toTopResEmitter)="toTopRes(index + resListContainer.viewPortInfo.startIndex - 5)"
-             (toBottomResEmitter)="toBottomRes(index + resListContainer.viewPortInfo.startIndex - 5)"
-             (selectedResEmitter)="selectedRes(index + resListContainer.viewPortInfo.startIndex - 5, $event)"
+             (upResEmitter)="upRes(resItem)"
+             (downResEmitter)="downRes(resItem)"
+             (toTopResEmitter)="toTopRes(resItem)"
+             (toBottomResEmitter)="toBottomRes(resItem)"
+             (selectedResEmitter)="selectedRes(resItem, $event)"
              (selectedIdEmitter)="selectedId(resItem.id, $event)"
-             (selectedTreeResEmitter)="selectedTreeRes(index + resListContainer.viewPortInfo.startIndex - 5, $event)"
-             (setDraggableEmitter)="setDraggable(index + resListContainer.viewPortInfo.startIndex - 5, $event)"
+             (selectedTreeResEmitter)="selectedTreeRes(resList.indexOf(resItem), $event)"
+             (setDraggableEmitter)="setDraggable(resList.indexOf(resItem), $event)"
+             (selectedNumEmitter)="selectedNum(resItem)"
              [tabIndex]="tabIndex"
              [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
-             (mouseenter)="mouseEnterHandler(index + resListContainer.viewPortInfo.startIndex - 5)"
+             (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"
              (mouseleave)="mouseLeaveHandler()"
              *ngFor="let resItem of resListContainer.viewPortItems; let index = index ;"
              [characterColors] = 'characterColors'
              [backgroundColors] = 'backgroundColors'
              [idStyles] = "idStyles"
              [resSizeList] = "resSizeList"
-             (cdkDragStarted)="dragStarted($event, index + resListContainer.viewPortInfo.startIndex - 5)"
-             [cdkDragDisabled]="getDraggable(index + resListContainer.viewPortInfo.startIndex - 5)" cdkDrag>
+             (cdkDragStarted)="dragStarted($event, resItem)"
+             [cdkDragDisabled]="getDraggable(resList.indexOf(resItem))" cdkDrag>
 
     </app-res>
 </virtual-scroller>

@@ -1,5 +1,5 @@
   <div class="row-1">
-    <h4 class="label-res-id-num">{{item.num}}</h4>
+    <h4 class="label-res-id-num" (dblclick)="item.isFiltered ? selectedNumHandler() : false">{{item.num}}</h4>
     <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
     <label class="radio-container">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
@@ -10,10 +10,10 @@
     <label class="radio-container">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [(ngModel)]="item.resSelect" value="candi2" (click)="candi2ClickHandler()">予2</label>
-    <h4 class="label-res-name">{{item.name}}</h4>
+    <h4 class="label-res-name" [innerHTML]="item.name | safeHtml"></h4>
     <h4 class="res-date">{{item.date}}</h4>
     <h4 class="label-res-id">ID:</h4>
-    <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}">{{item.id}}</h4>
+    <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}" [innerHTML]="item.id | safeHtml"></h4>
     <h4 class="label-res-cal1">({{item.idNum}}/{{item.idTotal}})</h4>
     <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)">
       <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
@@ -67,5 +67,5 @@
     <button class="btn-save" (click)="saveResHandler()">保存する</button>
     <button class="btn-cancel" (click)="cancelEditHandler()">キャンセル</button>
   </div>
-  <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
+  <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
 

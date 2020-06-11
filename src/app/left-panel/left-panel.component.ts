@@ -19,7 +19,8 @@ export class LeftPanelComponent implements OnInit {
   idStyles;
   resSizeList;
   tabWidth;
-
+  hitColor;
+  isFiltered = [false];
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
@@ -55,6 +56,7 @@ export class LeftPanelComponent implements OnInit {
         }
       ];
       this.tabWidth = `${this.settings.tab_haba - 37}px`;
+      this.hitColor = this.settings.hit_back_color;
     });
 
     this.resService.resData.subscribe((value) => {
@@ -82,6 +84,7 @@ export class LeftPanelComponent implements OnInit {
     this.tabs.push('New Tab');
     this.resLists.push([]);
     this.scrollPos.push(0);
+    this.isFiltered.push(false);
     this.selectedTabIndex = this.tabs.length - 1;
   }
 
@@ -89,6 +92,7 @@ export class LeftPanelComponent implements OnInit {
     this.resLists.splice(index, 1);
     this.tabs.splice(index, 1);
     this.scrollPos.splice(index, 1);
+    this.isFiltered.splice(index, 1);
   }
 
   tabChangedHandler($event: MatTabChangeEvent) {
@@ -111,4 +115,7 @@ export class LeftPanelComponent implements OnInit {
     this.resService.setScrollPos(pos);
   }
 
+  filteredHandler(index: number, $event: any) {
+    this.isFiltered[index] = $event;
+  }
 }

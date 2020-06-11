@@ -69,3 +69,48 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
   left: 30px;
   width: calc(100% - 31px);
 }
+.mat-button-toggle-button{
+  width: 29px;
+  height: 29px;
+  border-radius: unset;
+}
+.container{
+  app-left-panel{
+    app-content{
+      .mat-button-toggle-button{
+        min-width: 29px;
+        height: 29px;
+        border-radius: unset;
+        background: #e1e1e1;
+      }
+      .mat-button-toggle-appearance-standard{
+        .mat-button-toggle-label-content{
+          padding: 0;
+          line-height: 1em;
+        }
+      }
+      .mat-button-toggle-standalone{
+        overflow: unset;
+      }
+      .mat-button-toggle-group{
+        overflow: unset;
+      }
+      .mat-button-toggle-group-appearance-standard{
+        border: 0;
+      }
+      .mat-button-toggle-checked{
+        button{
+          background: #8dc0fb;
+          border: 2px solid #6495ed;
+          &:focus{
+            border: 2px solid #6495ed;
+          }
+          &:hover{
+            border: 2px solid #6495ed;
+          }
+        }
+      }
+    }
+
+  }
+}

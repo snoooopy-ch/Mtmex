@@ -4,10 +4,9 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { LeftPanelComponent } from './left-panel/left-panel.component';
 import { RightPanelComponent } from './right-panel/right-panel.component';
-import { HeaderComponent } from './left-panel/header/header.component';
-import { ContentComponent } from './left-panel/content/content.component';
+import {ContentComponent, } from './left-panel/content/content.component';
 import { StatusComponent } from './left-panel/status/status.component';
-import { ResComponent } from './left-panel/res/res.component';
+import { ResComponent, SafeHtmlPipe} from './left-panel/res/res.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +15,8 @@ import {MatIconModule} from '@angular/material/icon';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+
 
 @NgModule({
   declarations: [
@@ -23,10 +24,10 @@ import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 
     LeftPanelComponent,
     RightPanelComponent,
-    HeaderComponent,
     ContentComponent,
     StatusComponent,
-    ResComponent
+    ResComponent,
+    SafeHtmlPipe
   ],
     imports: [
         BrowserModule,
@@ -39,6 +40,8 @@ import { VirtualScrollerModule } from 'ngx-virtual-scroller';
         ReactiveFormsModule,
         ScrollingModule,
         VirtualScrollerModule,
+        MatButtonToggleModule,
+
     ],
   providers: [],
   bootstrap: [AppComponent]

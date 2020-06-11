@@ -20,4 +20,6 @@ export class ResItem{
   idBackgroundColor = '#fff';
   idColor = '#000';
   hasImage = false;
+  isFiltered = false;
+  originalIndex: number;
 }
