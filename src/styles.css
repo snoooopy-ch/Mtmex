@@ -81,19 +81,6 @@ label {
   padding: 5px 0 5px 5px;
 }
 
-.container app-left-panel button {
-  border: 1px solid #000;
-}
-
-.container app-left-panel button:hover {
-  border: 1px solid #000;
-}
-
-.container app-left-panel button:focus {
-  border: 1px solid #000;
-}
-
-
 .container app-left-panel #btn-plus {
   height: 29px;
   width: 29px;
@@ -164,6 +151,7 @@ label {
   min-width: 353px;
   width: 30%;
   height: 29px;
+  margin: 0 3px;
 }
 
 app-res {
@@ -195,7 +183,8 @@ app-res div .label-res-cal1 {
 }
 
 app-res div .radio-container {
-  margin: 0 5px;
+  margin: 0;
+  padding: 0 5.5px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -211,13 +200,47 @@ app-res div .btn-move {
 }
 
 app-res div label span {
-  margin: 0 10px;
-  width: 11px;
-  height: 11px;
+  margin: 0 6px;
+  width: 19px;
+  height: 13px;
 }
 
 app-res div button {
-  padding: 6px;
+  padding: 6px 10px;
+  margin: 0 0 0 -1px;
+  word-break: keep-all
+}
+
+app-res div button:hover {
+  background-color: #0366d6;
+  border-color: #0366d6;
+  color: #fff;
+}
+
+app-res div.row-3 button:first-child{
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.btn-left-round {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.border-round {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+app-res div.row-3 button:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.btn-right-round {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 app-res div .tree {
@@ -269,8 +292,7 @@ app-res div .btn-copy-res {
 }
 
 app-res .row-2 button {
-  margin: 0 5px 0 0;
-  border: 1px solid #adadad;
+  border: 1px solid #929292;
 }
 
 app-res .row-4 {
@@ -318,6 +340,22 @@ app-res .row-4 a {
   max-width: 240px;
   padding: 9px 10px 9px 0px;
   margin: 0 5px;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+}
+
+.container app-right-panel button {
+  background-color: white;
+  border-style: solid;
+  padding: 0 5px;
+}
+
+.container app-right-panel button:hover {
+  background-color: #0366d6;
+  border: solid 1px #0366d6;
+  color: white;
 }
 
 .container app-right-panel input[type="text"] {
@@ -332,6 +370,12 @@ app-res .row-4 a {
   width: 100%;
   height: 49px;
   margin: 2px 0 0;
+}
+
+.container app-right-panel .width-100 button:hover {
+  background-color: #0366d6;
+  border-color: #0366d6;
+  color: white;
 }
 
 .container app-right-panel .width-100 textarea {
@@ -364,12 +408,19 @@ app-res .row-4 a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin: 5px -1px;
+  margin: -1px 0 0 0;
 }
 
 .container app-right-panel .move-res div button {
   width: 50%;
   height: 39px;
+  margin: 0 0 0 -1px;
+}
+
+.container app-right-panel .move-res div button:hover {
+  background-color: #0366d6;
+  border-color: #0366d6;
+  color: #fff;
 }
 
 .container app-right-panel .move-res .res-count {
@@ -409,6 +460,7 @@ app-res .row-4 a {
 .container app-right-panel .save-container button {
   width: 50%;
   height: 35px;
+  margin: 0 0 0 -1px
 }
 
 .container app-right-panel .setting-panel {
@@ -433,6 +485,11 @@ app-res .row-4 a {
   padding: 1px 0;
 }
 
+.container app-right-panel .setting-panel table td label{
+  display: flex;
+  align-items: center;
+}
+
 .container app-right-panel .setting-panel table td .canel-radio {
   color: dodgerblue;
 }
@@ -455,6 +512,12 @@ app-res .row-4 a {
 .container app-right-panel #btn-print-html-tag {
   height: 58px;
   background-color: lightsalmon;
+  border:solid 1px lightsalmon;
+}
+
+.container app-right-panel #btn-print-html-tag:hover {
+  background-color: white;
+  color: lightsalmon;
 }
 
 .container app-right-panel #btn-set {
