@@ -12,7 +12,7 @@ import {ResService} from '../../res.service';
 import { normal } from 'color-blend';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
-import {DomSanitizer} from '@angular/platform-browser';
+
 
 
 @Component({
@@ -29,6 +29,7 @@ export class ContentComponent implements OnInit {
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
   @ViewChild('btnSearch') btnSearch: MatButtonToggle;
+  @ViewChild('btnNotice') btnImportant: MatButtonToggle;
   hovered: number;
   draggable: number;
   @Input() hoveredColor;
@@ -38,12 +39,15 @@ export class ContentComponent implements OnInit {
   @Input() idStyles;
   @Input() resSizeList;
   @Input() hitColor;
+  @Input() idRed;
+  @Input() noticeCount;
   @Output() filteredEmitter = new EventEmitter();
   searchOption = 'context';
   searchKeyword = '';
   search = '';
   important: '';
   backupResList;
+  noticeBackupResList;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
     this.hiddenIds = [];
@@ -468,5 +472,43 @@ export class ContentComponent implements OnInit {
     this.btnSearch.checked = false;
     this.searchTextHandler();
     this.virtualScroller.scrollToIndex(0);
+  }
+
+  filterNoticeHandler() {
+    if (this.btnImportant.checked){
+      this.noticeBackupResList = Object.assign([], this.resList);
+      let tmpResList = [];
+      let parentRes = [];
+      for (const res of this.resList){
+        if (!res.isAdded && res.anchorCount > this.noticeCount){
+          tmpResList = [...tmpResList, res];
+          parentRes = [...parentRes, res.num];
+        }else{
+          if (res.isAdded){
+            for (const parent of parentRes){
+              if (res.anchors.indexOf(parent) !== -1){
+                tmpResList = [...tmpResList, res];
+                parentRes = [...parentRes, res.num];
+                break;
+              }
+            }
+          }
+        }
+      }
+      this.resList = [];
+      this.resList = tmpResList;
+      this.changeStatus();
+      this.resService.setTotalRes({
+        tabIndex: this.tabIndex,
+        totalCount: this.resList.length
+      });
+    }else{
+      this.resList = Object.assign([], this.noticeBackupResList);
+      this.changeStatus();
+      this.resService.setTotalRes({
+        tabIndex: this.tabIndex,
+        totalCount: this.resList.length
+      });
+    }
   }
 }

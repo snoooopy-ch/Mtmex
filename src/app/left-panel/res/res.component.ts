@@ -48,6 +48,8 @@ export class ResComponent implements OnInit {
 
   @Input() backgroundColors;
   @Input() idStyles;
+  @Input() idRed;
+  @Input() noticeCount;
   @Input() resSizeList;
   isEdit = false;
   resContent = '';

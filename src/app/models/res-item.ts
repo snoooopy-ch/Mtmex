@@ -22,4 +22,5 @@ export class ResItem{
   hasImage = false;
   isFiltered = false;
   originalIndex: number;
+  anchorCount: number;
 }

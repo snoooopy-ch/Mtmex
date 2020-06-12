@@ -7,8 +7,8 @@
   <mat-button-toggle-group name="btn-search" [multiple]="true">
     <mat-button-toggle class="btn-long" (change)="searchTextHandler()" #btnSearch>抽出</mat-button-toggle>
   </mat-button-toggle-group>
-  <mat-button-toggle-group name="btn-important" >
-    <mat-button-toggle class="btn-long" value="selected">注目レス</mat-button-toggle>
+  <mat-button-toggle-group name="btn-notice" [multiple]="true">
+    <mat-button-toggle class="btn-long" (change)="filterNoticeHandler()" #btnNotice>注目レス</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
 <h3>{{tabName}}</h3>
@@ -41,6 +41,8 @@
              [characterColors] = 'characterColors'
              [backgroundColors] = 'backgroundColors'
              [idStyles] = "idStyles"
+             [idRed] = "idRed"
+             [noticeCount] = "noticeCount"
              [resSizeList] = "resSizeList"
              (cdkDragStarted)="dragStarted($event, resItem)"
              [cdkDragDisabled]="getDraggable(resList.indexOf(resItem))" cdkDrag>

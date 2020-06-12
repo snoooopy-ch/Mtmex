@@ -20,7 +20,10 @@ export class LeftPanelComponent implements OnInit {
   resSizeList;
   tabWidth;
   hitColor;
+  idRed;
   isFiltered = [false];
+  // chuumoku: number;
+  noticeCount: number;
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
@@ -57,6 +60,8 @@ export class LeftPanelComponent implements OnInit {
       ];
       this.tabWidth = `${this.settings.tab_haba - 37}px`;
       this.hitColor = this.settings.hit_back_color;
+      this.idRed = this.settings.id_red;
+      this.noticeCount = this.settings.noticeCount;
     });
 
     this.resService.resData.subscribe((value) => {

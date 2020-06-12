@@ -8,7 +8,7 @@ let ids = [];
 let resList = [];
 let sreTitle = '';
 let settingPath = 'Setting.ini';
-let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換', '#投稿日・IDの置換'];
+let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換', '#投稿日・IDの置換','#注目レスの閾値'];
 let curComment='';
 let yesnokey = ['AutoSave','shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
 let settings;
@@ -200,8 +200,9 @@ function getSettings() {
         settings['chuui'] = lineArgs[1].split(';');
       }else if(curComment === '#非表示レス'){
         settings['hihyouji'] = lineArgs[1].split(';');
-      }
-      else{
+      }else if(curComment === '#注目レスの閾値'){
+        settings['noticeCount'] = lineArgs[1].split(';');
+      } else{
         if(yesnokey.indexOf(lineArgs[0]) !== -1){
           settings[lineArgs[0]] = lineArgs[1] === 'yes';
         }else {
@@ -238,6 +239,17 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
       }
     }
   }
+  for (let resItem of resList) {
+    for (let anchor of resItem.anchors) {
+      for (let i = 0; i < resList.length; i++) {
+        if (resList[i].num === anchor) {
+          resList[i].anchorCount++;
+        }
+      }
+    }
+  }
+  console.log(resList);
+
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
     for (let i = 0; i < resList.length; i++) {
@@ -250,6 +262,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
         i--;
       }
     }
+
     // tmpResList.reverse();
     for (let resItem of tmpResList) {
       for (let anchor of resItem.anchors) {
@@ -402,6 +415,8 @@ function readLines(line) {
     idColor: '#000',
     hasImage: false,
     isFiltered: false,
+    originalIndex: -1,
+    anchorCount: 0,
   };
 
   num++;
