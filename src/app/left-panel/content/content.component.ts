@@ -147,6 +147,7 @@ export class ContentComponent implements OnInit {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.up, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.upRes(this.resList[this.hovered]);
+          this.cdRef.detectChanges();
         }
         return false; // Prevent bubbling
       }));
@@ -154,6 +155,7 @@ export class ContentComponent implements OnInit {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.down, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.downRes(this.resList[this.hovered]);
+          this.cdRef.detectChanges();
         }
         return false; // Prevent bubbling
       }));
