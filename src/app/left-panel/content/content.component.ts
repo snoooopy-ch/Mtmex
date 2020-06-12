@@ -159,6 +159,231 @@ export class ContentComponent implements OnInit {
         }
         return false; // Prevent bubbling
       }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.big1, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resFontSize = this.resSizeList[1].value;
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.big2, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resFontSize = this.resSizeList[2].value;
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.nasi, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = '#f00';
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color1, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[0];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color2, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[1];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color3, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[2];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color4, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[3];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color5, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[4];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color6, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[5];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color7, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[6];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color8, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[7];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color9, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[8];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.color10, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resColor = this.characterColors[9];
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_sentaku, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 1, resBackgroundColor: this.backgroundColors[1]});
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi1, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 2, resBackgroundColor: this.backgroundColors[2]});
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi2, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 3, resBackgroundColor: this.backgroundColors[3]});
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_kaijo, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 0, resBackgroundColor: this.backgroundColors[0]});
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id1, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: true,
+              idColor: this.idStyles[1].color,
+              idBackgroundColor: this.idStyles[1].background,
+              resBackgroundColor: this.backgroundColors[1]
+            });
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id2, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: true,
+              idColor: this.idStyles[2].color,
+              idBackgroundColor: this.idStyles[2].background,
+              resBackgroundColor: this.backgroundColors[1]
+            });
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id3, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: true,
+              idColor: this.idStyles[3].color,
+              idBackgroundColor: this.idStyles[3].background,
+              resBackgroundColor: this.backgroundColors[1]
+            });
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_kaijo, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'select') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered], {
+              selected: 'none',
+              select: false,
+              candi1: false,
+              candi2: false
+            });
+          }
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_irokesi, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: false,
+              idColor: this.idStyles[0].color,
+              idBackgroundColor: this.idStyles[0].background,
+              resBackgroundColor: this.backgroundColors[0]
+            });
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_kaijo_irokesi, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'select') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered], {
+              selected: 'none',
+              select: false,
+              candi1: false,
+              candi2: false
+            });
+          }
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: false,
+              idColor: this.idStyles[0].color,
+              idBackgroundColor: this.idStyles[0].background,
+              resBackgroundColor: this.backgroundColors[0]
+            });
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
     }
   }
 
@@ -295,16 +520,16 @@ export class ContentComponent implements OnInit {
   }
 
   selectedTreeRes(index: number, $event: any) {
-
+    const selecteKeys = ['none', 'select', 'candi1', 'candi2'];
     if (index < this.resList.length - 1) {
       if (this.resList[index + 1].isAdded &&
         this.resList[index + 1].anchors.indexOf(this.resList[index].num) !== -1){
-        this.resList[index].resSelect = $event.select.toString();
+        this.resList[index].resSelect = selecteKeys[$event.select];
         this.resList[index].resBackgroundColor = $event.resBackgroundColor;
         this.calcSelectedRes($event.select, this.resList[index]);
         if (this.resList[index].isAdded){
           for (let i = index - 1; i > 0; i--){
-            this.resList[i].resSelect = $event.select.toString();
+            this.resList[i].resSelect = selecteKeys[$event.select];
             this.resList[i].resBackgroundColor = $event.resBackgroundColor;
             this.calcSelectedRes($event.select, this.resList[i]);
             if (!this.resList[i].isAdded) { break; }
@@ -312,7 +537,7 @@ export class ContentComponent implements OnInit {
         }
         for (let i = index + 1; i < this.resList.length; i++){
           if (!this.resList[i].isAdded) { break; }
-          this.resList[i].resSelect = $event.select.toString();
+          this.resList[i].resSelect = selecteKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
           this.calcSelectedRes($event.select, this.resList[i]);
         }

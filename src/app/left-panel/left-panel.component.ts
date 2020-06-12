@@ -64,7 +64,6 @@ export class LeftPanelComponent implements OnInit {
       this.hitColor = this.settings.hit_back_color;
       this.idRed = this.settings.id_red;
       this.noticeCount = this.settings.noticeCount;
-      console.log(value.hasOwnProperty('sentaku_no1'));
       this.subHotKeys = [];
       if (value.hasOwnProperty('sentaku_no1')) {
         const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'up', 'down', 'big1', 'big2', 'nasi'
