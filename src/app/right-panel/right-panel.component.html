@@ -1,6 +1,6 @@
 <div class="width-100">
   <input type="text" [(ngModel)]="txtUrl">
-  <button (click)="onLoadUrl(txtUrl,isResSort, isMultiAnchor, isReplaceRes)">datファイル読み込み実行</button>
+  <button class="border-round" (click)="onLoadUrl(txtUrl,isResSort, isMultiAnchor, isReplaceRes)">datファイル読み込み実行</button>
 </div>
 <div class="res-order">
   <div class="width-60">
@@ -15,17 +15,21 @@
     </div>
   </div>
   <div class="width-40">
-    <button id="btn-located-dat" (click)="setDefaultPathHandler($event)">指定<br>dat</button>
+    <button id="btn-located-dat" class="border-round" (click)="setDefaultPathHandler($event)">指定<br>dat</button>
   </div>
 </div>
 <div class="move-res">
   <div>
-    <button id="btn-top-res-list" (click)="moveResHandler('top')">▲</button>
-    <button id="btn-bottom-res-list" (click)="moveResHandler('bottom')">▼</button>
+    <button id="btn-top-res-list" style="border-top-left-radius: 5px;" (click)="moveResHandler('top')">▲</button>
+    <button id="btn-bottom-res-list" style="border-top-right-radius: 5px;" (click)="moveResHandler('bottom')">▼</button>
   </div>
   <div>
-    <button id="btn-top-selected-list" (click)="moveResHandler('selected-top')">△<br>選択 TOP</button>
-    <button id="btn-bottom-selected-list" (click)="moveResHandler('selected-bottom')">▽<br>選択END</button>
+    <button id="btn-prev-selected-list" (click)="moveResHandler('selected-prev')">↑<br>選択</button>
+    <button id="btn-next-selected-list" (click)="moveResHandler('selected-next')">↓<br>選択</button>
+  </div>
+  <div>
+    <button id="btn-top-selected-list"  style="border-bottom-left-radius: 5px;" (click)="moveResHandler('selected-top')">△<br>選択 TOP</button>
+    <button id="btn-bottom-selected-list" style="border-bottom-right-radius: 5px;"  (click)="moveResHandler('selected-bottom')">▽<br>選択END</button>
   </div>
   <div class="res-count">
     <h3 id="lbl-main-of-total">{{selectCount}}/{{totalCount}}</h3>
@@ -34,13 +38,13 @@
   </div>
 </div>
 <div class="width-100">
-  <button id="btn-print-html-tag">タグ発行</button>
-  <button id="btn-copy-tag">コピー</button>
+  <button id="btn-print-html-tag" class="border-round">タグ発行</button>
+  <button id="btn-copy-tag" class="border-round">コピー</button>
   <textarea id="txt-html-tag"></textarea>
 </div>
 <div class="save-container">
-  <button id="btn-save">保存</button>
-  <button id="btn-load">復元</button>
+  <button id="btn-save" class="btn-left-round">保存</button>
+  <button id="btn-load" class="btn-right-round">復元</button>
 </div>
 <div class="setting-panel">
   <table>
@@ -84,12 +88,12 @@
       </td>
     </tr>
   </table>
-  <button (click)="selectResHandler()">実行 (対象は表示中のレス) </button>
+  <button class="btn-left-round btn-right-round" (click)="selectResHandler()">実行 (対象は表示中のレス) </button>
 </div>
 <div class="width-100">
-  <span>注意レス</span>
+  <label>注意レス</label>
   <input type="text">
-  <span>非表示レス</span>
+  <label>非表示レス</label>
   <input type="text">
   <label>非表示のID</label>
   <div class="hidden-ids-container">

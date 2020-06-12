@@ -24,8 +24,8 @@
     </div>
   </div>
   <div class="row-2">
-    <button class="btn-move" (click)="upOneHandler()">↑</button>
-    <button class="btn-move" (click)="downOneHandler()">↓</button>
+    <button class="btn-move btn-left-round" (click)="upOneHandler()">↑</button>
+    <button class="btn-move btn-right-round" (click)="downOneHandler()">↓</button>
     <label class="radio-container" *ngFor="let sizeItem of resSizeList">
       <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resFontSize"
              value="{{sizeItem.value}}" (change)="sizeChangeHandler()">{{sizeItem.name}}
@@ -42,8 +42,8 @@
       <span [ngStyle]="{'background-color':colorItem}"></span>
     </label>
 
-    <button class="btn-move" (click)="toTopHandler()">▲</button>
-    <button class="btn-move" (click)="toBottomHandler()">▼</button>
+    <button class="btn-move btn-left-round" (click)="toTopHandler()">▲</button>
+    <button class="btn-move btn-right-round" (click)="toBottomHandler()">▼</button>
   </div >
   <div class="row-3">
     <button class="tree btn-tree-main" (click)="treeSelectHandler(1)">T選択</button>
@@ -65,8 +65,8 @@
               [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar'] }"
               [(ngModel)]="resContent" >
     </ckeditor>
-    <button class="btn-save" (click)="saveResHandler()">保存する</button>
-    <button class="btn-cancel" (click)="cancelEditHandler()">キャンセル</button>
+    <button class="btn-save btn-left-round" (click)="saveResHandler()">保存する</button>
+    <button class="btn-cancel btn-class-round" (click)="cancelEditHandler()">キャンセル</button>
   </div>
   <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
 

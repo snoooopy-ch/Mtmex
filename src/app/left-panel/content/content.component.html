@@ -1,14 +1,14 @@
 <div class="extract">
   <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption">
-    <mat-button-toggle value="all">all</mat-button-toggle>
-    <mat-button-toggle value="context">本</mat-button-toggle>
+    <mat-button-toggle value="all" class="btn-left-round">all</mat-button-toggle>
+    <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本</mat-button-toggle>
   </mat-button-toggle-group>
   <input type="text" [(ngModel)]="searchKeyword">
   <mat-button-toggle-group name="btn-search" [multiple]="true">
-    <mat-button-toggle class="btn-long" (change)="searchTextHandler()" #btnSearch>抽出</mat-button-toggle>
+    <mat-button-toggle class="btn-long border-round" (change)="searchTextHandler()" #btnSearch>抽出</mat-button-toggle>
   </mat-button-toggle-group>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
-    <mat-button-toggle class="btn-long" (change)="filterNoticeHandler()" #btnNotice>注目レス</mat-button-toggle>
+    <mat-button-toggle class="btn-long border-round" (change)="filterNoticeHandler()" #btnNotice>注目レス</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
 <h3>{{tabName}}</h3>

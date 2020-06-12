@@ -72,7 +72,7 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
 .mat-button-toggle-button{
   width: 29px;
   height: 29px;
-  border-radius: unset;
+  border: none;
 }
 .container{
   app-left-panel{
@@ -80,8 +80,8 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
       .mat-button-toggle-button{
         min-width: 29px;
         height: 29px;
-        border-radius: unset;
-        background: #e1e1e1;
+        background-color: white;
+        border: 1px solid #0366b6;
       }
       .mat-button-toggle-appearance-standard{
         .mat-button-toggle-label-content{
@@ -97,16 +97,18 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
       }
       .mat-button-toggle-group-appearance-standard{
         border: 0;
+        margin-right: -1px;
       }
       .mat-button-toggle-checked{
         button{
-          background: #8dc0fb;
-          border: 2px solid #6495ed;
+          background: #0366b6;
+          border: 1px solid #0366b6;
+          color: white;
           &:focus{
-            border: 2px solid #6495ed;
+            border: 1px solid #0366b6;
           }
           &:hover{
-            border: 2px solid #6495ed;
+            border: 1px solid #0366b6;
           }
         }
       }
