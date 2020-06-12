@@ -24,6 +24,7 @@ export class LeftPanelComponent implements OnInit {
   isFiltered = [false];
   // chuumoku: number;
   noticeCount: number;
+  subHotKeys = [];
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
@@ -31,6 +32,7 @@ export class LeftPanelComponent implements OnInit {
   ngOnInit(): void {
 
     this.resService.settings.subscribe((value) => {
+
       this.settings = value;
       this.backgroundColors = [this.settings.Back_color,
         this.settings.Sentaku_back,
@@ -62,6 +64,17 @@ export class LeftPanelComponent implements OnInit {
       this.hitColor = this.settings.hit_back_color;
       this.idRed = this.settings.id_red;
       this.noticeCount = this.settings.noticeCount;
+      console.log(value.hasOwnProperty('sentaku_no1'));
+      this.subHotKeys = [];
+      if (value.hasOwnProperty('sentaku_no1')) {
+        const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'up', 'down', 'big1', 'big2', 'nasi'
+          , 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10', 'tree_sentaku'
+          , 'tree_yobi1', 'tree_yobi2', 'tree_kaijo', 'id1', 'id2', 'id3', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
+          , 'id_hihyouji', 'henshuu'];
+        for (const key of arrayKeys) {
+          this.subHotKeys[key] = this.settings[key].toLowerCase();
+        }
+      }
     });
 
     this.resService.resData.subscribe((value) => {

@@ -12,6 +12,7 @@ import {ResService} from '../../res.service';
 import { normal } from 'color-blend';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
 
 
@@ -41,6 +42,7 @@ export class ContentComponent implements OnInit {
   @Input() hitColor;
   @Input() idRed;
   @Input() noticeCount;
+  @Input() subHotKeys;
   @Output() filteredEmitter = new EventEmitter();
   searchOption = 'context';
   searchKeyword = '';
@@ -49,11 +51,14 @@ export class ContentComponent implements OnInit {
   backupResList;
   noticeBackupResList;
 
-  constructor(private cdRef: ChangeDetectorRef, private resService: ResService) {
+  constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
+    this.hovered = -1;
+    this.subHotKeys = [];
   }
 
   ngOnInit(): void {
+    // console.log(this.subHotKeys);
     this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
       for (let i = 0; i < this.resList.length; i++){
@@ -79,6 +84,80 @@ export class ContentComponent implements OnInit {
          this.multiSelection(value.command);
       }
     });
+
+    this.resService.selectedTab.subscribe((value) => {
+      if (value.tabIndex === this.tabIndex){
+        this.setHotKeys();
+      }
+    });
+
+    this.setHotKeys();
+
+  }
+
+  setHotKeys(){
+    if (this.subHotKeys.hasOwnProperty('sentaku_no1')) {
+      this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_no1,
+        this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'select') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              {select: false, candi1: false, candi2: false, selected: 'none'});
+
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
+            this.selectedRes(this.resList[this.hovered],
+              {select: true, candi1: false, candi2: false, selected: 'select'});
+          }
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi1, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi1') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              {select: false, candi1: false, candi2: false, selected: 'none'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[2];
+            this.selectedRes(this.resList[this.hovered],
+              {select: false, candi1: true, candi2: false, selected: 'candi1'});
+          }
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi2, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi2') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              {select: false, candi1: false, candi2: false, selected: 'none'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
+            this.selectedRes(this.resList[this.hovered],
+              {select: false, candi1: false, candi2: true, selected: 'candi2'});
+          }
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.up, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.upRes(this.resList[this.hovered]);
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.down, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.downRes(this.resList[this.hovered]);
+        }
+        return false; // Prevent bubbling
+      }));
+    }
   }
 
   /**
@@ -176,8 +255,6 @@ export class ContentComponent implements OnInit {
     this.resList = [...this.resList];
     this.virtualScroller.scrollToIndex(this.resList.length);
   }
-
-
 
   selectedRes(item: any, $event: any) {
     item.select = $event.select;

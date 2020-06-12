@@ -16,6 +16,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {HotkeyModule} from 'angular2-hotkeys';
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         ScrollingModule,
         VirtualScrollerModule,
         MatButtonToggleModule,
-
+        HotkeyModule.forRoot(),
     ],
   providers: [],
   bootstrap: [AppComponent]

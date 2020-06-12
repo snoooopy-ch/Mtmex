@@ -76,7 +76,7 @@ app.on('activate', function () {
  * @param isReplaceRes
  */
 function getResList(url, isResSort, isMultiAnchor, isReplaceRes) {
-  console.log(settings);
+
   fs.open(url, 'r', (err, fd) => {
     if (err) {
       if (err.code === 'ENOENT') {
@@ -218,7 +218,6 @@ function getSettings() {
   });
 
   input.on('end', function () {
-    console.log(settings);
     win.webContents.send("getSettings", settings);
   });
 }
@@ -248,7 +247,6 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
       }
     }
   }
-  console.log(resList);
 
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
