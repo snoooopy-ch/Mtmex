@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, EventEmitter,
+  Component, ElementRef, EventEmitter,
   Input,
   OnInit, Output, Pipe, PipeTransform,
   ViewChild
@@ -31,6 +31,7 @@ export class ContentComponent implements OnInit {
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
   @ViewChild('btnSearch') btnSearch: MatButtonToggle;
   @ViewChild('btnNotice') btnImportant: MatButtonToggle;
+  @ViewChild('txtSearch') txtSearch: ElementRef ;
   hovered: number;
   draggable: number;
   @Input() hoveredColor;
@@ -50,6 +51,7 @@ export class ContentComponent implements OnInit {
   important: '';
   backupResList;
   noticeBackupResList;
+  txtURL: string;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -90,6 +92,12 @@ export class ContentComponent implements OnInit {
         this.setHotKeys();
       }
     });
+
+    this.resService.printCommand.subscribe((value) => {
+      if (value.tabIndex === this.tabIndex){
+        this.printHtmlTag();
+      }
+    })
 
     this.setHotKeys();
 
@@ -384,6 +392,73 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_hihyouji, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.hideRes(this.resList[this.hovered].id);
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.henshuu, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].isEdit = true;
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.chuumoku, (event: KeyboardEvent): boolean => {
+        this.btnImportant.checked = !this.btnImportant.checked;
+        this.filterNoticeHandler();
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.chuushutu_kaijo, (event: KeyboardEvent): boolean => {
+        this.btnSearch.checked = false;
+        this.searchTextHandler();
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
+        this.btnSearch.checked = true;
+        this.searchTextHandler();
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('ctrl+f', (event: KeyboardEvent): boolean => {
+        this.txtSearch.nativeElement.focus();
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('ctrl+home', (event: KeyboardEvent): boolean => {
+        this.moveScroller('top');
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('ctrl+end', (event: KeyboardEvent): boolean => {
+        this.moveScroller('bottom');
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('home', (event: KeyboardEvent): boolean => {
+        this.moveScroller('selected-top');
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('end', (event: KeyboardEvent): boolean => {
+        this.moveScroller('selected-bottom');
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('space', (event: KeyboardEvent): boolean => {
+        this.moveScroller('selected-next');
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey('shift+space', (event: KeyboardEvent): boolean => {
+        this.moveScroller('selected-prev');
+        return false; // Prevent bubbling
+      }));
     }
   }
 
@@ -418,6 +493,24 @@ export class ContentComponent implements OnInit {
               this.virtualScroller.scrollToIndex(i);
               break;
             }
+          }
+        }
+        break;
+      case 'selected-prev':
+        if (this.virtualScroller.viewPortInfo.startIndex  > 0) {
+          for (let i = this.virtualScroller.viewPortInfo.startIndex - 1; i > 0; i--) {
+            if (this.resList[i].resSelect === 'select') {
+              this.virtualScroller.scrollToIndex(i);
+              break;
+            }
+          }
+        }
+        break;
+      case 'selected-next':
+        for (let i = this.virtualScroller.viewPortInfo.startIndex + 1; i < this.resList.length; i++) {
+          if (this.resList[i].resSelect === 'select') {
+            this.virtualScroller.scrollToIndex(i);
+            break;
           }
         }
         break;
@@ -814,5 +907,67 @@ export class ContentComponent implements OnInit {
         totalCount: this.resList.length
       });
     }
+  }
+
+  searchOnKeyHandler($event: KeyboardEvent) {
+    if ($event.ctrlKey && $event.code === 'Enter'){
+      this.btnSearch.checked = true;
+      this.searchTextHandler();
+      this.txtSearch.nativeElement.blur();
+    }
+  }
+
+  private printRes(res){
+    let htmlTag
+    let content = res.content;
+    content = content.replace(/(<img[^<]+>)/ig, '');
+    content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span style="color:mediumblue;" class="anchor">&gt;&gt;$1</span>`);
+    if (res.isAdded) {
+      htmlTag += `<div class="t_h t_i">`;
+    }else{
+      htmlTag += `<div class="t_h">`;
+    }
+    htmlTag += `${res.num}:<span style="color: green; font-weight: bold;">${res.name}</span>`;
+    htmlTag += `<span style="color: gray;">${res.date}`;
+    htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${res.id}</em>`;
+    htmlTag += `</span></div>\n`;
+
+    if (res.isAdded) {
+      htmlTag += `<div class="t_b t_i"><!-- res_s -->${res.content}<!-- res_s -->`;
+    }else{
+      htmlTag += `<div class="t_b" style="color: ${res.resColor};"><!-- res_s -->${res.content}<!-- res_s -->`;
+    }
+    htmlTag += `</div>`;
+    return htmlTag;
+  }
+
+  private printHtmlTag() {
+    let htmlTag = `★■●${this.tabName}●■★\n`;
+    htmlTag += `URL入力欄：${this.txtURL}\n`;
+    let exists = false;
+    for (const res of this.resList){
+      if (res.resSelect === 'select'){
+        exists = true;
+        htmlTag += this.printRes(res);
+      }
+    }
+    for (const res of this.resList){
+      if (res.resSelect === 'candi1'){
+        exists = true;
+        htmlTag += `<div style="yobi1">予備選択1</div>`
+        htmlTag += this.printRes(res);
+      }
+    }
+    for (const res of this.resList){
+      if (res.resSelect === 'candi2'){
+        exists = true;
+        htmlTag += `<div style="yobi1">予備選択2</div>`;
+        htmlTag += this.printRes(res);
+      }
+    }
+    if (!exists){
+      htmlTag = '';
+    }
+    this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag});
   }
 }

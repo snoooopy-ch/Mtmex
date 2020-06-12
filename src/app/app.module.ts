@@ -17,6 +17,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {HotkeyModule} from 'angular2-hotkeys';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {HotkeyModule} from 'angular2-hotkeys';
   ],
     imports: [
         BrowserModule,
+        ClipboardModule,
         FormsModule,
         DragDropModule,
         BrowserAnimationsModule,
@@ -43,6 +45,7 @@ import {HotkeyModule} from 'angular2-hotkeys';
         VirtualScrollerModule,
         MatButtonToggleModule,
         HotkeyModule.forRoot(),
+
     ],
   providers: [],
   bootstrap: [AppComponent]

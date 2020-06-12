@@ -51,7 +51,6 @@ export class ResComponent implements OnInit {
   @Input() idRed;
   @Input() noticeCount;
   @Input() resSizeList;
-  isEdit = false;
   resContent = '';
   @Input() characterColors;
 
@@ -94,8 +93,8 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
   editShowHandler() {
-    this.isEdit = !this.isEdit;
-    if (this.isEdit) {
+    this.item.isEdit = !this.item.isEdit;
+    if (this.item.isEdit) {
       this.resContent = this.item.content;
     }
     this.cdRef.detectChanges();
@@ -108,12 +107,11 @@ export class ResComponent implements OnInit {
     this.resContent = this.resContent.replace(/<\/figure>/ig, '');
     this.resContent = this.resContent.replace(/&nbsp;/ig, '');
     this.item.content = this.resContent;
-    this.isEdit = false;
     this.cdRef.detectChanges();
   }
 
   cancelEditHandler() {
-    this.isEdit = false;
+    this.item.isEdit = false;
     this.cdRef.detectChanges();
   }
 

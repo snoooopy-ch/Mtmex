@@ -19,6 +19,8 @@ export class RightPanelComponent implements OnInit {
   totalCount = 0;
   selectCommand = '';
   settings;
+  htmlTag: string;
+  private lifetimeAchievements: string;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) {
     this.hiddenIds = [];
@@ -47,7 +49,7 @@ export class RightPanelComponent implements OnInit {
       this.totalCount = value.totalCount;
     });
 
-    this.resService.selectedRes.subscribe(value => {
+    this.resService.selectedRes.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
@@ -56,17 +58,29 @@ export class RightPanelComponent implements OnInit {
       }
     });
 
-    this.resService.totalRes.subscribe(value => {
+    this.resService.totalRes.subscribe((value) => {
       if (this.tabIndex === value.tabIndex){
         this.totalCount = value.totalCount;
       }
     });
+
+    this.resService.printHtml.subscribe( (value) => {
+      if (this.tabIndex === value.tabIndex){
+        this.htmlTag = value.html;
+
+      }
+    });
   }
+
 
   onLoadUrl(txtUrl: string, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean) {
     this.resService.loadRes(txtUrl, isResSort, isMultiAnchor, isReplaceRes);
   }
 
+  /**
+   * IDを非表示のID欄から削除し、そのIDのレスを、レス描写エリアに表示します
+   * @param id: 非表示のID
+   */
   ShowIdHandler(id: string) {
     let exists = false;
     for (let i = 0; i < this.hiddenIds.length; i++){
@@ -82,7 +96,11 @@ export class RightPanelComponent implements OnInit {
     }
   }
 
-  moveResHandler(value: string) {
+  /**
+   * レス描写エリアを移動します
+   * @param value: 移動種類
+   */
+  moveResViewHandler(value: string) {
     this.resService.setMoveRes({
       tabIndex: this.tabIndex,
       moveKind: value
@@ -99,5 +117,9 @@ export class RightPanelComponent implements OnInit {
 
   setDefaultPathHandler($event: MouseEvent) {
     this.txtUrl = this.settings.defaultPath;
+  }
+
+  printHtmlTagHandler() {
+    this.resService.setPrintCommand({tabIndex: this.tabIndex});
   }
 }

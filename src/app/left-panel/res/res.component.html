@@ -60,7 +60,7 @@
     <button class="btn-white btn-copy-res" (click)="duplicateHandler()">複</button>
     <button class="btn-white btn-edit-text" (click)="editShowHandler()" >編集</button>
   </div>
-  <div class="row-4" *ngIf="isEdit">
+  <div class="row-4" *ngIf="item.isEdit">
     <ckeditor class="row-4" [editor]="Editor"
               [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar'] }"
               [(ngModel)]="resContent" >
@@ -68,5 +68,5 @@
     <button class="btn-save btn-left-round" (click)="saveResHandler()">保存する</button>
     <button class="btn-cancel btn-right-round" (click)="cancelEditHandler()">キャンセル</button>
   </div>
-  <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
+  <div *ngIf="!item.isEdit" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
 

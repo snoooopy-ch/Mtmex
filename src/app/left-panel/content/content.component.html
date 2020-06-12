@@ -3,7 +3,7 @@
     <mat-button-toggle value="all" class="btn-left-round">all</mat-button-toggle>
     <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本</mat-button-toggle>
   </mat-button-toggle-group>
-  <input type="text" [(ngModel)]="searchKeyword">
+  <input type="text" [(ngModel)]="searchKeyword" #txtSearch (keyup)="searchOnKeyHandler($event)">
   <mat-button-toggle-group name="btn-search" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="searchTextHandler()" #btnSearch>抽出</mat-button-toggle>
   </mat-button-toggle-group>
@@ -14,7 +14,7 @@
 <h3>{{tabName}}</h3>
 <div class="content-url">
   <label>URL</label>
-  <input type="text">
+  <input type="text" [(ngModel)]="txtURL">
 </div>
 <!--[enableUnequalChildrenSizes]="true" [bufferAmount]="5"-->
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"

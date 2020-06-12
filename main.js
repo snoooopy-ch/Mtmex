@@ -8,7 +8,8 @@ let ids = [];
 let resList = [];
 let sreTitle = '';
 let settingPath = 'Setting.ini';
-let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換', '#投稿日・IDの置換','#注目レスの閾値'];
+let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
+  '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
 let yesnokey = ['AutoSave','shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
 let settings;
@@ -207,6 +208,15 @@ function getSettings() {
           settings[lineArgs[0]] = lineArgs[1] === 'yes';
         }else {
           if (lineArgs.length > 1) {
+            if(curComment === '#ボタンの色'){
+              if(lineArgs[0] === 'tree_sentaku') {
+                lineArgs[0] = 'tree_sentaku_back';
+              } else if(lineArgs[0] === 'tree_kaijo') {
+                lineArgs[0] = 'tree_kaijo_back';
+              } else if(lineArgs[0] === 'id_kaijo') {
+                lineArgs[0] = 'id_kaijo_back';
+              }
+            }
             settings[lineArgs[0]] = lineArgs[1].replace(';','');
           } else {
             settings[lineArgs[0]] = '';
@@ -415,6 +425,7 @@ function readLines(line) {
     isFiltered: false,
     originalIndex: -1,
     anchorCount: 0,
+    isEdit: false,
   };
 
   num++;

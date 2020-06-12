@@ -23,4 +23,5 @@ export class ResItem{
   isFiltered = false;
   originalIndex: number;
   anchorCount: number;
+  isEdit: boolean;
 }

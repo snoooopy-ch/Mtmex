@@ -20,16 +20,16 @@
 </div>
 <div class="move-res">
   <div>
-    <button id="btn-top-res-list" style="border-top-left-radius: 5px;" (click)="moveResHandler('top')">▲</button>
-    <button id="btn-bottom-res-list" style="border-top-right-radius: 5px;" (click)="moveResHandler('bottom')">▼</button>
+    <button id="btn-top-res-list" style="border-top-left-radius: 5px;" (click)="moveResViewHandler('top')">▲</button>
+    <button id="btn-bottom-res-list" style="border-top-right-radius: 5px;" (click)="moveResViewHandler('bottom')">▼</button>
   </div>
   <div>
-    <button id="btn-prev-selected-list" (click)="moveResHandler('selected-prev')">↑<br>選択</button>
-    <button id="btn-next-selected-list" (click)="moveResHandler('selected-next')">↓<br>選択</button>
+    <button id="btn-prev-selected-list" (click)="moveResViewHandler('selected-prev')">↑<br>選択</button>
+    <button id="btn-next-selected-list" (click)="moveResViewHandler('selected-next')">↓<br>選択</button>
   </div>
   <div>
-    <button id="btn-top-selected-list"  style="border-bottom-left-radius: 5px;" (click)="moveResHandler('selected-top')">△<br>選択 TOP</button>
-    <button id="btn-bottom-selected-list" style="border-bottom-right-radius: 5px;"  (click)="moveResHandler('selected-bottom')">▽<br>選択END</button>
+    <button id="btn-top-selected-list"  style="border-bottom-left-radius: 5px;" (click)="moveResViewHandler('selected-top')">△<br>選択 TOP</button>
+    <button id="btn-bottom-selected-list" style="border-bottom-right-radius: 5px;"  (click)="moveResViewHandler('selected-bottom')">▽<br>選択END</button>
   </div>
   <div class="res-count">
     <h3 id="lbl-main-of-total">{{selectCount}}/{{totalCount}}</h3>
@@ -38,9 +38,9 @@
   </div>
 </div>
 <div class="width-100">
-  <button id="btn-print-html-tag" class="border-round">タグ発行</button>
-  <button id="btn-copy-tag" class="border-round">コピー</button>
-  <textarea id="txt-html-tag"></textarea>
+  <button id="btn-print-html-tag" class="border-round" (click)="printHtmlTagHandler()">タグ発行</button>
+  <button id="btn-copy-tag" class="border-round" [cdkCopyToClipboard]="htmlTag">コピー</button>
+  <textarea id="txt-html-tag" [(ngModel)]="htmlTag"></textarea>
 </div>
 <div class="save-container">
   <button id="btn-save" class="btn-left-round">保存</button>
