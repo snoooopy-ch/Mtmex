@@ -66,7 +66,7 @@
               [(ngModel)]="resContent" >
     </ckeditor>
     <button class="btn-save btn-left-round" (click)="saveResHandler()">保存する</button>
-    <button class="btn-cancel btn-class-round" (click)="cancelEditHandler()">キャンセル</button>
+    <button class="btn-cancel btn-right-round" (click)="cancelEditHandler()">キャンセル</button>
   </div>
   <div *ngIf="!isEdit" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
 
