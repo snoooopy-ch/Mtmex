@@ -27,6 +27,8 @@ export class ResService {
   printCommand = this.printCommandSource.asObservable();
   printHtmlSource = new BehaviorSubject<any>({tabIndex: 0, html: ''});
   printHtml = this.printHtmlSource.asObservable();
+  saveResStatusSource = new BehaviorSubject<any>({});
+  saveResStatus = this.saveResStatusSource.asObservable();
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
@@ -43,6 +45,10 @@ export class ResService {
 
   loadSettings(){
     electron.ipcRenderer.send('loadSettings');
+  }
+
+  saveStatus(saveData: any){
+    electron.ipcRenderer.send('saveStatus', saveData);
   }
 
   setHiddenIds(value: string[]) {
@@ -79,5 +85,9 @@ export class ResService {
 
   setPrintHtml(value: any){
     this.printHtmlSource.next(value);
+  }
+
+  setSaveResStatus(value: any){
+    this.saveResStatusSource.next(value);
   }
 }

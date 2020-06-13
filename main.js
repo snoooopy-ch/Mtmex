@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const fs = require('fs');
 const encoding = require('encoding-japanese');
 
@@ -129,108 +129,7 @@ ipcMain.on("loadRes", (event, url, isResSort, isMultiAnchor, isReplaceRes) => {
   getResList(url, isResSort, isMultiAnchor, isReplaceRes);
 });
 
-ipcMain.on("loadSettings", (event) => {
-  getSettings();
-});
 
-function getSettings() {
-
-  fs.open(settingPath, 'r', (err, fd) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        console.error(url + ' does not exist');
-        return;
-      }
-      throw err;
-    }
-    fs.close(fd, (err) => {
-      if (err) throw err;
-    });
-  });
-
-  let input = fs.createReadStream(settingPath);
-  let remaining = '';
-  settings = {
-    dataPath: '',
-    defaultPath: '',
-    isResSort: false,
-    isMultiAnchor: false,
-    isReplaceRes: false,
-    characterColors:[],
-    cautionRes: [],
-    hiddenRes: [],
-    colors: [],
-  };
-  num = 0;
-  input.on('data', function (data) {
-    remaining += data;
-    remaining = remaining.replace(/(\r)/gm,'');
-    var index = remaining.indexOf('\n');
-    var last = 0;
-    while (index > -1) {
-      let line = remaining.substring(last, index);
-
-      last = index + 1;
-      index = remaining.indexOf('\n', last);
-      if(line.startsWith('#')){
-        // if(stateComments.indexOf(line) !== -1) {
-          curComment = line;
-        // }
-        continue;
-      }
-      if(line.length === 0){
-        continue;
-      }
-      let lineArgs = line.split(':');
-
-      if(curComment === '#datパス'){
-        settings['dataPath'] = line;
-      }else if(curComment === '#指定したdatパス'){
-        settings['defaultPath'] = line;
-      }else if(curComment === '#チェックボックス'){
-        if(lineArgs[0] === '1'){
-          settings['isResSort'] = lineArgs[1] === 'on';
-        }else if(lineArgs[0] === '2'){
-          settings['isMultiAnchor'] = lineArgs[1] === 'on';
-        }else if(lineArgs[0] === '3'){
-          settings['isReplaceRes'] = lineArgs[1] === 'on';
-        }
-      }else if(curComment === '#文字色'){
-          settings['characterColors'].push(lineArgs[1]);
-      }else if(curComment === '注意レス'){
-        settings['chuui'] = lineArgs[1].split(';');
-      }else if(curComment === '#非表示レス'){
-        settings['hihyouji'] = lineArgs[1].split(';');
-      }else if(curComment === '#注目レスの閾値'){
-        settings['noticeCount'] = lineArgs[1].split(';');
-      } else{
-        if(yesnokey.indexOf(lineArgs[0]) !== -1){
-          settings[lineArgs[0]] = lineArgs[1] === 'yes';
-        }else {
-          if (lineArgs.length > 1) {
-            if(curComment === '#ボタンの色'){
-              if(lineArgs[0] === 'tree_sentaku') {
-                lineArgs[0] = 'tree_sentaku_back';
-              } else if(lineArgs[0] === 'tree_kaijo') {
-                lineArgs[0] = 'tree_kaijo_back';
-              } else if(lineArgs[0] === 'id_kaijo') {
-                lineArgs[0] = 'id_kaijo_back';
-              }
-            }
-            settings[lineArgs[0]] = lineArgs[1].replace(';','');
-          } else {
-            settings[lineArgs[0]] = '';
-          }
-        }
-      }
-    }
-    remaining = remaining.substring(last);
-  });
-
-  input.on('end', function () {
-    win.webContents.send("getSettings", settings);
-  });
-}
 /**
  * Adjust the res list by user selection
  * @param isResSort
@@ -493,5 +392,140 @@ function readLines(line) {
   }
   return resItem;
 }
+ipcMain.on("loadSettings", (event) => {
+  getSettings();
+});
 
+function getSettings() {
+
+  fs.open(settingPath, 'r', (err, fd) => {
+    if (err) {
+      if (err.code === 'ENOENT') {
+        console.error(url + ' does not exist');
+        return;
+      }
+      throw err;
+    }
+    fs.close(fd, (err) => {
+      if (err) throw err;
+    });
+  });
+
+  let input = fs.createReadStream(settingPath);
+  let remaining = '';
+  settings = {
+    dataPath: '',
+    defaultPath: '',
+    isResSort: false,
+    isMultiAnchor: false,
+    isReplaceRes: false,
+    characterColors:[],
+    cautionRes: [],
+    hiddenRes: [],
+    colors: [],
+  };
+  num = 0;
+  input.on('data', function (data) {
+    remaining += data;
+    remaining = remaining.replace(/(\r)/gm,'');
+    var index = remaining.indexOf('\n');
+    var last = 0;
+    while (index > -1) {
+      let line = remaining.substring(last, index);
+
+      last = index + 1;
+      index = remaining.indexOf('\n', last);
+      if(line.startsWith('#')){
+        // if(stateComments.indexOf(line) !== -1) {
+        curComment = line;
+        // }
+        continue;
+      }
+      if(line.length === 0){
+        continue;
+      }
+      let lineArgs = line.split(':');
+
+      if(curComment === '#datパス'){
+        settings['dataPath'] = line;
+      }else if(curComment === '#指定したdatパス'){
+        settings['defaultPath'] = line;
+      }else if(curComment === '#チェックボックス'){
+        if(lineArgs[0] === '1'){
+          settings['isResSort'] = lineArgs[1] === 'on';
+        }else if(lineArgs[0] === '2'){
+          settings['isMultiAnchor'] = lineArgs[1] === 'on';
+        }else if(lineArgs[0] === '3'){
+          settings['isReplaceRes'] = lineArgs[1] === 'on';
+        }
+      }else if(curComment === '#文字色'){
+        settings['characterColors'].push(lineArgs[1]);
+      }else if(curComment === '注意レス'){
+        settings['chuui'] = lineArgs[1].split(';');
+      }else if(curComment === '#非表示レス'){
+        settings['hihyouji'] = lineArgs[1].split(';');
+      }else if(curComment === '#注目レスの閾値'){
+        settings['noticeCount'] = lineArgs[1].split(';');
+      } else{
+        if(yesnokey.indexOf(lineArgs[0]) !== -1){
+          settings[lineArgs[0]] = lineArgs[1] === 'yes';
+        }else {
+          if (lineArgs.length > 1) {
+            if(curComment === '#ボタンの色'){
+              if(lineArgs[0] === 'tree_sentaku') {
+                lineArgs[0] = 'tree_sentaku_back';
+              } else if(lineArgs[0] === 'tree_kaijo') {
+                lineArgs[0] = 'tree_kaijo_back';
+              } else if(lineArgs[0] === 'id_kaijo') {
+                lineArgs[0] = 'id_kaijo_back';
+              }
+            }
+            settings[lineArgs[0]] = lineArgs[1].replace(';','');
+          } else {
+            settings[lineArgs[0]] = '';
+          }
+        }
+      }
+    }
+    remaining = remaining.substring(last);
+  });
+
+  input.on('end', function () {
+    win.webContents.send("getSettings", settings);
+  });
+}
+
+ipcMain.on("saveStatus", (event, saveData) => {
+  saveStatus(saveData);
+});
+
+function saveStatus(saveData) {
+  const jsonString = JSON.stringify(saveData);
+  const filePath = saveData.filePath;
+  if(filePath === undefined) return;
+  console.log('saveStatus');
+  fs.writeFile(filePath, jsonString, err => {
+    if (err) {
+      dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
+    } else {
+      dialog.showMessageBox({title: '保存', message: '保存に成功しました。'});
+    }
+  });
+}
+
+function loadStatus(filePath){
+  fs.readFile(filePath, 'utf8', (err, jsonString) => {
+    if (err) {
+      dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
+      console.log("Error reading file from disk:", err)
+      return
+    }
+    try {
+      const customer = JSON.parse(jsonString)
+      console.log("Customer address is:", customer.address) // => "Customer address is: Infinity Loop Drive"
+    } catch(err) {
+      console.log('Error parsing JSON string:', err)
+    }
+  })
+}
 

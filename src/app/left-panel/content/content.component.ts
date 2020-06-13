@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component, ElementRef, EventEmitter,
-  Input,
-  OnInit, Output, Pipe, PipeTransform,
+  Input, OnDestroy,
+  OnInit, Output,
   ViewChild
 } from '@angular/core';
 import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -22,7 +22,7 @@ import {Hotkey, HotkeysService} from 'angular2-hotkeys';
   styleUrls: ['./content.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContentComponent implements OnInit {
+export class ContentComponent implements OnInit, OnDestroy {
   @Input() tabName = 'New Tab';
   @Input() resList: ResItem[];
   @Input() tabIndex;
@@ -52,6 +52,7 @@ export class ContentComponent implements OnInit {
   backupResList;
   noticeBackupResList;
   txtURL: string;
+  public subscribers: any = {};
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -61,8 +62,7 @@ export class ContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.subHotKeys);
-    this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
+    this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
       for (let i = 0; i < this.resList.length; i++){
         this.resList[i].show = this.hiddenIds.indexOf(this.resList[i].id) === -1;
@@ -70,41 +70,69 @@ export class ContentComponent implements OnInit {
       this.cdRef.detectChanges();
     });
 
-    this.resService.scrollPos.subscribe((scrollPos) => {
+    this.subscribers.scrollPos = this.resService.scrollPos.subscribe((scrollPos) => {
          if (scrollPos.index === this.tabIndex && scrollPos.isTab){
           this.virtualScroller.scrollToIndex(scrollPos.pos);
         }
     });
 
-    this.resService.moveRes.subscribe((value) => {
+    this.subscribers.moveRes = this.resService.moveRes.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
         this.moveScroller(value.moveKind);
       }
     });
 
-    this.resService.selectCommand.subscribe((value) => {
+    this.subscribers.selectCommand = this.resService.selectCommand.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
          this.multiSelection(value.command);
       }
     });
 
-    this.resService.selectedTab.subscribe((value) => {
+    this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
         this.setHotKeys();
       }
     });
 
-    this.resService.printCommand.subscribe((value) => {
+    this.subscribers.printCommand =  this.resService.printCommand.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
+        console.log('content-panel');
         this.printHtmlTag();
       }
-    })
+    });
 
+    this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
+      if (value.tabIndex === this.tabIndex && this.resList.length > 0) {
+        console.log('content-panel');
+        const saveData = value;
+        saveData.resList = this.resList;
+        saveData.title = this.tabName;
+        saveData.txtUrl = this.txtURL;
+        saveData.scrollIndex = this.virtualScroller.viewPortInfo.startIndex;
+        this.resService.saveStatus(saveData);
+      }
+    });
     this.setHotKeys();
-
   }
 
+  /**
+   * Unsubscribe the completed service subscribers
+   */
+  ngOnDestroy(){
+    this.subscribers.LoadHiddenIds.unsubscribe();
+    this.subscribers.scrollPos.unsubscribe();
+    this.subscribers.moveRes.unsubscribe();
+    this.subscribers.selectCommand.unsubscribe();
+    this.subscribers.selectedTab.unsubscribe();
+    this.subscribers.printCommand.unsubscribe();
+    this.subscribers.saveResStatus.unsubscribe();
+  }
+
+  /**
+   * ショートカットキー値を設定します。
+   */
   setHotKeys(){
+    // 選択ボタン
     if (this.subHotKeys.hasOwnProperty('sentaku_no1')) {
       this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_no1,
         this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
@@ -120,9 +148,10 @@ export class ContentComponent implements OnInit {
               {select: true, candi1: false, candi2: false, selected: 'select'});
           }
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // 予備選択ボタン1
       this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'candi1') {
@@ -135,9 +164,10 @@ export class ContentComponent implements OnInit {
               {select: false, candi1: true, candi2: false, selected: 'candi1'});
           }
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // 予備選択ボタン2
       this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'candi2') {
@@ -150,33 +180,37 @@ export class ContentComponent implements OnInit {
               {select: false, candi1: false, candi2: true, selected: 'candi2'});
           }
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // ↑ ボタン
       this.hotkeysService.add(new Hotkey(this.subHotKeys.up, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.upRes(this.resList[this.hovered]);
           this.cdRef.detectChanges();
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // ↓ ボタン
       this.hotkeysService.add(new Hotkey(this.subHotKeys.down, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.downRes(this.resList[this.hovered]);
           this.cdRef.detectChanges();
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // 中
       this.hotkeysService.add(new Hotkey(this.subHotKeys.big1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resFontSize = this.resSizeList[1].value;
           this.cdRef.detectChanges();
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // 大
       this.hotkeysService.add(new Hotkey(this.subHotKeys.big2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resFontSize = this.resSizeList[2].value;
@@ -185,6 +219,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // なし
       this.hotkeysService.add(new Hotkey(this.subHotKeys.nasi, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = '#f00';
@@ -193,6 +228,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色1
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[0];
@@ -201,6 +237,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色2
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[1];
@@ -208,6 +245,8 @@ export class ContentComponent implements OnInit {
         }
         return false; // Prevent bubbling
       }));
+
+      // 色3
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color3, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[2];
@@ -216,6 +255,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色4
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color4, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[3];
@@ -224,6 +264,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色5
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color5, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[4];
@@ -232,6 +273,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色6
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color6, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[5];
@@ -240,6 +282,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色7
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color7, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[6];
@@ -248,6 +291,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色8
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color8, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[7];
@@ -256,6 +300,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色9
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color9, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[8];
@@ -264,6 +309,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 色10
       this.hotkeysService.add(new Hotkey(this.subHotKeys.color10, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].resColor = this.characterColors[9];
@@ -272,6 +318,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // ツリー選択（T選択）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_sentaku, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedTreeRes(this.hovered, {select: 1, resBackgroundColor: this.backgroundColors[1]});
@@ -280,30 +327,34 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // ツリー予備選択1（T1）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedTreeRes(this.hovered, {select: 2, resBackgroundColor: this.backgroundColors[2]});
           this.cdRef.detectChanges();
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // ツリー予備選択2（T2）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedTreeRes(this.hovered, {select: 3, resBackgroundColor: this.backgroundColors[3]});
           this.cdRef.detectChanges();
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // ツリー解除（T解除）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_kaijo, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedTreeRes(this.hovered, {select: 0, resBackgroundColor: this.backgroundColors[0]});
           this.cdRef.detectChanges();
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // ID選択1
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
@@ -317,6 +368,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // ID選択2
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
@@ -330,6 +382,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // ID選択3
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id3, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
@@ -340,9 +393,10 @@ export class ContentComponent implements OnInit {
             });
           this.cdRef.detectChanges();
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // ID解除
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_kaijo, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'select') {
@@ -355,9 +409,10 @@ export class ContentComponent implements OnInit {
             });
           }
         }
-        return false; // Prevent bubbling
+        return false;
       }));
 
+      // ID色消
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_irokesi, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
@@ -371,6 +426,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // ID解除＆ID色消
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_kaijo_irokesi, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'select') {
@@ -393,6 +449,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 非表示（ID非表示）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_hihyouji, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.hideRes(this.resList[this.hovered].id);
@@ -400,6 +457,7 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 編集
       this.hotkeysService.add(new Hotkey(this.subHotKeys.henshuu, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.resList[this.hovered].isEdit = true;
@@ -408,54 +466,64 @@ export class ContentComponent implements OnInit {
         return false; // Prevent bubbling
       }));
 
+      // 注目レス ON/OFF
       this.hotkeysService.add(new Hotkey(this.subHotKeys.chuumoku, (event: KeyboardEvent): boolean => {
         this.btnImportant.checked = !this.btnImportant.checked;
         this.filterNoticeHandler();
         return false; // Prevent bubbling
       }));
 
+      // 抽出解除
       this.hotkeysService.add(new Hotkey(this.subHotKeys.chuushutu_kaijo, (event: KeyboardEvent): boolean => {
         this.btnSearch.checked = false;
         this.searchTextHandler();
         return false; // Prevent bubbling
       }));
 
+      // 抽出
       this.hotkeysService.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
         this.btnSearch.checked = true;
         this.searchTextHandler();
         return false; // Prevent bubbling
       }));
 
+      // 検索バーにフォーカス移動
       this.hotkeysService.add(new Hotkey('ctrl+f', (event: KeyboardEvent): boolean => {
         this.txtSearch.nativeElement.focus();
         return false; // Prevent bubbling
       }));
 
+      // レス描写エリアの一番上に移動
       this.hotkeysService.add(new Hotkey('ctrl+home', (event: KeyboardEvent): boolean => {
         this.moveScroller('top');
         return false; // Prevent bubbling
       }));
 
+      // レス描写エリアの一番下に移動
       this.hotkeysService.add(new Hotkey('ctrl+end', (event: KeyboardEvent): boolean => {
         this.moveScroller('bottom');
         return false; // Prevent bubbling
       }));
 
+      // レス描写エリアの一番上に移動
       this.hotkeysService.add(new Hotkey('home', (event: KeyboardEvent): boolean => {
         this.moveScroller('selected-top');
         return false; // Prevent bubbling
       }));
 
+      // レス描写エリアの一番下に移動
       this.hotkeysService.add(new Hotkey('end', (event: KeyboardEvent): boolean => {
         this.moveScroller('selected-bottom');
         return false; // Prevent bubbling
       }));
 
+      // 描写エリアを下に移動
       this.hotkeysService.add(new Hotkey('space', (event: KeyboardEvent): boolean => {
         this.moveScroller('selected-next');
         return false; // Prevent bubbling
       }));
 
+      // 描写エリアを上に移動
       this.hotkeysService.add(new Hotkey('shift+space', (event: KeyboardEvent): boolean => {
         this.moveScroller('selected-prev');
         return false; // Prevent bubbling
@@ -528,10 +596,19 @@ export class ContentComponent implements OnInit {
     this.resList = [...this.resList];
   }
 
+  /**
+   * store drag started res index
+   * @param $event: event
+   * @param item: started res
+   */
   dragStarted($event: CdkDragStart, item) {
     this.selectedResIndex = this.resList.indexOf(item);
   }
 
+  /**
+   * レスを複製します。
+   * @param item: 複製レス
+   */
   duplicateRes(item: any) {
     const index = this.resList.indexOf(item);
     this.resList.splice(index + 1, 0, item);
@@ -542,23 +619,39 @@ export class ContentComponent implements OnInit {
     });
   }
 
+  /**
+   * IDを非表示します。
+   * @param resId:非表示ID
+   */
   hideRes(resId: string) {
     this.hiddenIds = [...this.hiddenIds, resId];
     this.resService.setHiddenIds(this.hiddenIds);
   }
 
+  /**
+   * 上に移動します。
+   * @param item: 移動レス
+   */
   upRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index - 1);
     this.resList = [...this.resList];
   }
 
+  /**
+   * 下に移動します。
+   * @param item: 移動レス
+   */
   downRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index + 1);
     this.resList = [...this.resList];
   }
 
+  /**
+   * レスを一番上に移動
+   * @param item: 移動レス
+   */
   toTopRes(item: any) {
     const index = this.resList.indexOf(item);
     const tmpRes = Object.assign({}, item);
@@ -568,6 +661,10 @@ export class ContentComponent implements OnInit {
     this.virtualScroller.scrollToIndex(0);
   }
 
+  /**
+   * レスを一番下に移動
+   * @param item: 移動レス
+   */
   toBottomRes(item: any) {
     const index = this.resList.indexOf(item);
     const tmpRes = Object.assign({}, item);
@@ -577,6 +674,11 @@ export class ContentComponent implements OnInit {
     this.virtualScroller.scrollToIndex(this.resList.length);
   }
 
+  /**
+   * レスを選択
+   * @param item: 選択レス
+   * @param $event: event
+   */
   selectedRes(item: any, $event: any) {
     item.select = $event.select;
     item.candi1 = $event.candi1;
@@ -919,7 +1021,7 @@ export class ContentComponent implements OnInit {
   }
 
   private printRes(res){
-    let htmlTag ='';
+    let htmlTag = '';
     let content = res.content;
     content = content.replace(/(<img[^<]+>)/ig, '');
     content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span style="color:mediumblue;" class="anchor">$1</span>`);
@@ -959,7 +1061,7 @@ export class ContentComponent implements OnInit {
     for (const res of this.resList){
       if (res.resSelect === 'candi1'){
         exists = true;
-        htmlTag += `<div style="yobi1">予備選択1</div>`
+        htmlTag += `<div style="yobi1">予備選択1</div>`;
         htmlTag += this.printRes(res);
       }
     }

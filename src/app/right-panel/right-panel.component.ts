@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
+const electron = (window as any).require('electron');
 
 @Component({
   selector: 'app-right-panel',
@@ -21,7 +22,6 @@ export class RightPanelComponent implements OnInit {
   selectCommand = '';
   settings;
   htmlTag: string;
-  private lifetimeAchievements: string;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
@@ -116,11 +116,30 @@ export class RightPanelComponent implements OnInit {
     this.selectCommand = '';
   }
 
-  setDefaultPathHandler($event: MouseEvent) {
+  setDefaultPathHandler() {
     this.txtUrl = this.settings.defaultPath;
   }
 
   printHtmlTagHandler() {
     this.resService.setPrintCommand({tabIndex: this.tabIndex});
+  }
+
+  saveCurrentLes() {
+    electron.remote.dialog.showSaveDialog(null, {title: 'レス状態保存'}).then(result => {
+      if (!result.canceled){
+        console.log('rightpanel');
+        this.resService.setSaveResStatus({
+          tabIndex: this.tabIndex,
+          filePath: result.filePath,
+          isResSort: this.isResSort,
+          isMultiAnchor: this.isMultiAnchor,
+          isReplaceRes: this.isReplaceRes,
+          txtPath: this.txtUrl
+        });
+      }
+
+    }).catch(err => {
+      console.log(err);
+    });
   }
 }

@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="width-40">
-    <button id="btn-located-dat" class="border-round" (click)="setDefaultPathHandler($event)">指定<br>dat</button>
+    <button id="btn-located-dat" class="border-round" (click)="setDefaultPathHandler()">指定<br>dat</button>
   </div>
 </div>
 <div class="move-res">
@@ -43,7 +43,7 @@
   <textarea id="txt-html-tag" [(ngModel)]="htmlTag"></textarea>
 </div>
 <div class="save-container">
-  <button id="btn-save" class="btn-left-round">保存</button>
+  <button id="btn-save" class="btn-left-round" (click)="saveCurrentLes()">保存</button>
   <button id="btn-load" class="btn-right-round">復元</button>
 </div>
 <div class="setting-panel">
