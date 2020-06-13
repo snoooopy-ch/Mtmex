@@ -8,7 +8,7 @@ import {ResService} from '../../res.service';
 })
 export class StatusComponent implements OnInit {
 
-  @Input() totalCount;
+  totalCount;
   @Input() tabIndex;
   selectCount = 0;
   candi1Count = 0;

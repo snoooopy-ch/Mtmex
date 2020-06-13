@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ResService} from '../res.service';
 import {MatTabChangeEvent} from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -8,7 +8,7 @@ import { Title } from '@angular/platform-browser';
   templateUrl: './left-panel.component.html',
   styleUrls: ['./left-panel.component.css'],
 })
-export class LeftPanelComponent implements OnInit {
+export class LeftPanelComponent implements OnInit, OnDestroy {
   resLists: [any[]];
   tabs = ['New Tab'];
   scrollPos = [0];
@@ -25,13 +25,14 @@ export class LeftPanelComponent implements OnInit {
   // chuumoku: number;
   noticeCount: number;
   subHotKeys = [];
+  public subscribers: any = {};
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
 
   ngOnInit(): void {
 
-    this.resService.settings.subscribe((value) => {
+    this.subscribers.settings = this.resService.settings.subscribe((value) => {
 
       this.settings = value;
       this.backgroundColors = [this.settings.Back_color,
@@ -76,7 +77,7 @@ export class LeftPanelComponent implements OnInit {
       }
     });
 
-    this.resService.resData.subscribe((value) => {
+    this.subscribers.resData = this.resService.resData.subscribe((value) => {
 
       this.resLists[this.selectedTabIndex] = value.resList;
       this.cdr.detectChanges();
@@ -90,11 +91,35 @@ export class LeftPanelComponent implements OnInit {
       }
 
     });
-    this.resService.scrollPos.subscribe((value) => {
+    this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
       if (this.selectedTabIndex === value.index) {
         this.scrollPos[this.selectedTabIndex] = value.pos;
       }
     });
+
+    this.subscribers.status = this.resService.status.subscribe((value) => {
+
+      if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
+        this.resLists[this.selectedTabIndex] = value.data.resList;
+        this.cdr.detectChanges();
+        this.tabs[this.selectedTabIndex] = value.data.title;
+        this.titleService.setTitle(`${this.tabs[this.selectedTabIndex]} - スレ編集`);
+        this.resService.setTotalRes({
+          tabIndex: this.selectedTabIndex,
+          totalCount: value.data.resList.length
+        });
+      }
+    });
+  }
+
+  /**
+   * Unsubscribe the completed service subscribers
+   */
+  ngOnDestroy(){
+    this.subscribers.settings.unsubscribe();
+    this.subscribers.resData.unsubscribe();
+    this.subscribers.scrollPos.unsubscribe();
+    this.subscribers.status.unsubscribe();
   }
 
   addTab() {

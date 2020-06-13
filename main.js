@@ -503,7 +503,6 @@ function saveStatus(saveData) {
   const jsonString = JSON.stringify(saveData);
   const filePath = saveData.filePath;
   if(filePath === undefined) return;
-  console.log('saveStatus');
   fs.writeFile(filePath, jsonString, err => {
     if (err) {
       dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
@@ -512,17 +511,18 @@ function saveStatus(saveData) {
     }
   });
 }
-
-function loadStatus(filePath){
+ipcMain.on("loadStatus", (event, filePath, tabIndex) => {
+  loadStatus(filePath, tabIndex);
+});
+function loadStatus(filePath, tabIndex){
   fs.readFile(filePath, 'utf8', (err, jsonString) => {
     if (err) {
-      dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
-      console.log("Error reading file from disk:", err)
+      dialog.showMessageBox({title: '復元', message: '復元。'});
       return
     }
     try {
-      const customer = JSON.parse(jsonString)
-      console.log("Customer address is:", customer.address) // => "Customer address is: Infinity Loop Drive"
+      const loadData = JSON.parse(jsonString)
+      win.webContents.send("getStatus", {data: loadData, tabIndex: tabIndex});
     } catch(err) {
       console.log('Error parsing JSON string:', err)
     }

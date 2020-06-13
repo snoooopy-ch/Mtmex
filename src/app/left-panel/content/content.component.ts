@@ -95,15 +95,15 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.printCommand =  this.resService.printCommand.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex){
-        console.log('content-panel');
+      if (value.tabIndex === this.tabIndex && value.token){
         this.printHtmlTag();
       }
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex && this.resList.length > 0) {
-        console.log('content-panel');
+      console.log('content-panel');
+      console.log(value);
+      if (value.tabIndex === this.tabIndex && this.resList.length > 0 && value.token) {
         const saveData = value;
         saveData.resList = this.resList;
         saveData.title = this.tabName;
@@ -112,6 +112,18 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.resService.saveStatus(saveData);
       }
     });
+
+    this.subscribers.status = this.resService.status.subscribe((value) => {
+      if (this.tabIndex === value.tabIndex) {
+        this.txtURL = value.data.txtUrl;
+        if (this.resList !== undefined) {
+          this.virtualScroller.scrollToIndex(value.data.scrollIndex);
+          this.changeStatus();
+          this.cdRef.detectChanges();
+        }
+      }
+    });
+
     this.setHotKeys();
   }
 
@@ -126,6 +138,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.selectedTab.unsubscribe();
     this.subscribers.printCommand.unsubscribe();
     this.subscribers.saveResStatus.unsubscribe();
+    this.subscribers.status.unsubscribe();
   }
 
   /**

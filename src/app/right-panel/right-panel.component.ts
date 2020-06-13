@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
 const electron = (window as any).require('electron');
@@ -8,7 +8,7 @@ const electron = (window as any).require('electron');
   templateUrl: './right-panel.component.html',
   styleUrls: ['./right-panel.component.css']
 })
-export class RightPanelComponent implements OnInit {
+export class RightPanelComponent implements OnInit, OnDestroy {
   txtUrl = '';
   isResSort = false;
   isMultiAnchor = false;
@@ -22,18 +22,19 @@ export class RightPanelComponent implements OnInit {
   selectCommand = '';
   settings;
   htmlTag: string;
+  public subscribers: any = {};
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
   }
 
   ngOnInit(): void {
-    this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
+    this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
       this.cdRef.detectChanges();
     });
 
-    this.resService.settings.subscribe((value) => {
+    this.subscribers.settings = this.resService.settings.subscribe((value) => {
       this.settings = value;
       this.txtUrl = this.settings.dataPath;
       this.isReplaceRes = this.settings.isReplaceRes;
@@ -42,7 +43,7 @@ export class RightPanelComponent implements OnInit {
       this.cdRef.detectChanges();
     });
 
-    this.resService.selectedTab.subscribe((value ) => {
+    this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value ) => {
       this.tabIndex = value.tabIndex;
       this.selectCount = value.select;
       this.candi1Count = value.candi1;
@@ -50,7 +51,7 @@ export class RightPanelComponent implements OnInit {
       this.totalCount = value.totalCount;
     });
 
-    this.resService.selectedRes.subscribe((value) => {
+    this.subscribers.selectedRes = this.resService.selectedRes.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
@@ -59,20 +60,41 @@ export class RightPanelComponent implements OnInit {
       }
     });
 
-    this.resService.totalRes.subscribe((value) => {
+    this.subscribers.totalRes = this.resService.totalRes.subscribe((value) => {
       if (this.tabIndex === value.tabIndex){
         this.totalCount = value.totalCount;
       }
     });
 
-    this.resService.printHtml.subscribe( (value) => {
+    this.subscribers.printHtml = this.resService.printHtml.subscribe( (value) => {
       if (this.tabIndex === value.tabIndex){
         this.htmlTag = value.html;
         this.clipboard.copy(this.htmlTag);
       }
     });
+
+    this.subscribers.status = this.resService.status.subscribe((value) => {
+      if (this.tabIndex === value.tabIndex) {
+        this.isResSort = value.data.isResSort;
+        this.isReplaceRes = value.data.isReplaceRes;
+        this.isMultiAnchor = value.data.isMultiAnchor;
+        this.txtUrl = value.data.txtPath;
+      }
+    });
   }
 
+  /**
+   * Unsubscribe the completed service subscribers
+   */
+  ngOnDestroy(){
+    this.subscribers.LoadHiddenIds.unsubscribe();
+    this.subscribers.settings.unsubscribe();
+    this.subscribers.selectedTab.unsubscribe();
+    this.subscribers.selectedRes.unsubscribe();
+    this.subscribers.totalRes.unsubscribe();
+    this.subscribers.printHtml.unsubscribe();
+    this.subscribers.status.unsubscribe();
+  }
 
   onLoadUrl(txtUrl: string, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean) {
     this.resService.loadRes(txtUrl, isResSort, isMultiAnchor, isReplaceRes);
@@ -121,25 +143,34 @@ export class RightPanelComponent implements OnInit {
   }
 
   printHtmlTagHandler() {
-    this.resService.setPrintCommand({tabIndex: this.tabIndex});
+    this.resService.setPrintCommand({tabIndex: this.tabIndex, token: true});
   }
 
-  saveCurrentLes() {
+  saveCurrentRes() {
     electron.remote.dialog.showSaveDialog(null, {title: 'レス状態保存'}).then(result => {
       if (!result.canceled){
-        console.log('rightpanel');
+        console.log('right-panel');
         this.resService.setSaveResStatus({
           tabIndex: this.tabIndex,
           filePath: result.filePath,
           isResSort: this.isResSort,
           isMultiAnchor: this.isMultiAnchor,
           isReplaceRes: this.isReplaceRes,
-          txtPath: this.txtUrl
+          txtPath: this.txtUrl,
+          token: true,
         });
       }
 
     }).catch(err => {
       console.log(err);
+    });
+  }
+
+  loadCurrentRes() {
+    electron.remote.dialog.showOpenDialog(null, {title: 'レス状態保存'}).then(result => {
+      if (!result.canceled){
+        this.resService.loadStatus(result.filePaths[0], this.tabIndex);
+      }
     });
   }
 }
