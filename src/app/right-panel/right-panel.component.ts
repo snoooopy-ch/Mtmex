@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
 
 @Component({
@@ -22,7 +23,7 @@ export class RightPanelComponent implements OnInit {
   htmlTag: string;
   private lifetimeAchievements: string;
 
-  constructor(private resService: ResService, private cdRef: ChangeDetectorRef) {
+  constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
   }
 
@@ -67,7 +68,7 @@ export class RightPanelComponent implements OnInit {
     this.resService.printHtml.subscribe( (value) => {
       if (this.tabIndex === value.tabIndex){
         this.htmlTag = value.html;
-
+        this.clipboard.copy(this.htmlTag);
       }
     });
   }

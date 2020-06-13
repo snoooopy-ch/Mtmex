@@ -57,6 +57,7 @@ export class ContentComponent implements OnInit {
     this.hiddenIds = [];
     this.hovered = -1;
     this.subHotKeys = [];
+    this.txtURL = '';
   }
 
   ngOnInit(): void {
@@ -918,10 +919,10 @@ export class ContentComponent implements OnInit {
   }
 
   private printRes(res){
-    let htmlTag
+    let htmlTag ='';
     let content = res.content;
     content = content.replace(/(<img[^<]+>)/ig, '');
-    content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span style="color:mediumblue;" class="anchor">&gt;&gt;$1</span>`);
+    content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span style="color:mediumblue;" class="anchor">$1</span>`);
     if (res.isAdded) {
       htmlTag += `<div class="t_h t_i">`;
     }else{
@@ -929,13 +930,17 @@ export class ContentComponent implements OnInit {
     }
     htmlTag += `${res.num}:<span style="color: green; font-weight: bold;">${res.name}</span>`;
     htmlTag += `<span style="color: gray;">${res.date}`;
-    htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${res.id}</em>`;
+    if (res.idColor !== '#f00') {
+      htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${res.id}</em>`;
+    }else{
+      htmlTag += ` ID:${res.id}`;
+    }
     htmlTag += `</span></div>\n`;
 
     if (res.isAdded) {
-      htmlTag += `<div class="t_b t_i"><!-- res_s -->${res.content}<!-- res_s -->`;
+      htmlTag += `<div class="t_b t_i"><!-- res_s -->${content}<!-- res_s -->`;
     }else{
-      htmlTag += `<div class="t_b" style="color: ${res.resColor};"><!-- res_s -->${res.content}<!-- res_s -->`;
+      htmlTag += `<div class="t_b" style="color: ${res.resColor};"><!-- res_s -->${content}<!-- res_s -->`;
     }
     htmlTag += `</div>`;
     return htmlTag;
