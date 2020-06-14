@@ -122,7 +122,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(){
     this.subscribers.settings.unsubscribe();
-    this.subscribers.resData.unsubscribe();
+    // this.subscribers.resData.unsubscribe();
     this.subscribers.scrollPos.unsubscribe();
     this.subscribers.status.unsubscribe();
   }

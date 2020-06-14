@@ -299,7 +299,7 @@ function readLines(line) {
   let words = line.split('<>');
   if (words.length > 4 && resList.length === 0) {
     sreTitle = words[4].replace(/\r|\r|\r\n/gi,'');
-    sreTitle = sreTite.trim();
+    sreTitle = sreTitle.trim();
   }
   let date_and_id = words[2].split(' ID:');
   let resItem = {
@@ -363,7 +363,10 @@ function readLines(line) {
       if (index > 0)
         resItem.content += '<br>';
       tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
-      tmp_item = tmp_item.trim();
+      // if(tmp_item.match(/(&gt;&gt;\d*[0-9]\d*)/)){
+      //   tmp_item = tmp_item.trim();
+      // }
+      // tmp_item = tmp_item.trim();
       if (tmp_item.startsWith("https:")) {
         tmp_item = tmp_item.replace('.JPG', '.jpg');
         tmp_item = tmp_item.replace('.GIF', '.gif');

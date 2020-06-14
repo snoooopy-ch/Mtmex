@@ -1044,8 +1044,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       `$1 target="_blank" class="image"$2`);
     content = content.replace(/(\.[^jpg]+"|\.[^gif]+"|\.[^jpeg]+"|\.[^png]+"|\.[^bmp]+")(>https:)/ig,
       `$1 target="_blank"$2`);
-    content = content.replace(/(<br><br>)/ig, '<br>');
-    content = content.replace(/(<br><br>)/ig, '<br>');
+    // content = content.replace(/(<br><br>)/ig, '<br>');
+    // content = content.replace(/(<br><br>)/ig, '<br>');
     content = content.replace(/(<br>)/ig, '<br />');
 
     if (res.isAdded) {
@@ -1147,22 +1147,34 @@ export class ContentComponent implements OnInit, OnDestroy {
         htmlTag += this.printRes(res);
       }
     }
+
+    let yobi1 = ``;
     for (const res of this.resList){
       if (res.resSelect === 'candi1'){
         exists = true;
-        htmlTag += `<div style="yobi1">予備選択1</div>`;
-        htmlTag += this.printRes(res);
+        yobi1 += this.printRes(res);
       }
     }
+    if (yobi1.length > 0){
+      htmlTag += `<div style="yobi1">予備選択1</div>\n${yobi1}`;
+    }
+
+    let yobi2 = ``;
     for (const res of this.resList){
       if (res.resSelect === 'candi2'){
         exists = true;
-        htmlTag += `<div style="yobi1">予備選択2</div>`;
-        htmlTag += this.printRes(res);
+        yobi2 += this.printRes(res);
       }
     }
+
+    if (yobi2.length > 0){
+      htmlTag += `<div style="yobi2">予備選択2</div>\n${yobi2}`;
+    }
+
     if (!exists){
       htmlTag = '';
+    }else{
+      htmlTag = htmlTag.substr(0, htmlTag.length - 1);
     }
     this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag});
   }
