@@ -81,6 +81,7 @@ label {
   padding: 5px 0 5px 5px;
 }
 
+/*
 .container app-left-panel button {
   border: 1px solid #000;
 }
@@ -91,7 +92,7 @@ label {
 
 .container app-left-panel button:focus {
   border: 1px solid #000;
-}
+}*/
 
 
 .container app-left-panel #btn-plus {
