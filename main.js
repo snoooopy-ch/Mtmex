@@ -109,7 +109,8 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes) {
     while (index > -1) {
       let line = remaining.substring(last, index);
       last = index + 1;
-      resList.push(readLines(line));
+      if(line.length > 1)
+        resList.push(readLines(line));
       index = remaining.indexOf('\n', last);
     }
 
@@ -294,9 +295,11 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
  *            resColor: string}}
  */
 function readLines(line) {
+  if(line === undefined) return undefined;
   let words = line.split('<>');
   if (words.length > 4 && resList.length === 0) {
-    sreTitle = words[4];
+    sreTitle = words[4].replace(/\r|\r|\r\n/gi,'');
+    sreTitle = sreTite.trim();
   }
   let date_and_id = words[2].split(' ID:');
   let resItem = {
@@ -330,8 +333,8 @@ function readLines(line) {
   num++;
   resItem.num = num;
   resItem.name = words[0].replace(/(<([^>]+)>)/ig, '');
-  resItem.date = date_and_id[0];
-  resItem.id = date_and_id[1];
+  resItem.date = date_and_id[0].replace(/(<([^>]+)>)/ig, '');
+  resItem.id = date_and_id[1] === undefined ? '' : date_and_id[1];
 
   // add id to id array
   let idExists = false;
@@ -353,12 +356,14 @@ function readLines(line) {
 
   if (words.length > 2) {
     let tmp_str = words[3];
+    tmp_str = tmp_str.replace(/<hr>|<br \/>/ig,'<br>');
     let tmp_items = tmp_str.split('<br>');
     let index = 0;
     for (let tmp_item of tmp_items) {
       if (index > 0)
         resItem.content += '<br>';
       tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
+      tmp_item = tmp_item.trim();
       if (tmp_item.startsWith("https:")) {
         tmp_item = tmp_item.replace('.JPG', '.jpg');
         tmp_item = tmp_item.replace('.GIF', '.gif');

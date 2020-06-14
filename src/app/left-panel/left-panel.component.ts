@@ -1,7 +1,8 @@
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ResService} from '../res.service';
-import {MatTabChangeEvent} from '@angular/material/tabs';
+import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import {MatButtonToggle} from "@angular/material/button-toggle";
 
 @Component({
   selector: 'app-left-panel',
@@ -9,6 +10,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./left-panel.component.css'],
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
   resLists: [any[]];
   tabs = ['New Tab'];
   scrollPos = [0];
@@ -26,6 +28,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   noticeCount: number;
   subHotKeys = [];
   public subscribers: any = {};
+  shuturyoku: true;
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
@@ -65,6 +68,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.hitColor = this.settings.hit_back_color;
       this.idRed = this.settings.id_red;
       this.noticeCount = this.settings.noticeCount;
+      this.shuturyoku = this.settings.shuturyoku;
       this.subHotKeys = [];
       if (value.hasOwnProperty('sentaku_no1')) {
         const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'up', 'down', 'big1', 'big2', 'nasi'
@@ -78,34 +82,35 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.resData = this.resService.resData.subscribe((value) => {
-
-      this.resLists[this.selectedTabIndex] = value.resList;
+      if (this.tabGroup === undefined) { return; }
+      this.resLists[this.tabGroup.selectedIndex] = value.resList;
       this.cdr.detectChanges();
       if (value.resList.length > 0 ) {
-        this.tabs[this.selectedTabIndex] = value.sreTitle;
-        this.titleService.setTitle(`${this.tabs[this.selectedTabIndex]} - スレ編集`);
+        this.tabs[this.tabGroup.selectedIndex] = value.sreTitle;
+        this.titleService.setTitle(`${this.tabs[this.tabGroup.selectedIndex]} - スレ編集`);
         this.resService.setTotalRes({
-          tabIndex: this.selectedTabIndex,
+          tabIndex: this.tabGroup.selectedIndex,
           totalCount: value.resList.length
         });
       }
 
     });
     this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
-      if (this.selectedTabIndex === value.index) {
-        this.scrollPos[this.selectedTabIndex] = value.pos;
+      if (this.tabGroup === undefined) { return; }
+      if (this.tabGroup.selectedIndex === value.index) {
+        this.scrollPos[this.tabGroup.selectedIndex] = value.pos;
       }
     });
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
-
-      if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
-        this.resLists[this.selectedTabIndex] = value.data.resList;
+      if (this.tabGroup === undefined) { return; }
+      if (this.tabGroup.selectedIndex === value.tabIndex && value.data.resList !== undefined) {
+        this.resLists[this.tabGroup.selectedIndex] = value.data.resList;
         this.cdr.detectChanges();
-        this.tabs[this.selectedTabIndex] = value.data.title;
-        this.titleService.setTitle(`${this.tabs[this.selectedTabIndex]} - スレ編集`);
+        this.tabs[this.tabGroup.selectedIndex] = value.data.title;
+        this.titleService.setTitle(`${this.tabs[this.tabGroup.selectedIndex]} - スレ編集`);
         this.resService.setTotalRes({
-          tabIndex: this.selectedTabIndex,
+          tabIndex: this.tabGroup.selectedIndex,
           totalCount: value.data.resList.length
         });
       }
@@ -127,7 +132,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.resLists.push([]);
     this.scrollPos.push(0);
     this.isFiltered.push(false);
-    this.selectedTabIndex = this.tabs.length - 1;
+    this.tabGroup.selectedIndex = this.tabs.length - 1;
   }
 
   removeTab(index: number) {
@@ -138,8 +143,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   tabChangedHandler($event: MatTabChangeEvent) {
-    this.selectedTabIndex = $event.index;
-    this.titleService.setTitle(`${this.tabs[this.selectedTabIndex]} - スレ編集`);
+    this.titleService.setTitle(`${this.tabs[this.tabGroup.selectedIndex]} - スレ編集`);
     this.resService.setSelectedTab({
       select: this.resLists[$event.index].filter(item => item.select).length,
       candi1: this.resLists[$event.index].filter(item => item.candi1).length,

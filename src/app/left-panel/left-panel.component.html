@@ -1,5 +1,5 @@
 <button id="btn-plus" (click)="addTab()" class="add-tab">+</button>
-<mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="0ms" (selectedTabChange)="tabChangedHandler($event);" disableRipple>
+<mat-tab-group #tabGroup animationDuration="0ms" (selectedTabChange)="tabChangedHandler($event);" disableRipple>
   <mat-tab *ngFor="let tab of tabs; let index = index;" >
     <ng-template mat-tab-label>
       <div [ngStyle]="{'width':tabWidth}" [ngClass]="{'filtered-tab':isFiltered[index],'col':true}">{{tab}}</div>
@@ -17,7 +17,8 @@
                [idStyles] = "idStyles"
                [hitColor] = "hitColor"
                [idRed] = "idRed"
-               [noticeCount] ="noticeCount"
+               [noticeCount] = "noticeCount"
+               [shuturyoku] = "shuturyoku"
                [subHotKeys] = "subHotKeys"
                (filteredEmitter)="filteredHandler(index,$event)"
                [resSizeList] = "resSizeList"
