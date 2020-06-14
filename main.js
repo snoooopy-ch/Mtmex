@@ -17,9 +17,9 @@ let settings;
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1213,
+    width: 1223,
     height: 948,
-    minWidth: 1213,
+    minWidth: 1223,
     title: 'スレ編集',
     backgroundColor: '#ffffff',
     icon: `file://${__dirname}/dist/assets/logo.png`,
