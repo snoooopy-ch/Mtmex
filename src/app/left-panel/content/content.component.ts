@@ -46,8 +46,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() shuturyoku;
   @Input() subHotKeys;
   @Output() filteredEmitter = new EventEmitter();
-  searchOption = 'context';
-  searchKeyword = '';
+  @Output() searchStatusEmitter = new EventEmitter();
+  @Input() searchOption;
+  @Input() searchKeyword = '';
   search = '';
   important: '';
   backupResList;
@@ -504,6 +505,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // 検索バーにフォーカス移動
       this.hotkeysService.add(new Hotkey('ctrl+f', (event: KeyboardEvent): boolean => {
         this.txtSearch.nativeElement.focus();
+        this.txtSearch.nativeElement.select();
         return false; // Prevent bubbling
       }));
 
@@ -730,16 +732,16 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   selectedTreeRes(index: number, $event: any) {
-    const selecteKeys = ['none', 'select', 'candi1', 'candi2'];
+    const selectKeys = ['none', 'select', 'candi1', 'candi2'];
     if (index < this.resList.length - 1) {
       if (this.resList[index + 1].isAdded &&
         this.resList[index + 1].anchors.indexOf(this.resList[index].num) !== -1){
-        this.resList[index].resSelect = selecteKeys[$event.select];
+        this.resList[index].resSelect = selectKeys[$event.select];
         this.resList[index].resBackgroundColor = $event.resBackgroundColor;
         this.calcSelectedRes($event.select, this.resList[index]);
         if (this.resList[index].isAdded){
           for (let i = index - 1; i > 0; i--){
-            this.resList[i].resSelect = selecteKeys[$event.select];
+            this.resList[i].resSelect = selectKeys[$event.select];
             this.resList[i].resBackgroundColor = $event.resBackgroundColor;
             this.calcSelectedRes($event.select, this.resList[i]);
             if (!this.resList[i].isAdded) { break; }
@@ -747,7 +749,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         for (let i = index + 1; i < this.resList.length; i++){
           if (!this.resList[i].isAdded) { break; }
-          this.resList[i].resSelect = selecteKeys[$event.select];
+          this.resList[i].resSelect = selectKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
           this.calcSelectedRes($event.select, this.resList[i]);
         }
@@ -913,62 +915,66 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
   }
 
+  cancelSearchResTest(){
+    for (const res of this.resList){
+      res.content = res.content.replace(/(<span[^<]+>)/ig, '');
+      res.content = res.content.replace(/<\/span>/ig, '');
+      if (this.searchOption === 'all'){
+        res.id = res.id.replace(/(<span[^<]+>)/ig, '');
+        res.id = res.id.replace(/<\/span>/ig, '');
+        res.name = res.name.replace(/(<span[^<]+>)/ig, '');
+        res.name = res.name.replace(/<\/span>/ig, '');
+      }
+    }
+  }
+
+  searchResText(){
+    const re = new RegExp(this.searchKeyword, 'gi');
+    let index = 0;
+    for (const res of this.resList){
+      if (res.content.match(re)){
+        res.content = res.content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+        res.isFiltered = true;
+        res.originalIndex = index;
+      }
+      if (this.searchOption === 'all'){
+        if (res.name.match(re) || res.id.match(re)){
+          res.id = res.id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+          res.name = res.name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+          res.isFiltered = true;
+          res.originalIndex = index;
+        }
+      }
+      index++;
+    }
+  }
+
+  abstractRes(){
+    this.backupResList = Object.assign([], this.resList);
+    let tmpResList = [];
+    for (const res of this.resList){
+      if (res.isFiltered) {
+        tmpResList = [...tmpResList, res];
+      }
+    }
+    this.resList = [];
+    this.resList = tmpResList;
+    this.changeStatus();
+    this.resService.setTotalRes({
+      tabIndex: this.tabIndex,
+      totalCount: this.resList.length
+    });
+  }
+
   searchTextHandler() {
     if (this.btnSearch.checked){
       if (this.searchKeyword.length === 0) {
         this.btnSearch.checked = false;
       }else{
-        this.backupResList = Object.assign([], this.resList);
-        let tmpResList = [];
-        const re = new RegExp(this.searchKeyword, 'gi');
-        const replacers = this.searchKeyword.split('|');
-        let index = 0;
-        for (const res of this.resList){
-          if (this.searchOption === 'context'){
-            if (res.content.match(re)){
-              for (const replace of replacers){
-                const regExp = new RegExp(replace, 'gi');
-                res.content = res.content.replace(regExp, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
-              }
-              res.isFiltered = true;
-              res.originalIndex = index;
-              tmpResList = [...tmpResList, res];
-            }
-          }else{
-            if (res.content.match(re) || res.name.match(re) || res.id.match(re)){
-
-              for (const replace of replacers){
-                const regExp = new RegExp(replace, 'gi');
-                res.content = res.content.replace(regExp, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
-                res.id = res.id.replace(replace, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
-                res.name = res.name.replace(replace, `<span style="background-color: ${this.hitColor};">${replace}</span>`);
-              }
-              res.isFiltered = true;
-              res.originalIndex = index;
-              tmpResList = [...tmpResList, res];
-            }
-          }
-          index++;
-        }
-        this.resList = [];
-        this.resList = tmpResList;
-        this.changeStatus();
-        this.resService.setTotalRes({
-          tabIndex: this.tabIndex,
-          totalCount: this.resList.length
-        });
+        this.searchResText();
+        this.abstractRes();
       }
     }else{
-      for (const res of this.resList){
-        res.content = res.content.replace(/(<span[^<]+>)/ig, '');
-        res.content = res.content.replace(/<\/span>/ig, '');
-        if (this.searchOption === 'all'){
-          res.id = res.id.replace(/(<span[^<]+>)/ig, '');
-          res.id = res.id.replace(/<\/span>/ig, '');
-          res.name = res.name.replace(/(<span[^<]+>)/ig, '');
-          res.name = res.name.replace(/<\/span>/ig, '');
-        }
-      }
       this.resList = Object.assign([], this.backupResList);
       this.changeStatus();
       this.resService.setTotalRes({
@@ -1027,12 +1033,27 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   searchOnKeyHandler($event: KeyboardEvent) {
-    if ($event.ctrlKey && $event.code === 'Enter'){
+    if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
       this.btnSearch.checked = true;
       this.searchTextHandler();
       this.txtSearch.nativeElement.blur();
+    }else if ($event.code === 'Enter'){
+      if (this.searchKeyword === ' ') {
+        this.cancelSearchResTest();
+      }else{
+        this.searchResText();
+      }
+      this.txtSearch.nativeElement.blur();
+    }else{
+      if (this.searchOption !== undefined) {
+        this.searchStatusEmitter.emit({
+          searchKeyword: this.searchKeyword,
+          searchOption: this.searchOption
+        });
+      }
     }
   }
+
 
   private printRes(res: ResItem){
     let htmlTag = '';
@@ -1177,5 +1198,12 @@ export class ContentComponent implements OnInit, OnDestroy {
       htmlTag = htmlTag.substr(0, htmlTag.length - 1);
     }
     this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag});
+  }
+
+  changeSearchOptionHandler() {
+    this.searchStatusEmitter.emit({
+      searchKeyword: this.searchKeyword,
+      searchOption: this.searchOption,
+    });
   }
 }

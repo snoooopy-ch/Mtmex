@@ -29,6 +29,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   subHotKeys = [];
   public subscribers: any = {};
   shuturyoku: true;
+  searchKeyword: string;
+  searchOption: 'context';
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
@@ -163,5 +165,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   filteredHandler(index: number, $event: any) {
     this.isFiltered[index] = $event;
+  }
+
+  changeSearchStatus($event: any) {
+    if($event.searchOption !== undefined) {
+      this.searchKeyword = $event.searchKeyword;
+      this.searchOption = $event.searchOption;
+      this.cdr.detectChanges();
+    }
   }
 }

@@ -1,5 +1,5 @@
 <div class="extract">
-  <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption">
+  <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption" (change)="changeSearchOptionHandler()">
     <mat-button-toggle value="all" class="btn-left-round">all</mat-button-toggle>
     <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本</mat-button-toggle>
   </mat-button-toggle-group>
@@ -45,7 +45,7 @@
              [noticeCount] = "noticeCount"
              [resSizeList] = "resSizeList"
              (cdkDragStarted)="dragStarted($event, resItem)"
-             [cdkDragDisabled]="getDraggable(resList.indexOf(resItem))" 
+             [cdkDragDisabled]="getDraggable(resList.indexOf(resItem))"
              cdkDragLockAxis="y" cdkDrag>
 
     </app-res>

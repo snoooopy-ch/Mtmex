@@ -21,7 +21,10 @@
                [shuturyoku] = "shuturyoku"
                [subHotKeys] = "subHotKeys"
                (filteredEmitter)="filteredHandler(index,$event)"
+               (searchStatusEmitter)="changeSearchStatus($event)"
                [resSizeList] = "resSizeList"
+               [searchKeyword] = "searchKeyword"
+               [searchOption] = "searchOption"
                [tabIndex]="index">
   </app-content>
   <app-status [tabIndex]="index"></app-status>
