@@ -19,9 +19,12 @@ export class ResItem{
   resBackgroundColor = 'transparent';
   idBackgroundColor = '#fff';
   idColor = '#000';
+  idClassNoSelect = '';
   hasImage = false;
   isFiltered = false;
   originalIndex: number;
   anchorCount: number;
   isEdit: boolean;
+  resMenu: boolean;
+  isMenuOpen: boolean;
 }

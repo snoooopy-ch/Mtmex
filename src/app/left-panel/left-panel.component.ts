@@ -55,10 +55,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.settings.YobiSentaku1_back,
         this.settings.YobiSentaku2_back];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
-      this.idStyles = [{color: '#000', background: 'transparent'},
-          {color: this.settings.ID1_moji, background: this.settings.ID1_back},
-          {color: this.settings.ID2_moji, background: this.settings.ID2_back},
-          {color: this.settings.ID3_moji, background: this.settings.ID3_back}];
+      this.idStyles = [{color: '#000', background: 'transparent', classNoSelect: ''},
+          {color: this.settings.ID1_moji, background: this.settings.ID1_back, classNoSelect: 'same_id1'},
+          {color: this.settings.ID2_moji, background: this.settings.ID2_back, classNoSelect: 'same_id2'},
+          {color: this.settings.ID3_moji, background: this.settings.ID3_back, classNoSelect: 'same_id3'}];
       this.resSizeList = [
         {
           name: '小',

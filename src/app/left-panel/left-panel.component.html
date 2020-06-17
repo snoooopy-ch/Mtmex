@@ -26,9 +26,9 @@
            (dndEnd)="onDragEnd($event)">
 
         <i class="fa fa-star"></i>{{tabItem.title}}
-        <button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">
+        <!--button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">
           <mat-icon>close</mat-icon>
-        </button>
+        </button-->
       </div>
     </ng-template>
   <app-content [resList]="resLists[index]"

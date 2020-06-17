@@ -186,15 +186,19 @@ app-res div {
   padding: 2px 0;
 }
 
+app-res div.row-1 {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
 app-res div .label-res-id-num {
   width: 35px;
-  height: 15px;
   text-align: left;
 }
 
 app-res div .label-res-cal1 {
   width: 60px;
-  height: 15px;
   color: red;
 }
 
@@ -224,7 +228,8 @@ app-res div label span {
 app-res div button {
   padding: 6px 10px;
   margin: 0 0 0 -1px;
-  word-break: keep-all
+  word-break: keep-all;
+  line-height: 14px;
 }
 
 app-res div button:hover {
@@ -363,7 +368,6 @@ app-res .row-4 a {
 }
 
 .main-container app-right-panel button {
-  background-color: white;
   border-style: solid;
   padding: 0 5px;
 }
@@ -417,6 +421,8 @@ app-res .row-4 a {
 .main-container app-right-panel .res-order .width-60 div label {
   margin: 0;
   line-height: 2em;
+  display: flex;
+  align-items: center;
 }
 
 .main-container app-right-panel .move-res div {
@@ -583,3 +589,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: #3981e6;
 }
 
+.label-res-kaihei {
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+}
+
+.label-res-kaihei:hover {
+  cursor: help
+}

@@ -90,8 +90,20 @@ export class ResComponent implements OnInit {
   }
 
   colorChangeHandler() {
+    this.item.resSelect = 'select';
+    let colorIndex = 1;
+
+    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
+    this.selectedResEmitter.emit({
+        select: this.item.resSelect !== 'none',
+        candi1: false,
+        candi2: false,
+        selected: colorIndex === 0 ? 'none' : 'select'
+      });
     this.cdRef.detectChanges();
   }
+  
   editShowHandler() {
     this.item.isEdit = !this.item.isEdit;
     if (this.item.isEdit) {
@@ -107,11 +119,17 @@ export class ResComponent implements OnInit {
     this.resContent = this.resContent.replace(/<\/figure>/ig, '');
     this.resContent = this.resContent.replace(/&nbsp;/ig, '');
     this.item.content = this.resContent;
+    this.item.isEdit = false;
     this.cdRef.detectChanges();
   }
 
   cancelEditHandler() {
     this.item.isEdit = false;
+    this.cdRef.detectChanges();
+  }
+
+  clickResMenuKaihei() {
+    this.item.isMenuOpen = !this.item.isMenuOpen;
     this.cdRef.detectChanges();
   }
 
@@ -200,6 +218,7 @@ export class ResComponent implements OnInit {
   catchIdHandler(buttonIndex: number) {
     this.item.idBackgroundColor = this.idStyles[buttonIndex].background;
     this.item.idColor = this.idStyles[buttonIndex].color;
+    this.item.idClassNoSelect = this.idStyles[buttonIndex].classNoSelect;
     this.selectedIdEmitter.emit({
       isSelect: true,
       idBackgroundColor: this.idStyles[buttonIndex].background,

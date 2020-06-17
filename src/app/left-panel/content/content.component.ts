@@ -1076,11 +1076,22 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
     htmlTag += `${res.num}: <span class="name">${res.name}</span>`;
     htmlTag += ` <span style="color: gray;"> ${res.date}`;
-    if (res.id.length > 0 ) {
-      if (res.idColor !== '#000') {
-        htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${res.id}</em>`;
-      } else {
-        htmlTag += ` ID:${res.id}`;
+
+    if ( this.shuturyoku) {
+      if (res.id.length > 0 ) {
+        if (res.idColor !== '#000') {
+          htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${res.id}</em>`;
+        } else {
+          htmlTag += ` ID:${res.id}`;
+        }
+      }
+    } else {
+      if (res.id.length > 0 ) {
+        if (res.idColor !== '#000') {
+          htmlTag += `<span class="${res.idClassNoSelect}"> ID:${res.id}</span>`;
+        } else {
+          htmlTag += ` ID:${res.id}`;
+        }
       }
     }
     htmlTag += `</span></div>\n`;

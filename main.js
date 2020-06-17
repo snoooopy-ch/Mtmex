@@ -78,14 +78,20 @@ app.on('activate', function () {
  * @param isReplaceRes
  */
 function getResList(url, isResSort, isMultiAnchor, isReplaceRes) {
+  if (url === '') {
+    dialog.showErrorBox('読み込み', 'ファイルパスを入力してください。');
+    return;
+  }
 
   fs.open(url, 'r', (err, fd) => {
     if (err) {
       if (err.code === 'ENOENT') {
         console.error(url + ' does not exist');
+        dialog.showErrorBox('読み込み', 'ファイルが存在しません。');
         return;
       }
-      throw err;
+      dialog.showErrorBox('読み込み', 'ファイルを読めません。');
+      return;
     }
     fs.close(fd, (err) => {
       if (err) throw err;
@@ -329,6 +335,8 @@ function readLines(line) {
     originalIndex: -1,
     anchorCount: 0,
     isEdit: false,
+    resMenu: false,
+    isMenuOpen: false,
   };
 
   num++;
@@ -336,6 +344,8 @@ function readLines(line) {
   resItem.name = words[0].replace(/(<([^>]+)>)/ig, '');
   resItem.date = date_and_id[0].replace(/(<([^>]+)>)/ig, '');
   resItem.id = date_and_id[1] === undefined ? '' : date_and_id[1];
+  resItem.resMenu = settings['res_menu'];
+  resItem.isMenuOpen = false;
 
   // add id to id array
   let idExists = false;
@@ -514,9 +524,9 @@ function saveStatus(saveData) {
   if(filePath === undefined) return;
   fs.writeFile(filePath, jsonString, err => {
     if (err) {
-      dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
+      dialog.showErrorBox('保存', '保存に失敗しました。');
     } else {
-      dialog.showMessageBox({title: '保存', message: '保存に成功しました。'});
+      dialog.showErrorBox('保存', '保存に成功しました。');
     }
   });
 }
@@ -526,7 +536,7 @@ ipcMain.on("loadStatus", (event, filePath, tabIndex) => {
 function loadStatus(filePath, tabIndex){
   fs.readFile(filePath, 'utf8', (err, jsonString) => {
     if (err) {
-      dialog.showMessageBox({title: '復元', message: '復元。'});
+      dialog.showErrorBox('復元', '復元。');
       return
     }
     try {
