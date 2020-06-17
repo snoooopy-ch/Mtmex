@@ -1,8 +1,10 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ResService} from '../res.service';
-import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
+// import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import {MatButtonToggle} from "@angular/material/button-toggle";
+// import {MatButtonToggle} from '@angular/material/button-toggle';
+import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-left-panel',
@@ -10,9 +12,15 @@ import {MatButtonToggle} from "@angular/material/button-toggle";
   styleUrls: ['./left-panel.component.css'],
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
-  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  @ViewChild('tabGroup') tabGroup: TabsetComponent;
   resLists: [any[]];
-  tabs = ['New Tab'];
+  tabs = [{title: 'New Tab', active: true}];
+  draggable = {
+    data: 'myDragData',
+    effectAllowed: 'all',
+    disable: false,
+    handle: false
+  };
   scrollPos = [0];
   selectedTabIndex = 0;
   settings;
@@ -31,6 +39,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   shuturyoku: true;
   searchKeyword: string;
   searchOption: 'context';
+  private previousTabId: number;
+  private currentTabId: number;
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
     this.resLists = [[]];
   }
@@ -85,13 +95,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.resData = this.resService.resData.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
-      this.resLists[this.tabGroup.selectedIndex] = value.resList;
+      this.resLists[this.selectedTabIndex] = value.resList;
       this.cdr.detectChanges();
       if (value.resList.length > 0 ) {
-        this.tabs[this.tabGroup.selectedIndex] = value.sreTitle;
-        this.titleService.setTitle(`${this.tabs[this.tabGroup.selectedIndex]} - スレ編集`);
+        this.tabs[this.selectedTabIndex].title = value.sreTitle;
+        this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
         this.resService.setTotalRes({
-          tabIndex: this.tabGroup.selectedIndex,
+          tabIndex: this.selectedTabIndex,
           totalCount: value.resList.length
         });
       }
@@ -99,20 +109,20 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     });
     this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
-      if (this.tabGroup.selectedIndex === value.index) {
-        this.scrollPos[this.tabGroup.selectedIndex] = value.pos;
+      if (this.selectedTabIndex === value.index) {
+        this.scrollPos[this.selectedTabIndex] = value.pos;
       }
     });
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
-      if (this.tabGroup.selectedIndex === value.tabIndex && value.data.resList !== undefined) {
-        this.resLists[this.tabGroup.selectedIndex] = value.data.resList;
+      if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
+        this.resLists[this.selectedTabIndex] = value.data.resList;
         this.cdr.detectChanges();
-        this.tabs[this.tabGroup.selectedIndex] = value.data.title;
-        this.titleService.setTitle(`${this.tabs[this.tabGroup.selectedIndex]} - スレ編集`);
+        this.tabs[this.selectedTabIndex].title = value.data.title;
+        this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
         this.resService.setTotalRes({
-          tabIndex: this.tabGroup.selectedIndex,
+          tabIndex: this.selectedTabIndex,
           totalCount: value.data.resList.length
         });
       }
@@ -130,11 +140,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   addTab() {
-    this.tabs.push('New Tab');
+    this.tabs.push({title: 'New Tab' + this.tabs.length.toString(), active: true});
     this.resLists.push([]);
     this.scrollPos.push(0);
     this.isFiltered.push(false);
-    this.tabGroup.selectedIndex = this.tabs.length - 1;
+    // this.tabGroup.tabs[this.tabs.length - 1].active = true;
   }
 
   removeTab(index: number) {
@@ -144,18 +154,20 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.isFiltered.splice(index, 1);
   }
 
-  tabChangedHandler($event: MatTabChangeEvent) {
-    this.titleService.setTitle(`${this.tabs[this.tabGroup.selectedIndex]} - スレ編集`);
+  tabChangedHandler(index: number) {
+    this.selectedTabIndex = index;
+    this.tabs[this.selectedTabIndex].active = true;
+    this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
     this.resService.setSelectedTab({
-      select: this.resLists[$event.index].filter(item => item.select).length,
-      candi1: this.resLists[$event.index].filter(item => item.candi1).length,
-      candi2: this.resLists[$event.index].filter(item => item.candi2).length,
-      totalCount: this.resLists[$event.index].length,
-      tabIndex: $event.index
+      select: this.resLists[this.selectedTabIndex].filter(item => item.select).length,
+      candi1: this.resLists[this.selectedTabIndex].filter(item => item.candi1).length,
+      candi2: this.resLists[this.selectedTabIndex].filter(item => item.candi2).length,
+      totalCount: this.resLists[this.selectedTabIndex].length,
+      tabIndex: this.selectedTabIndex
     });
     const pos = {
-      index: $event.index,
-      pos: this.scrollPos[$event.index],
+      index: this.selectedTabIndex,
+      pos: this.scrollPos[this.selectedTabIndex],
       isTab: true
     };
     this.cdr.detectChanges();
@@ -168,10 +180,51 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   changeSearchStatus($event: any) {
-    if($event.searchOption !== undefined) {
+    if ($event.searchOption !== undefined) {
       this.searchKeyword = $event.searchKeyword;
       this.searchOption = $event.searchOption;
       this.cdr.detectChanges();
     }
   }
+
+  onDraggableMoved($event: DragEvent) {
+    this.currentTabId = $event.target['id'];
+    console.log($event.target['id']);
+
+    // console.log('--------moved------');
+    // console.log(this.currentTabId);
+    // console.log(index);
+    // console.log($event.target['id']);
+    // const toIndex = index;
+    // const fromIndex = this.currentTabId;
+    // // moveItemInArray(this.tabs, fromIndex, toIndex);
+
+  }
+
+  onDragEnd($event: DragEvent) {
+    const toIndex = this.previousTabId;
+    const fromIndex = this.currentTabId;
+    let tabListItems = this.tabs;
+    // tabListItems.splice(toIndex, 0, tabListItems.splice(fromIndex, 1)[0]);
+    // this.tabGroup.tabs.splice(toIndex, 0, this.tabGroup.tabs.splice(fromIndex, 1)[0]);
+    // console.log('--------end------');
+    moveItemInArray(this.tabs, fromIndex, toIndex);
+    moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
+    // this.tabs = [...this.tabs];
+    console.log('--------end------');
+    // this.currentTabId = index;
+    // console.log(index);
+    // console.log($event.target['data-id']);
+  }
+
+  onDragover($event: DragEvent) {
+    console.log('----------over-------');
+    console.log($event.target);
+    console.log($event.target['data-id']);
+    this.previousTabId = $event.target['id'];
+    // this.previousTabId = selectedTabIndex;
+    // console.log('--------over------')
+    // console.log(selectedTabIndex);
+  }
+
 }

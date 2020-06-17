@@ -74,7 +74,19 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
   height: 29px;
   border: none;
 }
-.container{
+tabset{
+  .nav{
+    height: 30px;
+    margin-left: 31px;
+    .nav-item{
+      height: 30px;
+      .nav-link{
+        padding: 4px;
+      }
+    }
+  }
+}
+.main-container{
   app-left-panel{
     app-content{
       .mat-button-toggle-button{
