@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ResService} from '../res.service';
-// import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 // import {MatButtonToggle} from '@angular/material/button-toggle';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
@@ -13,7 +12,6 @@ import {moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
-  // resLists: [any[]];
   tabs = [{title: 'New Tab', active: true, resList: [], scrollPos: 0, isFiltered: false}];
   draggable = {
     data: 'myDragData',
@@ -21,7 +19,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     disable: false,
     handle: false
   };
-  // scrollPos = [0];
   selectedTabIndex = 0;
   settings;
   backgroundColors;
@@ -31,7 +28,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   tabWidth;
   hitColor;
   idRed;
-  // isFiltered = [false];
   // chuumoku: number;
   noticeCount: number;
   subHotKeys = [];
@@ -41,6 +37,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   searchOption: 'context';
   private previousTabId: number;
   private currentTabId: number;
+
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
 
   }
@@ -48,7 +45,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.subscribers.settings = this.resService.settings.subscribe((value) => {
-
       this.settings = value;
       this.backgroundColors = [this.settings.Back_color,
         this.settings.Sentaku_back,
@@ -56,9 +52,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.settings.YobiSentaku2_back];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
       this.idStyles = [{color: '#000', background: 'transparent'},
-          {color: this.settings.ID1_moji, background: this.settings.ID1_back},
-          {color: this.settings.ID2_moji, background: this.settings.ID2_back},
-          {color: this.settings.ID3_moji, background: this.settings.ID3_back}];
+        {color: this.settings.ID1_moji, background: this.settings.ID1_back},
+        {color: this.settings.ID2_moji, background: this.settings.ID2_back},
+        {color: this.settings.ID3_moji, background: this.settings.ID3_back}];
       this.resSizeList = [
         {
           name: '小',
@@ -102,11 +98,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
         this.resService.setTotalRes({
           tabIndex: this.selectedTabIndex,
-          totalCount: value.resList.length
+          totalCount: value.resList.length,
+          title: this.tabs[this.selectedTabIndex].title,
         });
       }
-
     });
+
     this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.index) {

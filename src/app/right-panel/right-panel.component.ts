@@ -50,7 +50,6 @@ export class RightPanelComponent implements OnInit, OnDestroy {
             this.saveAppStatus(`${this.settings.autoSavePath}${this.title}.txt`, false);
           }
         });
-
       }
       this.txtUrl = this.settings.dataPath;
       this.isReplaceRes = this.settings.isReplaceRes;
@@ -80,6 +79,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.subscribers.totalRes = this.resService.totalRes.subscribe((value) => {
       if (this.tabIndex === value.tabIndex){
         this.totalCount = value.totalCount;
+        console.log(value.title);
+        if (value.title !== undefined){
+          this.title = value.title;
+        }
       }
     });
 

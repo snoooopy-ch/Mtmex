@@ -455,7 +455,7 @@ function getSettings() {
         continue;
       }
       if(line.match(/pass:/gi)){
-        settings['autoSavePath'] = line.replace(/pass:/gi,'');
+        settings['autoSavePath'] = line.replace(/pass:/gi,'').trim();
         continue;
       }
       let lineArgs = line.split(':');
@@ -522,11 +522,16 @@ function saveStatus(saveData) {
   if(filePath === undefined) return;
   fs.writeFile(filePath, jsonString, err => {
     if (err) {
+      if(showMessage) {
         dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
-
+      }else{
+        console.log('自動保存に失敗しました。');
+      }
     } else {
       if(showMessage) {
         dialog.showMessageBox({title: '保存', message: '保存に成功しました。'});
+      }else{
+        console.log('自動保存に成功しました。');
       }
     }
   });
