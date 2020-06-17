@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ResService} from '../res.service';
-// import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 // import {MatButtonToggle} from '@angular/material/button-toggle';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
@@ -13,15 +12,14 @@ import {moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
-  resLists: [any[]];
-  tabs = [{title: 'New Tab', active: true}];
+  
+  tabs = [{title: 'New Tab', active: true, resList: [], scrollPos: 0, isFiltered: false}];
   draggable = {
     data: 'myDragData',
     effectAllowed: 'all',
     disable: false,
     handle: false
   };
-  scrollPos = [0];
   selectedTabIndex = 0;
   settings;
   backgroundColors;
@@ -31,7 +29,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   tabWidth;
   hitColor;
   idRed;
-  isFiltered = [false];
   // chuumoku: number;
   noticeCount: number;
   subHotKeys = [];
@@ -41,24 +38,20 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   searchOption: 'context';
   private previousTabId: number;
   private currentTabId: number;
+
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
-    this.resLists = [[]];
+
   }
 
   ngOnInit(): void {
 
     this.subscribers.settings = this.resService.settings.subscribe((value) => {
-
       this.settings = value;
       this.backgroundColors = [this.settings.Back_color,
         this.settings.Sentaku_back,
         this.settings.YobiSentaku1_back,
         this.settings.YobiSentaku2_back];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
-      this.idStyles = [{color: '#000', background: 'transparent', classNoSelect: ''},
-          {color: this.settings.ID1_moji, background: this.settings.ID1_back, classNoSelect: 'same_id1'},
-          {color: this.settings.ID2_moji, background: this.settings.ID2_back, classNoSelect: 'same_id2'},
-          {color: this.settings.ID3_moji, background: this.settings.ID3_back, classNoSelect: 'same_id3'}];
       this.resSizeList = [
         {
           name: '小',
@@ -95,29 +88,30 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.resData = this.resService.resData.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
-      this.resLists[this.selectedTabIndex] = value.resList;
+      this.tabs[this.selectedTabIndex].resList = value.resList;
       this.cdr.detectChanges();
       if (value.resList.length > 0 ) {
         this.tabs[this.selectedTabIndex].title = value.sreTitle;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
         this.resService.setTotalRes({
           tabIndex: this.selectedTabIndex,
-          totalCount: value.resList.length
+          totalCount: value.resList.length,
+          title: this.tabs[this.selectedTabIndex].title,
         });
       }
-
     });
+
     this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.index) {
-        this.scrollPos[this.selectedTabIndex] = value.pos;
+        this.tabs[this.selectedTabIndex].scrollPos = value.pos;
       }
     });
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
-        this.resLists[this.selectedTabIndex] = value.data.resList;
+        this.tabs[this.selectedTabIndex].resList = value.data.resList;
         this.cdr.detectChanges();
         this.tabs[this.selectedTabIndex].title = value.data.title;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
@@ -140,18 +134,17 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   addTab() {
-    this.tabs.push({title: 'New Tab' + this.tabs.length.toString(), active: true});
-    this.resLists.push([]);
-    this.scrollPos.push(0);
-    this.isFiltered.push(false);
-    // this.tabGroup.tabs[this.tabs.length - 1].active = true;
+    this.tabs.push({
+      title: 'New Tab',
+      active: true,
+      resList: [],
+      scrollPos: 0,
+      isFiltered: false
+    });
   }
 
   removeTab(index: number) {
-    this.resLists.splice(index, 1);
     this.tabs.splice(index, 1);
-    this.scrollPos.splice(index, 1);
-    this.isFiltered.splice(index, 1);
   }
 
   tabChangedHandler(index: number) {
@@ -159,15 +152,16 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.tabs[this.selectedTabIndex].active = true;
     this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
     this.resService.setSelectedTab({
-      select: this.resLists[this.selectedTabIndex].filter(item => item.select).length,
-      candi1: this.resLists[this.selectedTabIndex].filter(item => item.candi1).length,
-      candi2: this.resLists[this.selectedTabIndex].filter(item => item.candi2).length,
-      totalCount: this.resLists[this.selectedTabIndex].length,
-      tabIndex: this.selectedTabIndex
+      select: this.tabs[this.selectedTabIndex].resList.filter(item => item.select).length,
+      candi1: this.tabs[this.selectedTabIndex].resList.filter(item => item.candi1).length,
+      candi2: this.tabs[this.selectedTabIndex].resList.filter(item => item.candi2).length,
+      totalCount: this.tabs[this.selectedTabIndex].resList.length,
+      tabIndex: this.selectedTabIndex,
+      title: this.tabs[this.selectedTabIndex].title
     });
     const pos = {
       index: this.selectedTabIndex,
-      pos: this.scrollPos[this.selectedTabIndex],
+      pos: this.tabs[this.selectedTabIndex].scrollPos,
       isTab: true
     };
     this.cdr.detectChanges();
@@ -176,7 +170,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   filteredHandler(index: number, $event: any) {
-    this.isFiltered[index] = $event;
+    this.tabs[this.selectedTabIndex].isFiltered = $event;
   }
 
   changeSearchStatus($event: any) {
@@ -189,42 +183,20 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   onDraggableMoved($event: DragEvent) {
     this.currentTabId = $event.target['id'];
-    console.log($event.target['id']);
-
-    // console.log('--------moved------');
-    // console.log(this.currentTabId);
-    // console.log(index);
-    // console.log($event.target['id']);
-    // const toIndex = index;
-    // const fromIndex = this.currentTabId;
-    // // moveItemInArray(this.tabs, fromIndex, toIndex);
 
   }
 
   onDragEnd($event: DragEvent) {
     const toIndex = this.previousTabId;
     const fromIndex = this.currentTabId;
-    let tabListItems = this.tabs;
-    // tabListItems.splice(toIndex, 0, tabListItems.splice(fromIndex, 1)[0]);
-    // this.tabGroup.tabs.splice(toIndex, 0, this.tabGroup.tabs.splice(fromIndex, 1)[0]);
-    // console.log('--------end------');
+    const tabListItems = this.tabs;
     moveItemInArray(this.tabs, fromIndex, toIndex);
     moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
-    // this.tabs = [...this.tabs];
-    console.log('--------end------');
-    // this.currentTabId = index;
-    // console.log(index);
-    // console.log($event.target['data-id']);
+    this.tabs[fromIndex].active = false;
   }
 
   onDragover($event: DragEvent) {
-    console.log('----------over-------');
-    console.log($event.target);
-    console.log($event.target['data-id']);
     this.previousTabId = $event.target['id'];
-    // this.previousTabId = selectedTabIndex;
-    // console.log('--------over------')
-    // console.log(selectedTabIndex);
   }
 
 }

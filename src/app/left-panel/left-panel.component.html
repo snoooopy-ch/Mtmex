@@ -1,16 +1,5 @@
 <button id="btn-plus" (click)="addTab()" class="add-tab">+</button>
-<!--<mat-tab-group #tabGroup animationDuration="0ms" (selectedTabChange)="tabChangedHandler($event);" disableRipple>-->
-<!--  <mat-tab *ngFor="let tab of tabs; let index = index;" >-->
-<!--    <ng-template mat-tab-label>-->
-<!--      <div [ngStyle]="{'width':tabWidth}" [ngClass]="{'filtered-tab':isFiltered[index],'col':true}">{{tab}}</div>-->
-<!--      <button mat-icon-button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">-->
-<!--        <mat-icon>close</mat-icon>-->
-<!--      </button>-->
-<!--    </ng-template>-->
-<!--  <app-header ></app-header>-->
-<!--       [heading]="tabItem.title"-->
-<!--(removed)="removeTab(index)"-->
-<!--       [removable]="true"-->
+
 <tabset #tabGroup dndDropzone (dndDragover)="onDragover($event)">
   <tab *ngFor="let tabItem of tabs; let index = index;"
 
@@ -24,14 +13,10 @@
            [dndDisableIf]="draggable.disable"
            (dndMoved)="onDraggableMoved($event)"
            (dndEnd)="onDragEnd($event)">
-
-        <i class="fa fa-star"></i>{{tabItem.title}}
-        <!--button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">
-          <mat-icon>close</mat-icon>
-        </button-->
+			{{tabItem.title}}
       </div>
     </ng-template>
-  <app-content [resList]="resLists[index]"
+  <app-content [resList]="tabItem.resList"
                [tabName]="tabItem.title"
                [characterColors] = "settings.characterColors"
                [hoveredColor] = "settings.Mouseover"
@@ -53,7 +38,4 @@
   <app-status [tabIndex]="index"></app-status>
   </tab>
 </tabset>
-<!--  </mat-tab>-->
-<!--</mat-tab-group>-->
-
-<!--<p id='preview'><img class='popup-image' src='' alt='Image preview' /></p>-->
+<p id='preview'><img class='popup-image' src='' alt='Image preview' /></p>
