@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
 import { Observable, timer } from 'rxjs';
@@ -10,7 +10,7 @@ const electron = (window as any).require('electron');
   styleUrls: ['./right-panel.component.css']
 })
 export class RightPanelComponent implements OnInit, OnDestroy {
-  txtUrl = '';
+  txtDataFilePath = '';
   isResSort = false;
   isMultiAnchor = false;
   isReplaceRes = false;
@@ -26,6 +26,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   private timer;
   public subscribers: any = {};
   private title: any;
+  txtRemarkRes: string;
+  txtHideRes: string;
 
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
@@ -51,10 +53,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
           }
         });
       }
-      this.txtUrl = this.settings.dataPath;
+      this.txtDataFilePath = this.settings.dataPath;
       this.isReplaceRes = this.settings.isReplaceRes;
       this.isMultiAnchor = this.settings.isMultiAnchor;
       this.isResSort = this.settings.isResSort;
+      if (this.settings.chuui !== undefined) {
+        this.txtRemarkRes = this.settings.chuui;
+        this.txtHideRes = this.settings.hihyouji;
+      }
       this.cdRef.detectChanges();
     });
 
@@ -98,7 +104,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.isResSort = value.data.isResSort;
         this.isReplaceRes = value.data.isReplaceRes;
         this.isMultiAnchor = value.data.isMultiAnchor;
-        this.txtUrl = value.data.txtPath;
+        this.txtDataFilePath = value.data.txtPath;
       }
     });
   }
@@ -117,8 +123,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.subscribers.statusTimer.unsubscribe();
   }
 
-  onLoadUrl(txtUrl: string, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean) {
-    this.resService.loadRes(txtUrl, isResSort, isMultiAnchor, isReplaceRes);
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHandler(event) {
+    this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes);
+  }
+  onLoadUrl() {
+    const remarkRes = this.txtRemarkRes.substr(0, this.txtRemarkRes.length - 1).replace(/;/gi, '|');
+    const hideRes = this.txtHideRes.substr(0, this.txtHideRes.length - 1).replace(/;/gi, '|');
+    this.resService.loadRes(this.txtDataFilePath, this.isResSort, this.isMultiAnchor, this.isReplaceRes , remarkRes, hideRes);
   }
 
   /**
@@ -160,7 +172,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   setDefaultPathHandler() {
-    this.txtUrl = this.settings.defaultPath;
+    this.txtDataFilePath = this.settings.defaultPath;
   }
 
   printHtmlTagHandler() {
@@ -184,7 +196,9 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       isResSort: this.isResSort,
       isMultiAnchor: this.isMultiAnchor,
       isReplaceRes: this.isReplaceRes,
-      txtPath: this.txtUrl,
+      txtPath: this.txtDataFilePath,
+      remarkRes: this.txtRemarkRes,
+      hideRes: this.txtHideRes,
       token: true,
       showMessage: isMessage
     });

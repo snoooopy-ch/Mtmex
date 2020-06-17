@@ -1,6 +1,6 @@
 <div class="width-100">
-  <input type="text" [(ngModel)]="txtUrl">
-  <button class="border-round" (click)="onLoadUrl(txtUrl,isResSort, isMultiAnchor, isReplaceRes)">datファイル読み込み実行</button>
+  <input type="text" [(ngModel)]="txtDataFilePath">
+  <button class="border-round" (click)="onLoadUrl()">datファイル読み込み実行</button>
 </div>
 <div class="res-order">
   <div class="width-60">
@@ -92,9 +92,9 @@
 </div>
 <div class="width-100">
   <label>注意レス</label>
-  <input type="text">
+  <input type="text" [(ngModel)]="txtRemarkRes">
   <label>非表示レス</label>
-  <input type="text">
+  <input type="text" [(ngModel)]="txtHideRes">
   <label>非表示のID</label>
   <div class="hidden-ids-container">
     <button class="btn-show-id" *ngFor="let id of hiddenIds;" (click)="ShowIdHandler(id)">[X]{{id}}</button>

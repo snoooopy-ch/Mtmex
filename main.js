@@ -71,6 +71,8 @@ app.on('activate', function () {
   }
 });
 
+
+
 /**
  * Load res list from a file
  * @param url: a file path
@@ -78,7 +80,7 @@ app.on('activate', function () {
  * @param isMultiAnchor
  * @param isReplaceRes
  */
-function getResList(url, isResSort, isMultiAnchor, isReplaceRes) {
+function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes) {
   if (url === '') {
     dialog.showErrorBox('読み込み', 'ファイルパスを入力してください。');
     return;
@@ -117,8 +119,25 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes) {
     while (index > -1) {
       let line = remaining.substring(last, index);
       last = index + 1;
-      if(line.length > 1)
-        resList.push(readLines(line));
+      if(line.length > 1) {
+        const res = readLines(line);
+        if(remarkRes !== undefined && remarkRes.length > 0){
+          const re = new RegExp(remarkRes,'gi');
+          if(res.content.match(re)) {
+            res.isRemark = true;
+          }
+        }
+
+        if(hideRes.length < 1){
+          resList.push(res);
+        }else{
+          const re = new RegExp(hideRes,'gi');
+          if(!res.content.match(re)) {
+            resList.push(res);
+          }
+
+        }
+      }
       index = remaining.indexOf('\n', last);
     }
 
@@ -134,8 +153,8 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes) {
   });
 }
 
-ipcMain.on("loadRes", (event, url, isResSort, isMultiAnchor, isReplaceRes) => {
-  getResList(url, isResSort, isMultiAnchor, isReplaceRes);
+ipcMain.on("loadRes", (event, url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes) => {
+  getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
 });
 
 
@@ -338,6 +357,7 @@ function readLines(line) {
     isEdit: false,
     resMenu: false,
     isMenuOpen: false,
+    isRemark: false,
   };
 
   num++;
@@ -484,10 +504,10 @@ function getSettings() {
         }
       }else if(curComment === '#文字色'){
         settings['characterColors'].push(lineArgs[1]);
-      }else if(curComment === '注意レス'){
-        settings['chuui'] = lineArgs[1].split(';');
+      }else if(curComment === '#注意レス'){
+        settings['chuui'] = lineArgs[1];
       }else if(curComment === '#非表示レス'){
-        settings['hihyouji'] = lineArgs[1].split(';');
+        settings['hihyouji'] = lineArgs[1];
       }else if(curComment === '#注目レスの閾値'){
         settings['noticeCount'] = lineArgs[1].split(';');
       } else{
@@ -563,4 +583,18 @@ function loadStatus(filePath, tabIndex){
     }
   })
 }
+ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes) => {
+  saveSettings(dataFilePath, remarkRes, hideRes);
+});
 
+function saveSettings(dataFilePath, remarkRes, hideRes) {
+  fs.readFile('Setting.ini', 'utf8', function (err,data) {
+    data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
+    data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
+    data = data.replace(/(hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+    fs.writeFile('Setting.ini', data, (err) => {
+      if (err) throw err;
+      console.log('The settings file has been saved!');
+    });
+  });
+}
