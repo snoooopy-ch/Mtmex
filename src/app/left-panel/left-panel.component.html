@@ -24,14 +24,13 @@
            [dndDisableIf]="draggable.disable"
            (dndMoved)="onDraggableMoved($event)"
            (dndEnd)="onDragEnd($event)">
-
-        <i class="fa fa-star"></i>{{tabItem.title}}
-        <button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">
-          <mat-icon>close</mat-icon>
-        </button>
+        {{tabItem.title}}
+<!--        <button [disabled]="tabs.length === 1" (click)="removeTab(index)" class="close-tab">-->
+<!--          <mat-icon>close</mat-icon>-->
+<!--        </button>-->
       </div>
     </ng-template>
-  <app-content [resList]="resLists[index]"
+  <app-content [resList]="tabItem.resList"
                [tabName]="tabItem.title"
                [characterColors] = "settings.characterColors"
                [hoveredColor] = "settings.Mouseover"

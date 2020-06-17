@@ -11,7 +11,8 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
-let yesnokey = ['AutoSave','shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
+let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
+const onOffKeys = ['AutoSave'];
 let settings;
 
 function createWindow() {
@@ -453,6 +454,10 @@ function getSettings() {
       if(line.length === 0){
         continue;
       }
+      if(line.match(/pass:/gi)){
+        settings['autoSavePath'] = line.replace(/pass:/gi,'');
+        continue;
+      }
       let lineArgs = line.split(':');
 
       if(curComment === '#datパス'){
@@ -476,8 +481,10 @@ function getSettings() {
       }else if(curComment === '#注目レスの閾値'){
         settings['noticeCount'] = lineArgs[1].split(';');
       } else{
-        if(yesnokey.indexOf(lineArgs[0]) !== -1){
+        if(yesNoKeys.indexOf(lineArgs[0]) !== -1) {
           settings[lineArgs[0]] = lineArgs[1] === 'yes';
+        }else if(onOffKeys.indexOf(lineArgs[0]) !== -1){
+          settings[lineArgs[0]] = lineArgs[1] === 'on';
         }else {
           if (lineArgs.length > 1) {
             if(curComment === '#ボタンの色'){
@@ -509,14 +516,18 @@ ipcMain.on("saveStatus", (event, saveData) => {
 });
 
 function saveStatus(saveData) {
+  const showMessage = saveData.showMessage;
   const jsonString = JSON.stringify(saveData);
   const filePath = saveData.filePath;
   if(filePath === undefined) return;
   fs.writeFile(filePath, jsonString, err => {
     if (err) {
-      dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
+        dialog.showMessageBox({title: '保存', message: '保存に失敗しました。'});
+
     } else {
-      dialog.showMessageBox({title: '保存', message: '保存に成功しました。'});
+      if(showMessage) {
+        dialog.showMessageBox({title: '保存', message: '保存に成功しました。'});
+      }
     }
   });
 }

@@ -13,15 +13,15 @@ import {moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
-  resLists: [any[]];
-  tabs = [{title: 'New Tab', active: true}];
+  // resLists: [any[]];
+  tabs = [{title: 'New Tab', active: true, resList: [], scrollPos: 0, isFiltered: false}];
   draggable = {
     data: 'myDragData',
     effectAllowed: 'all',
     disable: false,
     handle: false
   };
-  scrollPos = [0];
+  // scrollPos = [0];
   selectedTabIndex = 0;
   settings;
   backgroundColors;
@@ -31,7 +31,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   tabWidth;
   hitColor;
   idRed;
-  isFiltered = [false];
+  // isFiltered = [false];
   // chuumoku: number;
   noticeCount: number;
   subHotKeys = [];
@@ -42,7 +42,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   private previousTabId: number;
   private currentTabId: number;
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
-    this.resLists = [[]];
+
   }
 
   ngOnInit(): void {
@@ -95,7 +95,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.resData = this.resService.resData.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
-      this.resLists[this.selectedTabIndex] = value.resList;
+      this.tabs[this.selectedTabIndex].resList = value.resList;
       this.cdr.detectChanges();
       if (value.resList.length > 0 ) {
         this.tabs[this.selectedTabIndex].title = value.sreTitle;
@@ -110,14 +110,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.index) {
-        this.scrollPos[this.selectedTabIndex] = value.pos;
+        this.tabs[this.selectedTabIndex].scrollPos = value.pos;
       }
     });
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
-        this.resLists[this.selectedTabIndex] = value.data.resList;
+        this.tabs[this.selectedTabIndex].resList = value.data.resList;
         this.cdr.detectChanges();
         this.tabs[this.selectedTabIndex].title = value.data.title;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
@@ -140,18 +140,17 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   addTab() {
-    this.tabs.push({title: 'New Tab' + this.tabs.length.toString(), active: true});
-    this.resLists.push([]);
-    this.scrollPos.push(0);
-    this.isFiltered.push(false);
-    // this.tabGroup.tabs[this.tabs.length - 1].active = true;
+    this.tabs.push({
+      title: 'New Tab',
+      active: true,
+      resList: [],
+      scrollPos: 0,
+      isFiltered: false
+    });
   }
 
   removeTab(index: number) {
-    this.resLists.splice(index, 1);
     this.tabs.splice(index, 1);
-    this.scrollPos.splice(index, 1);
-    this.isFiltered.splice(index, 1);
   }
 
   tabChangedHandler(index: number) {
@@ -159,15 +158,16 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.tabs[this.selectedTabIndex].active = true;
     this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
     this.resService.setSelectedTab({
-      select: this.resLists[this.selectedTabIndex].filter(item => item.select).length,
-      candi1: this.resLists[this.selectedTabIndex].filter(item => item.candi1).length,
-      candi2: this.resLists[this.selectedTabIndex].filter(item => item.candi2).length,
-      totalCount: this.resLists[this.selectedTabIndex].length,
-      tabIndex: this.selectedTabIndex
+      select: this.tabs[this.selectedTabIndex].resList.filter(item => item.select).length,
+      candi1: this.tabs[this.selectedTabIndex].resList.filter(item => item.candi1).length,
+      candi2: this.tabs[this.selectedTabIndex].resList.filter(item => item.candi2).length,
+      totalCount: this.tabs[this.selectedTabIndex].resList.length,
+      tabIndex: this.selectedTabIndex,
+      title: this.tabs[this.selectedTabIndex].title
     });
     const pos = {
       index: this.selectedTabIndex,
-      pos: this.scrollPos[this.selectedTabIndex],
+      pos: this.tabs[this.selectedTabIndex].scrollPos,
       isTab: true
     };
     this.cdr.detectChanges();
@@ -176,7 +176,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   filteredHandler(index: number, $event: any) {
-    this.isFiltered[index] = $event;
+    this.tabs[this.selectedTabIndex].isFiltered = $event;
   }
 
   changeSearchStatus($event: any) {
@@ -189,42 +189,19 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   onDraggableMoved($event: DragEvent) {
     this.currentTabId = $event.target['id'];
-    console.log($event.target['id']);
-
-    // console.log('--------moved------');
-    // console.log(this.currentTabId);
-    // console.log(index);
-    // console.log($event.target['id']);
-    // const toIndex = index;
-    // const fromIndex = this.currentTabId;
-    // // moveItemInArray(this.tabs, fromIndex, toIndex);
-
   }
 
   onDragEnd($event: DragEvent) {
     const toIndex = this.previousTabId;
     const fromIndex = this.currentTabId;
-    let tabListItems = this.tabs;
-    // tabListItems.splice(toIndex, 0, tabListItems.splice(fromIndex, 1)[0]);
-    // this.tabGroup.tabs.splice(toIndex, 0, this.tabGroup.tabs.splice(fromIndex, 1)[0]);
-    // console.log('--------end------');
+    const tabListItems = this.tabs;
     moveItemInArray(this.tabs, fromIndex, toIndex);
     moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
-    // this.tabs = [...this.tabs];
-    console.log('--------end------');
-    // this.currentTabId = index;
-    // console.log(index);
-    // console.log($event.target['data-id']);
+    this.tabs[fromIndex].active = false;
   }
 
   onDragover($event: DragEvent) {
-    console.log('----------over-------');
-    console.log($event.target);
-    console.log($event.target['data-id']);
     this.previousTabId = $event.target['id'];
-    // this.previousTabId = selectedTabIndex;
-    // console.log('--------over------')
-    // console.log(selectedTabIndex);
   }
 
 }

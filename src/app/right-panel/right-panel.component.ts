@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
+import { Observable, timer } from 'rxjs';
 const electron = (window as any).require('electron');
 
 @Component({
@@ -22,7 +23,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   selectCommand = '';
   settings;
   htmlTag: string;
+  private timer;
   public subscribers: any = {};
+  private title: any;
+
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
@@ -36,6 +40,18 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.settings = this.resService.settings.subscribe((value) => {
       this.settings = value;
+
+      if (this.settings.AutoSave){
+        const min = Number(this.settings.min);
+        this.timer = timer(2000, min * 60000);
+        // subscribing to a observable returns a subscription object
+        this.subscribers.statusTimer =  this.timer.subscribe(t => {
+          if (this.title !== undefined) {
+            this.saveAppStatus(`${this.settings.autoSavePath}${this.title}.txt`, false);
+          }
+        });
+
+      }
       this.txtUrl = this.settings.dataPath;
       this.isReplaceRes = this.settings.isReplaceRes;
       this.isMultiAnchor = this.settings.isMultiAnchor;
@@ -49,6 +65,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       this.candi1Count = value.candi1;
       this.candi2Count = value.candi2;
       this.totalCount = value.totalCount;
+      this.title = value.title;
     });
 
     this.subscribers.selectedRes = this.resService.selectedRes.subscribe((value) => {
@@ -94,6 +111,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.subscribers.totalRes.unsubscribe();
     this.subscribers.printHtml.unsubscribe();
     this.subscribers.status.unsubscribe();
+    this.subscribers.statusTimer.unsubscribe();
   }
 
   onLoadUrl(txtUrl: string, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean) {
@@ -149,22 +167,26 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   saveCurrentRes() {
     electron.remote.dialog.showSaveDialog(null, {title: 'レス状態保存'}).then(result => {
       if (!result.canceled){
-        console.log('right-panel');
-        this.resService.setSaveResStatus({
-          tabIndex: this.tabIndex,
-          filePath: result.filePath,
-          isResSort: this.isResSort,
-          isMultiAnchor: this.isMultiAnchor,
-          isReplaceRes: this.isReplaceRes,
-          txtPath: this.txtUrl,
-          token: true,
-        });
+        this.saveAppStatus(result.filePath, true);
       }
-
     }).catch(err => {
       console.log(err);
     });
   }
+
+  saveAppStatus(path, isMessage){
+    this.resService.setSaveResStatus({
+      tabIndex: this.tabIndex,
+      filePath: path,
+      isResSort: this.isResSort,
+      isMultiAnchor: this.isMultiAnchor,
+      isReplaceRes: this.isReplaceRes,
+      txtPath: this.txtUrl,
+      token: true,
+      showMessage: isMessage
+    });
+  }
+
 
   loadCurrentRes() {
     electron.remote.dialog.showOpenDialog(null, {title: 'レス状態保存'}).then(result => {
