@@ -48,6 +48,7 @@ function createWindow() {
 
   win.webContents.on('will-navigate', handleRedirect)
   win.webContents.on('new-window', handleRedirect)
+  win.setMenu(null)
 }
 
 // Create window on electron intialization
@@ -357,7 +358,7 @@ function readLines(line) {
   if (words.length > 2) {
     let tmp_str = words[3];
     tmp_str = tmp_str.replace(/<hr>|<br \/>/ig,'<br>');
-    let tmp_items = tmp_str.split('<br>');
+    let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let index = 0;
     for (let tmp_item of tmp_items) {
       if (index > 0)
@@ -367,7 +368,7 @@ function readLines(line) {
       //   tmp_item = tmp_item.trim();
       // }
       // tmp_item = tmp_item.trim();
-      if (tmp_item.startsWith("https:")) {
+      if (tmp_item.startsWith("https:") || tmp_item.startsWith("http:")) {
         tmp_item = tmp_item.replace('.JPG', '.jpg');
         tmp_item = tmp_item.replace('.GIF', '.gif');
         tmp_item = tmp_item.replace('.JPEG', '.jpeg');
