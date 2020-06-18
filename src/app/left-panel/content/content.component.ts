@@ -808,7 +808,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       r: parseInt(rgbs[1], 16),
       g: parseInt(rgbs[2], 16),
       b: parseInt(rgbs[3], 16),
-      a: 0.3
+      a: 0.7
     };
     const mixedColor = normal(backgroundRGB, hoveredRGB);
     return `#${mixedColor.r.toString(16)}${mixedColor.g.toString(16)}${mixedColor.b.toString(16)}`;
