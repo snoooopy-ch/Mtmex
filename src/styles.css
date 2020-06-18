@@ -264,18 +264,6 @@ app-res div.row-3 button:last-child {
   border-bottom-right-radius: 5px;
 }
 
-app-res div .tree {
-  background-color: #fce4d6;
-}
-
-app-res div .btn-cancel-tree {
-  background-color: #ddebf7;
-}
-
-app-res div .btn-white {
-  background-color: #fff;
-}
-
 app-res div .btn-cancel-tree {
   width: 55px;
 }

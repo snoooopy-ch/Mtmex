@@ -128,8 +128,17 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes);
   }
   onLoadUrl() {
-    const remarkRes = this.txtRemarkRes.substr(0, this.txtRemarkRes.length - 1).replace(/;/gi, '|');
-    const hideRes = this.txtHideRes.substr(0, this.txtHideRes.length - 1).replace(/;/gi, '|');
+
+    let remarkRes = this.txtRemarkRes;
+    if (remarkRes.endsWith(';')){
+      remarkRes = remarkRes.substr(0, remarkRes.length - 1);
+    }
+    remarkRes = remarkRes.replace(/;/gi, '|');
+    let hideRes = this.txtHideRes;
+    if (hideRes.endsWith(';')){
+      hideRes = hideRes.substr(0, hideRes.length - 1);
+    }
+    hideRes = hideRes.replace(/;/gi, '|');
     this.resService.loadRes(this.txtDataFilePath, this.isResSort, this.isMultiAnchor, this.isReplaceRes , remarkRes, hideRes);
   }
 

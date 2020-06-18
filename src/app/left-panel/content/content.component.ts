@@ -46,12 +46,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() noticeCount;
   @Input() shuturyoku;
   @Input() subHotKeys;
+  @Input() btnBackgroundColors;
   @Output() filteredEmitter = new EventEmitter();
   @Output() searchStatusEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
-  search = '';
-  important: '';
   backupResList;
   noticeBackupResList;
   txtURL: string;

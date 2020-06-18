@@ -14,6 +14,7 @@ let curComment='';
 let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
 const onOffKeys = ['AutoSave'];
 let settings;
+let loadedTitles = [];
 
 function createWindow() {
   // Create the browser window.
@@ -149,7 +150,18 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
       resList.push(readLines(remaining));
     }
     adjustResList(isResSort, isMultiAnchor, isReplaceRes);
-    win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle});
+    if(loadedTitles.indexOf(url) !==-1){
+      let response = dialog.showMessageBoxSync(win, {buttons: ["Yes","No"],
+        message: '同じタブがあります、datを読み込みますか'});
+      if(response === 0){
+        loadedTitles.push(url);
+        sreTitle = `${sreTitle}+`;
+        win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle});
+      }
+    } else {
+      loadedTitles.push(url);
+      win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle});
+    }
   });
 }
 
@@ -328,6 +340,17 @@ function readLines(line) {
     sreTitle = words[4].replace(/\r|\r|\r\n/gi,'');
     sreTitle = sreTitle.trim();
   }
+  for(let i=1; i<31; i++){
+    let search = settings[`toukoubi_mae${i}`];
+    if(search === undefined || search.length < 1){
+      continue;
+    }
+    search = search.replace(/\(/gi,'\\(');
+    search = search.replace(/\)/gi,'\\)');
+    const re = new RegExp(search, 'gi');
+    let replacement = settings[`toukoubi_ato${i}`];
+    words[2] = words[2].replace(re, replacement);
+  }
   let date_and_id = words[2].split(' ID:');
   let resItem = {
     num: -1,
@@ -363,6 +386,17 @@ function readLines(line) {
   num++;
   resItem.num = num;
   resItem.name = words[0].replace(/(<([^>]+)>)/ig, '');
+  for(let i=1; i<31; i++){
+    let search = settings[`namae_mae${i}`];
+    if(search === undefined || search.length < 0){
+      continue;
+    }
+    search = search.replace(/\(/gi,'\\(');
+    search = search.replace(/\)/gi,'\\)');
+    const re = new RegExp(search, 'gi');
+    let replacement = settings[`namae_ato${i}`];
+    resItem.name = resItem.name.replace(re, replacement);
+  }
   resItem.date = date_and_id[0].replace(/(<([^>]+)>)/ig, '');
   resItem.id = date_and_id[1] === undefined ? '' : date_and_id[1];
   resItem.resMenu = settings['res_menu'];
