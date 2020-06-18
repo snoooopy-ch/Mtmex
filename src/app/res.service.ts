@@ -31,6 +31,7 @@ export class ResService {
   saveResStatusSource = new BehaviorSubject<any>({});
   saveResStatus = this.saveResStatusSource.asObservable();
 
+
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
       this.resData.next(value);
@@ -43,8 +44,8 @@ export class ResService {
     });
   }
 
-  loadRes(url, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean) {
-    electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes);
+  loadRes(url, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, remarkRes, hideRes) {
+    electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
   }
 
   loadSettings(){
@@ -57,6 +58,10 @@ export class ResService {
 
   loadStatus(filePath, tabIndex){
     electron.ipcRenderer.send('loadStatus', filePath, tabIndex);
+  }
+
+  saveSettings(dataFilePath, remarkRes, hiddenRes){
+    electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes);
   }
 
   setHiddenIds(value: string[]) {

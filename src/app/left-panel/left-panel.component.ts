@@ -12,7 +12,7 @@ import {moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
-  
+
   tabs = [{title: 'New Tab', active: true, resList: [], scrollPos: 0, isFiltered: false}];
   draggable = {
     data: 'myDragData',
@@ -35,9 +35,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   public subscribers: any = {};
   shuturyoku: true;
   searchKeyword: string;
-  searchOption: 'context';
+  searchOption = 'context';
   private previousTabId: number;
   private currentTabId: number;
+  topBorder: string;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
 
@@ -52,6 +53,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.settings.YobiSentaku1_back,
         this.settings.YobiSentaku2_back];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
+      this.topBorder = `6px solid ${this.settings.Chuui_gatti_border}`;
       this.resSizeList = [
         {
           name: '小',

@@ -27,4 +27,5 @@ export class ResItem{
   isEdit: boolean;
   resMenu: boolean;
   isMenuOpen: boolean;
+  isRemark: boolean;
 }

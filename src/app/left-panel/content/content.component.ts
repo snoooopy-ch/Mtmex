@@ -38,6 +38,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() backgroundColors;
   @Input() characterColors;
   @Input() leftBorder;
+  @Input() topBorder;
   @Input() idStyles;
   @Input() resSizeList;
   @Input() hitColor;

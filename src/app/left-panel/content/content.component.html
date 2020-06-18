@@ -21,7 +21,7 @@
                   cdkDropList (cdkDropListDropped)="drop($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
     <app-res [item]="resItem" [resIndex]="index + resListContainer.viewPortInfo.startIndex - 5"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
-             'border-left': resItem.isAdded ? leftBorder : ''}"
+             'border-left': resItem.isAdded ? leftBorder : '', 'border-top': resItem.isRemark ? topBorder : ''}"
              (duplicateResEmitter)="duplicateRes(resItem)"
              (hideResEmitter)="hideRes(resItem.id)"
              (upResEmitter)="upRes(resItem)"
