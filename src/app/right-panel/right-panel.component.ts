@@ -188,6 +188,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.setPrintCommand({tabIndex: this.tabIndex, token: true});
   }
 
+  printAllHtmlTagHandler() {
+    this.resService.setPrintCommand({tabIndex: this.tabIndex, token: true});
+  }
+
   saveCurrentRes() {
     electron.remote.dialog.showSaveDialog(null, {title: 'レス状態保存'}).then(result => {
       if (!result.canceled){
