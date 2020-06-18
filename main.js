@@ -406,16 +406,20 @@ function readLines(line) {
         tmp_item = tmp_item.replace('.PNG', '.png');
         tmp_item = tmp_item.replace('.BMP', '.bmp');
         if (tmp_item.endsWith("jpg")
-          || tmp_item.endsWith("gif")
           || tmp_item.endsWith("jpeg")
           || tmp_item.endsWith("png")
           || tmp_item.endsWith("bmp")
         ) {
           tmp_item = `<img src="${tmp_item}" alt=""><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
           resItem.hasImage = true;
+        } else if (tmp_item.endsWith("gif")) {
+          tmp_item = `<img src="${tmp_item}" alt=""><a class="res-img-link res-img-gif" href="${tmp_item}">${tmp_item}</a>`;
+          resItem.hasImage = true;
         } else {
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
         }
+      } else if (tmp_item.startsWith("ttp:")) {
+        tmp_item = `<a class="res-link" href="h${tmp_item}">${tmp_item}</a>`;
       } else {
 
         if (tmp_item.indexOf("&gt;&gt;") !== -1) {
@@ -585,7 +589,7 @@ function loadStatus(filePath, tabIndex){
 }
 ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes) => {
   saveSettings(dataFilePath, remarkRes, hideRes);
-});
+}); 
 
 function saveSettings(dataFilePath, remarkRes, hideRes) {
   fs.readFile('Setting.ini', 'utf8', function (err,data) {

@@ -542,6 +542,17 @@ app-res .row-4 a {
   color: lightsalmon;
 }
 
+.main-container app-right-panel #btn-print-all-tag {
+  height: 35px;
+  background-color: #cc99FF;
+  border:solid 1px #cc99FF;
+}
+
+.main-container app-right-panel #btn-print-all-tag:hover {
+  background-color: white;
+  color: #cc99FF;
+}
+
 .main-container app-right-panel #btn-set {
   width: 162px;
   height: 32px;
@@ -598,4 +609,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .label-res-kaihei:hover {
   cursor: help
+}
+
+.res-img-gif {
+  color: red;
+  animation-play-state: paused;
 }
