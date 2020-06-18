@@ -12,7 +12,7 @@ let stateComments = ['#datパス','#指定したdatパス','#チェックボッ�
   '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
 let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
-const onOffKeys = ['AutoSave'];
+const onOffKeys = ['AutoSave','jogai'];
 let settings;
 let loadedTitles = [];
 
@@ -188,6 +188,12 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
     }
   }
   for (let resItem of resList) {
+    if(settings.jogai && sreTitle !== undefined && sreTitle.length > 0){
+      const re = new RegExp(sreTitle, 'gi');
+      resItem.content = resItem.content.replace(re,'');
+      resItem.id = resItem.id.replace(re,'');
+      resItem.id = resItem.id.replace(re,'');
+    }
     for (let anchor of resItem.anchors) {
       for (let i = 0; i < resList.length; i++) {
         if (resList[i].num === anchor) {
@@ -216,25 +222,25 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
         for (let i = 0; i < resList.length; i++) {
           if (resList[i].num === anchor) {
             if (isReplaceRes) {
-              if (isMultiAnchor) {
-                addAnchorRes(i + 1, resItem, anchor, isMultiAnchor);
+              if (isMultiAnchor && resItem.anchors.length < settings.anker) {
+                addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
                 resItem.isAdded = true;
               } else {
                 if (!resItem.isAdded) {
-                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor);
+                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
                   // resList.splice(i + 1, 0, resItem);
                   resItem.isAdded = true;
                 }
               }
             } else {
               if (resList[i].num !== 1) {
-                if (isMultiAnchor) {
-                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor);
+                if (isMultiAnchor && resItem.anchors.length < settings.anker) {
+                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
                   // resList.splice(i + 1, 0, resItem);
                   resItem.isAdded = true;
                 } else {
                   if (!resItem.isAdded) {
-                    addAnchorRes(i + 1, resItem, anchor, isMultiAnchor);
+                    addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
                     // resList.splice(i + 1, 0, resItem);
                     resItem.isAdded = true;
                   }
@@ -423,6 +429,15 @@ function readLines(line) {
   if (words.length > 2) {
     let tmp_str = words[3];
     tmp_str = tmp_str.replace(/<hr>|<br \/>/ig,'<br>');
+
+    let anchor_str = tmp_str.replace(/未来アンカー[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^gt]+<br>未来アンカー$/gi,'');
+    let anchor_ary = anchor_str.match(/&gt;&gt;\d+/g);
+    if(anchor_ary !== null) {
+      for (const anchor of anchor_ary) {
+        resItem.anchors.push(parseInt(anchor.replace(/&gt;&gt;/g, '')));
+      }
+    }
+
     let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let index = 0;
     for (let tmp_item of tmp_items) {
@@ -454,15 +469,15 @@ function readLines(line) {
         }
       } else if (tmp_item.startsWith("ttp:")) {
         tmp_item = `<a class="res-link" href="h${tmp_item}">${tmp_item}</a>`;
-      } else {
-
-        if (tmp_item.indexOf("&gt;&gt;") !== -1) {
-          let tmpAnchors = tmp_item.split("&gt;&gt;");
-          if (tmpAnchors.length > 1) {
-            resItem.anchors.push(parseInt(tmpAnchors[1]));
-          }
-        }
       }
+      // else {
+      //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
+      //     let tmpAnchors = tmp_item.split("&gt;&gt;");
+      //     if (tmpAnchors.length > 1) {
+      //       resItem.anchors.push(parseInt(tmpAnchors[1]));
+      //     }
+      //   }
+      // }
       resItem.content += tmp_item;
       index++;
     }
@@ -623,7 +638,7 @@ function loadStatus(filePath, tabIndex){
 }
 ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes) => {
   saveSettings(dataFilePath, remarkRes, hideRes);
-}); 
+});
 
 function saveSettings(dataFilePath, remarkRes, hideRes) {
   fs.readFile('Setting.ini', 'utf8', function (err,data) {

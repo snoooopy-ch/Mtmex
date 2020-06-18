@@ -233,7 +233,7 @@ app-res div button {
 }
 
 app-res div button:hover {
-  background-color: #0366d6;
+  background-color: #0366d6 !important;
   border-color: #0366d6;
   color: #fff;
 }
