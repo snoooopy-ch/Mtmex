@@ -23,6 +23,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   selectedTabIndex = 0;
   settings;
   backgroundColors;
+  hovergroundColors;
   leftBorder;
   idStyles;
   resSizeList;
@@ -40,7 +41,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   private currentTabId: number;
   topBorder: string;
   btnBackgroundColors: any[];
-
+  leftHightlight: true;
+  
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
 
   }
@@ -53,6 +55,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.settings.Sentaku_back,
         this.settings.YobiSentaku1_back,
         this.settings.YobiSentaku2_back];
+      this.hovergroundColors = [this.settings.Mouseover,
+        this.settings.Sentaku_MouseOver,
+        this.settings.Yobi1_MouseOver,
+        this.settings.Yobi2_MouseOver];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
       this.topBorder = `6px solid ${this.settings.Chuui_gatti_border}`;
       this.resSizeList = [
@@ -77,6 +83,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.idRed = this.settings.id_red;
       this.noticeCount = this.settings.noticeCount;
       this.shuturyoku = this.settings.shuturyoku;
+      this.leftHightlight = this.settings.Left_highlight;
       this.subHotKeys = [];
       if (value.hasOwnProperty('sentaku_no1')) {
         const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'up', 'down', 'big1', 'big2', 'nasi'

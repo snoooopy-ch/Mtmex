@@ -11,7 +11,7 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
-let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2'];
+let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['AutoSave','jogai'];
 let settings;
@@ -378,6 +378,7 @@ function readLines(line) {
     resFontSize: '14px',
     resSelect: 'none',
     resBackgroundColor: '#ffffff',
+    resHovergroundColor: '#ffffff',
     idBackgroundColor: 'transparent',
     idColor: '#000',
     hasImage: false,
@@ -446,7 +447,7 @@ function readLines(line) {
         resItem.content += '<br>';
       tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
       tmp_item = tmp_item.replace(/(http|ttp):/ig, 'http:');
-      tmp_item = tmp_item.replace(/(http|ttp)s:/ig, 'https');
+      tmp_item = tmp_item.replace(/(http|ttp)s:/ig, 'https:');
       // if(tmp_item.match(/(&gt;&gt;\d*[0-9]\d*)/)){
       //   tmp_item = tmp_item.trim();
       // }

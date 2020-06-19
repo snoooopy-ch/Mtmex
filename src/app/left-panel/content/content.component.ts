@@ -34,8 +34,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @ViewChild('txtSearch') txtSearch: ElementRef ;
   hovered: number;
   draggable: number;
-  @Input() hoveredColor;
   @Input() backgroundColors;
+  @Input() hovergroundColors;
   @Input() characterColors;
   @Input() leftBorder;
   @Input() topBorder;
@@ -47,6 +47,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() shuturyoku;
   @Input() subHotKeys;
   @Input() btnBackgroundColors;
+  @Input() leftHightlight;
   @Output() filteredEmitter = new EventEmitter();
   @Output() searchStatusEmitter = new EventEmitter();
   @Input() searchOption;
@@ -789,29 +790,10 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   getHoverColor(resBackgroundColor: string) {
     if (resBackgroundColor === '#fff' || resBackgroundColor === '#ffffff') {
-      return this.hoveredColor;
+      return this.hovergroundColors[0];
+    } else {
+      return this.hovergroundColors[this.backgroundColors.indexOf(resBackgroundColor)];
     }
-    let rgbs = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(resBackgroundColor);
-    const backgroundRGB = rgbs ? {
-      r: parseInt(rgbs[1], 16),
-      g: parseInt(rgbs[2], 16),
-      b: parseInt(rgbs[3], 16),
-      a: 1
-    } : {
-      r: 255,
-      g: 255,
-      b: 255,
-      a: 1
-    };
-    rgbs = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(this.hoveredColor);
-    const hoveredRGB = {
-      r: parseInt(rgbs[1], 16),
-      g: parseInt(rgbs[2], 16),
-      b: parseInt(rgbs[3], 16),
-      a: 0.7
-    };
-    const mixedColor = normal(backgroundRGB, hoveredRGB);
-    return `#${mixedColor.r.toString(16)}${mixedColor.g.toString(16)}${mixedColor.b.toString(16)}`;
   }
 
   mouseLeaveHandler() {

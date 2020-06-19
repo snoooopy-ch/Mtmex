@@ -52,6 +52,7 @@ export class ResComponent implements OnInit {
   @Input() noticeCount;
   @Input() resSizeList;
   @Input() btnBackgroundColors;
+  @Input() leftHightlight;
   resContent = '';
   @Input() characterColors;
 
@@ -83,10 +84,10 @@ export class ResComponent implements OnInit {
         $('#preview').css('display', 'none');
       });
 
-      $("img.res-img-thumb").one("load", function() {
-        console.log($(this));
-        [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);
-      });
+
+      // $("img.res-img-thumb").one("load", function() {
+      //   [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);
+      // });
 
       function is_gif_image(i) {
           return /^(?!data:).*\.gif/i.test(i.src);
