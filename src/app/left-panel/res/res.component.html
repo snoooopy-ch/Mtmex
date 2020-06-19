@@ -48,19 +48,32 @@
     <button class="btn-move btn-right-round" (click)="toBottomHandler()">▼</button>
   </div >
   <div class="row-3" *ngIf="item.resMenu">
-    <button class="tree btn-tree-main" (click)="treeSelectHandler(1)">T選択</button>
-    <button class="tree btn-tree-candi1" (click)="treeSelectHandler(2)">T1</button>
-    <button class="tree btn-tree-candi2" (click)="treeSelectHandler(3)">T2</button>
-    <button class="btn-cancel-tree" (click)="treeSelectHandler(0)">T解除</button>
-    <button class="btn-white btn-catch-id1" (click)="catchIdHandler(1)">ID選択1</button>
-    <button class="btn-white btn-catch-id2" (click)="catchIdHandler(2)">ID選択2</button>
-    <button class="btn-white btn-catch-id3" (click)="catchIdHandler(3)">ID選択3</button>
-    <button class="btn-cancel-selected-id" (click)="cancelSelectedIdHandler()">ID解除</button>
-    <button class="btn-cancel-only-catch-id" (click)="cancelOnlyCatchIdHandler()">ID色消</button>
-    <button class="btn-cancel-select-and-catch-id" (click)="cancelSelectAndCatchIdHandler()">ID解除＆ID色消</button>
-    <button class="btn-white btn-hide-res" (click)="hideHandler()">非表示</button>
-    <button class="btn-white btn-copy-res" (click)="duplicateHandler()">複</button>
-    <button class="btn-white btn-edit-text" (click)="editShowHandler()" >編集</button>
+    <button class="btn-tree-main" [ngStyle]="{'background-color':btnBackgroundColors.tree_sentaku_back}"
+            (click)="treeSelectHandler(1)">T選択</button>
+    <button class="btn-tree-candi1" [ngStyle]="{'background-color':btnBackgroundColors.tree_yobi_sentaku1}"
+            (click)="treeSelectHandler(2)">T1</button>
+    <button class="btn-tree-candi2" [ngStyle]="{'background-color':btnBackgroundColors.tree_yobi_sentaku2}"
+            (click)="treeSelectHandler(3)">T2</button>
+    <button class="btn-cancel-tree" [ngStyle]="{'background-color':btnBackgroundColors.tree_kaijo_back}"
+            (click)="treeSelectHandler(0)">T解除</button>
+    <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.id_sentaku1}"
+            (click)="catchIdHandler(1)">ID選択1</button>
+    <button class="btn-catch-id2" [ngStyle]="{'background-color':btnBackgroundColors.id_sentaku2}"
+            (click)="catchIdHandler(2)">ID選択2</button>
+    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.id_sentaku3}"
+            (click)="catchIdHandler(3)">ID選択3</button>
+    <button class="btn-cancel-selected-id" [ngStyle]="{'background-color':btnBackgroundColors.id_kaijo_back}"
+            (click)="cancelSelectedIdHandler()">ID解除</button>
+    <button class="btn-cancel-only-catch-id" [ngStyle]="{'background-color':btnBackgroundColors.id_iro_delete}"
+            (click)="cancelOnlyCatchIdHandler()">ID色消</button>
+    <button class="btn-cancel-select-and-catch-id" [ngStyle]="{'background-color':btnBackgroundColors.id_kaijo_iro_delete}"
+            (click)="cancelSelectAndCatchIdHandler()">ID解除＆ID色消</button>
+    <button class="btn-hide-res" [ngStyle]="{'background-color':btnBackgroundColors.id_hihyouji}"
+            (click)="hideHandler()">非表示</button>
+    <button class="btn-copy-res" [ngStyle]="{'background-color':btnBackgroundColors.copy}"
+            (click)="duplicateHandler()">複</button>
+    <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.edit}"
+            (click)="editShowHandler()" >編集</button>
   </div>
   <div class="row-4" *ngIf="item.isEdit">
     <ckeditor class="row-4" [editor]="Editor"

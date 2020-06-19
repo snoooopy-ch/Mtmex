@@ -39,6 +39,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   private previousTabId: number;
   private currentTabId: number;
   topBorder: string;
+  btnBackgroundColors: any[];
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
 
@@ -86,6 +87,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           this.subHotKeys[key] = this.settings[key].toLowerCase();
         }
       }
+      this.btnBackgroundColors = [];
+      if (value.hasOwnProperty('tree_sentaku_back')){
+        const colorKeys = ['tree_sentaku_back', 'tree_yobi_sentaku1', 'tree_yobi_sentaku2', 'tree_kaijo_back', 'id_sentaku1',
+          'id_sentaku2', 'id_sentaku3', 'id_kaijo_back', 'id_iro_delete', 'id_kaijo_iro_delete', 'id_hihyouji', 'copy', 'edit'];
+        for (const key of colorKeys){
+          this.btnBackgroundColors[key] = this.settings[key];
+        }
+      }
     });
 
     this.subscribers.resData = this.resService.resData.subscribe((value) => {
@@ -130,7 +139,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(){
     this.subscribers.settings.unsubscribe();
-    // this.subscribers.resData.unsubscribe();
+    this.subscribers.resData.unsubscribe();
     this.subscribers.scrollPos.unsubscribe();
     this.subscribers.status.unsubscribe();
   }

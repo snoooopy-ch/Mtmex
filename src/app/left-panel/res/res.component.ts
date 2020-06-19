@@ -51,6 +51,7 @@ export class ResComponent implements OnInit {
   @Input() idRed;
   @Input() noticeCount;
   @Input() resSizeList;
+  @Input() btnBackgroundColors;
   resContent = '';
   @Input() characterColors;
 
@@ -124,7 +125,7 @@ export class ResComponent implements OnInit {
       });
     this.cdRef.detectChanges();
   }
-  
+
   editShowHandler() {
     this.item.isEdit = !this.item.isEdit;
     if (this.item.isEdit) {
