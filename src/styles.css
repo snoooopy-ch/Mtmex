@@ -612,6 +612,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .res-img-gif {
-  color: red;
+  color: red !important;
+}
+
+.gif-pause {
   animation-play-state: paused;
 }

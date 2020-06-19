@@ -49,7 +49,7 @@ function createWindow() {
 
   win.webContents.on('will-navigate', handleRedirect)
   win.webContents.on('new-window', handleRedirect)
-  win.setMenu(null)
+  //win.setMenu(null)
 }
 
 // Create window on electron intialization
@@ -410,10 +410,10 @@ function readLines(line) {
           || tmp_item.endsWith("png")
           || tmp_item.endsWith("bmp")
         ) {
-          tmp_item = `<img src="${tmp_item}" alt=""><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
+          tmp_item = `<img class="res-img-thumb" src="${tmp_item}" alt=""><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
           resItem.hasImage = true;
         } else if (tmp_item.endsWith("gif")) {
-          tmp_item = `<img src="${tmp_item}" alt=""><a class="res-img-link res-img-gif" href="${tmp_item}">${tmp_item}</a>`;
+          tmp_item = `<img class="res-img-thumb" src="${tmp_item}" class="gif-pause" alt=""><a class="res-img-link res-img-gif" href="${tmp_item}">${tmp_item}</a>`;
           resItem.hasImage = true;
         } else {
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;

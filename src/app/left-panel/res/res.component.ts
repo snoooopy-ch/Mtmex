@@ -81,8 +81,29 @@ export class ResComponent implements OnInit {
         this.title = this.t;
         $('#preview').css('display', 'none');
       });
-    });
 
+      $("img.res-img-thumb").one("load", function() {
+        [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);
+      });
+
+      function is_gif_image(i) {
+          return /^(?!data:).*\.gif/i.test(i.src);
+      }
+
+      function freeze_gif(i) {
+          var c = document.createElement('canvas');
+          var w = c.width = i.width;
+          var h = c.height = i.height;
+          c.getContext('2d').drawImage(i, 0, 0, w, h);
+          try {
+              i.src = c.toDataURL("image/gif");         // if possible, retain all css aspects
+          } catch(e) {                                  // cross-domain -- mimic original with all its tag attributes
+              for (var j = 0, a; a = i.attributes[j]; j++)
+                  c.setAttribute(a.name, a.value);
+              i.parentNode.replaceChild(c, i);
+          }
+      }
+    });
   }
 
   sizeChangeHandler() {
