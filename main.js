@@ -11,7 +11,8 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
-let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','res_menu'];
+let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2'];
+let selectKeys = ['res_menu'];
 const onOffKeys = ['AutoSave','jogai'];
 let settings;
 let loadedTitles = [];
@@ -444,6 +445,8 @@ function readLines(line) {
       if (index > 0)
         resItem.content += '<br>';
       tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
+      tmp_item = tmp_item.replace(/(http|ttp):/ig, 'http:');
+      tmp_item = tmp_item.replace(/(http|ttp)s:/ig, 'https');
       // if(tmp_item.match(/(&gt;&gt;\d*[0-9]\d*)/)){
       //   tmp_item = tmp_item.trim();
       // }
@@ -467,9 +470,7 @@ function readLines(line) {
         } else {
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
         }
-      } else if (tmp_item.startsWith("ttp:")) {
-        tmp_item = `<a class="res-link" href="h${tmp_item}">${tmp_item}</a>`;
-      }
+      } 
       // else {
       //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
       //     let tmpAnchors = tmp_item.split("&gt;&gt;");
@@ -508,7 +509,7 @@ function getSettings() {
   let remaining = '';
   settings = {
     dataPath: '',
-    defaultPath: '',
+    defaultPath: [],
     isResSort: false,
     isMultiAnchor: false,
     isReplaceRes: false,
@@ -541,12 +542,13 @@ function getSettings() {
         settings['autoSavePath'] = line.replace(/pass:/gi,'').trim();
         continue;
       }
-      let lineArgs = line.split(':');
+      let chunks = line.split(':');
+      let lineArgs = [chunks.shift(), chunks.join(':')];
 
       if(curComment === '#datパス'){
         settings['dataPath'] = line;
       }else if(curComment === '#指定したdatパス'){
-        settings['defaultPath'] = line;
+        settings['defaultPath'].push(lineArgs[1]);
       }else if(curComment === '#チェックボックス'){
         if(lineArgs[0] === '1'){
           settings['isResSort'] = lineArgs[1] === 'on';
@@ -568,6 +570,8 @@ function getSettings() {
           settings[lineArgs[0]] = lineArgs[1] === 'yes';
         }else if(onOffKeys.indexOf(lineArgs[0]) !== -1){
           settings[lineArgs[0]] = lineArgs[1] === 'on';
+        }else if(selectKeys.indexOf(lineArgs[0]) !== -1){
+          settings[lineArgs[0]] = lineArgs[1];
         }else {
           if (lineArgs.length > 1) {
             if(curComment === '#ボタンの色'){

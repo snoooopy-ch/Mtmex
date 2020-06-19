@@ -25,7 +25,7 @@
       </svg>
     </div>
   </div>
-  <div class="row-2" *ngIf="item.isMenuOpen">
+  <div class="row-2" *ngIf="(item.isMenuOpen == true || item.resMenu == 3)">
     <button class="btn-move btn-left-round" (click)="upOneHandler()">↑</button>
     <button class="btn-move btn-right-round" (click)="downOneHandler()">↓</button>
     <label class="radio-container" *ngFor="let sizeItem of resSizeList">
@@ -47,7 +47,7 @@
     <button class="btn-move btn-left-round" (click)="toTopHandler()">▲</button>
     <button class="btn-move btn-right-round" (click)="toBottomHandler()">▼</button>
   </div >
-  <div class="row-3" *ngIf="item.resMenu">
+  <div class="row-3" *ngIf="(item.isMenuOpen == true || item.resMenu >= 2)">
     <button class="btn-tree-main" [ngStyle]="{'background-color':btnBackgroundColors.tree_sentaku_back}"
             (click)="treeSelectHandler(1)">T選択</button>
     <button class="btn-tree-candi1" [ngStyle]="{'background-color':btnBackgroundColors.tree_yobi_sentaku1}"

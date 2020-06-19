@@ -84,6 +84,7 @@ export class ResComponent implements OnInit {
       });
 
       $("img.res-img-thumb").one("load", function() {
+        console.log($(this));
         [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);
       });
 
@@ -151,6 +152,8 @@ export class ResComponent implements OnInit {
   }
 
   clickResMenuKaihei() {
+    if (this.item.resMenu == 3) return;
+
     this.item.isMenuOpen = !this.item.isMenuOpen;
     this.cdRef.detectChanges();
   }

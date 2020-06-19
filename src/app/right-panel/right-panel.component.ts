@@ -180,8 +180,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.selectCommand = '';
   }
 
-  setDefaultPathHandler() {
-    this.txtDataFilePath = this.settings.defaultPath;
+  setDefaultPathHandler(dataIndex) {
+    this.txtDataFilePath = this.settings.defaultPath[dataIndex];
   }
 
   printHtmlTagHandler() {

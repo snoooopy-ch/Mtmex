@@ -25,7 +25,7 @@ export class ResItem{
   originalIndex: number;
   anchorCount: number;
   isEdit: boolean;
-  resMenu: boolean;
+  resMenu: number;
   isMenuOpen: boolean;
   isRemark: boolean;
 }

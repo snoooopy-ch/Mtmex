@@ -393,11 +393,11 @@ app-res .row-4 a {
 .main-container app-right-panel .res-order {
   display: -webkit-box;
   display: -ms-flexbox;
-  display: flex;
-  padding: 18px 0 8px;
+  display: block;
+  padding: 18px 0 0px;
 }
 
-.main-container app-right-panel .res-order .width-60 div {
+.main-container app-right-panel .res-order .reading-mode div {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -406,7 +406,7 @@ app-res .row-4 a {
   align-items: center;
 }
 
-.main-container app-right-panel .res-order .width-60 div label {
+.main-container app-right-panel .res-order .reading-mode div label {
   margin: 0;
   line-height: 2em;
   display: flex;
@@ -451,13 +451,14 @@ app-res .row-4 a {
   color: red;
 }
 
-.main-container app-right-panel .width-60 {
+.main-container app-right-panel .reading-mode {
   display: block;
-  width: calc(100% - 67px);
+  width: 100%;
 }
 
-.main-container app-right-panel .width-40 {
-  width: 66px;
+.main-container app-right-panel .sure-specific {
+  width: 100%;
+  display: flex;
 }
 
 .main-container app-right-panel .save-container {
@@ -475,7 +476,7 @@ app-res .row-4 a {
 
 .main-container app-right-panel .setting-panel {
   margin: 5px 0 0 0;
-  padding: 2px 23px 10px;
+  padding: 10px 23px 10px;
   border: 1px solid lightgrey;
   text-align: center;
 }
@@ -504,9 +505,11 @@ app-res .row-4 a {
   color: dodgerblue;
 }
 
-.main-container app-right-panel #btn-located-dat {
-  width: 66px;
-  height: 63px;
+.main-container app-right-panel .sure-specific button{
+  width: 33.33%;
+  height: 43px;
+  margin: 0px;
+  margin-left: -1px;
 }
 
 .main-container app-right-panel #txt-html-tag {
