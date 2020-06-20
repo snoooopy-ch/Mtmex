@@ -39,6 +39,7 @@ import {DndModule} from 'ngx-drag-drop';
     FormsModule,
     DragDropModule,
     BrowserAnimationsModule,
+    
     // MatTabsModule,
     MatIconModule,
     CKEditorModule,

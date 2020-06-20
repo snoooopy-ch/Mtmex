@@ -12,9 +12,9 @@ import {
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {DomSanitizer} from '@angular/platform-browser';
 
-
 declare var jQuery: any;
 declare var $: any;
+declare var Freezeframe: any;
 
 @Pipe({ name: 'safeHtml'})
 export class SafeHtmlPipe implements PipeTransform  {
@@ -66,6 +66,7 @@ export class ResComponent implements OnInit {
     this.item.resFontSize = '19px';
 
     $(document).ready(function() {
+      
       const xOffset = 150;
       const yOffset = 40;
       const imgPop = $('#preview img');
@@ -83,7 +84,11 @@ export class ResComponent implements OnInit {
         this.title = this.t;
         $('#preview').css('display', 'none');
       });
-
+      
+      const imgGif = new Freezeframe('.gif-pause', {
+        trigger: false,
+        responsive: false,
+      });
 
       // $("img.res-img-thumb").one("load", function() {
       //   [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);

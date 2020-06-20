@@ -27,7 +27,7 @@
               "src/custom-theme.scss",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["node_modules/freezeframe/dist/freezeframe.min.js"]
           },
           "configurations": {
             "production": {

@@ -466,7 +466,7 @@ function readLines(line) {
           tmp_item = `<img class="res-img-thumb" src="${tmp_item}" alt=""><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
           resItem.hasImage = true;
         } else if (tmp_item.endsWith("gif")) {
-          tmp_item = `<img class="res-img-thumb" src="${tmp_item}" class="gif-pause" alt=""><a class="res-img-link res-img-gif" href="${tmp_item}">${tmp_item}</a>`;
+          tmp_item = `<img class="res-img-thumb gif-pause" src="${tmp_item}" alt=""><a class="res-img-link res-gif-link" href="${tmp_item}">${tmp_item}</a>`;
           resItem.hasImage = true;
         } else {
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;

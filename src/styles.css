@@ -601,7 +601,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .label-res-kaihei:hover {
   cursor: help
 }
-.res-img-gif {
+.res-gif-link {
   color: red !important;
 }
 
