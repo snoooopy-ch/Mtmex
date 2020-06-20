@@ -212,7 +212,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
           continue;
         }
         tmpResList.push(resList[i]);
-        if(resList[i].featureAnchors.length < 1 || !isMultiAnchor) {
+        if(resList[i].futureAnchors.length < 1 || !isMultiAnchor) {
           resList.splice(i, 1);
           i--;
         }
@@ -495,7 +495,7 @@ function readLines(line) {
         } else {
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
         }
-      } 
+      }
       // else {
       //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
       //     let tmpAnchors = tmp_item.split("&gt;&gt;");
