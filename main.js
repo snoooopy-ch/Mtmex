@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron');
 const fs = require('fs');
 const encoding = require('encoding-japanese');
 
@@ -49,9 +49,21 @@ function createWindow() {
     }
   };
 
+  const menu = Menu.getApplicationMenu();
+
+  menu.append(new MenuItem({
+    label: 'タブを閉じる',
+    submenu: [{
+      label: 'タブを閉じる',
+      click: function () {
+        win.webContents.send("closeMenu");
+      }
+    }]
+  }));
+
   win.webContents.on('will-navigate', handleRedirect)
   win.webContents.on('new-window', handleRedirect)
-  //win.setMenu(null)
+  win.setMenu(menu);
 }
 
 // Create window on electron intialization
