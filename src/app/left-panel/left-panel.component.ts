@@ -35,6 +35,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   subHotKeys = [];
   public subscribers: any = {};
   shuturyoku: true;
+  youtube: false;
+  twitter: false;
   searchKeyword: string;
   searchOption = 'context';
   private previousTabId: number;
@@ -83,6 +85,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.idRed = this.settings.id_red;
       this.noticeCount = this.settings.noticeCount;
       this.shuturyoku = this.settings.shuturyoku;
+      this.youtube = this.settings.youtube;
+      this.twitter = this.settings.twitter;
       this.leftHightlight = this.settings.Left_highlight;
       this.subHotKeys = [];
       if (value.hasOwnProperty('sentaku_no1')) {

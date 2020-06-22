@@ -21,7 +21,7 @@
     <h4 class="label-res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}">ID:</h4>
     <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}" [innerHTML]="item.id | safeHtml"></h4>
     <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
-    <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)">
+    <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor}">
       <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
         <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
         <path d="M0 0h24v24H0z" fill="none"></path>
@@ -51,7 +51,13 @@
     <button class="btn-move btn-right-round" (click)="toBottomHandler()">▼</button>
   </div >
   <div class="row-3" *ngIf="(item.isMenuOpen == true || item.resMenu >= 2)">
-    <button class="btn-tree-main" [ngStyle]="{'background-color':btnBackgroundColors.tree_sentaku_back}"
+    <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor, 'margin':'0'}">
+        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
+    <button class="btn-tree-main btn-left-round" [ngStyle]="{'background-color':btnBackgroundColors.tree_sentaku_back}"
             (click)="treeSelectHandler(1)">T選択</button>
     <button class="btn-tree-candi1" [ngStyle]="{'background-color':btnBackgroundColors.tree_yobi_sentaku1}"
             (click)="treeSelectHandler(2)">T1</button>

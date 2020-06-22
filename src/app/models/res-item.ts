@@ -20,6 +20,7 @@ export class ResItem{
   resHovergroundColor = '#e2e2e2';
   idBackgroundColor = '#fff';
   idColor = '#000';
+  moveMarkColor = '#999';
   idClassNoSelect = '';
   hasImage = false;
   isFiltered = false;

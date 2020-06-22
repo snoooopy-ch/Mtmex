@@ -204,7 +204,7 @@ app-res div .label-res-cal1 {
 
 app-res div .radio-container {
   margin: 0;
-  padding: 0 5.5px;
+  padding: 0 5px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -616,6 +616,7 @@ input[type='radio'] {
   border:1px solid #464646;
   border-radius:50%;
   outline:none;
+  margin-right: 3px;
 }
 input[type='radio']:before {
   content:'';

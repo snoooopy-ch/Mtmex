@@ -11,7 +11,7 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
-let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight'];
+let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight', 'res_mouse_click', 'youtube', 'twitter'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['AutoSave','jogai'];
 let settings;
@@ -381,6 +381,7 @@ function readLines(line) {
     resHovergroundColor: '#ffffff',
     idBackgroundColor: 'transparent',
     idColor: '#000',
+    moveMarkColor: '#999',
     hasImage: false,
     isFiltered: false,
     originalIndex: -1,
@@ -408,6 +409,7 @@ function readLines(line) {
   resItem.date = date_and_id[0].replace(/(<([^>]+)>)/ig, '');
   resItem.id = date_and_id[1] === undefined ? '' : date_and_id[1];
   resItem.resMenu = settings['res_menu'];
+  resItem.moveMarkColor = settings['res_move'];
   resItem.isMenuOpen = false;
 
   // add id to id array
@@ -452,26 +454,23 @@ function readLines(line) {
       //   tmp_item = tmp_item.trim();
       // }
       // tmp_item = tmp_item.trim();
-      if (tmp_item.startsWith("https:") || tmp_item.startsWith("http:")) {
-        tmp_item = tmp_item.replace('.JPG', '.jpg');
-        tmp_item = tmp_item.replace('.GIF', '.gif');
-        tmp_item = tmp_item.replace('.JPEG', '.jpeg');
-        tmp_item = tmp_item.replace('.PNG', '.png');
-        tmp_item = tmp_item.replace('.BMP', '.bmp');
-        if (tmp_item.endsWith("jpg")
-          || tmp_item.endsWith("jpeg")
-          || tmp_item.endsWith("png")
-          || tmp_item.endsWith("bmp")
-        ) {
-          tmp_item = `<img class="res-img-thumb" src="${tmp_item}" alt=""><a class="res-img-link" href="${tmp_item}">${tmp_item}</a>`;
+
+      var expUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      var expGifUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].gif)/ig;
+      var expImgUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].(jpg|jpeg|png|bmp))/ig;
+
+      if (new RegExp(expUrl).test(tmp_item)) {
+        if (new RegExp(expGifUrl).test(tmp_item)) {
+          tmp_item = tmp_item.replace(expGifUrl, `<img class="res-img-thumb gif-pause" src="$1" alt=""><a class="res-img-link res-gif-link" href="$1">$1</a>`);
           resItem.hasImage = true;
-        } else if (tmp_item.endsWith("gif")) {
-          tmp_item = `<img class="res-img-thumb gif-pause" src="${tmp_item}" alt=""><a class="res-img-link res-gif-link" href="${tmp_item}">${tmp_item}</a>`;
+        } else if (new RegExp(expImgUrl).test(tmp_item)) {
+          tmp_item = tmp_item.replace(expImgUrl, `<img class="res-img-thumb" src="$1" alt=""><a class="res-img-link" href="$1">$1</a>`);
           resItem.hasImage = true;
         } else {
-          tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
+          tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`); 
         }
-      } 
+      }
+      
       // else {
       //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
       //     let tmpAnchors = tmp_item.split("&gt;&gt;");

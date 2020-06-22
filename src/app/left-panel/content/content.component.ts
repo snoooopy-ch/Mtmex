@@ -14,7 +14,8 @@ import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
-
+declare var jQuery: any;
+declare var $: any;
 
 @Component({
   selector: 'app-content',
@@ -45,6 +46,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() idRed;
   @Input() noticeCount;
   @Input() shuturyoku;
+  @Input() youtube;
+  @Input() twitter;
   @Input() subHotKeys;
   @Input() btnBackgroundColors;
   @Input() leftHightlight;
@@ -1036,8 +1039,19 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  // private httpGet(theUrl) {
+  //   var xmlHttp = new XMLHttpRequest();
+  //   xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+  //   xmlHttp.send( null );
+  //   if (request.status === 200) {
+  //     data = stringToArrayBuffer(request.response);
+  //   } else {
+  //       alert('Something bad happen!\n(' + request.status + ') ' + request.statusText);
+  //   }
+  //   return xmlHttp.response;
+  // }
 
-  private printRes(res: ResItem){
+  private async printRes(res: ResItem){
     let htmlTag = '';
     let content = res.content;
     content = content.replace(/(<img[^<]+>)/ig, '');
@@ -1050,6 +1064,42 @@ export class ContentComponent implements OnInit, OnDestroy {
     // content = content.replace(/(<br><br>)/ig, '<br>');
     // content = content.replace(/(<br><br>)/ig, '<br>');
     content = content.replace(/(<br>)/ig, '<br />');
+
+    // Twitter embed code
+    if (this.twitter) {
+      let twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
+      if (Array.isArray(twitters) && twitters.length) {
+        for (var twitter of twitters) {
+          let twitterURL = twitter.slice(1, -1);
+          let response = await fetch("https://publish.twitter.com/oembed?url=" + twitterURL);
+          let data = await response.json();
+          let replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
+          content = content.replace(replace, replace + data.html);
+        }
+      }
+    }
+    
+    console.log("content");
+    console.log(content);
+    // Youtube embed code
+    if (this.youtube) {
+      let youtubes = content.match(/"(https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)"/ig);
+      console.log("youtube");
+      console.log(youtube);
+      if (Array.isArray(youtubes) && youtubes.length) {
+        for (var youtube of youtubes) {
+          let youtubeURL = youtube.slice(1, -1);
+          console.log("youtubeURL");
+          console.log(youtubeURL);
+          let response = await fetch("http://www.youtube.com/oembed?url=" + youtubeURL);
+          let data = await response.json();
+          console.log("data.html");
+          console.log(data.html);
+          let replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
+          content = content.replace(replace, replace + data.html);
+        }
+      }
+    }
 
     if (res.isAdded) {
       htmlTag += `<div class="t_h t_i">`;
@@ -1151,14 +1201,17 @@ export class ContentComponent implements OnInit, OnDestroy {
     return htmlTag;
   }
 
-  private printHtmlTag() {
+  private async printHtmlTag() {
+    $.LoadingOverlay("show", {
+      "imageColor": "#ffa07a",
+    });
     let htmlTag = `★■●${this.tabName}●■★\n`;
     htmlTag += `URL入力欄：${this.txtURL}\n`;
     let exists = false;
     for (const res of this.resList){
       if (res.resSelect === 'select'){
         exists = true;
-        htmlTag += this.printRes(res);
+        htmlTag += await this.printRes(res);
       }
     }
 
@@ -1166,7 +1219,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     for (const res of this.resList){
       if (res.resSelect === 'candi1'){
         exists = true;
-        yobi1 += this.printRes(res);
+        yobi1 += await this.printRes(res);
       }
     }
     if (yobi1.length > 0){
@@ -1177,7 +1230,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     for (const res of this.resList){
       if (res.resSelect === 'candi2'){
         exists = true;
-        yobi2 += this.printRes(res);
+        yobi2 += await this.printRes(res);
       }
     }
 
@@ -1191,6 +1244,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       htmlTag = htmlTag.substr(0, htmlTag.length - 1);
     }
     this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag});
+    $.LoadingOverlay("hide");
   }
 
   changeSearchOptionHandler() {
