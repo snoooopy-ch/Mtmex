@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron');
 const fs = require('fs');
 const encoding = require('encoding-japanese');
 
@@ -49,9 +49,21 @@ function createWindow() {
     }
   };
 
+  const menu = Menu.getApplicationMenu();
+
+  menu.append(new MenuItem({
+    label: 'タブを閉じる',
+    submenu: [{
+      label: 'タブを閉じる',
+      click: function () {
+        win.webContents.send("closeMenu");
+      }
+    }]
+  }));
+
   win.webContents.on('will-navigate', handleRedirect)
   win.webContents.on('new-window', handleRedirect)
-  //win.setMenu(null)
+  win.setMenu(menu);
 }
 
 // Create window on electron intialization
@@ -212,8 +224,10 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
           continue;
         }
         tmpResList.push(resList[i]);
-        resList.splice(i, 1);
-        i--;
+        if(resList[i].futureAnchors.length < 1 || !isMultiAnchor) {
+          resList.splice(i, 1);
+          i--;
+        }
       }
     }
 
@@ -225,11 +239,12 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
             if (isReplaceRes) {
               if (isMultiAnchor && resItem.anchors.length < settings.anker) {
                 addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
-                resItem.isAdded = true;
+                if(resItem.futureAnchors.length < 1) {
+                  resItem.isAdded = true;
+                }
               } else {
                 if (!resItem.isAdded) {
                   addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
-                  // resList.splice(i + 1, 0, resItem);
                   resItem.isAdded = true;
                 }
               }
@@ -237,12 +252,12 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
               if (resList[i].num !== 1) {
                 if (isMultiAnchor && resItem.anchors.length < settings.anker) {
                   addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
-                  // resList.splice(i + 1, 0, resItem);
-                  resItem.isAdded = true;
+                  if(resItem.futureAnchors.length < 1) {
+                    resItem.isAdded = true;
+                  }
                 } else {
                   if (!resItem.isAdded) {
                     addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
-                    // resList.splice(i + 1, 0, resItem);
                     resItem.isAdded = true;
                   }
                 }
@@ -268,7 +283,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
   while (true) {
     if (resList.length - 2 < i)
       break;
-    if (resList[i].anchors.indexOf(anchor) !== -1) {
+    if (resList[i].anchors.indexOf(anchor) !== -1 && resList[i].num !== item.num) {
       parentAnchors.push(resList[i].num);
       i++;
       continue;
@@ -293,6 +308,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
     let tmpItems = newItem.content.split('<br>');
     let anchorContent = '';
     let anchorExists = false;
+    let isAdded = false;
     let spliter = '&gt;&gt;' + anchor;
     for (let tmpItem of tmpItems) {
       if (tmpItem.indexOf(spliter) !== -1) {
@@ -308,7 +324,11 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
       }
     }
     newItem.content = anchorContent;
-    newItem.isAdded = true;
+    if(item.featureAnchors > 0){
+        item.content = item.content.replace(newItem.content,'');
+    }
+    isAdded = true;
+    newItem.isAdded = isAdded;
     resList.splice(i, 0, newItem);
   } else {
     resList.splice(i, 0, item);
@@ -390,6 +410,7 @@ function readLines(line) {
     resMenu: false,
     isMenuOpen: false,
     isRemark: false,
+    futureAnchors: []
   };
 
   num++;
@@ -434,13 +455,28 @@ function readLines(line) {
     let tmp_str = words[3];
     tmp_str = tmp_str.replace(/<hr>|<br \/>/ig,'<br>');
 
-    let anchor_str = tmp_str.replace(/未来アンカー[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^gt]+<br>未来アンカー$/gi,'');
-    let anchor_ary = anchor_str.match(/&gt;&gt;\d+/g);
-    if(anchor_ary !== null) {
-      for (const anchor of anchor_ary) {
+
+    let f_anchors = tmp_str.match(/未来アンカー[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^&]+未来アンカー$/gi);
+
+    if(f_anchors !== null) {
+      for (let f_anchor of f_anchors) {
+        f_anchor = f_anchor.replace(/未来アンカー[^&]+&gt;&gt;(\d+)/gi,'$1');
+        f_anchor = f_anchor.replace(/&gt;&gt;(\d+)[^&]+未来アンカー$/gi,'$1');
+        resItem.futureAnchors.push(parseInt(f_anchor));
+      }
+    }
+    let anchor_str = tmp_str.replace(/未来アンカー[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^&]+未来アンカー$/gi,'');
+    let anchors = anchor_str.match(/&gt;&gt;\d+/g);
+    if(anchors !== null) {
+      for (const anchor of anchors) {
         resItem.anchors.push(parseInt(anchor.replace(/&gt;&gt;/g, '')));
       }
     }
+    // if(JSON.stringify(resItem.featureAnchors) === JSON.stringify(resItem.anchors)){
+    //   console.log(resItem.num);
+    //   resItem.anchors = [];
+    //   resItem.featureAnchors = [];
+    // }
 
     let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let index = 0;
@@ -469,8 +505,6 @@ function readLines(line) {
         } else {
           tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`); 
         }
-      }
-      
       // else {
       //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
       //     let tmpAnchors = tmp_item.split("&gt;&gt;");

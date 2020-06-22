@@ -953,7 +953,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchTextHandler() {
     if (this.btnSearch.checked){
-      if (this.searchKeyword.length === 0) {
+      if (this.searchKeyword === undefined || this.searchKeyword.length === 0) {
         this.btnSearch.checked = false;
       }else{
         this.searchResText();
