@@ -505,6 +505,7 @@ function readLines(line) {
         } else {
           tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`); 
         }
+      }
       // else {
       //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
       //     let tmpAnchors = tmp_item.split("&gt;&gt;");
