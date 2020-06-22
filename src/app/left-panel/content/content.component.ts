@@ -1039,18 +1039,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  // private httpGet(theUrl) {
-  //   var xmlHttp = new XMLHttpRequest();
-  //   xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-  //   xmlHttp.send( null );
-  //   if (request.status === 200) {
-  //     data = stringToArrayBuffer(request.response);
-  //   } else {
-  //       alert('Something bad happen!\n(' + request.status + ') ' + request.statusText);
-  //   }
-  //   return xmlHttp.response;
-  // }
-
   private async printRes(res: ResItem){
     let htmlTag = '';
     let content = res.content;
@@ -1079,22 +1067,14 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     }
     
-    console.log("content");
-    console.log(content);
     // Youtube embed code
     if (this.youtube) {
       let youtubes = content.match(/"(https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)"/ig);
-      console.log("youtube");
-      console.log(youtube);
       if (Array.isArray(youtubes) && youtubes.length) {
         for (var youtube of youtubes) {
           let youtubeURL = youtube.slice(1, -1);
-          console.log("youtubeURL");
-          console.log(youtubeURL);
           let response = await fetch("http://www.youtube.com/oembed?url=" + youtubeURL);
           let data = await response.json();
-          console.log("data.html");
-          console.log(data.html);
           let replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
           content = content.replace(replace, replace + data.html);
         }
