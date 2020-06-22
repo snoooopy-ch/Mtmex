@@ -1,9 +1,9 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ResService} from '../res.service';
 import { Title } from '@angular/platform-browser';
-// import {MatButtonToggle} from '@angular/material/button-toggle';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
+const electron = (window as any).require('electron');
 
 @Component({
   selector: 'app-left-panel',
@@ -42,7 +42,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   topBorder: string;
   btnBackgroundColors: any[];
   leftHightlight: true;
-  
+
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
 
   }
@@ -143,6 +143,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         });
       }
     });
+
+    electron.ipcRenderer.on('closeMenu', (event) => {
+      this.removeTab(this.selectedTabIndex);
+
+    });
   }
 
   /**
@@ -167,6 +172,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   removeTab(index: number) {
     this.tabs.splice(index, 1);
+    if (this.tabs.length - 1 < index){
+      index = this.tabs.length - 1;
+    }
+    if (this.tabs.length > index && this.tabs.length > 0){
+      this.tabChangedHandler(index);
+    }else{
+      this.cdr.detectChanges();
+    }
   }
 
   tabChangedHandler(index: number) {

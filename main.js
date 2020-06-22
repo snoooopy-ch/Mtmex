@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron');
 const fs = require('fs');
 const encoding = require('encoding-japanese');
 
@@ -49,9 +49,21 @@ function createWindow() {
     }
   };
 
+  const menu = Menu.getApplicationMenu();
+
+  menu.append(new MenuItem({
+    label: 'タブを閉じる',
+    submenu: [{
+      label: 'タブを閉じる',
+      click: function () {
+        win.webContents.send("closeMenu");
+      }
+    }]
+  }));
+
   win.webContents.on('will-navigate', handleRedirect)
   win.webContents.on('new-window', handleRedirect)
-  //win.setMenu(null)
+  win.setMenu(menu);
 }
 
 // Create window on electron intialization
@@ -212,7 +224,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
           continue;
         }
         tmpResList.push(resList[i]);
-        if(resList[i].featureAnchors.length < 1 || !isMultiAnchor) {
+        if(resList[i].futureAnchors.length < 1 || !isMultiAnchor) {
           resList.splice(i, 1);
           i--;
         }
@@ -495,7 +507,7 @@ function readLines(line) {
         } else {
           tmp_item = `<a class="res-link" href="${tmp_item}">${tmp_item}</a>`;
         }
-      } 
+      }
       // else {
       //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
       //     let tmpAnchors = tmp_item.split("&gt;&gt;");

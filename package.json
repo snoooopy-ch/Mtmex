@@ -26,6 +26,7 @@
     "@angular/router": "~9.1.7",
     "@ckeditor/ckeditor5-angular": "^1.2.3",
     "@ckeditor/ckeditor5-build-classic": "^19.0.1",
+    "angular-popper": "^2.0.1",
     "angular2-hotkeys": "^2.2.0",
     "bootstrap": "^4.5.0",
     "color-blend": "^3.0.0",
@@ -38,6 +39,7 @@
     "ngx-bootstrap": "^5.6.1",
     "ngx-drag-drop": "^2.0.0",
     "ngx-virtual-scroller": "^4.0.3",
+    "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
