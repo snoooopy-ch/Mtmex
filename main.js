@@ -1,6 +1,7 @@
 const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron');
 const fs = require('fs');
 const encoding = require('encoding-japanese');
+const { v4: uuidv4 } = require('uuid');
 
 let win;
 let num = 0;
@@ -168,7 +169,9 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
         message: '同じタブがあります、datを読み込みますか'});
       if(response === 0){
         loadedTitles.push(url);
-        sreTitle = `${sreTitle}+`;
+        let suffix = uuidv4();
+        suffix = suffix.replace(/-/g,'').substr(0,10);
+        sreTitle = `${sreTitle}${suffix}`;
         win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle});
       }
     } else {
