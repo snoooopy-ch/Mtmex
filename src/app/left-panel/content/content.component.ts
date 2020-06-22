@@ -59,12 +59,18 @@ export class ContentComponent implements OnInit, OnDestroy {
   noticeBackupResList;
   txtURL: string;
   public subscribers: any = {};
+  private isChangedSearch: boolean;
+  private searchedRes: number;
+  private startInRes: number;
+  highLightColor = '#ff9632';
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
     this.hovered = -1;
     this.subHotKeys = [];
     this.txtURL = '';
+    this.isChangedSearch = true;
+    this.searchedRes = 0;
   }
 
   ngOnInit(): void {
@@ -911,6 +917,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         res.name = res.name.replace(/<\/span>/ig, '');
       }
     }
+    this.startInRes = 0;
+    this.searchedRes = 0;
+    this.isChangedSearch = false;
   }
 
   searchResText(){
@@ -932,6 +941,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
       index++;
     }
+    this.startInRes = 0;
+    this.searchedRes = 0;
+    this.isChangedSearch = false;
   }
 
   abstractRes(){
@@ -1021,16 +1033,56 @@ export class ContentComponent implements OnInit, OnDestroy {
     if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
       this.btnSearch.checked = true;
       this.searchTextHandler();
-      this.txtSearch.nativeElement.blur();
     }else if ($event.code === 'Enter'){
-      if (this.searchKeyword === ' ') {
-        this.cancelSearchResTest();
+      if (this.isChangedSearch) {
+        if (this.searchKeyword === ' ') {
+          this.cancelSearchResTest();
+        } else {
+          this.cancelSearchResTest();
+          this.searchResText();
+        }
       }else{
-        this.searchResText();
+        if (this.searchOption !== undefined && this.searchOption.length > 0){
+          let isExist = false;
+          while (true){
+            if (this.searchedRes > this.resList.length - 1){
+              break;
+            }
+
+            if (this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
+              this.startInRes) !== -1){
+              this.startInRes = this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
+                this.startInRes);
+              isExist = true;
+              break;
+            }
+            this.startInRes++;
+            if (this.startInRes > this.resList[this.searchedRes].content.length - 1){
+              this.startInRes = 0;
+              this.searchedRes++;
+            }
+          }
+          if (isExist){
+            for (const res of this.resList){
+              res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
+            }
+            const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
+            this.resList[this.searchedRes].content = this.resList[this.searchedRes].content.replace(re, (match, offset) => {
+              let result = match;
+              if (this.startInRes === offset){
+                result = `<span style="background-color: ${this.highLightColor};">`;
+              }
+              return result;
+            });
+            this.startInRes += `<span style="background-color: ${this.highLightColor};">`.length;
+            this.virtualScroller.scrollToIndex(this.searchedRes);
+          }
+
+        }
       }
-      this.txtSearch.nativeElement.blur();
     }else{
       if (this.searchOption !== undefined) {
+        this.isChangedSearch = true;
         this.searchStatusEmitter.emit({
           searchKeyword: this.searchKeyword,
           searchOption: this.searchOption
