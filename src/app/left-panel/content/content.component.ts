@@ -923,7 +923,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   searchResText(){
-    const re = new RegExp(this.searchKeyword, 'gi');
+    const re = new RegExp(`(?<!</?[^>]*)${this.searchKeyword}`, 'gi');
     let index = 0;
     for (const res of this.resList){
       if (res.content.match(re)){
@@ -1033,7 +1033,49 @@ export class ContentComponent implements OnInit, OnDestroy {
     if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
       this.btnSearch.checked = true;
       this.searchTextHandler();
-    }else if ($event.code === 'Enter'){
+    }else if ($event.shiftKey && $event.code === 'Enter'){
+      this.isChangedSearch = false;
+      if (this.searchOption !== undefined && this.searchOption.length > 0) {
+        let isExist = false;
+        while (true) {
+          if (this.searchedRes > this.resList.length - 1){
+            this.searchedRes = this.resList.length - 1;
+          }
+          if (this.searchedRes < 0) {
+            break;
+          }
+          this.startInRes = this.resList[this.searchedRes].content.lastIndexOf(`<span style="background-color: ${this.hitColor};">`,
+            this.startInRes);
+          if (this.startInRes !== -1) {
+            isExist = true;
+            break;
+          }
+
+          this.startInRes--;
+          if (this.startInRes < 0) {
+            this.searchedRes--;
+            if (this.searchedRes > 0){
+              this.startInRes = this.resList[this.searchedRes].content.length - 1;
+            }
+          }
+        }
+        if (isExist){
+          for (const res of this.resList){
+            res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
+          }
+          const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
+          this.resList[this.searchedRes].content = this.resList[this.searchedRes].content.replace(re, (match, offset) => {
+            let result = match;
+            if (this.startInRes === offset){
+              result = `<span style="background-color: ${this.highLightColor};">`;
+            }
+            return result;
+          });
+          // this.startInRes -= `<span style="background-color: ${this.highLightColor};">`.length;
+          this.virtualScroller.scrollToIndex(this.searchedRes);
+        }
+      }
+    } else if ($event.code === 'Enter'){
       if (this.isChangedSearch) {
         if (this.searchKeyword === ' ') {
           this.cancelSearchResTest();
@@ -1045,19 +1087,21 @@ export class ContentComponent implements OnInit, OnDestroy {
         if (this.searchOption !== undefined && this.searchOption.length > 0){
           let isExist = false;
           while (true){
+            if (this.searchedRes < 0){
+              this.searchedRes = 0;
+            }
             if (this.searchedRes > this.resList.length - 1){
               break;
             }
 
-            if (this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
-              this.startInRes) !== -1){
-              this.startInRes = this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
-                this.startInRes);
+            this.startInRes = this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
+              this.startInRes);
+            if (this.startInRes !== -1){
               isExist = true;
               break;
             }
-            this.startInRes++;
-            if (this.startInRes > this.resList[this.searchedRes].content.length - 1){
+            // this.startInRes++;
+            if (this.startInRes === -1){
               this.startInRes = 0;
               this.searchedRes++;
             }
@@ -1082,7 +1126,6 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     }else{
       if (this.searchOption !== undefined) {
-        this.isChangedSearch = true;
         this.searchStatusEmitter.emit({
           searchKeyword: this.searchKeyword,
           searchOption: this.searchOption
@@ -1095,6 +1138,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     let htmlTag = '';
     let content = res.content;
     content = content.replace(/(<img[^<]+>)/ig, '');
+    content = content.replace(/(<span[^<]+>)/ig, '');
+    content = content.replace(/(<\/span>)/ig, '');
     content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span class="anchor">$1</span>`);
     content = content.replace(/( class="res-img-link"| class="res-link")/ig, ``);
     content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
@@ -1107,27 +1152,27 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     // Twitter embed code
     if (this.twitter) {
-      let twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
+      const twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
       if (Array.isArray(twitters) && twitters.length) {
-        for (var twitter of twitters) {
-          let twitterURL = twitter.slice(1, -1);
-          let response = await fetch("https://publish.twitter.com/oembed?url=" + twitterURL);
-          let data = await response.json();
-          let replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
+        for (const twitter of twitters) {
+          const twitterURL = twitter.slice(1, -1);
+          const response = await fetch('https://publish.twitter.com/oembed?url=' + twitterURL);
+          const data = await response.json();
+          const replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
           content = content.replace(replace, replace + data.html);
         }
       }
     }
-    
+
     // Youtube embed code
     if (this.youtube) {
-      let youtubes = content.match(/"(https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)"/ig);
+      const youtubes = content.match(/"(https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)"/ig);
       if (Array.isArray(youtubes) && youtubes.length) {
-        for (var youtube of youtubes) {
-          let youtubeURL = youtube.slice(1, -1);
-          let response = await fetch("http://www.youtube.com/oembed?url=" + youtubeURL);
-          let data = await response.json();
-          let replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
+        for (const youtube of youtubes) {
+          const youtubeURL = youtube.slice(1, -1);
+          const response = await fetch('http://www.youtube.com/oembed?url=' + youtubeURL);
+          const data = await response.json();
+          const replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
           content = content.replace(replace, replace + data.html);
         }
       }
@@ -1284,5 +1329,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       searchKeyword: this.searchKeyword,
       searchOption: this.searchOption,
     });
+  }
+
+  changeSearchHandler($event: any) {
+    this.isChangedSearch = true;
   }
 }
