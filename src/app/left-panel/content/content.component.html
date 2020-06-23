@@ -19,7 +19,7 @@
 <!--[enableUnequalChildrenSizes]="true" [bufferAmount]="5"-->
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
                   cdkDropList (cdkDropListDropped)="drop($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
-    <app-res [item]="resItem" [resIndex]="index + resListContainer.viewPortInfo.startIndex - 5"
+    <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
              'border-left': resItem.isAdded ? leftBorder : '', 'border-top': resItem.isRemark ? topBorder : ''}"
              (duplicateResEmitter)="duplicateRes(resItem)"
