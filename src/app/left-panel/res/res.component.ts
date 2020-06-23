@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ResItem} from '../../models/res-item';
 
 declare var jQuery: any;
 declare var $: any;
@@ -31,7 +32,7 @@ export class SafeHtmlPipe implements PipeTransform  {
 })
 export class ResComponent implements OnInit {
   public Editor = ClassicEditor;
-  @Input() item;
+  @Input() item: ResItem;
   @Input() resIndex;
   @Input() tabIndex;
   @Output() duplicateResEmitter = new EventEmitter();
@@ -62,11 +63,15 @@ export class ResComponent implements OnInit {
 
   ngOnInit(): void {
     this.resContent = this.item.content;
-    this.item.resColor = '#f00';
-    this.item.resFontSize = this.resSizeList[0].value;
+    if (this.item.resFontSize === undefined){
+      this.item.resFontSize = '19px';
+    }
+    if (this.item.resColor === undefined){
+      this.item.resColor = '#f00';
+    }
 
     $(document).ready(function() {
-      
+
       const xOffset = 150;
       const yOffset = 40;
       const imgPop = $('#preview img');
@@ -74,7 +79,7 @@ export class ResComponent implements OnInit {
         this.t = this.href;
         this.title = '';
         imgPop.attr('src', this.href);
-        const c = (this.t != '') ? '<br/>' + this.t : '';
+        const c = (this.t !== '') ? '<br/>' + this.t : '';
         $('#preview').css('display', 'block');
         $('#preview')
           .css('top', (e.pageY - xOffset) + 'px')
@@ -84,7 +89,7 @@ export class ResComponent implements OnInit {
         this.title = this.t;
         $('#preview').css('display', 'none');
       });
-      
+
       const imgGif = new Freezeframe('.gif-pause', {
         trigger: false,
         responsive: false,
@@ -99,15 +104,16 @@ export class ResComponent implements OnInit {
       }
 
       function freeze_gif(i) {
-          var c = document.createElement('canvas');
-          var w = c.width = i.width;
-          var h = c.height = i.height;
+          const c = document.createElement('canvas');
+          const w = c.width = i.width;
+          const h = c.height = i.height;
           c.getContext('2d').drawImage(i, 0, 0, w, h);
           try {
-              i.src = c.toDataURL("image/gif");         // if possible, retain all css aspects
-          } catch(e) {                                  // cross-domain -- mimic original with all its tag attributes
-              for (var j = 0, a; a = i.attributes[j]; j++)
+              i.src = c.toDataURL('image/gif');         // if possible, retain all css aspects
+          } catch (e) {                                  // cross-domain -- mimic original with all its tag attributes
+              for (let j = 0, a; a = i.attributes[j]; j++) {
                   c.setAttribute(a.name, a.value);
+              }
               i.parentNode.replaceChild(c, i);
           }
       }
@@ -120,15 +126,14 @@ export class ResComponent implements OnInit {
 
   colorChangeHandler() {
     this.item.resSelect = 'select';
-    let colorIndex = 1;
 
-    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
+    this.item.resBackgroundColor = this.backgroundColors[1];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[1];
     this.selectedResEmitter.emit({
         select: this.item.resSelect !== 'none',
         candi1: false,
         candi2: false,
-        selected: colorIndex === 0 ? 'none' : 'select'
+        selected: 'select'
       });
     this.cdRef.detectChanges();
   }
@@ -158,7 +163,7 @@ export class ResComponent implements OnInit {
   }
 
   clickResMenuKaihei() {
-    if (this.item.resMenu == 3) return;
+    if (this.item.resMenu === 3) { return; }
 
     this.item.isMenuOpen = !this.item.isMenuOpen;
     this.cdRef.detectChanges();
