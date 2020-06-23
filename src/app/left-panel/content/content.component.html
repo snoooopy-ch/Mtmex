@@ -3,7 +3,7 @@
     <mat-button-toggle value="all" class="btn-left-round">all</mat-button-toggle>
     <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本</mat-button-toggle>
   </mat-button-toggle-group>
-  <input type="text" [(ngModel)]="searchKeyword" #txtSearch (keyup)="searchOnKeyHandler($event)">
+  <input type="text" [(ngModel)]="searchKeyword" #txtSearch (keyup)="searchOnKeyHandler($event)" (ngModelChange)="changeSearchHandler($event)">
   <mat-button-toggle-group name="btn-search" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="searchTextHandler()" #btnSearch>抽出</mat-button-toggle>
   </mat-button-toggle-group>
