@@ -435,6 +435,7 @@ function readLines(line) {
   resItem.resMenu = settings['res_menu'];
   resItem.moveMarkColor = settings['res_move'];
   resItem.isMenuOpen = false;
+  resItem.resFontSize = settings['font-size1'];
 
   // add id to id array
   let idExists = false;

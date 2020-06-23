@@ -63,7 +63,7 @@ export class ResComponent implements OnInit {
   ngOnInit(): void {
     this.resContent = this.item.content;
     this.item.resColor = '#f00';
-    this.item.resFontSize = '19px';
+    this.item.resFontSize = this.resSizeList[0].value;
 
     $(document).ready(function() {
       

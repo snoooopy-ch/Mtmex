@@ -4,15 +4,18 @@
         [ngStyle]="{'color': item.anchorCount >= noticeCount ? '#f00' : '#000'}">{{item.num}}</h4>
       <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
     </div>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent'}">
+    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent', 
+        'color': leftHightlight? item.idColor : '#464646'}">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
              [(ngModel)]="item.resSelect" value="select" (click)="selectClickHandler()">選択</label>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent'}">
+    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+        'color': leftHightlight? item.idColor : '#464646'}">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
              [(ngModel)]="item.resSelect" value="candi1" (click)="candi1ClickHandler()">予1</label>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent'}">
+    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+        'color': leftHightlight? item.idColor : '#464646'}">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
              [(ngModel)]="item.resSelect" value="candi2" (click)="candi2ClickHandler()">予2</label>
