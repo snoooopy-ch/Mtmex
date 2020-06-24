@@ -507,7 +507,7 @@ function readLines(line) {
           tmp_item = tmp_item.replace(expImgUrl, `<img class="res-img-thumb" src="$1" alt=""><a class="res-img-link" href="$1">$1</a>`);
           resItem.hasImage = true;
         } else {
-          tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`); 
+          tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`);
         }
       }
       // else {
@@ -676,7 +676,11 @@ ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes) => {
 
 function saveSettings(dataFilePath, remarkRes, hideRes) {
   fs.readFile('Setting.ini', 'utf8', function (err,data) {
-    data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
+    if(data.match(/(#datパス\r\n)[^\r^\n]+(\r\n)/g)===null){
+      data = data.replace(/(#datパス\r\n)+(\r\n)/g, `$1${dataFilePath}$2`);
+    }else{
+      data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
+    }
     data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
     data = data.replace(/(^hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
     fs.writeFile('Setting.ini', data, (err) => {

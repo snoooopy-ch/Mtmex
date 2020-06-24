@@ -189,7 +189,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   printAllHtmlTagHandler() {
-    this.resService.setPrintCommand({tabIndex: this.tabIndex, token: true});
+    this.resService.setPrintAllCommand({ token: true});
   }
 
   saveCurrentRes() {
