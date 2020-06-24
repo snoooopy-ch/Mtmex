@@ -1,8 +1,10 @@
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ResService} from '../res.service';
 import { Title } from '@angular/platform-browser';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
+import {ResItem} from '../models/res-item';
 // import {appendHtmlElementToHead} from '@angular/cdk/schematics';
 const electron = (window as any).require('electron');
 declare var jQuery: any;
@@ -48,8 +50,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   topBorder: string;
   btnBackgroundColors: any[];
   leftHightlight: true;
+  moveOption: any;
 
-  constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title) {
+  constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
+              private hotkeysService: HotkeysService, private zone: NgZone) {
 
   }
 
@@ -102,7 +106,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'up', 'down', 'big1', 'big2', 'nasi'
           , 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10', 'tree_sentaku'
           , 'tree_yobi1', 'tree_yobi2', 'tree_kaijo', 'id1', 'id2', 'id3', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
-          , 'id_hihyouji', 'henshuu', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo'];
+          , 'id_hihyouji', 'henshuu', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
+          , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b'];
         for (const key of arrayKeys) {
           this.subHotKeys[key] = this.settings[key].toLowerCase();
         }
@@ -115,23 +120,28 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           this.btnBackgroundColors[key] = this.settings[key];
         }
       }
+
+      this.moveOption = {
+        sentaku_idou1: this.settings.sentaku_idou1,
+        sentaku_idou2: this.settings.sentaku_idou2,
+      };
+
+      this.setHotKeys();
     });
 
-    this.subscribers.resData = this.resService.resData.subscribe((value) => {
+    this.subscribers.resData = this.resService.resData.subscribe( (value) => {
       if (this.tabGroup === undefined) { return; }
-      this.addTab();
-      this.selectedTabIndex = this.tabs.length - 1;
-      this.tabs[this.selectedTabIndex].resList = value.resList;
-      this.cdr.detectChanges();
-      if (value.resList.length > 0 ) {
-        this.tabs[this.selectedTabIndex].title = value.sreTitle;
+      this.zone.run(() => {
+        this.addTab(value.sreTitle, value.resList);
+        this.selectedTabIndex = this.tabs.length - 1;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
         this.resService.setTotalRes({
           tabIndex: this.selectedTabIndex,
           totalCount: value.resList.length,
           title: this.tabs[this.selectedTabIndex].title,
         });
-      }
+      });
+
     });
 
     this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
@@ -176,15 +186,46 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.status.unsubscribe();
   }
 
-  addTab() {
-    this.tabs.push({
-      title: 'New Tab',
+  setHotKeys() {
+    // 前のタブ
+    if (this.settings.tab_prev !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.tab_prev.toLowerCase(), (event: KeyboardEvent): boolean => {
+        let prevTabIndex = this.selectedTabIndex - 1;
+        if (prevTabIndex < 0) {
+          prevTabIndex = this.tabs.length - 1;
+        }
+        this.tabChangedHandler(prevTabIndex);
+        return false;
+      }));
+    }
+    // 次のタブ
+    if (this.settings.tab_next !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.tab_next.toLowerCase(), (event: KeyboardEvent): boolean => {
+        let prevTabIndex = this.selectedTabIndex + 1;
+        if (prevTabIndex > this.tabs.length - 1) {
+          prevTabIndex = 0;
+        }
+        this.tabChangedHandler(prevTabIndex);
+        return false;
+      }));
+    }
+    // アクティブのタブを閉じる
+    this.hotkeysService.add(new Hotkey('ctrl+w', (event: KeyboardEvent): boolean => {
+      this.removeTab(this.selectedTabIndex);
+      return false;
+    }));
+  }
+
+  addTab(pTitle, pResList: ResItem[]) {
+    this.tabs = [...this.tabs, {
+      title: pTitle,
       active: true,
-      resList: [],
+      resList: pResList,
       scrollPos: 0,
       isFiltered: false,
       url: ''
-    });
+    }];
+    // this.tabs.push();
   }
 
   removeTab(index: number) {
@@ -235,13 +276,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   onDraggableMoved($event: DragEvent) {
     this.currentTabId = $event.target['id'];
-
   }
 
   onDragEnd($event: DragEvent) {
     const toIndex = this.previousTabId;
     const fromIndex = this.currentTabId;
-    const tabListItems = this.tabs;
+    // const tabListItems = this.tabs;
     moveItemInArray(this.tabs, fromIndex, toIndex);
     moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
     this.tabs[fromIndex].active = false;

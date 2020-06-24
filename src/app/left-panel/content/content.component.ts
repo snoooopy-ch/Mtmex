@@ -56,6 +56,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() searchStatusEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
+  @Input() moveOption;
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -157,7 +158,6 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   setHotKeys(){
     // 選択ボタン
-    console.log(this.subHotKeys);
     if (this.subHotKeys.hasOwnProperty('sentaku_no1')) {
       this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_no1,
         this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
@@ -538,26 +538,39 @@ export class ContentComponent implements OnInit, OnDestroy {
       }));
 
       // レス描写エリアの一番上に移動
-      this.hotkeysService.add(new Hotkey('ctrl+home', (event: KeyboardEvent): boolean => {
+      this.hotkeysService.add(new Hotkey(['ctrl+home', this.subHotKeys.res_area_move_top],
+        (event: KeyboardEvent): boolean => {
         this.moveScroller('top');
         return false; // Prevent bubbling
       }));
 
       // レス描写エリアの一番下に移動
-      this.hotkeysService.add(new Hotkey('ctrl+end', (event: KeyboardEvent): boolean => {
+      this.hotkeysService.add(new Hotkey(['ctrl+end', this.subHotKeys.res_area_move_bottom], (event: KeyboardEvent): boolean => {
         this.moveScroller('bottom');
         return false; // Prevent bubbling
       }));
 
       // レス描写エリアの一番上に移動
-      this.hotkeysService.add(new Hotkey('home', (event: KeyboardEvent): boolean => {
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.res_area_move2a, (event: KeyboardEvent): boolean => {
         this.moveScroller('selected-top');
         return false; // Prevent bubbling
       }));
 
       // レス描写エリアの一番下に移動
-      this.hotkeysService.add(new Hotkey('end', (event: KeyboardEvent): boolean => {
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.res_area_move2b, (event: KeyboardEvent): boolean => {
         this.moveScroller('selected-bottom');
+        return false; // Prevent bubbling
+      }));
+
+      // ↑選択
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.res_area_move1a, (event: KeyboardEvent): boolean => {
+        this.moveScroller('selected-prev');
+        return false; // Prevent bubbling
+      }));
+
+      // ↓選択
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.res_area_move1b, (event: KeyboardEvent): boolean => {
+        this.moveScroller('selected-next');
         return false; // Prevent bubbling
       }));
 
@@ -591,7 +604,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       case 'selected-top':
         let index = 0;
         for (const item of this.resList){
-          if (item.resSelect === 'select'){
+          if (item.resSelect === 'select'
+            || (item.resSelect === 'candi1' && this.moveOption.sentaku_idou1)
+            || (item.resSelect === 'candi2' && this.moveOption.sentaku_idou2)){
             this.virtualScroller.scrollToIndex(index);
             break;
           }
@@ -602,7 +617,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       case 'selected-bottom':
         if (this.resList.length > 0) {
           for (let i = this.resList.length - 1; i > 0; i--) {
-            if (this.resList[i].resSelect === 'select') {
+            if (this.resList[i].resSelect === 'select'
+              || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
+              || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
               this.virtualScroller.scrollToIndex(i);
               break;
             }
@@ -612,7 +629,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       case 'selected-prev':
         if (this.virtualScroller.viewPortInfo.startIndex  > 0) {
           for (let i = this.virtualScroller.viewPortInfo.startIndex - 1; i > 0; i--) {
-            if (this.resList[i].resSelect === 'select') {
+            if (this.resList[i].resSelect === 'select'
+              || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
+              || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
               this.virtualScroller.scrollToIndex(i);
               break;
             }
@@ -621,7 +640,10 @@ export class ContentComponent implements OnInit, OnDestroy {
         break;
       case 'selected-next':
         for (let i = this.virtualScroller.viewPortInfo.startIndex + 1; i < this.resList.length; i++) {
-          if (this.resList[i].resSelect === 'select') {
+          if (this.resList[i].resSelect === 'select'
+            || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
+            || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
+            console.log(i);
             this.virtualScroller.scrollToIndex(i);
             break;
           }
