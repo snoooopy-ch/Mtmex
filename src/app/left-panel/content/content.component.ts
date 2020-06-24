@@ -234,7 +234,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         return false;
       }));
-      
+
       // 中
       this.hotkeysService.add(new Hotkey(this.subHotKeys.big1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
@@ -864,7 +864,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   mouseClickHandler() {
     if (this.resMouseClick) {
-      
+
     }
   }
 
