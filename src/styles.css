@@ -629,3 +629,7 @@ input[type='radio']:before {
 input[type='radio']:checked:before {
   background: #464646;
 }
+
+.res-container {
+  display: block;
+}

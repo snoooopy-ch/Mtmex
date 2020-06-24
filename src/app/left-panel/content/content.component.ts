@@ -46,6 +46,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() idRed;
   @Input() noticeCount;
   @Input() shuturyoku;
+  @Input() resMouseClick;
   @Input() youtube;
   @Input() twitter;
   @Input() subHotKeys;
@@ -226,6 +227,15 @@ export class ContentComponent implements OnInit, OnDestroy {
         return false;
       }));
 
+      // 小
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.big0, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].resFontSize = this.resSizeList[0].value;
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+      
       // 中
       this.hotkeysService.add(new Hotkey(this.subHotKeys.big1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
@@ -491,6 +501,15 @@ export class ContentComponent implements OnInit, OnDestroy {
         return false; // Prevent bubbling
       }));
 
+      // メニューの開閉
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.menu_kaihei, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.resList[this.hovered].isMenuOpen = true;
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
       // 注目レス ON/OFF
       this.hotkeysService.add(new Hotkey(this.subHotKeys.chuumoku, (event: KeyboardEvent): boolean => {
         this.btnImportant.checked = !this.btnImportant.checked;
@@ -715,6 +734,19 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.cdRef.detectChanges();
   }
 
+  cancelSelectedIdRes(id: any, $event: any) {
+    for (const res of this.resList){
+      if (res.id === id && res.resSelect === 'select'){
+        res.resBackgroundColor = this.backgroundColors[0];
+        res.resSelect = 'none';
+        res.select = false;
+        res.candi1 = false;
+        res.candi2 = false;
+      }
+    }
+    this.changeStatus();
+  }
+
   changeStatus(){
     this.resService.setSelectedRes({
       select: this.resList.filter(item => item.select).length,
@@ -807,6 +839,12 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   mouseLeaveHandler() {
     this.hovered = -1;
+  }
+
+  mouseClickHandler() {
+    if (this.resMouseClick) {
+      
+    }
   }
 
   getDraggable(index: number) {

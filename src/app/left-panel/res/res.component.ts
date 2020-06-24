@@ -42,6 +42,7 @@ export class ResComponent implements OnInit {
   @Output() toTopResEmitter = new EventEmitter();
   @Output() toBottomResEmitter = new EventEmitter();
   @Output() selectedResEmitter = new EventEmitter();
+  @Output() cancelSelectedIdEmitter = new EventEmitter();
   @Output() selectedIdEmitter = new EventEmitter();
   @Output() selectedTreeResEmitter = new EventEmitter();
   @Output() setDraggableEmitter = new EventEmitter();
@@ -54,6 +55,7 @@ export class ResComponent implements OnInit {
   @Input() resSizeList;
   @Input() btnBackgroundColors;
   @Input() leftHightlight;
+  @Input() resMouseClick;
   resContent = '';
   @Input() characterColors;
 
@@ -64,7 +66,7 @@ export class ResComponent implements OnInit {
   ngOnInit(): void {
     this.resContent = this.item.content;
     if (this.item.resFontSize === undefined){
-      this.item.resFontSize = '19px';
+      this.item.resFontSize = `${this.resSizeList[0].value}px`;
     }
     if (this.item.resColor === undefined){
       this.item.resColor = '#f00';
@@ -120,6 +122,13 @@ export class ResComponent implements OnInit {
     });
   }
 
+  mouseClickHandler() {
+    if (this.resMouseClick) {
+      this.selectClickHandler();
+    }
+    return false;
+  }
+
   sizeChangeHandler() {
     this.cdRef.detectChanges();
   }
@@ -147,6 +156,7 @@ export class ResComponent implements OnInit {
   }
 
   saveResHandler() {
+
     this.resContent = this.resContent.replace(/(<p>)/ig, '');
     this.resContent = this.resContent.replace(/(<\/p>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)/ig, '');
@@ -194,7 +204,6 @@ export class ResComponent implements OnInit {
   }
 
   selectClickHandler() {
-
     let colorIndex = 0;
     if (this.item.resSelect === 'select') {
       this.item.resSelect = 'none';
@@ -273,7 +282,8 @@ export class ResComponent implements OnInit {
     this.item.resSelect = 'none';
     this.item.resBackgroundColor = this.backgroundColors[0];
     this.ref.nativeElement.style.backgroundColor = this.backgroundColors[0];
-    this.selectedResEmitter.emit({
+    this.cancelSelectedIdEmitter.emit({
+      isSelect: false,
       select: false,
       candi1: false,
       candi2: false

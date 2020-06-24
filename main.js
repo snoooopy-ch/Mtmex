@@ -12,9 +12,9 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
-let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight', 'res_mouse_click', 'youtube', 'twitter'];
+let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight', 'res_mouse_click', 'youtube', 'twitter', 'AutoSave'];
 let selectKeys = ['res_menu'];
-const onOffKeys = ['AutoSave','jogai'];
+const onOffKeys = ['jogai'];
 let settings;
 let loadedTitles = [];
 
@@ -435,7 +435,7 @@ function readLines(line) {
   resItem.resMenu = settings['res_menu'];
   resItem.moveMarkColor = settings['res_move'];
   resItem.isMenuOpen = false;
-  resItem.resFontSize = settings['font-size1'];
+  resItem.resFontSize = `${settings['font-size1']}px`;
 
   // add id to id array
   let idExists = false;
@@ -613,15 +613,6 @@ function getSettings() {
           settings[lineArgs[0]] = lineArgs[1];
         }else {
           if (lineArgs.length > 1) {
-            if(curComment === '#ボタンの色'){
-              if(lineArgs[0] === 'tree_sentaku') {
-                lineArgs[0] = 'tree_sentaku_back';
-              } else if(lineArgs[0] === 'tree_kaijo') {
-                lineArgs[0] = 'tree_kaijo_back';
-              } else if(lineArgs[0] === 'id_kaijo') {
-                lineArgs[0] = 'id_kaijo_back';
-              }
-            }
             settings[lineArgs[0]] = lineArgs[1].replace(';','');
           } else {
             settings[lineArgs[0]] = '';
@@ -687,7 +678,7 @@ function saveSettings(dataFilePath, remarkRes, hideRes) {
   fs.readFile('Setting.ini', 'utf8', function (err,data) {
     data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
     data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
-    data = data.replace(/(hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+    data = data.replace(/(^hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
     fs.writeFile('Setting.ini', data, (err) => {
       if (err) throw err;
       console.log('The settings file has been saved!');

@@ -12,13 +12,13 @@
   </mat-button-toggle-group>
 </div>
 <h3>{{tabName}}</h3>
-<div class="content-url">
-  <label>URL</label>
-  <input type="text" [(ngModel)]="txtURL">
-</div>
 <!--[enableUnequalChildrenSizes]="true" [bufferAmount]="5"-->
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
                   cdkDropList (cdkDropListDropped)="drop($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
+    <div class="content-url">
+      <label>URL</label>
+      <input type="text" [(ngModel)]="txtURL">
+    </div>
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
              'border-left': resItem.isAdded ? leftBorder : '', 'border-top': resItem.isRemark ? topBorder : ''}"
@@ -29,6 +29,7 @@
              (toTopResEmitter)="toTopRes(resItem)"
              (toBottomResEmitter)="toBottomRes(resItem)"
              (selectedResEmitter)="selectedRes(resItem, $event)"
+             (cancelSelectedIdEmitter)="cancelSelectedIdRes(resItem.id, $event)"
              (selectedIdEmitter)="selectedId(resItem.id, $event)"
              (selectedTreeResEmitter)="selectedTreeRes(resList.indexOf(resItem), $event)"
              (setDraggableEmitter)="setDraggable(resList.indexOf(resItem), $event)"
@@ -40,6 +41,7 @@
              *ngFor="let resItem of resListContainer.viewPortItems; let index = index ;"
              [characterColors] = 'characterColors'
              [backgroundColors] = 'backgroundColors'
+             [resMouseClick] = "resMouseClick"
              [idStyles] = "idStyles"
              [idRed] = "idRed"
              [noticeCount] = "noticeCount"
