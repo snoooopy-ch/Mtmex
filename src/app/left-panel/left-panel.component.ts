@@ -3,7 +3,10 @@ import {ResService} from '../res.service';
 import { Title } from '@angular/platform-browser';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
+// import {appendHtmlElementToHead} from '@angular/cdk/schematics';
 const electron = (window as any).require('electron');
+declare var jQuery: any;
+declare var $: any;
 
 @Component({
   selector: 'app-left-panel',
@@ -13,7 +16,7 @@ const electron = (window as any).require('electron');
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
 
-  tabs = [{title: 'New Tab', active: true, resList: [], scrollPos: 0, isFiltered: false}];
+  tabs = [{title: 'New Tab', active: true, resList: [], scrollPos: 0, isFiltered: false, url: ''}];
   draggable = {
     data: 'myDragData',
     effectAllowed: 'all',
@@ -94,6 +97,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.leftHightlight = this.settings.Left_highlight;
       this.subHotKeys = [];
       if (value.hasOwnProperty('sentaku_no1')) {
+        console.log('sethotkey');
         const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'up', 'down', 'big1', 'big2', 'nasi'
           , 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10', 'tree_sentaku'
           , 'tree_yobi1', 'tree_yobi2', 'tree_kaijo', 'id1', 'id2', 'id3', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
@@ -148,9 +152,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.subscribers.allprint = this.resService.printAllCommand.subscribe((value) => {
+      if (value.token){
+        this.printAllHtmlTag();
+      }
+    });
+
     electron.ipcRenderer.on('closeMenu', (event) => {
       this.removeTab(this.selectedTabIndex);
-
     });
   }
 
@@ -170,7 +179,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       active: true,
       resList: [],
       scrollPos: 0,
-      isFiltered: false
+      isFiltered: false,
+      url: ''
     });
   }
 
@@ -238,4 +248,35 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.previousTabId = $event.target['id'];
   }
 
+  private async printAllHtmlTag() {
+    $.LoadingOverlay('show', {
+      imageColor: '#ffa07a',
+    });
+    let htmlTag = '';
+    let index = 0;
+    let currentTab = 0;
+    for (const tabItem of this.tabs) {
+      if (tabItem.resList.length > 0) {
+        if (index !== 0) {
+          htmlTag += '\n';
+        }
+        htmlTag += await this.resService.printHtmlTag(tabItem.resList, {
+          tabName: tabItem.title,
+          txtURL: tabItem.url,
+          twitter: this.twitter,
+          youtube: this.youtube,
+          shuturyoku: this.shuturyoku,
+          resSizeList: this.resSizeList,
+          characterColors: this.settings.characterColors,
+        });
+      }
+      if (tabItem.active){
+        currentTab = index;
+      }
+      index++;
+    }
+
+    this.resService.setPrintHtml({tabIndex: currentTab, html: htmlTag});
+    $.LoadingOverlay('hide');
+  }
 }

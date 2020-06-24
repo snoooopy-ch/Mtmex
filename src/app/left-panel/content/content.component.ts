@@ -57,7 +57,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() searchKeyword = '';
   backupResList;
   noticeBackupResList;
-  txtURL: string;
+  @Input() txtURL: string;
   public subscribers: any = {};
   private isChangedSearch: boolean;
   private searchedRes: number;
@@ -68,7 +68,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.hiddenIds = [];
     this.hovered = -1;
     this.subHotKeys = [];
-    this.txtURL = '';
     this.isChangedSearch = true;
     this.searchedRes = 0;
   }
@@ -136,7 +135,6 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.setHotKeys();
   }
 
   /**
@@ -158,6 +156,7 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   setHotKeys(){
     // 選択ボタン
+    console.log(this.subHotKeys);
     if (this.subHotKeys.hasOwnProperty('sentaku_no1')) {
       this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_no1,
         this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
@@ -1134,194 +1133,25 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async printRes(res: ResItem){
-    let htmlTag = '';
-    let content = res.content;
-    content = content.replace(/(<img[^<]+>)/ig, '');
-    content = content.replace(/(<span[^<]+>)/ig, '');
-    content = content.replace(/(<\/span>)/ig, '');
-    content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span class="anchor">$1</span>`);
-    content = content.replace(/( class="res-img-link"| class="res-link")/ig, ``);
-    content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
-      `$1 target="_blank" class="image"$2`);
-    content = content.replace(/(\.[^jpg]+"|\.[^gif]+"|\.[^jpeg]+"|\.[^png]+"|\.[^bmp]+")(>https:)/ig,
-      `$1 target="_blank"$2`);
-    // content = content.replace(/(<br><br>)/ig, '<br>');
-    // content = content.replace(/(<br><br>)/ig, '<br>');
-    content = content.replace(/(<br>)/ig, '<br />');
 
-    // Twitter embed code
-    if (this.twitter) {
-      const twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
-      if (Array.isArray(twitters) && twitters.length) {
-        for (const twitter of twitters) {
-          const twitterURL = twitter.slice(1, -1);
-          const response = await fetch('https://publish.twitter.com/oembed?url=' + twitterURL);
-          const data = await response.json();
-          const replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
-          content = content.replace(replace, replace + data.html);
-        }
-      }
-    }
-
-    // Youtube embed code
-    if (this.youtube) {
-      const youtubes = content.match(/"(https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)"/ig);
-      if (Array.isArray(youtubes) && youtubes.length) {
-        for (const youtube of youtubes) {
-          const youtubeURL = youtube.slice(1, -1);
-          const response = await fetch('http://www.youtube.com/oembed?url=' + youtubeURL);
-          const data = await response.json();
-          const replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
-          content = content.replace(replace, replace + data.html);
-        }
-      }
-    }
-
-    if (res.isAdded) {
-      htmlTag += `<div class="t_h t_i">`;
-    } else {
-      htmlTag += `<div class="t_h">`;
-    }
-    htmlTag += `${res.num}: <span class="name">${res.name}</span>`;
-    htmlTag += ` <span style="color: gray;"> ${res.date}`;
-
-    if ( this.shuturyoku) {
-      if (res.id.length > 0 ) {
-        if (res.idColor !== '#000') {
-          htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${res.id}</em>`;
-        } else {
-          htmlTag += ` ID:${res.id}`;
-        }
-      }
-    } else {
-      if (res.id.length > 0 ) {
-        if (res.idColor !== '#000') {
-          htmlTag += `<span class="${res.idClassNoSelect}"> ID:${res.id}</span>`;
-        } else {
-          htmlTag += ` ID:${res.id}`;
-        }
-      }
-    }
-    htmlTag += `</span></div>\n`;
-
-    if ( this.shuturyoku) {
-      htmlTag += `<div class="t_b`;
-      if (res.isAdded) {
-        htmlTag += ` t_i`;
-      }
-      htmlTag += `"><!-- res_s -->`;
-      let suffix = '';
-      if (res.resFontSize === this.resSizeList[1].value || res.resFontSize === this.resSizeList[2].value ){
-        htmlTag += `<span style="font-size:${res.resFontSize};">`;
-        suffix = `</span>`;
-      }
-
-      if (this.characterColors.indexOf(res.resColor) !== -1){
-        htmlTag += `<span style="color:${res.resColor};">`;
-        suffix = `</span>` + suffix;
-      }
-
-      htmlTag += `${content}${suffix}<!-- res_e -->`;
-
-    } else {
-
-      htmlTag += `<div class="t_b`;
-      if (res.isAdded) {
-        htmlTag += ` t_i`;
-      }
-      htmlTag += `"><!-- res_s -->`;
-      let suffix = '';
-      if (res.resFontSize === this.resSizeList[1].value){
-        htmlTag += `<tt>`;
-        suffix = `</tt>` + suffix;
-      }else if (res.resFontSize === this.resSizeList[2].value){
-        htmlTag += `<code>`;
-        suffix = `</code>` + suffix;
-      }
-
-      if (res.resColor === this.characterColors[0]){
-        htmlTag += `<s>`;
-        suffix = `</s>` + suffix;
-      } else if (res.resColor === this.characterColors[1]){
-        htmlTag += `<em>`;
-        suffix = `</em>` + suffix;
-      }else if (res.resColor === this.characterColors[2]){
-        htmlTag += `<ins>`;
-        suffix = `</ins>` + suffix;
-      } else if (res.resColor === this.characterColors[3]){
-        htmlTag += `<samp>`;
-        suffix = `</samp>` + suffix;
-      } else if (res.resColor === this.characterColors[4]){
-        htmlTag += `<del>`;
-        suffix = `</del>` + suffix;
-      }else if (res.resColor === this.characterColors[5]){
-        htmlTag += `<dfn>`;
-        suffix = `</dfn>` + suffix;
-      } else if (res.resColor === this.characterColors[6]){
-        htmlTag += `<var>`;
-        suffix = `</var>` + suffix;
-      } else if (res.resColor === this.characterColors[7]){
-        htmlTag += `<cite>`;
-        suffix = `</cite>` + suffix;
-      } else if (res.resColor === this.characterColors[8]){
-        htmlTag += `<u>`;
-        suffix = `</u>` + suffix;
-      } else if (res.resColor === this.characterColors[9]){
-        htmlTag += `<kbd>`;
-        suffix = `</kbd>` + suffix;
-      }
-      htmlTag += `${content}${suffix}<!-- res_e -->`;
-
-    }
-    htmlTag += `</div>\n`;
-    return htmlTag;
-  }
 
   private async printHtmlTag() {
-    $.LoadingOverlay("show", {
-      "imageColor": "#ffa07a",
+    $.LoadingOverlay('show', {
+      imageColor: '#ffa07a',
     });
-    let htmlTag = `★■●${this.tabName}●■★\n`;
-    htmlTag += `URL入力欄：${this.txtURL}\n`;
-    let exists = false;
-    for (const res of this.resList){
-      if (res.resSelect === 'select'){
-        exists = true;
-        htmlTag += await this.printRes(res);
-      }
-    }
 
-    let yobi1 = ``;
-    for (const res of this.resList){
-      if (res.resSelect === 'candi1'){
-        exists = true;
-        yobi1 += await this.printRes(res);
-      }
-    }
-    if (yobi1.length > 0){
-      htmlTag += `<div style="yobi1">予備選択1</div>\n${yobi1}`;
-    }
+    const htmlTag = await this.resService.printHtmlTag(this.resList, {
+      tabName: this.tabName,
+      txtURL: this.txtURL,
+      twitter: this.twitter,
+      youtube: this.youtube,
+      shuturyoku: this.shuturyoku,
+      resSizeList: this.resSizeList,
+      characterColors: this.characterColors,
+    });
 
-    let yobi2 = ``;
-    for (const res of this.resList){
-      if (res.resSelect === 'candi2'){
-        exists = true;
-        yobi2 += await this.printRes(res);
-      }
-    }
-
-    if (yobi2.length > 0){
-      htmlTag += `<div style="yobi2">予備選択2</div>\n${yobi2}`;
-    }
-
-    if (!exists){
-      htmlTag = '';
-    }else{
-      htmlTag = htmlTag.substr(0, htmlTag.length - 1);
-    }
     this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag});
-    $.LoadingOverlay("hide");
+    $.LoadingOverlay('hide');
   }
 
   changeSearchOptionHandler() {
