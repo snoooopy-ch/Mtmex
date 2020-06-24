@@ -16,7 +16,7 @@ declare var $: any;
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
 
-  tabs = [{title: 'New Tab', active: true, resList: [], scrollPos: 0, isFiltered: false, url: ''}];
+  tabs = [];
   draggable = {
     data: 'myDragData',
     effectAllowed: 'all',
@@ -87,7 +87,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           selected: false
         }
       ];
-      this.tabWidth = `${this.settings.tab_haba - 37}px`;
+      this.tabWidth = `${this.settings.tab_haba - 10}px`;
       this.hitColor = this.settings.hit_back_color;
       this.idRed = this.settings.id_red;
       this.noticeCount = this.settings.noticeCount;
@@ -118,6 +118,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.resData = this.resService.resData.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
+      this.addTab();
+      this.selectedTabIndex = this.tabs.length - 1;
       this.tabs[this.selectedTabIndex].resList = value.resList;
       this.cdr.detectChanges();
       if (value.resList.length > 0 ) {
