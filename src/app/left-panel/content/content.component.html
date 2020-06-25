@@ -38,6 +38,7 @@
              [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
              (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"
              (mouseleave)="mouseLeaveHandler()"
+             (click)="mouseClickHandler()"
              *ngFor="let resItem of resListContainer.viewPortItems; let index = index ;"
              [characterColors] = 'characterColors'
              [backgroundColors] = 'backgroundColors'
@@ -46,6 +47,7 @@
              [idRed] = "idRed"
              [noticeCount] = "noticeCount"
              [resSizeList] = "resSizeList"
+             [txtRemarkRes] = "txtRemarkRes"
              [btnBackgroundColors] = "btnBackgroundColors"
              [leftHightlight] = "leftHightlight"
              (cdkDragStarted)="dragStarted($event, resItem)"

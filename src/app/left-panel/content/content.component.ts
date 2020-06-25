@@ -57,6 +57,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
+  @Input() txtRemarkRes;
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -161,18 +162,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (this.subHotKeys.hasOwnProperty('sentaku_no1')) {
       this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_no1,
         this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
-        if (this.hovered >= 0) {
-          if (this.resList[this.hovered].resSelect === 'select') {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
-            this.selectedRes(this.resList[this.hovered],
-              {select: false, candi1: false, candi2: false, selected: 'none'});
-
-          } else {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
-            this.selectedRes(this.resList[this.hovered],
-              {select: true, candi1: false, candi2: false, selected: 'select'});
-          }
-        }
+        this.selectHoveredRes(true);
         return false;
       }));
 
@@ -864,7 +854,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   mouseClickHandler() {
     if (this.resMouseClick) {
-
+      // this.selectHoveredRes(false);
     }
   }
 
@@ -982,7 +972,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   searchResText(){
-    const re = new RegExp(`(?<!</?[^>]*)${this.searchKeyword}`, 'gi');
+    const keyword = this.searchKeyword.replace(/\s/gi, '|');
+    const re = new RegExp(`(?<!</?[^>]*)${keyword}`, 'gi');
     let index = 0;
     for (const res of this.resList){
       if (res.content.match(re)){
@@ -1223,5 +1214,20 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   changeSearchHandler($event: any) {
     this.isChangedSearch = true;
+  }
+
+  selectHoveredRes(canUnselect){
+    if (this.hovered >= 0) {
+      if (this.resList[this.hovered].resSelect === 'select' && canUnselect) {
+        this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+        this.selectedRes(this.resList[this.hovered],
+          {select: false, candi1: false, candi2: false, selected: 'none'});
+
+      } else {
+        this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
+        this.selectedRes(this.resList[this.hovered],
+          {select: true, candi1: false, candi2: false, selected: 'select'});
+      }
+    }
   }
 }

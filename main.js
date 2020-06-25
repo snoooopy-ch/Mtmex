@@ -670,11 +670,11 @@ function loadStatus(filePath, tabIndex){
     }
   })
 }
-ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes) => {
-  saveSettings(dataFilePath, remarkRes, hideRes);
+ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes) => {
+  saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes);
 });
 
-function saveSettings(dataFilePath, remarkRes, hideRes) {
+function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes) {
   fs.readFile('Setting.ini', 'utf8', function (err,data) {
     if(data.match(/(#datパス\r\n)[^\r^\n]+(\r\n)/g)===null){
       data = data.replace(/(#datパス\r\n)+(\r\n)/g, `$1${dataFilePath}$2`);
@@ -683,6 +683,23 @@ function saveSettings(dataFilePath, remarkRes, hideRes) {
     }
     data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
     data = data.replace(/(^hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+    let replaceString ='';
+    if(isResSort){
+      replaceString += '$1on$2';
+    }else{
+      replaceString += '$1off$2';
+    }
+    if(isMultiAnchor){
+      replaceString += 'on';
+    }else{
+      replaceString += 'off';
+    }
+    if(isReplaceRes){
+      replaceString += '$3on$4';
+    }else{
+      replaceString += '$3off$4';
+    }
+    data = data.replace(/(#チェックボックス\r\n1:)\w+(\r\n2:)\w+(\r\n3:)\w+(\r\n)/gi, replaceString);
     fs.writeFile('Setting.ini', data, (err) => {
       if (err) throw err;
       console.log('The settings file has been saved!');

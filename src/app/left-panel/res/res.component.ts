@@ -56,6 +56,7 @@ export class ResComponent implements OnInit {
   @Input() btnBackgroundColors;
   @Input() leftHightlight;
   @Input() resMouseClick;
+  @Input() txtRemarkRes;
   resContent = '';
   @Input() characterColors;
 
@@ -162,7 +163,18 @@ export class ResComponent implements OnInit {
     this.resContent = this.resContent.replace(/(<figure[^<]+>)/ig, '');
     this.resContent = this.resContent.replace(/<\/figure>/ig, '');
     this.resContent = this.resContent.replace(/&nbsp;/ig, '');
+    let remarkRes = this.txtRemarkRes;
+    if (remarkRes.endsWith(';')){
+      remarkRes = remarkRes.substr(0, remarkRes.length - 1);
+    }
+    remarkRes = remarkRes.replace(/;/gi, '|');
     this.item.content = this.resContent;
+    if (remarkRes !== undefined && remarkRes.length > 0){
+      const re = new RegExp(remarkRes, 'gi');
+      if (this.item.content.match(re)) {
+        this.item.isRemark = true;
+      }
+    }
     this.item.isEdit = false;
     this.cdRef.detectChanges();
   }
