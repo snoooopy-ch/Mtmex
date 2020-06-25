@@ -149,9 +149,10 @@ export class ResService {
 
     if (!exists){
       htmlTag = '';
-    }else{
-      htmlTag = htmlTag.substr(0, htmlTag.length - 1);
     }
+    // else{
+    //   htmlTag = htmlTag.substr(0, htmlTag.length - 1);
+    // }
     return htmlTag;
   }
 

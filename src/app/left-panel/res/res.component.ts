@@ -158,8 +158,8 @@ export class ResComponent implements OnInit {
 
   saveResHandler() {
 
-    this.resContent = this.resContent.replace(/(<p>)/ig, '');
-    this.resContent = this.resContent.replace(/(<\/p>)/ig, '');
+    this.resContent = this.resContent.replace(/(<p>)|(<h3>)/ig, '');
+    this.resContent = this.resContent.replace(/(<\/p>)|(<\/h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)/ig, '');
     this.resContent = this.resContent.replace(/<\/figure>/ig, '');
     this.resContent = this.resContent.replace(/&nbsp;/ig, '');

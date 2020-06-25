@@ -9,7 +9,7 @@ export class ResItem{
   content: string;
   isAdded: boolean;
   parent: number;
-  show: boolean;
+  isShow: boolean;
   select: boolean;
   candi1: boolean;
   candi2: boolean;

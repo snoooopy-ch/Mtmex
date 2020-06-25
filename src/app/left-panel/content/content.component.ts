@@ -78,8 +78,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
-      for (let i = 0; i < this.resList.length; i++){
-        this.resList[i].show = this.hiddenIds.indexOf(this.resList[i].id) === -1;
+
+      for (const res of this.resList){
+        res.isShow = this.hiddenIds.indexOf(res.id) === -1;
       }
       this.cdRef.detectChanges();
     });
@@ -97,7 +98,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.selectCommand = this.resService.selectCommand.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex){
+      if (value.tabIndex === this.tabIndex && value.token){
          this.multiSelection(value.command);
       }
     });
@@ -667,8 +668,10 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   duplicateRes(item: any) {
     const index = this.resList.indexOf(item);
-    this.resList.splice(index + 1, 0, item);
-    this.resList = [...this.resList];
+    const cloneItem = Object.assign({}, item);
+    this.resList.splice(index + 1, 0, cloneItem);
+    this.cdRef.detectChanges();
+    // this.resList = [...this.resList];
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length
@@ -871,77 +874,81 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   multiSelection(command: string){
-    for (let i = this.virtualScroller.viewPortInfo.startIndex; i <= this.virtualScroller.viewPortInfo.endIndex; i++){
-      switch (command) {
-        case 'select':
-          this.resList[i].resSelect = 'select';
-          this.resList[i].select = true;
-          this.resList[i].candi1 = false;
-          this.resList[i].candi2 = false;
-          this.resList[i].resBackgroundColor = this.backgroundColors[1];
-          break;
-        case 'candi1':
-          this.resList[i].resSelect = 'candi1';
-          this.resList[i].select = false;
-          this.resList[i].candi1 = true;
-          this.resList[i].candi2 = false;
-          this.resList[i].resBackgroundColor = this.backgroundColors[2];
-          break;
-        case 'candi2':
-          this.resList[i].resSelect = 'candi2';
-          this.resList[i].select = false;
-          this.resList[i].candi1 = false;
-          this.resList[i].candi2 = true;
-          this.resList[i].resBackgroundColor = this.backgroundColors[3];
-          break;
-        case 'select-image':
-          if (this.resList[i].hasImage) {
+
+    // for (let i = this.virtualScroller.viewPortInfo.startIndex; i <= this.virtualScroller.viewPortInfo.endIndex; i++){
+    for (let i = 0; i < this.resList.length; i++){
+      if (this.resList[i].isShow) {
+        switch (command) {
+          case 'select':
             this.resList[i].resSelect = 'select';
             this.resList[i].select = true;
             this.resList[i].candi1 = false;
             this.resList[i].candi2 = false;
             this.resList[i].resBackgroundColor = this.backgroundColors[1];
-          }
-          break;
-        case 'candi1-image':
-          if (this.resList[i].hasImage) {
+            break;
+          case 'candi1':
             this.resList[i].resSelect = 'candi1';
             this.resList[i].select = false;
             this.resList[i].candi1 = true;
             this.resList[i].candi2 = false;
             this.resList[i].resBackgroundColor = this.backgroundColors[2];
-          }
-          break;
-        case 'candi2-image':
-          if (this.resList[i].hasImage) {
+            break;
+          case 'candi2':
             this.resList[i].resSelect = 'candi2';
             this.resList[i].select = false;
             this.resList[i].candi1 = false;
             this.resList[i].candi2 = true;
             this.resList[i].resBackgroundColor = this.backgroundColors[3];
-          }
-          break;
-        case 'cancel-select':
-          if (this.resList[i].resSelect === 'select') {
-            this.resList[i].resSelect = 'none';
-            this.resList[i].select = false;
-            this.resList[i].resBackgroundColor = this.backgroundColors[0];
-          }
-          break;
-        case 'cancel-candi1':
-          if (this.resList[i].resSelect === 'candi1') {
-            this.resList[i].resSelect = 'none';
-            this.resList[i].candi1 = false;
-            this.resList[i].resBackgroundColor = this.backgroundColors[0];
-          }
-          break;
-        case 'cancel-candi2':
-          if (this.resList[i].resSelect === 'candi2') {
-            this.resList[i].resSelect = 'none';
-            this.resList[i].candi2 = false;
-            this.resList[i].resBackgroundColor = this.backgroundColors[0];
-          }
-          break;
+            break;
+          case 'select-image':
+            if (this.resList[i].hasImage) {
+              this.resList[i].resSelect = 'select';
+              this.resList[i].select = true;
+              this.resList[i].candi1 = false;
+              this.resList[i].candi2 = false;
+              this.resList[i].resBackgroundColor = this.backgroundColors[1];
+            }
+            break;
+          case 'candi1-image':
+            if (this.resList[i].hasImage) {
+              this.resList[i].resSelect = 'candi1';
+              this.resList[i].select = false;
+              this.resList[i].candi1 = true;
+              this.resList[i].candi2 = false;
+              this.resList[i].resBackgroundColor = this.backgroundColors[2];
+            }
+            break;
+          case 'candi2-image':
+            if (this.resList[i].hasImage) {
+              this.resList[i].resSelect = 'candi2';
+              this.resList[i].select = false;
+              this.resList[i].candi1 = false;
+              this.resList[i].candi2 = true;
+              this.resList[i].resBackgroundColor = this.backgroundColors[3];
+            }
+            break;
+          case 'cancel-select':
+            if (this.resList[i].resSelect === 'select') {
+              this.resList[i].resSelect = 'none';
+              this.resList[i].select = false;
+              this.resList[i].resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi1':
+            if (this.resList[i].resSelect === 'candi1') {
+              this.resList[i].resSelect = 'none';
+              this.resList[i].candi1 = false;
+              this.resList[i].resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi2':
+            if (this.resList[i].resSelect === 'candi2') {
+              this.resList[i].resSelect = 'none';
+              this.resList[i].candi2 = false;
+              this.resList[i].resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+        }
       }
     }
     this.cdRef.detectChanges();
@@ -972,7 +979,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   searchResText(){
-    const keyword = this.searchKeyword.replace(/\s/gi, '|');
+    const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
     const re = new RegExp(`(?<!</?[^>]*)${keyword}`, 'gi');
     let index = 0;
     for (const res of this.resList){
@@ -1015,7 +1022,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchTextHandler() {
     if (this.btnSearch.checked){
-      if (this.searchKeyword === undefined || this.searchKeyword.length === 0) {
+      if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
         this.btnSearch.checked = false;
       }else{
         this.searchResText();
