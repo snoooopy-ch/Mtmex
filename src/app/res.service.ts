@@ -64,8 +64,8 @@ export class ResService {
     electron.ipcRenderer.send('loadStatus', filePath, tabIndex);
   }
 
-  saveSettings(dataFilePath, remarkRes, hiddenRes){
-    electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes);
+  saveSettings(dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes){
+    electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes);
   }
 
   setHiddenIds(value: string[]) {

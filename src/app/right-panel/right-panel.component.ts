@@ -125,7 +125,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
   @HostListener('window:beforeunload', [ '$event' ])
   beforeUnloadHandler(event) {
-    this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes);
+    this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes,
+      this.isResSort, this.isMultiAnchor, this.isReplaceRes);
   }
   onLoadUrl() {
 

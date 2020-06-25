@@ -51,6 +51,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   btnBackgroundColors: any[];
   leftHightlight: true;
   moveOption: any;
+  txtRemarkRes: any;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -126,6 +127,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         sentaku_idou2: this.settings.sentaku_idou2,
       };
 
+      if (this.settings.chuui !== undefined) {
+        this.txtRemarkRes = this.settings.chuui;
+      }
       this.setHotKeys();
     });
 
