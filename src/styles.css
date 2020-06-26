@@ -308,6 +308,7 @@ app-res .row-4 {
   display: block;
   color: red;
   line-height: 1.2em;
+  overflow-wrap: break-word;
 }
 
 app-res .row-4 img {

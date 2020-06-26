@@ -12,13 +12,13 @@
   </mat-button-toggle-group>
 </div>
 <h3>{{tabName}}</h3>
-<!--[enableUnequalChildrenSizes]="true" [bufferAmount]="5"-->
+<div class="content-url">
+  <label>URL</label>
+  <input type="text" [(ngModel)]="txtURL">
+</div>
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
                   cdkDropList (cdkDropListDropped)="drop($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
-    <div class="content-url">
-      <label>URL</label>
-      <input type="text" [(ngModel)]="txtURL">
-    </div>
+
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
              'border-left': resItem.isAdded ? leftBorder : '', 'border-top': resItem.isRemark ? topBorder : ''}"
@@ -35,7 +35,7 @@
              (setDraggableEmitter)="setDraggable(resList.indexOf(resItem), $event)"
              (selectedNumEmitter)="selectedNum(resItem)"
              [tabIndex]="tabIndex"
-             [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.show}"
+             [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.isShow}"
              (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"
              (mouseleave)="mouseLeaveHandler()"
              (click)="mouseClickHandler()"

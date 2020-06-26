@@ -393,7 +393,7 @@ function readLines(line) {
     content: '',
     isAdded: false,
     parent: 0,
-    show: true,
+    isShow: true,
     select: false,
     candi1: false,
     candi2: false,

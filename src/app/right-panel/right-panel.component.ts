@@ -176,7 +176,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   selectResHandler() {
     this.resService.setSelectCommand({
       tabIndex: this.tabIndex,
-      command: this.selectCommand
+      command: this.selectCommand,
+      token: true,
     });
     this.selectCommand = '';
   }
