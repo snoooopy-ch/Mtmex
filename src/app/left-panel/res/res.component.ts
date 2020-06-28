@@ -10,6 +10,11 @@ import {
   PipeTransform,
 } from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import Image from '@ckeditor/ckeditor5-image/src/image';
+// import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
+// import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
+// import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize';
+// import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ResItem} from '../../models/res-item';
 
@@ -158,6 +163,7 @@ export class ResComponent implements OnInit {
 
   saveResHandler() {
 
+    this.resContent = this.resContent.replace(/<p>&nbsp;<\/p>/gi, '<br>');
     this.resContent = this.resContent.replace(/(<p>)|(<h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<\/p>)|(<\/h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)/ig, '');

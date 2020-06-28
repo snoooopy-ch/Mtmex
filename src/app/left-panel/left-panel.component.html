@@ -1,5 +1,5 @@
 <!--<button id="btn-plus" (click)="addTab()" class="add-tab">+</button>-->
-
+<!--[ngStyle]="{'width': this.tabWidth}"-->
 <tabset #tabGroup dndDropzone (dndDragover)="onDragover($event)">
   <tab *ngFor="let tabItem of tabs; let index = index;"
 
@@ -10,7 +10,6 @@
     <ng-template tabHeading>
       <div data-id="{{index}}"
            class="tab-header"
-           [ngStyle]="{'width': this.tabWidth}"
            [dndDraggable]="draggable.data"
            [dndEffectAllowed]="draggable.effectAllowed"
            [dndDisableIf]="draggable.disable"
