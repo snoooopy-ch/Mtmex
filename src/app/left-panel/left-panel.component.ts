@@ -148,16 +148,17 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     });
 
-    this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
-      if (this.tabGroup === undefined) { return; }
-      if (this.selectedTabIndex === value.index) {
-        this.tabs[this.selectedTabIndex].scrollPos = value.pos;
-      }
-    });
+    // this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
+    //   if (this.tabGroup === undefined) { return; }
+    //   if (this.selectedTabIndex === value.index) {
+    //     this.tabs[this.selectedTabIndex].scrollPos = value.pos;
+    //   }
+    // });
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
+        console.log('left-panel-status');
         this.tabs[this.selectedTabIndex].resList = value.data.resList;
         this.cdr.detectChanges();
         this.tabs[this.selectedTabIndex].title = value.data.title;
@@ -169,7 +170,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscribers.allprint = this.resService.printAllCommand.subscribe((value) => {
+    this.subscribers.allPrint = this.resService.printAllCommand.subscribe((value) => {
       if (value.token){
         this.printAllHtmlTag();
       }
@@ -186,8 +187,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.subscribers.settings.unsubscribe();
     this.subscribers.resData.unsubscribe();
-    this.subscribers.scrollPos.unsubscribe();
+    // this.subscribers.scrollPos.unsubscribe();
     this.subscribers.status.unsubscribe();
+    this.subscribers.allPrint.unsubscribe();
   }
 
   setHotKeys() {
@@ -263,11 +265,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     };
     this.cdr.detectChanges();
     // @ts-ignore
-    this.resService.setScrollPos(pos);
+    if (this.tabs[this.selectedTabIndex].scrollPos > 0) {
+      this.resService.setScrollPos(pos);
+    }
   }
 
-  filteredHandler(index: number, $event: any) {
-    this.tabs[this.selectedTabIndex].isFiltered = $event;
+  filteredHandler(index: number, $event: boolean) {
+    this.tabs[index].isFiltered = $event;
   }
 
   changeSearchStatus($event: any) {
@@ -304,10 +308,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     let currentTab = 0;
     for (const tabItem of this.tabs) {
       if (tabItem.resList.length > 0) {
-        if (index !== 0) {
-          htmlTag += '\n';
-        }
-        htmlTag += await this.resService.printHtmlTag(tabItem.resList, {
+        const oneHtmlTag = await this.resService.printHtmlTag(tabItem.resList, {
           tabName: tabItem.title,
           txtURL: tabItem.url,
           twitter: this.twitter,
@@ -316,6 +317,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           resSizeList: this.resSizeList,
           characterColors: this.settings.characterColors,
         });
+
+        if (index !== 0 && oneHtmlTag.length > 0) {
+          htmlTag += '\n';
+        }
+        htmlTag += oneHtmlTag;
       }
       if (tabItem.active){
         currentTab = index;
@@ -325,5 +331,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.resService.setPrintHtml({tabIndex: currentTab, html: htmlTag});
     $.LoadingOverlay('hide');
+  }
+
+  changeScrollIndex(index: number, $event: any) {
+    this.tabs[index].scrollPos = $event;
   }
 }

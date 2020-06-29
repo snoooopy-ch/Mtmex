@@ -54,6 +54,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() leftHightlight;
   @Output() filteredEmitter = new EventEmitter();
   @Output() searchStatusEmitter = new EventEmitter();
+  @Output() scrollIndexEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -85,11 +86,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.cdRef.detectChanges();
     });
 
-    this.subscribers.scrollPos = this.resService.scrollPos.subscribe((scrollPos) => {
-         if (scrollPos.index === this.tabIndex && scrollPos.isTab){
-          this.virtualScroller.scrollToIndex(scrollPos.pos);
-        }
-    });
+    // this.subscribers.scrollPos = this.resService.scrollPos.subscribe((scrollPos) => {
+    //      if (scrollPos.index === this.tabIndex && scrollPos.isTab){
+    //       this.virtualScroller.scrollToIndex(scrollPos.pos);
+    //     }
+    // });
 
     this.subscribers.moveRes = this.resService.moveRes.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
@@ -116,15 +117,17 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
-      console.log('content-panel');
-      console.log(value);
+
       if (value.tabIndex === this.tabIndex && this.resList.length > 0 && value.token) {
+        console.log('content-panel');
+        console.log(value);
         const saveData = value;
         saveData.resList = this.resList;
         saveData.title = this.tabName;
         saveData.txtUrl = this.txtURL;
         saveData.scrollIndex = this.virtualScroller.viewPortInfo.startIndex;
         this.resService.saveStatus(saveData);
+        value.token = false;
       }
     });
 
@@ -132,6 +135,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.tabIndex === value.tabIndex) {
         this.txtURL = value.data.txtUrl;
         if (this.resList !== undefined) {
+          console.log('content-status');
           this.virtualScroller.scrollToIndex(value.data.scrollIndex);
           this.changeStatus();
           this.cdRef.detectChanges();
@@ -146,7 +150,7 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(){
     this.subscribers.LoadHiddenIds.unsubscribe();
-    this.subscribers.scrollPos.unsubscribe();
+    // this.subscribers.scrollPos.unsubscribe();
     this.subscribers.moveRes.unsubscribe();
     this.subscribers.selectCommand.unsubscribe();
     this.subscribers.selectedTab.unsubscribe();
@@ -956,10 +960,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   usUpdateHandler($event: any[]) {
-    this.resService.setScrollPos({index: this.tabIndex,
-      pos: this.virtualScroller.viewPortInfo.startIndex,
-      isTab: false
-    });
+    this.scrollIndexEmitter.emit(this.virtualScroller.viewPortInfo.startIndex);
+    // this.resService.setScrollPos({index: this.tabIndex,
+    //   pos: this.virtualScroller.viewPortInfo.startIndex,
+    //   isTab: false
+    // });
   }
 
   cancelSearchResTest(){
