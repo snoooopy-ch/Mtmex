@@ -967,7 +967,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     // });
   }
 
-  cancelSearchResTest(){
+  cancelSearchResText(){
     for (const res of this.resList){
       res.content = res.content.replace(/(<span[^<]+>)/ig, '');
       res.content = res.content.replace(/<\/span>/ig, '');
@@ -977,6 +977,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         res.name = res.name.replace(/(<span[^<]+>)/ig, '');
         res.name = res.name.replace(/<\/span>/ig, '');
       }
+      res.isFiltered = false;
     }
     this.startInRes = 0;
     this.searchedRes = 0;
@@ -1031,11 +1032,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
         this.btnSearch.checked = false;
       }else{
+        this.cancelSearchResText();
         this.searchResText();
         this.abstractRes();
       }
     }else{
       this.resList = Object.assign([], this.backupResList);
+      this.cancelSearchResText();
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
@@ -1097,7 +1100,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       return;
     }
     if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
-      this.btnSearch.checked = true;
+      this.btnSearch.checked = !this.btnSearch.checked;
       this.searchTextHandler();
     }else if ($event.shiftKey && $event.code === 'Enter'){
       this.isChangedSearch = false;
@@ -1147,9 +1150,9 @@ export class ContentComponent implements OnInit, OnDestroy {
           return;
         }
         if (this.searchKeyword.match(/^\s+$/g) !== null || this.searchKeyword.length === 0) {
-          this.cancelSearchResTest();
+          this.cancelSearchResText();
         } else {
-          this.cancelSearchResTest();
+          this.cancelSearchResText();
           this.searchResText();
         }
       }else{
