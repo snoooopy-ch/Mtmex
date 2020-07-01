@@ -1093,6 +1093,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   searchOnKeyHandler($event: KeyboardEvent) {
+    if (this.searchOption === undefined){
+      return;
+    }
     if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
       this.btnSearch.checked = true;
       this.searchTextHandler();
@@ -1140,11 +1143,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     } else if ($event.code === 'Enter'){
       if (this.isChangedSearch) {
-        if (this.searchKeyword === ' ') {
+        if (this.searchKeyword === undefined){
+          return;
+        }
+        if (this.searchKeyword.match(/^\s+$/g) !== null || this.searchKeyword.length === 0) {
           this.cancelSearchResTest();
         } else {
           this.cancelSearchResTest();
-          console.log('EnterKeyword');
           this.searchResText();
         }
       }else{
