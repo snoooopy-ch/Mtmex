@@ -985,10 +985,11 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
-    const re = new RegExp(`(?<!</?[^>]*)${keyword}`, 'gi');
+    // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
+    const re = new RegExp(`(?![^<>]*>)${keyword}`, 'gi');
     let index = 0;
     for (const res of this.resList){
-      if (res.content.match(re)){
+      if (res.content.match(re) !== null){
         res.content = res.content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
         res.isFiltered = true;
         res.originalIndex = index;
@@ -1143,6 +1144,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.cancelSearchResTest();
         } else {
           this.cancelSearchResTest();
+          console.log('EnterKeyword');
           this.searchResText();
         }
       }else{
