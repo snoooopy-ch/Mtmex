@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
   Pipe,
-  PipeTransform,
+  PipeTransform, ViewChild,
 } from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // import Image from '@ckeditor/ckeditor5-image/src/image';
@@ -64,6 +64,9 @@ export class ResComponent implements OnInit {
   @Input() txtRemarkRes;
   resContent = '';
   @Input() characterColors;
+  @ViewChild('optResSelect') optResSelect: ElementRef;
+  @ViewChild('optResCandi1') optResCandi1: ElementRef;
+  @ViewChild('optResCandi2') optResCandi2: ElementRef;
 
   constructor(private cdRef: ChangeDetectorRef, private ref: ElementRef) {
 
@@ -75,7 +78,7 @@ export class ResComponent implements OnInit {
       this.item.resFontSize = `${this.resSizeList[0].value}px`;
     }
     if (this.item.resColor === undefined){
-      this.item.resColor = '#f00';
+      this.item.resColor = '#000';
     }
 
     $(document).ready(function() {
@@ -130,16 +133,17 @@ export class ResComponent implements OnInit {
 
   mouseClickHandler() {
     if (this.resMouseClick) {
-      this.selectClickHandler();
+      // this.selectClickHandler($event);
     }
     return false;
   }
 
-  sizeChangeHandler() {
+  sizeChangeHandler($event) {
+    $event.target.blur();
     this.cdRef.detectChanges();
   }
 
-  colorChangeHandler() {
+  colorChangeHandler($event) {
     this.item.resSelect = 'select';
 
     this.item.resBackgroundColor = this.backgroundColors[1];
@@ -150,6 +154,7 @@ export class ResComponent implements OnInit {
         candi2: false,
         selected: 'select'
       });
+    $event.target.blur();
     this.cdRef.detectChanges();
   }
 
@@ -237,6 +242,7 @@ export class ResComponent implements OnInit {
         candi2: false,
         selected: colorIndex === 0 ? 'none' : 'select'
       });
+    this.optResSelect.nativeElement.blur();
     this.cdRef.detectChanges();
   }
 
@@ -256,6 +262,7 @@ export class ResComponent implements OnInit {
       candi2: false,
       selected: colorIndex === 0 ? 'none' : 'candi1'
     });
+    this.optResCandi1.nativeElement.blur();
     this.cdRef.detectChanges();
   }
 
@@ -275,6 +282,7 @@ export class ResComponent implements OnInit {
       candi2: this.item.resSelect !== 'none',
       selected: colorIndex === 0 ? 'none' : 'candi2'
     });
+    this.optResCandi2.nativeElement.blur();
     this.cdRef.detectChanges();
   }
 

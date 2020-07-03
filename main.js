@@ -397,7 +397,7 @@ function readLines(line) {
     select: false,
     candi1: false,
     candi2: false,
-    resColor: '#f00',
+    resColor: '#000',
     resFontSize: '14px',
     resSelect: 'none',
     resBackgroundColor: '#ffffff',
