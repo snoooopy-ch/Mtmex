@@ -93,10 +93,24 @@ export class ResComponent implements OnInit {
         $('#preview').css('display', 'none');
       });
 
-      const imgGif = new Freezeframe('.gif-pause', {
-        trigger: false,
-        responsive: false,
+      $('.res-container label').click(function(event){
+        event.stopPropagation();
       });
+
+      $('.res-container .row-4').on('mousedown touchstart', function(event) {
+        event.stopPropagation();
+      });
+      $('.res-container .row-4').on('mousemove touchmove', function(event) {
+        event.stopPropagation();
+      });
+      $(window.document).on('mouseup touchend', function(event) {
+        // Capture this event anywhere in the document, since the mouse may leave our element while mouse is down and then the 'up' event will not fire within the element.
+      });
+
+      // const imgGif = new Freezeframe('.gif-pause', {
+      //   trigger: false,
+      //   responsive: false,
+      // });
 
       // $("img.res-img-thumb").one("load", function() {
       //   [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);
@@ -123,9 +137,10 @@ export class ResComponent implements OnInit {
     });
   }
 
-  mouseClickHandler() {
+  clickResContainer(event) {
+
     if (this.resMouseClick) {
-      this.selectClickHandler();
+      this.selectClickHandler(event);
     }
     return false;
   }
@@ -148,7 +163,8 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  editShowHandler() {
+  editShowHandler(event) {
+    event.stopPropagation();
     this.item.isEdit = !this.item.isEdit;
     if (this.item.isEdit) {
       this.resContent = this.item.content;
@@ -156,8 +172,8 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  saveResHandler() {
-
+  saveResHandler(event) {
+    event.stopPropagation();
     this.resContent = this.resContent.replace(/(<p>)|(<h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<\/p>)|(<\/h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)/ig, '');
@@ -179,43 +195,52 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  cancelEditHandler() {
+  cancelEditHandler(event) {
+    event.stopPropagation();
     this.item.isEdit = false;
     this.cdRef.detectChanges();
   }
 
-  clickResMenuKaihei() {
+  clickResMenuKaihei(event) {
+    event.stopPropagation();
     if (this.item.resMenu === 3) { return; }
 
     this.item.isMenuOpen = !this.item.isMenuOpen;
     this.cdRef.detectChanges();
   }
 
-  duplicateHandler() {
+  duplicateHandler(event) {
+    event.stopPropagation();
     this.duplicateResEmitter.emit();
   }
 
-  hideHandler() {
+  hideHandler(event) {
+    event.stopPropagation();
     this.hideResEmitter.emit();
   }
 
-  upOneHandler() {
+  upOneHandler(event) {
+    event.stopPropagation();
     this.upResEmitter.emit();
   }
 
-  downOneHandler() {
+  downOneHandler(event) {
+    event.stopPropagation();
     this.downResEmitter.emit();
   }
 
-  toTopHandler() {
+  toTopHandler(event) {
+    event.stopPropagation()
     this.toTopResEmitter.emit();
   }
 
-  toBottomHandler() {
+  toBottomHandler(event) {
+    event.stopPropagation()
     this.toBottomResEmitter.emit();
   }
 
-  selectClickHandler() {
+  selectClickHandler(event) {
+    event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'select') {
       this.item.resSelect = 'none';
@@ -234,7 +259,8 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  candi1ClickHandler() {
+  candi1ClickHandler(event) {
+    event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi1') {
       this.item.resSelect = 'none';
@@ -253,7 +279,8 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  candi2ClickHandler() {
+  candi2ClickHandler(event) {
+    event.stopPropagation()
     let colorIndex = 0;
     if (this.item.resSelect === 'candi2') {
       this.item.resSelect = 'none';
@@ -272,7 +299,8 @@ export class ResComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  catchIdHandler(buttonIndex: number) {
+  catchIdHandler(event, buttonIndex: number) {
+    event.stopPropagation();
     this.item.idBackgroundColor = this.idStyles[buttonIndex].background;
     this.item.idColor = this.idStyles[buttonIndex].color;
     this.item.idClassNoSelect = this.idStyles[buttonIndex].classNoSelect;
@@ -284,7 +312,8 @@ export class ResComponent implements OnInit {
     });
   }
 
-  cancelSelectedIdHandler() {
+  cancelSelectedIdHandler(event) {
+    event.stopPropagation()
     if (this.item.resSelect === 'select') {
       this.cancelSelectedId();
     }
@@ -302,7 +331,8 @@ export class ResComponent implements OnInit {
     });
   }
 
-  cancelOnlyCatchIdHandler() {
+  cancelOnlyCatchIdHandler(event) {
+    event.stopPropagation();
     this.selectedIdEmitter.emit({
       isSelect: false,
       idBackgroundColor: this.idStyles[0].background,
@@ -311,7 +341,8 @@ export class ResComponent implements OnInit {
     });
   }
 
-  cancelSelectAndCatchIdHandler() {
+  cancelSelectAndCatchIdHandler(event) {
+    event.stopPropagation();
     if (this.item.resSelect === 'select') {
       this.cancelSelectedId();
     }
@@ -322,7 +353,8 @@ export class ResComponent implements OnInit {
     });
   }
 
-  treeSelectHandler(selectKind: number) {
+  treeSelectHandler(event, selectKind: number) {
+    event.stopPropagation();
     this.selectedTreeResEmitter.emit({
       select: selectKind,
       resBackgroundColor: this.backgroundColors[selectKind]
@@ -335,5 +367,9 @@ export class ResComponent implements OnInit {
 
   selectedNumHandler() {
     this.selectedNumEmitter.emit();
+  }
+
+  clickCKEditor(event) {
+    event.stopPropagation();
   }
 }
