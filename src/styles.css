@@ -311,10 +311,10 @@ app-res .row-4 {
   overflow-wrap: break-word;
 }
 
-app-res .row-4 img {
-  width: 148px;
-  height: 108px;
-}
+/*app-res .row-4 img {*/
+/*  width: 148px;*/
+/*  height: 108px;*/
+/*}*/
 
 app-res .row-4 a {
   text-decoration: underline;
@@ -555,7 +555,7 @@ app-res {
 
 img.popup-image{
   border:0px;
-  width: 400px;
+  /*width: 400px;*/
 	box-shadow: 2px 2px 3px #555562;
 }
 #preview{

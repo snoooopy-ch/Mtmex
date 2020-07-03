@@ -12,7 +12,7 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
 let curComment='';
-let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight', 'res_mouse_click', 'youtube', 'twitter', 'AutoSave'];
+let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight', 'res_mouse_click', 'youtube', 'twitter', 'AutoSave','gif_stop'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];
 let settings;
@@ -219,6 +219,19 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
     }
   }
 
+  for (let resItem of resList) {
+    for (let anchor of resItem.anchors) {
+      for (let i = 0; i < resList.length; i++) {
+        if (resList[i].num === anchor) {
+          if(resList[i].anchorCount > settings.noticeCount){
+            resList[i].isNotice = true;
+            resItem.isNotice = true;
+          }
+        }
+      }
+    }
+  }
+
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
     for (let i = 0; i < resList.length; i++) {
@@ -270,6 +283,8 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
         }
       }
     }
+
+
   }
 }
 
@@ -400,7 +415,7 @@ function readLines(line) {
     resColor: '#000',
     resFontSize: '14px',
     resSelect: 'none',
-    resBackgroundColor: '#ffffff',
+    resBackgroundColor: settings.Back_color,
     resHovergroundColor: '#ffffff',
     idBackgroundColor: 'transparent',
     idColor: '#000',
@@ -413,7 +428,8 @@ function readLines(line) {
     resMenu: false,
     isMenuOpen: false,
     isRemark: false,
-    futureAnchors: []
+    futureAnchors: [],
+    isNotice: false,
   };
 
   num++;
@@ -501,10 +517,14 @@ function readLines(line) {
 
       if (new RegExp(expUrl).test(tmp_item)) {
         if (new RegExp(expGifUrl).test(tmp_item)) {
-          tmp_item = tmp_item.replace(expGifUrl, `<img class="res-img-thumb gif-pause" src="$1" alt=""><a class="res-img-link res-gif-link" href="$1">$1</a>`);
+          if(settings.gif_stop){
+            tmp_item = tmp_item.replace(expGifUrl, `<img class="res-img-thumb gif-pause" src="$1" alt="" width="${settings.pict_hyouji}px"><a class="res-img-link res-gif-link" href="$1">$1</a>`);
+          } else{
+            tmp_item = tmp_item.replace(expGifUrl, `<img class="res-img-thumb" src="$1" alt="" width="${settings.pict_hyouji}px"><a class="res-img-link res-gif-link" href="$1">$1</a>`);
+          }
           resItem.hasImage = true;
         } else if (new RegExp(expImgUrl).test(tmp_item)) {
-          tmp_item = tmp_item.replace(expImgUrl, `<img class="res-img-thumb" src="$1" alt=""><a class="res-img-link" href="$1">$1</a>`);
+          tmp_item = tmp_item.replace(expImgUrl, `<img class="res-img-thumb" src="$1" alt="" width="${settings.pict_hyouji}px"><a class="res-img-link" href="$1">$1</a>`);
           resItem.hasImage = true;
         } else {
           tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`);
@@ -606,9 +626,9 @@ function getSettings() {
         settings['noticeCount'] = lineArgs[1].split(';');
       } else{
         if(yesNoKeys.indexOf(lineArgs[0]) !== -1) {
-          settings[lineArgs[0]] = lineArgs[1] === 'yes';
+          settings[lineArgs[0]] = (lineArgs[1] === 'yes' || lineArgs[1] === 'yes;');
         }else if(onOffKeys.indexOf(lineArgs[0]) !== -1){
-          settings[lineArgs[0]] = lineArgs[1] === 'on';
+          settings[lineArgs[0]] = (lineArgs[1] === 'on' || lineArgs[1] === 'on;');
         }else if(selectKeys.indexOf(lineArgs[0]) !== -1){
           settings[lineArgs[0]] = lineArgs[1];
         }else {

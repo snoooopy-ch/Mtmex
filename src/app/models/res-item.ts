@@ -30,4 +30,6 @@ export class ResItem{
   resMenu: number;
   isMenuOpen: boolean;
   isRemark: boolean;
+  isSearched = false;
+  isNotice: boolean;
 }
