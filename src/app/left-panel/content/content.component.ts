@@ -54,6 +54,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() leftHightlight;
   @Output() filteredEmitter = new EventEmitter();
   @Output() searchStatusEmitter = new EventEmitter();
+  @Output() scrollIndexEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -85,11 +86,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.cdRef.detectChanges();
     });
 
-    this.subscribers.scrollPos = this.resService.scrollPos.subscribe((scrollPos) => {
-         if (scrollPos.index === this.tabIndex && scrollPos.isTab){
-          this.virtualScroller.scrollToIndex(scrollPos.pos);
-        }
-    });
+    // this.subscribers.scrollPos = this.resService.scrollPos.subscribe((scrollPos) => {
+    //      if (scrollPos.index === this.tabIndex && scrollPos.isTab){
+    //       this.virtualScroller.scrollToIndex(scrollPos.pos);
+    //     }
+    // });
 
     this.subscribers.moveRes = this.resService.moveRes.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
@@ -116,15 +117,17 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
-      console.log('content-panel');
-      console.log(value);
+
       if (value.tabIndex === this.tabIndex && this.resList.length > 0 && value.token) {
+        console.log('content-panel');
+        console.log(value);
         const saveData = value;
         saveData.resList = this.resList;
         saveData.title = this.tabName;
         saveData.txtUrl = this.txtURL;
         saveData.scrollIndex = this.virtualScroller.viewPortInfo.startIndex;
         this.resService.saveStatus(saveData);
+        value.token = false;
       }
     });
 
@@ -132,6 +135,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.tabIndex === value.tabIndex) {
         this.txtURL = value.data.txtUrl;
         if (this.resList !== undefined) {
+          console.log('content-status');
           this.virtualScroller.scrollToIndex(value.data.scrollIndex);
           this.changeStatus();
           this.cdRef.detectChanges();
@@ -146,7 +150,7 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(){
     this.subscribers.LoadHiddenIds.unsubscribe();
-    this.subscribers.scrollPos.unsubscribe();
+    // this.subscribers.scrollPos.unsubscribe();
     this.subscribers.moveRes.unsubscribe();
     this.subscribers.selectCommand.unsubscribe();
     this.subscribers.selectedTab.unsubscribe();
@@ -956,13 +960,14 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   usUpdateHandler($event: any[]) {
-    this.resService.setScrollPos({index: this.tabIndex,
-      pos: this.virtualScroller.viewPortInfo.startIndex,
-      isTab: false
-    });
+    this.scrollIndexEmitter.emit(this.virtualScroller.viewPortInfo.startIndex);
+    // this.resService.setScrollPos({index: this.tabIndex,
+    //   pos: this.virtualScroller.viewPortInfo.startIndex,
+    //   isTab: false
+    // });
   }
 
-  cancelSearchResTest(){
+  cancelSearchResText(){
     for (const res of this.resList){
       res.content = res.content.replace(/(<span[^<]+>)/ig, '');
       res.content = res.content.replace(/<\/span>/ig, '');
@@ -972,6 +977,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         res.name = res.name.replace(/(<span[^<]+>)/ig, '');
         res.name = res.name.replace(/<\/span>/ig, '');
       }
+      res.isFiltered = false;
     }
     this.startInRes = 0;
     this.searchedRes = 0;
@@ -980,10 +986,11 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
-    const re = new RegExp(`(?<!</?[^>]*)${keyword}`, 'gi');
+    // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
+    const re = new RegExp(`(?![^<>]*>)${keyword}`, 'gi');
     let index = 0;
     for (const res of this.resList){
-      if (res.content.match(re)){
+      if (res.content.match(re) !== null){
         res.content = res.content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
         res.isFiltered = true;
         res.originalIndex = index;
@@ -1025,11 +1032,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
         this.btnSearch.checked = false;
       }else{
+        this.cancelSearchResText();
         this.searchResText();
         this.abstractRes();
       }
     }else{
       this.resList = Object.assign([], this.backupResList);
+      this.cancelSearchResText();
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
@@ -1087,8 +1096,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   searchOnKeyHandler($event: KeyboardEvent) {
+    if (this.searchOption === undefined){
+      return;
+    }
     if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
-      this.btnSearch.checked = true;
+      this.btnSearch.checked = !this.btnSearch.checked;
       this.searchTextHandler();
     }else if ($event.shiftKey && $event.code === 'Enter'){
       this.isChangedSearch = false;
@@ -1134,10 +1146,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     } else if ($event.code === 'Enter'){
       if (this.isChangedSearch) {
-        if (this.searchKeyword === ' ') {
-          this.cancelSearchResTest();
+        if (this.searchKeyword === undefined){
+          return;
+        }
+        if (this.searchKeyword.match(/^\s+$/g) !== null || this.searchKeyword.length === 0) {
+          this.cancelSearchResText();
         } else {
-          this.cancelSearchResTest();
+          this.cancelSearchResText();
           this.searchResText();
         }
       }else{

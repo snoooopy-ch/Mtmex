@@ -162,8 +162,9 @@ export class ResService {
     content = content.replace(/(<img[^<]+>)/ig, '');
     content = content.replace(/(<span[^<]+>)/ig, '');
     content = content.replace(/(<\/span>)/ig, '');
+    // content = content.replace(/(<iframe[^<]+>|<\/iframe>)/ig, '');
     content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span class="anchor">$1</span>`);
-    content = content.replace(/( class="res-img-link"| class="res-link")/ig, ``);
+    content = content.replace(/(\s+class="res-img-link"|\s+class="res-link"| class="res-img-link res-gif-link")/ig, ``);
     content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 target="_blank" class="image"$2`);
     content = content.replace(/(\.[^jpg]+"|\.[^gif]+"|\.[^jpeg]+"|\.[^png]+"|\.[^bmp]+")(>https:)/ig,

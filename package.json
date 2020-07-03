@@ -28,6 +28,8 @@
     "@angular/router": "~9.1.7",
     "@ckeditor/ckeditor5-angular": "^1.2.3",
     "@ckeditor/ckeditor5-build-classic": "^19.0.1",
+    "@ckeditor/ckeditor5-image": "^20.0.0",
+    "@ckeditor/ckeditor5-link": "^20.0.0",
     "angular2-hotkeys": "^2.2.0",
     "bootstrap": "^4.5.0",
     "color-blend": "^3.0.0",

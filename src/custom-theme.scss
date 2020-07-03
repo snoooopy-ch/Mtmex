@@ -76,10 +76,13 @@ $Mtmex-theme: mat-light-theme($Mtmex-primary, $Mtmex-accent, $Mtmex-warn);
 }
 tabset{
   .nav{
+    width: 1200px;
     height: 30px;
+    flex-wrap: unset;
     //margin-left: 31px;
     .nav-item{
       height: 30px;
+      overflow: auto;
       .nav-link{
         padding: 4px;
       }

@@ -5,21 +5,20 @@
         [ngStyle]="{'color': item.anchorCount >= noticeCount ? '#f00' : '#000'}">{{item.num}}</h4>
       <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
     </div>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent', 
-        'color': leftHightlight? item.idColor : '#464646'}">
-      <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="select" (click)="selectClickHandler($event)">選択</label>
     <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
         'color': leftHightlight? item.idColor : '#464646'}">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="candi1" (click)="candi1ClickHandler($event)">予1</label>
+             [(ngModel)]="item.resSelect" value="select" (click)="selectClickHandler($event)" #optResSelect>選択</label>    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+        'color': leftHightlight? item.idColor : '#464646'}">
+      <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+             [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+             [(ngModel)]="item.resSelect" value="candi1" (click)="candi1ClickHandler($event)" #optResCandi1>予1</label>
     <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
         'color': leftHightlight? item.idColor : '#464646'}">
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="candi2" (click)="candi2ClickHandler($event)">予2</label>
+             [(ngModel)]="item.resSelect" value="candi2" (click)="candi2ClickHandler($event)" #optResCandi2>予2</label>
     <h4 class="label-res-name" [innerHTML]="item.name | safeHtml"></h4>
     <h4 class="res-date">{{item.date}}</h4>
     <h4 class="label-res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}">ID:</h4>
@@ -37,17 +36,17 @@
     <button class="btn-move btn-right-round" (click)="downOneHandler($event)">↓</button>
     <label class="radio-container" *ngFor="let sizeItem of resSizeList">
       <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resFontSize"
-             value="{{sizeItem.value}}" (change)="sizeChangeHandler()">{{sizeItem.name}}
+             value="{{sizeItem.value}}" (change)="sizeChangeHandler($event)">{{sizeItem.name}}
     </label>
 
     <label class="radio-container">
       <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="item.resColor" [checked]=true (change)="colorChangeHandler()" value="#f00">
+             [(ngModel)]="item.resColor" [checked]=true (change)="colorChangeHandler($event)" value="#000">
       なし
     </label>
     <label class="radio-container" *ngFor="let colorItem of characterColors">
       <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="item.resColor" (change)="colorChangeHandler()" [value]="colorItem">
+             [(ngModel)]="item.resColor" (change)="colorChangeHandler($event)" [value]="colorItem">
       <span [ngStyle]="{'background-color':colorItem}"></span>
     </label>
 
