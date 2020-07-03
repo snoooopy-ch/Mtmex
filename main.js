@@ -100,21 +100,10 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
     dialog.showErrorBox('読み込み', 'ファイルパスを入力してください。');
     return;
   }
-
-  fs.open(url, 'r', (err, fd) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        console.error(url + ' does not exist');
-        dialog.showErrorBox('読み込み', 'ファイルが存在しません。');
-        return;
-      }
-      dialog.showErrorBox('読み込み', 'ファイルを読めません。');
-      return;
-    }
-    fs.close(fd, (err) => {
-      if (err) throw err;
-    });
-  });
+  if(!fs.existsSync(url)){
+    dialog.showErrorBox('読み込み', 'ファイルを読めません。');
+    return;
+  }
 
   let input = fs.createReadStream(url,);
   let remaining = '';
@@ -234,7 +223,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
 
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
-    for (let i = 0; i < resList.length; i++) {
+    for (let i = 1; i < resList.length; i++) {
       if (resList[i].anchors.length > 0) {
         if (!isReplaceRes && resList[i].anchors.indexOf(1) !== -1) {
           continue;
@@ -666,7 +655,8 @@ function saveStatus(saveData) {
       }
     } else {
       if(showMessage) {
-        dialog.showErrorBox('保存', '保存に成功しました。');
+        // dialog.showErrorBox('保存', '保存に成功しました。');
+        console.log('保存に成功しました。');
       }else{
         console.log('自動保存に成功しました。');
       }

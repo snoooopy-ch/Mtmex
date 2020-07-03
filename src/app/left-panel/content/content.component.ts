@@ -106,6 +106,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
+        this.tabIndex = value.tabIndex;
         this.setHotKeys();
       }
     });
@@ -135,7 +136,6 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.tabIndex === value.tabIndex) {
         this.txtURL = value.data.txtUrl;
         if (this.resList !== undefined) {
-          console.log('content-status');
           this.virtualScroller.scrollToIndex(value.data.scrollIndex);
           this.changeStatus();
           this.cdRef.detectChanges();
@@ -785,6 +785,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           res.select = true;
           res.candi1 = false;
           res.candi2 = false;
+          res.idClassNoSelect = $event.idClassNoSelect;
         }
       }
     }

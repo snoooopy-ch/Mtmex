@@ -321,7 +321,8 @@ export class ResComponent implements OnInit {
       isSelect: true,
       idBackgroundColor: this.idStyles[buttonIndex].background,
       idColor: this.idStyles[buttonIndex].color,
-      resBackgroundColor: this.backgroundColors[1]
+      resBackgroundColor: this.backgroundColors[1],
+      idClassNoSelect: this.idStyles[buttonIndex].classNoSelect
     });
   }
 

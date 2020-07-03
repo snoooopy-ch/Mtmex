@@ -239,10 +239,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     if (this.tabs.length - 1 < index){
       index = this.tabs.length - 1;
     }
+    this.cdr.detectChanges();
     if (this.tabs.length > index && this.tabs.length > 0){
       this.tabChangedHandler(index);
-    }else{
-      this.cdr.detectChanges();
     }
   }
 
@@ -256,7 +255,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       candi2: this.tabs[this.selectedTabIndex].resList.filter(item => item.candi2).length,
       totalCount: this.tabs[this.selectedTabIndex].resList.length,
       tabIndex: this.selectedTabIndex,
-      title: this.tabs[this.selectedTabIndex].title
+      title: this.tabs[this.selectedTabIndex].title,
     });
     const pos = {
       index: this.selectedTabIndex,
