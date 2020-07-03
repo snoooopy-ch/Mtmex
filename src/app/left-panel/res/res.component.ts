@@ -146,9 +146,8 @@ export class ResComponent implements OnInit {
   }
 
   clickResContainer(event) {
-
     if (this.resMouseClick) {
-	this.selectClickHandler(event);
+	    this.selectClickHandler(event);
     }
     return false;
   }
