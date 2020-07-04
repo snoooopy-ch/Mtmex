@@ -49,22 +49,125 @@ function createWindow() {
       require('electron').shell.openExternal(url);
     }
   };
+  const isMac = process.platform === 'darwin'
 
-  const menu = Menu.getApplicationMenu();
-
-  menu.append(new MenuItem({
-    label: 'タブを閉じる',
-    submenu: [{
+  const template = [
+    // { role: 'appMenu' }
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    }] : []),
+    // { role: 'fileMenu' }
+    {
+      label: 'File',
+      submenu: [
+        isMac ? { role: 'close' } : { role: 'quit' }
+      ]
+    },
+    // { role: 'editMenu' }
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        ...(isMac ? [
+          { role: 'pasteAndMatchStyle' },
+          { role: 'delete' },
+          { role: 'selectAll' },
+          { type: 'separator' },
+          {
+            label: 'Speech',
+            submenu: [
+              { role: 'startspeaking' },
+              { role: 'stopspeaking' }
+            ]
+          }
+        ] : [
+          { role: 'delete' },
+          { type: 'separator' },
+          { role: 'selectAll' }
+        ])
+      ]
+    },
+    // { role: 'viewMenu' }
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forcereload' },
+        { role: 'toggledevtools' },
+        { type: 'separator' },
+        { role: 'resetzoom' },
+        { role: 'zoomin' },
+        { role: 'zoomout' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    // { role: 'windowMenu' }
+    {
+      label: 'Window',
+      submenu: [
+        { role: 'minimize' },
+        { role: 'zoom' }
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click: async () => {
+            const { shell } = require('electron');
+            await shell.openExternal('https://electronjs.org');
+          }
+        }
+      ]
+    },
+    {
       label: 'タブを閉じる',
-      click: function () {
-        win.webContents.send("closeMenu");
-      }
-    }]
-  }));
+      submenu: [{
+        label: 'タブを閉じる',
+        click: function () {
+          win.webContents.send("closeMenu");
+        }
+      }]
+    }
+  ];
+
+  const temp_menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(temp_menu);
+
+  // const menu = Menu.getApplicationMenu();
+  // menu.items[3].submenu.items.splice(2, 1);
+  //
+  // menu.append(new MenuItem({
+  //   label: 'タブを閉じる',
+  //   submenu: [{
+  //     label: 'タブを閉じる',
+  //     click: function () {
+  //       win.webContents.send("closeMenu");
+  //     }
+  //   }]
+  // }));
 
   win.webContents.on('will-navigate', handleRedirect)
   win.webContents.on('new-window', handleRedirect)
-  win.setMenu(menu);
+  // win.setMenu(menu);
 }
 
 // Create window on electron intialization
@@ -373,6 +476,9 @@ function readLines(line) {
   if (words.length > 4 && resList.length === 0) {
     sreTitle = words[4].replace(/\r|\r|\r\n/gi,'');
     sreTitle = sreTitle.trim();
+    if(sreTitle.length === 0){
+      sreTitle = 'スレタイ';
+    }
   }
   for(let i=1; i<31; i++){
     let search = settings[`toukoubi_mae${i}`];
@@ -692,7 +798,7 @@ function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
       data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
     }
     data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
-    data = data.replace(/(^hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+    data = data.replace(/(hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
     let replaceString ='';
     if(isResSort){
       replaceString += '$1on$2';

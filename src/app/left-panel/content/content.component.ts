@@ -498,7 +498,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       // メニューの開閉
       this.hotkeysService.add(new Hotkey(this.subHotKeys.menu_kaihei, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.resList[this.hovered].isMenuOpen = true;
+          if (this.resList[this.hovered].isMenuOpen === undefined){
+            this.resList[this.hovered].isMenuOpen = true;
+          }else{
+            this.resList[this.hovered].isMenuOpen = !this.resList[this.hovered].isMenuOpen;
+          }
           this.cdRef.detectChanges();
         }
         return false; // Prevent bubbling

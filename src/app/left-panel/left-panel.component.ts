@@ -110,7 +110,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'id_hihyouji', 'henshuu', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b'];
         for (const key of arrayKeys) {
-          this.subHotKeys[key] = this.settings[key].toLowerCase();
+          if (this.settings[key].toLowerCase() === 'insert'){
+            this.subHotKeys[key] = 'ins';
+          }else if (this.settings[key].toLowerCase() === 'delete'){
+            this.subHotKeys[key] = 'del';
+          }else{
+            this.subHotKeys[key] = this.settings[key].toLowerCase();
+          }
         }
       }
       this.btnBackgroundColors = [];
@@ -158,14 +164,15 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
-        console.log('left-panel-status');
-        this.tabs[this.selectedTabIndex].resList = value.data.resList;
-        this.cdr.detectChanges();
-        this.tabs[this.selectedTabIndex].title = value.data.title;
-        this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
-        this.resService.setTotalRes({
-          tabIndex: this.selectedTabIndex,
-          totalCount: value.data.resList.length
+        this.zone.run(() => {
+          this.addTab(value.data.title, value.data.resList);
+          this.selectedTabIndex = this.tabs.length - 1;
+          this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
+          this.resService.setTotalRes({
+            tabIndex: this.selectedTabIndex,
+            totalCount: value.data.resList.length,
+            title: this.tabs[this.selectedTabIndex].title,
+          });
         });
       }
     });
