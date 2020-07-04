@@ -106,6 +106,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
+        this.tabIndex = value.tabIndex;
         this.setHotKeys();
       }
     });
@@ -135,7 +136,6 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.tabIndex === value.tabIndex) {
         this.txtURL = value.data.txtUrl;
         if (this.resList !== undefined) {
-          console.log('content-status');
           this.virtualScroller.scrollToIndex(value.data.scrollIndex);
           this.changeStatus();
           this.cdRef.detectChanges();
@@ -785,6 +785,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           res.select = true;
           res.candi1 = false;
           res.candi2 = false;
+          res.idClassNoSelect = $event.idClassNoSelect;
         }
       }
     }
@@ -978,6 +979,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         res.name = res.name.replace(/<\/span>/ig, '');
       }
       res.isFiltered = false;
+      res.isSearched = false;
     }
     this.startInRes = 0;
     this.searchedRes = 0;
@@ -988,22 +990,21 @@ export class ContentComponent implements OnInit, OnDestroy {
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)${keyword}`, 'gi');
-    let index = 0;
-    for (const res of this.resList){
-      if (res.content.match(re) !== null){
-        res.content = res.content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-        res.isFiltered = true;
-        res.originalIndex = index;
+
+    for (let i = this.virtualScroller.viewPortInfo.startIndex; i < this.resList.length; i++){
+      if (this.resList[i].content.match(re) !== null){
+        this.resList[i].content = this.resList[i].content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+        this.resList[i].isSearched = true;
+        this.resList[i].originalIndex = i;
       }
       if (this.searchOption === 'all'){
-        if (res.name.match(re) || res.id.match(re)){
-          res.id = res.id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-          res.name = res.name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-          res.isFiltered = true;
-          res.originalIndex = index;
+        if (this.resList[i].name.match(re) || this.resList[i].id.match(re)){
+          this.resList[i].id = this.resList[i].id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+          this.resList[i].name = this.resList[i].name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+          this.resList[i].isSearched = true;
+          this.resList[i].originalIndex = i;
         }
       }
-      index++;
     }
     this.startInRes = 0;
     this.searchedRes = 0;
@@ -1013,9 +1014,24 @@ export class ContentComponent implements OnInit, OnDestroy {
   abstractRes(){
     this.backupResList = Object.assign([], this.resList);
     let tmpResList = [];
-    for (const res of this.resList){
-      if (res.isFiltered) {
-        tmpResList = [...tmpResList, res];
+    for (let i = 0; i < this.resList.length; i++){
+      if (this.resList[i].isSearched) {
+        this.resList[i].isFiltered = true;
+        tmpResList = [...tmpResList, this.resList[i]];
+      }else {
+        if (i < this.resList.length - 1){
+          if (this.resList[i + 1].isFiltered && this.resList[i + 1].isAdded){
+            this.resList[i].originalIndex = i;
+            tmpResList = [...tmpResList, this.resList[i]];
+            this.resList[i].isFiltered = true;
+            continue;
+          }
+        }
+        if (i > 0 && this.resList[i].isAdded && this.resList[i - 1].isFiltered){
+          this.resList[i].originalIndex = i;
+          tmpResList = [...tmpResList, this.resList[i]];
+          this.resList[i].isFiltered = true;
+        }
       }
     }
     this.resList = [];

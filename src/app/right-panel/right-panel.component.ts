@@ -85,7 +85,6 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.subscribers.totalRes = this.resService.totalRes.subscribe((value) => {
       if (this.tabIndex === value.tabIndex){
         this.totalCount = value.totalCount;
-        console.log(value.title);
         if (value.title !== undefined){
           this.title = value.title;
         }

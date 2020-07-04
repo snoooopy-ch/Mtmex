@@ -240,12 +240,12 @@ export class ResComponent implements OnInit {
   }
 
   toTopHandler(event) {
-    event.stopPropagation()
+    event.stopPropagation();
     this.toTopResEmitter.emit();
   }
 
   toBottomHandler(event) {
-    event.stopPropagation()
+    event.stopPropagation();
     this.toBottomResEmitter.emit();
   }
 
@@ -292,7 +292,7 @@ export class ResComponent implements OnInit {
   }
 
   candi2ClickHandler(event) {
-    event.stopPropagation()
+    event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi2') {
       this.item.resSelect = 'none';
@@ -321,12 +321,13 @@ export class ResComponent implements OnInit {
       isSelect: true,
       idBackgroundColor: this.idStyles[buttonIndex].background,
       idColor: this.idStyles[buttonIndex].color,
-      resBackgroundColor: this.backgroundColors[1]
+      resBackgroundColor: this.backgroundColors[1],
+      idClassNoSelect: this.idStyles[buttonIndex].classNoSelect
     });
   }
 
   cancelSelectedIdHandler(event) {
-    event.stopPropagation()
+    event.stopPropagation();
     if (this.item.resSelect === 'select') {
       this.cancelSelectedId();
     }

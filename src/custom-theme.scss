@@ -86,6 +86,9 @@ tabset{
       .nav-link{
         padding: 4px;
       }
+      .nav-link.active{
+        background-color: #c3ebbe;
+      }
     }
   }
 }
