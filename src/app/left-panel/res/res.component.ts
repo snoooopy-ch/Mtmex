@@ -146,10 +146,10 @@ export class ResComponent implements OnInit {
   }
 
   clickResContainer(event) {
-    if (this.resMouseClick) {
-	    this.selectClickHandler(event);
-    }
-    return false;
+    // if (this.resMouseClick) {
+	  //   this.selectClickHandler(event);
+    // }
+    // return false;
   }
 
   sizeChangeHandler($event) {
@@ -168,7 +168,7 @@ export class ResComponent implements OnInit {
         candi2: false,
         selected: 'select'
       });
-    $event.target.blur();
+    //$event.target.blur();
     this.cdRef.detectChanges();
   }
 
