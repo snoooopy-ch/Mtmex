@@ -129,7 +129,7 @@ label {
 .main-container app-left-panel app-content {
   display: block;
   width: 100%;
-  padding: 18px 5px 5px 19px;
+  padding: 18px 5px 5px 0;
 }
 
 .main-container app-left-panel app-content h3 {
@@ -138,7 +138,10 @@ label {
 }
 
 .main-container app-left-panel app-content .content-url {
+  display: flex;
   padding: 3px 0;
+  justify-content: center;
+  align-items: center;
 }
 
 .main-container app-left-panel app-content input[type="text"] {
@@ -147,6 +150,7 @@ label {
 }
 
 .main-container app-left-panel app-content .res-content {
+  border-top: 1px solid #adadad;
   width: 100%;
   height: calc(100vh - 209px);
 }
@@ -172,7 +176,7 @@ label {
 
 app-res {
   display: block;
-  padding: 11px;
+  padding: 5px 11px 11px;
 }
 
 app-res:hover {
@@ -332,16 +336,21 @@ app-res .row-4 a {
   max-width: 956px;
 }
 
-.main-container app-left-panel app-status h3 {
+.main-container app-left-panel .status {
   text-align: center;
   margin: 0 5px;
   border: 1px solid lightgrey;
   padding: 0 10px;
   font-size: 24px;
+  color: #000;
 }
 
-.main-container app-left-panel app-status #lbl-sts-main-of-toal {
+.main-container app-left-panel .lbl-sts-main-of-total {
   color: red;
+}
+
+.main-container app-left-panel app-content .lbl-sts-main-of-total {
+  margin: 0 5px 0 0;
 }
 
 .main-container app-right-panel {

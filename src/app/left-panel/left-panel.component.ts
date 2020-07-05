@@ -52,6 +52,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   leftHightlight: true;
   moveOption: any;
   txtRemarkRes: any;
+  resTopBar: any;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -135,6 +136,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
       if (this.settings.chuui !== undefined) {
         this.txtRemarkRes = this.settings.chuui;
+      }
+
+      if (this.settings.top_bar !== undefined) {
+        this.resTopBar = `1px solid ${this.settings.top_bar}`;
       }
       this.setHotKeys();
     });
