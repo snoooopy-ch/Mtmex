@@ -1,13 +1,14 @@
 <div class="width-100">
-  <input type="text" [(ngModel)]="txtDataFilePath">
-  <button class="border-round" (click)="onLoadUrl()">datファイル読み込み実行</button>
-</div>
-<div class="res-order">
   <div class="sure-specific">
     <button class="sure-specific-btn btn-left-round" (click)="setDefaultPathHandler(0)">dat1</button>
     <button class="sure-specific-btn" (click)="setDefaultPathHandler(1)">dat2</button>
     <button class="sure-specific-btn btn-right-round" (click)="setDefaultPathHandler(2)">dat3</button>
   </div>
+  <input type="text" [(ngModel)]="txtDataFilePath">
+  <button class="border-round" (click)="onLoadUrl()">datファイル読み込み実行</button>
+</div>
+<div class="res-order">
+
   <div class="reading-mode">
     <div>
        <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替える</label>
