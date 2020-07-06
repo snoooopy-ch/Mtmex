@@ -31,4 +31,11 @@ export class StatusComponent implements OnInit {
     });
   }
 
+  printHtmlTagHandler() {
+    this.resService.setPrintCommand({tabIndex: this.tabIndex, token: true});
+  }
+
+  printAllHtmlTagHandler() {
+    this.resService.setPrintAllCommand({ token: true});
+  }
 }

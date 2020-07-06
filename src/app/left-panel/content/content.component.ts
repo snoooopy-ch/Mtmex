@@ -59,6 +59,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() searchKeyword = '';
   @Input() moveOption;
   @Input() txtRemarkRes;
+  @Input() resTopBar;
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -67,6 +68,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   private searchedRes: number;
   private startInRes: number;
   highLightColor = '#ff9632';
+  selectCount: number;
+  candi1Count: number;
+  candi2Count: number;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -74,9 +78,13 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subHotKeys = [];
     this.isChangedSearch = true;
     this.searchedRes = 0;
+    this.selectCount = 0;
+    this.candi1Count = 0;
+    this.candi2Count = 0;
   }
 
   ngOnInit(): void {
+
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
 
@@ -638,6 +646,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         break;
       case 'selected-next':
+        console.log(this.virtualScroller.viewPortInfo.startIndex);
         for (let i = this.virtualScroller.viewPortInfo.startIndex + 1; i < this.resList.length; i++) {
           if (this.resList[i].resSelect === 'select'
             || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
@@ -770,6 +779,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   changeStatus(){
+    this.selectCount = this.resList.filter(item => item.select).length;
+    this.candi1Count = this.resList.filter(item => item.candi1).length;
+    this.candi2Count = this.resList.filter(item => item.candi2).length;
     this.resService.setSelectedRes({
       select: this.resList.filter(item => item.select).length,
       candi1: this.resList.filter(item => item.candi1).length,

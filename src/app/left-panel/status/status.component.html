@@ -1,3 +1,9 @@
-<h3 id="lbl-sts-main-of-toal">{{selectCount}}/{{totalCount}}</h3>
-<h3 id="lbl-sts-candi-1">{{candi1Count}}</h3>
-<h3 id="lbl-sts-candi-2">{{candi2Count}}</h3>
+<div class="status-label-content">
+<h3 class="status lbl-sts-main-of-total">{{selectCount}}/{{totalCount}}</h3>
+<h3 class="status">{{candi1Count}}</h3>
+<h3 class="status">{{candi2Count}}</h3>
+</div>
+<div>
+<button class="btn-print-all-tag border-round" (click)="printAllHtmlTagHandler()">全タブのタグ出力</button>
+<button class="btn-print-html-tag border-round" (click)="printHtmlTagHandler()">タグ発行</button>
+</div>
