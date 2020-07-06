@@ -71,6 +71,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   selectCount: number;
   candi1Count: number;
   candi2Count: number;
+  currentScrollIndex: number;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -128,10 +129,37 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
 
       if (value.tabIndex === this.tabIndex && this.resList.length > 0 && value.token) {
-        console.log('content-panel');
-        console.log(value);
         const saveData = value;
-        saveData.resList = this.resList;
+        saveData.resList = [];
+        for (const res of this.resList){
+          const resItem = Object.assign({}, res);
+          resItem.resColor = this.characterColors.indexOf(res.resColor) === -1 ? 0 : this.characterColors.indexOf(res.resColor) + 1;
+
+          if (this.resSizeList[0].value === res.resFontSize){
+            resItem.resFontSize = '1';
+          }else if (this.resSizeList[1].value === res.resFontSize){
+            resItem.resFontSize = '2';
+          }else if (this.resSizeList[2].value === res.resFontSize){
+            resItem.resFontSize = '3';
+          }
+          resItem.resBackgroundColor = this.backgroundColors.indexOf(res.resBackgroundColor) === -1 ? 0 : this.backgroundColors.indexOf(res.resBackgroundColor);
+          resItem.resHovergroundColor = this.hovergroundColors.indexOf(res.resHovergroundColor) === -1 ? 0 : this.hovergroundColors.indexOf(res.resHovergroundColor);
+          if (this.idStyles[0].color === res.idColor){
+            resItem.idColor = '0';
+            resItem.idBackgroundColor = '0';
+          } else if (this.idStyles[1].color === res.idColor){
+            resItem.idColor = '1';
+            resItem.idBackgroundColor = '1';
+          }else if (this.idStyles[2].color === res.idColor){
+            resItem.idColor = '2';
+            resItem.idBackgroundColor = '2';
+          }else if (this.idStyles[3].color === res.idColor){
+            resItem.idColor = '3';
+            resItem.idBackgroundColor = '3';
+          }
+
+          saveData.resList.push(resItem);
+        }
         saveData.title = this.tabName;
         saveData.txtUrl = this.txtURL;
         saveData.scrollIndex = this.virtualScroller.viewPortInfo.startIndex;
@@ -634,8 +662,8 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         break;
       case 'selected-prev':
-        if (this.virtualScroller.viewPortInfo.startIndex  > 0) {
-          for (let i = this.virtualScroller.viewPortInfo.startIndex - 1; i > 0; i--) {
+        if (this.virtualScroller.viewPortInfo.startIndex  >= 0) {
+          for (let i = this.virtualScroller.viewPortInfo.startIndex - 1; i >= 0; i--) {
             if (this.resList[i].resSelect === 'select'
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
               || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
@@ -646,12 +674,17 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         break;
       case 'selected-next':
-        console.log(this.virtualScroller.viewPortInfo.startIndex);
-        for (let i = this.virtualScroller.viewPortInfo.startIndex + 1; i < this.resList.length; i++) {
+        let curIndex;
+        if (this.currentScrollIndex - 1 === this.virtualScroller.viewPortInfo.startIndex){
+          curIndex = this.currentScrollIndex + 1;
+        }else{
+          curIndex = this.virtualScroller.viewPortInfo.startIndex + 1;
+        }
+        for (let i = curIndex; i < this.resList.length; i++) {
           if (this.resList[i].resSelect === 'select'
             || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
             || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
-            console.log(i);
+            this.currentScrollIndex = i;
             this.virtualScroller.scrollToIndex(i);
             break;
           }

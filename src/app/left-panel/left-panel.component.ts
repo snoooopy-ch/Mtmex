@@ -23,7 +23,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     data: 'myDragData',
     effectAllowed: 'all',
     disable: false,
-    handle: false
+    handle: false,
   };
   selectedTabIndex = 0;
   settings;
@@ -147,7 +147,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.resData = this.resService.resData.subscribe( (value) => {
       if (this.tabGroup === undefined) { return; }
       this.zone.run(() => {
-        this.addTab(value.sreTitle, value.resList);
+        this.addTab(value.sreTitle, value.resList, value.dataFilePath);
         this.selectedTabIndex = this.tabs.length - 1;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
         this.resService.setTotalRes({
@@ -170,7 +170,23 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       if (this.tabGroup === undefined) { return; }
       if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
         this.zone.run(() => {
-          this.addTab(value.data.title, value.data.resList);
+          const loadResList = [];
+          for (const res of value.data.resList){
+            const resItem = Object.assign({}, res);
+            if (Number(res.resColor) === 0){
+              resItem.resColor = '#000';
+            }else{
+              resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
+            }
+
+            resItem.resFontSize = this.resSizeList[Number(res.resFontSize) - 1].value;
+            resItem.resBackgroundColor = this.backgroundColors[res.resBackgroundColor];
+            resItem.resHovergroundColor = this.hovergroundColors[res.resHovergroundColor];
+            resItem.idColor = this.idStyles[Number(res.idColor)].color;
+            resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
+            loadResList.push(resItem);
+          }
+          this.addTab(value.data.title, loadResList);
           this.selectedTabIndex = this.tabs.length - 1;
           this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
           this.resService.setTotalRes({
@@ -234,19 +250,22 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     }));
   }
 
-  addTab(pTitle, pResList: ResItem[]) {
+  addTab(pTitle, pResList: ResItem[], pDataFilePath= '') {
     this.tabs = [...this.tabs, {
       title: pTitle,
       active: true,
       resList: pResList,
       scrollPos: 0,
       isFiltered: false,
-      url: ''
+      url: '',
+      dataFilePath: pDataFilePath
     }];
     // this.tabs.push();
   }
 
   removeTab(index: number) {
+    const dataFilePath = this.tabs[index].dataFilePath;
+    this.resService.removeTab(dataFilePath);
     this.tabs.splice(index, 1);
     if (this.tabs.length - 1 < index){
       index = this.tabs.length - 1;
