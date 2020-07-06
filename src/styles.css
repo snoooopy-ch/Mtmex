@@ -326,16 +326,17 @@ app-res .row-4 a {
 }
 
 .main-container app-left-panel app-status {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   bottom: 2px;
   border: 1px solid lightgrey;
   width: 100%;
   padding: 5px;
   max-width: 956px;
+  display: flex;
+  justify-content: space-between;
 }
-
+.main-container app-left-panel .status-label-content{
+  display: flex;
+}
 .main-container app-left-panel .status {
   text-align: center;
   margin: 0 5px;
@@ -351,6 +352,28 @@ app-res .row-4 a {
 
 .main-container app-left-panel app-content .lbl-sts-main-of-total {
   margin: 0 5px 0 0;
+}
+
+.main-container app-left-panel app-status .btn-print-html-tag {
+  width: 95px;
+  background-color: lightsalmon;
+  border:solid 1px lightsalmon;
+}
+
+.main-container app-left-panel app-status .btn-print-html-tag:hover {
+  background-color: white;
+  color: lightsalmon;
+}
+
+.main-container app-left-panel app-status .btn-print-all-tag {
+  width: 95px;
+  background-color: #cc99FF;
+  border:solid 1px #cc99FF;
+}
+
+.main-container app-left-panel app-status .btn-print-all-tag:hover {
+  background-color: white;
+  color: #cc99FF;
 }
 
 .main-container app-right-panel {
