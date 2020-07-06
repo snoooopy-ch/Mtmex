@@ -180,9 +180,11 @@ export class ResService {
         for (const twitter of twitters) {
           const twitterURL = twitter.slice(1, -1);
           const response = await fetch('https://publish.twitter.com/oembed?url=' + twitterURL);
-          const data = await response.json();
-          const replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
-          content = content.replace(replace, replace + data.html);
+          if (response.ok) {
+            const data = await response.json();
+            const replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
+            content = content.replace(replace, replace + data.html);
+          }
         }
       }
     }
@@ -194,9 +196,11 @@ export class ResService {
         for (const youtube of youtubes) {
           const youtubeURL = youtube.slice(1, -1);
           const response = await fetch('http://www.youtube.com/oembed?url=' + youtubeURL);
-          const data = await response.json();
-          const replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
-          content = content.replace(replace, replace + data.html);
+          if (response.ok) {
+            const data = await response.json();
+            const replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
+            content = content.replace(replace, replace + data.html);
+          }
         }
       }
     }
