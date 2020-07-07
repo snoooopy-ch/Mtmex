@@ -264,13 +264,26 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
         let suffix = uuidv4();
         suffix = suffix.replace(/-/g,'').substr(0,10);
         sreTitle = `${sreTitle}${suffix}`;
-        win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle});
+        win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, dataFilePath: url});
       }
     } else {
       loadedTitles.push(url);
-      win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle});
+      win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, dataFilePath: url});
     }
   });
+}
+
+ipcMain.on("removeTab", (event, dataFilePath) => {
+  removeTitle(dataFilePath);
+});
+
+function removeTitle(dataFilePath) {
+  if (dataFilePath.length > 0){
+    const index = loadedTitles.indexOf(dataFilePath);
+    if(index !== -1){
+      loadedTitles.splice(index, 1);
+    }
+  }
 }
 
 ipcMain.on("loadRes", (event, url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes) => {

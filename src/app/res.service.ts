@@ -68,6 +68,10 @@ export class ResService {
     electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes);
   }
 
+  removeTab(dataFilePath){
+    electron.ipcRenderer.send('removeTab',dataFilePath);
+  }
+
   setHiddenIds(value: string[]) {
     this.hideIdSource.next(value);
   }

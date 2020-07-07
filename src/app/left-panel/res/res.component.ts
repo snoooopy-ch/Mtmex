@@ -146,10 +146,11 @@ export class ResComponent implements OnInit {
   }
 
   clickResContainer(event) {
-    // if (this.resMouseClick) {
-	  //   this.selectClickHandler(event);
-    // }
-    // return false;
+    console.log('clickResContainer');
+    if (this.resMouseClick) {
+	    this.selectClickHandler(event);
+    }
+    return false;
   }
 
   sizeChangeHandler($event) {
@@ -158,6 +159,7 @@ export class ResComponent implements OnInit {
   }
 
   colorChangeHandler($event) {
+    console.log('colorChangeHandler');
     this.item.resSelect = 'select';
 
     this.item.resBackgroundColor = this.backgroundColors[1];
@@ -216,6 +218,7 @@ export class ResComponent implements OnInit {
     if (this.item.resMenu === 3) { return; }
 
     this.item.isMenuOpen = !this.item.isMenuOpen;
+    this.cdRef.detectChanges();
     this.cdRef.detectChanges();
   }
 
