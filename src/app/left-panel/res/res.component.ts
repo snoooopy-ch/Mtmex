@@ -146,11 +146,10 @@ export class ResComponent implements OnInit {
   }
 
   clickResContainer(event) {
-    console.log('clickResContainer');
     if (this.resMouseClick) {
 	    this.selectClickHandler(event);
     }
-    return false;
+    //return false;
   }
 
   sizeChangeHandler($event) {
@@ -159,7 +158,6 @@ export class ResComponent implements OnInit {
   }
 
   colorChangeHandler($event) {
-    console.log('colorChangeHandler');
     this.item.resSelect = 'select';
 
     this.item.resBackgroundColor = this.backgroundColors[1];
