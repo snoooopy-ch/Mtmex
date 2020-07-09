@@ -186,7 +186,9 @@ export class ResService {
           const response = await fetch('https://publish.twitter.com/oembed?url=' + twitterURL);
           if (response.ok) {
             const data = await response.json();
-            const replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
+            let replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a>`;
+            content = content.replace(replace, replace + data.html);
+            replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
             content = content.replace(replace, replace + data.html);
           }
         }
@@ -202,8 +204,11 @@ export class ResService {
           const response = await fetch('http://www.youtube.com/oembed?url=' + youtubeURL);
           if (response.ok) {
             const data = await response.json();
-            const replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
+            let replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a>`;
             content = content.replace(replace, replace + data.html);
+            replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
+            content = content.replace(replace, replace + data.html);
+            
           }
         }
       }
