@@ -186,10 +186,9 @@ export class ResService {
           const response = await fetch('https://publish.twitter.com/oembed?url=' + twitterURL);
           if (response.ok) {
             const data = await response.json();
-            let replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a>`;
-            content = content.replace(replace, replace + data.html);
-            replace = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />`;
-            content = content.replace(replace, replace + data.html);
+            let targetT = new RegExp(`<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a>(<br \/>|)`, "ig");
+            let replacementT = `<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a><br />` + data.html;
+            content = content.replace(targetT, replacementT);
           }
         }
       }
@@ -204,11 +203,10 @@ export class ResService {
           const response = await fetch('http://www.youtube.com/oembed?url=' + youtubeURL);
           if (response.ok) {
             const data = await response.json();
-            let replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a>`;
-            content = content.replace(replace, replace + data.html);
-            replace = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br />`;
-            content = content.replace(replace, replace + data.html);
-            
+            var youtubeTemp = youtubeURL.replace('?', '\\?');
+            let targetY = new RegExp(`<a href="` + youtubeTemp + `" target="_blank">` + youtubeTemp + `</a>(<br \/>|)`, "ig");
+            let replacementY = `<a href="` + youtubeURL + `" target="_blank">` + youtubeURL + `</a><br />` + data.html;
+            content = content.replace(targetY, replacementY);
           }
         }
       }
