@@ -1,14 +1,14 @@
 <div class="extract">
-  <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption" (change)="changeSearchOptionHandler()">
+  <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption" (change)="tglSearchChangeHandler()">
     <mat-button-toggle value="all" class="btn-left-round">all</mat-button-toggle>
     <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本</mat-button-toggle>
   </mat-button-toggle-group>
-  <input type="text" [(ngModel)]="searchKeyword" #txtSearch (keyup)="searchOnKeyHandler($event)" (ngModelChange)="changeSearchHandler($event)">
+  <input type="text" [(ngModel)]="searchKeyword" #txtSearch (keyup)="txtSearchKeyUpHandler($event)" (ngModelChange)="txtSearchChangeHandler($event)">
   <mat-button-toggle-group name="btn-search" [multiple]="true">
-    <mat-button-toggle class="btn-long border-round" (change)="searchTextHandler()" #btnSearch>抽出</mat-button-toggle>
+    <mat-button-toggle class="btn-long border-round" (change)="btnSearchChangeHandler()" #btnSearch>抽出</mat-button-toggle>
   </mat-button-toggle-group>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
-    <mat-button-toggle class="btn-long border-round" (change)="filterNoticeHandler()" #btnNotice>注目レス</mat-button-toggle>
+    <mat-button-toggle class="btn-long border-round" (change)="btnNoticeChangeHandler()" #btnNotice>注目レス</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
 <div class="content-url">
@@ -19,18 +19,18 @@
   <input type="text" [(ngModel)]="txtURL">
 </div>
 <h3>{{tabName}}</h3>
-<virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="usUpdateHandler($event)"
-                  cdkDropList (cdkDropListDropped)="drop($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
+<virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)"
+                  cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
 
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
              'border-left': resItem.isAdded ? leftBorder : '', 'border-top': resItem.isRemark ? topBorder : resTopBar}"
              (duplicateResEmitter)="duplicateRes(resItem)"
              (hideResEmitter)="hideRes(resItem.id)"
-             (upResEmitter)="upRes(resItem)"
-             (downResEmitter)="downRes(resItem)"
-             (toTopResEmitter)="toTopRes(resItem)"
-             (toBottomResEmitter)="toBottomRes(resItem)"
+             (upResEmitter)="moveUpRes(resItem)"
+             (downResEmitter)="moveDownRes(resItem)"
+             (toTopResEmitter)="moveResToTop(resItem)"
+             (toBottomResEmitter)="moveResToBottom(resItem)"
              (selectedResEmitter)="selectedRes(resItem, $event)"
              (cancelSelectedIdEmitter)="cancelSelectedIdRes(resItem.id, $event)"
              (selectedIdEmitter)="selectedId(resItem.id, $event)"
@@ -53,7 +53,7 @@
              [txtRemarkRes] = "txtRemarkRes"
              [btnBackgroundColors] = "btnBackgroundColors"
              [leftHightlight] = "leftHightlight"
-             (cdkDragStarted)="dragStarted($event, resItem)"
+             (cdkDragStarted)="resDragStartedHandler($event, resItem)"
              [cdkDragDisabled]="getDraggable(resList.indexOf(resItem))"
              cdkDragLockAxis="y" cdkDrag>
     </app-res>

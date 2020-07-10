@@ -85,6 +85,7 @@ tabset{
       overflow: auto;
       .nav-link{
         padding: 4px;
+        border: 1px solid lightgrey;
       }
       .nav-link.active{
         background-color: #c3ebbe;

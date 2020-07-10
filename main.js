@@ -223,11 +223,13 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
     remaining += encoded_data;
     var index = remaining.indexOf('\n');
     var last = 0;
+
     while (index > -1) {
       let line = remaining.substring(last, index);
       last = index + 1;
       if(line.length > 1) {
         const res = readLines(line);
+        isFirst = false;
         if(remarkRes !== undefined && remarkRes.length > 0){
           const re = new RegExp(remarkRes,'gi');
           if(res.content.match(re)) {
@@ -324,24 +326,14 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
     }
   }
 
-  for (let resItem of resList) {
-    for (let anchor of resItem.anchors) {
-      for (let i = 0; i < resList.length; i++) {
-        if (resList[i].num === anchor) {
-          if(resList[i].anchorCount > settings.noticeCount){
-            resList[i].isNotice = true;
-            resItem.isNotice = true;
-          }
-        }
-      }
-    }
-  }
-
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
     for (let i = 1; i < resList.length; i++) {
       if (resList[i].anchors.length > 0) {
         if (!isReplaceRes && resList[i].anchors.indexOf(1) !== -1) {
+          continue;
+        }
+        if(resList[i].anchors.length === 1 && resList[i].anchors.indexOf(resList[i].num) !== -1){
           continue;
         }
         tmpResList.push(resList[i]);
@@ -384,6 +376,33 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
                 }
               }
             }
+          }
+        }
+      }
+    }
+
+
+    for (let i = 0; i < resList.length; i++) {
+      if(resList[i].anchorCount > settings.noticeCount){
+        resList[i].isNotice = true;
+        if (resList[i].isAdded){
+          let j = i - 1;
+          while (resList[j].isAdded && j > -1){
+            resList[j].isNotice = true;
+            j--;
+          }
+          resList[j].isNotice = true;
+          j = i + 1;
+          while (resList[j].isAdded && j < resList.length){
+            resList[j].isNotice = true;
+            j++;
+          }
+          i = j;
+        }else if(i < resList.length - 1 && resList[i + 1]){
+          let j = i + 1;
+          while (resList[j].isAdded && j < resList.length){
+            resList[j].isNotice = true;
+            j++;
           }
         }
       }
@@ -486,12 +505,9 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
 function readLines(line) {
   if(line === undefined) return undefined;
   let words = line.split('<>');
-  if (words.length > 4 && resList.length === 0) {
+  if (words.length > 4 && num === 0) {
     sreTitle = words[4].replace(/\r|\r|\r\n/gi,'');
     sreTitle = sreTitle.trim();
-    if(sreTitle.length === 0){
-      sreTitle = 'スレタイ';
-    }
   }
   for(let i=1; i<31; i++){
     let search = settings[`toukoubi_mae${i}`];
