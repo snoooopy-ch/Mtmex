@@ -826,8 +826,17 @@ function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
     }else{
       data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
     }
-    data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
-    data = data.replace(/(hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+    if(data.match(/(chuui:)[^\r^\n]+(\r\n)/g) === null){
+      data = data.replace(/(chuui:)+(\r\n)/g, `$1${remarkRes}$2`);
+    }else{
+      data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
+    }
+    if(data.match(/(hihyouji:)[^\r^\n]+(\r\n)/g) === null){
+      data = data.replace(/(hihyouji:)+(\r\n)/g, `$1${hideRes}$2`);
+    }else{
+      data = data.replace(/(hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+    }
+
     let replaceString ='';
     if(isResSort){
       replaceString += '$1on$2';

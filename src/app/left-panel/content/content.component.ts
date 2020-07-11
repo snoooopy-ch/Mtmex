@@ -82,6 +82,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.selectCount = 0;
     this.candi1Count = 0;
     this.candi2Count = 0;
+    this.currentScrollIndex = 0;
   }
 
   ngOnInit(): void {
@@ -638,9 +639,11 @@ export class ContentComponent implements OnInit, OnDestroy {
     switch (moveKind) {
       case 'top':
         this.virtualScroller.scrollToIndex(0);
+        this.currentScrollIndex = 0;
         break;
       case 'bottom':
         this.virtualScroller.scrollToIndex(this.resList.length);
+        this.currentScrollIndex = this.resList.length - 1;
         break;
       case 'selected-top':
         let index = 0;
@@ -649,6 +652,7 @@ export class ContentComponent implements OnInit, OnDestroy {
             || (item.resSelect === 'candi1' && this.moveOption.sentaku_idou1)
             || (item.resSelect === 'candi2' && this.moveOption.sentaku_idou2)){
             this.virtualScroller.scrollToIndex(index);
+            this.currentScrollIndex = index;
             break;
           }
           index++;
@@ -661,6 +665,7 @@ export class ContentComponent implements OnInit, OnDestroy {
             if (this.resList[i].resSelect === 'select'
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
               || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
+              this.currentScrollIndex = i;
               this.virtualScroller.scrollToIndex(i);
               break;
             }
@@ -674,6 +679,7 @@ export class ContentComponent implements OnInit, OnDestroy {
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
               || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
               this.virtualScroller.scrollToIndex(i);
+              this.currentScrollIndex = i;
               break;
             }
           }
@@ -686,6 +692,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }else{
           curIndex = this.virtualScroller.viewPortInfo.startIndex + 1;
         }
+
         for (let i = curIndex; i < this.resList.length; i++) {
           if (this.resList[i].resSelect === 'select'
             || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
@@ -849,27 +856,37 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   selectedTreeRes(index: number, $event: any) {
     const selectKeys = ['none', 'select', 'candi1', 'candi2'];
-    if (index < this.resList.length - 1) {
-      if (this.resList[index + 1].isAdded &&
-        this.resList[index + 1].anchors.indexOf(this.resList[index].num) !== -1){
-        this.resList[index].resSelect = selectKeys[$event.select];
-        this.resList[index].resBackgroundColor = $event.resBackgroundColor;
-        this.calcSelectedRes($event.select, this.resList[index]);
-        if (this.resList[index].isAdded){
-          for (let i = index - 1; i > 0; i--){
-            this.resList[i].resSelect = selectKeys[$event.select];
-            this.resList[i].resBackgroundColor = $event.resBackgroundColor;
-            this.calcSelectedRes($event.select, this.resList[i]);
-            if (!this.resList[i].isAdded) { break; }
-          }
+    if (index < this.resList.length - 1 && (this.resList[index + 1].isAdded || this.resList[index].isAdded)) {
+      this.resList[index].resSelect = selectKeys[$event.select];
+      this.resList[index].resBackgroundColor = $event.resBackgroundColor;
+      this.calcSelectedRes($event.select, this.resList[index]);
+      if (this.resList[index].isAdded){
+        let i = index;
+        do {
+          i--;
+          this.resList[i].resSelect = selectKeys[$event.select];
+          this.resList[i].resBackgroundColor = $event.resBackgroundColor;
+          this.calcSelectedRes($event.select, this.resList[i]);
         }
-        for (let i = index + 1; i < this.resList.length; i++){
-          if (!this.resList[i].isAdded) { break; }
+        while (this.resList[i].isAdded && i > -1);
+        i = index + 1;
+        while (this.resList[i].isAdded && i < this.resList.length){
+          this.resList[i].resSelect = selectKeys[$event.select];
+          this.resList[i].resBackgroundColor = $event.resBackgroundColor;
+          this.calcSelectedRes($event.select, this.resList[i]);
+          i++;
+        }
+      }else if (this.resList[index + 1]) {
+        for (let i = index + 1; i < this.resList.length; i++) {
+          if (!this.resList[i].isAdded) {
+            break;
+          }
           this.resList[i].resSelect = selectKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
           this.calcSelectedRes($event.select, this.resList[i]);
         }
       }
+
     }
     this.changeStatus();
   }
