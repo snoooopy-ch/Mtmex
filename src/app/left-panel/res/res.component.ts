@@ -62,6 +62,7 @@ export class ResComponent implements OnInit {
   @Input() leftHightlight;
   @Input() resMouseClick;
   @Input() txtRemarkRes;
+  @Input() imageWidth;
   resContent = '';
   @Input() characterColors;
   @ViewChild('optResSelect') optResSelect: ElementRef;
@@ -168,7 +169,7 @@ export class ResComponent implements OnInit {
         candi2: false,
         selected: 'select'
       });
-    //$event.target.blur();
+    $event.target.blur();
     this.cdRef.detectChanges();
   }
 
@@ -183,12 +184,45 @@ export class ResComponent implements OnInit {
 
   saveResHandler(event) {
     event.stopPropagation();
+    console.log(this.resContent);
     this.resContent = this.resContent.replace(/<p>&nbsp;<\/p>/gi, '<br>');
-    this.resContent = this.resContent.replace(/(<p>)|(<h3>)/ig, '');
-    this.resContent = this.resContent.replace(/(<\/p>)|(<\/h3>)/ig, '');
-    this.resContent = this.resContent.replace(/(<figure[^<]+>)/ig, '');
-    this.resContent = this.resContent.replace(/<\/figure>/ig, '');
+    this.resContent = this.resContent.replace(/<\/p><p>/gi, '<br>');
+    this.resContent = this.resContent.replace(/(<img[^<]+>)|(<a[^<]+>)|(<\/a>)/ig, '');
+    this.resContent = this.resContent.replace(/(<p>)|(<\/p>)|(<h3>)|(<\/h3>)/ig, '');
+    this.resContent = this.resContent.replace(/(<figure[^<]+>)|(<\/figure>)/ig, '');
     this.resContent = this.resContent.replace(/&nbsp;/ig, '');
+    console.log(this.resContent);
+    let index = 0;
+    const tmpItems = this.resContent.split(/<br>\s|<br>/ig);
+    const expUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    const expGifUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].gif)/ig;
+    const expImgUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].(jpg|jpeg|png|bmp))/ig;
+    this.resContent = '';
+    for (let tmpItem of tmpItems) {
+      if (index > 0) {
+        this.resContent += '<br>';
+      }
+      if (new RegExp(expUrl).test(tmpItem)) {
+        if (new RegExp(expGifUrl).test(tmpItem)) {
+          // if(settings.gif_stop){
+          //   tmp_item = tmp_item.replace(expGifUrl,
+          //   `<img src="$1" class="res-img-thumb gif-pause" alt="" width="${settings.pict_hyouji}px">
+          //   <a href="$1" class="res-img-link res-gif-link" class="res-img-link res-gif-link">$1</a>`);
+          // } else{
+          tmpItem = tmpItem.replace(expGifUrl, `<img src="$1" class="res-img-thumb" alt="" width="${this.imageWidth}"><a href="$1" class="res-img-link res-gif-link">$1</a>`);
+          // }
+          this.item.hasImage = true;
+        } else if (new RegExp(expImgUrl).test(tmpItem)) {
+          tmpItem = tmpItem.replace(expImgUrl, `<img src="$1" class="res-img-thumb" alt="" width="${this.imageWidth}"><a href="$1" class="res-img-link">$1</a>`);
+          this.item.hasImage = true;
+        } else {
+          tmpItem = tmpItem.replace(expUrl, `<a class="res-link" href="$1">$1</a>`);
+        }
+      }
+      this.resContent += tmpItem;
+      index++;
+    }
+
     let remarkRes = this.txtRemarkRes;
     if (remarkRes.endsWith(';')){
       remarkRes = remarkRes.substr(0, remarkRes.length - 1);

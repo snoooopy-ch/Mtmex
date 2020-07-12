@@ -60,6 +60,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() moveOption;
   @Input() txtRemarkRes;
   @Input() resTopBar;
+  @Input() imageWidth;
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -618,13 +619,13 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       // 描写エリアを下に移動
       this.hotkeysService.add(new Hotkey('space', (event: KeyboardEvent): boolean => {
-        this.moveScroller('selected-next');
+        this.virtualScroller.scrollToIndex(this.virtualScroller.viewPortInfo.endIndex);
         return false; // Prevent bubbling
       }));
 
       // 描写エリアを上に移動
       this.hotkeysService.add(new Hotkey('shift+space', (event: KeyboardEvent): boolean => {
-        this.moveScroller('selected-prev');
+        this.virtualScroller.scrollToPosition(this.virtualScroller.viewPortInfo.scrollStartPosition - this.virtualScroller.ssrViewportHeight);
         return false; // Prevent bubbling
       }));
     }

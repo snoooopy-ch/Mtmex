@@ -337,9 +337,11 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
           continue;
         }
         tmpResList.push(resList[i]);
-        if(resList[i].futureAnchors.length < 1 || !isMultiAnchor) {
-          resList.splice(i, 1);
-          i--;
+        if(resList[i].futureAnchors.length < 1 || !isMultiAnchor ) {
+          if(resList[i].anchors.indexOf(resList[i].num) === -1) {
+            resList.splice(i, 1);
+            i--;
+          }
         }
       }
     }
@@ -347,6 +349,9 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
     // tmpResList.reverse();
     for (let resItem of tmpResList) {
       for (let anchor of resItem.anchors) {
+        if(resItem.num === anchor){
+          continue;
+        }
         for (let i = 0; i < resList.length; i++) {
           if (resList[i].num === anchor) {
             if (isReplaceRes) {
@@ -383,7 +388,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
 
 
     for (let i = 0; i < resList.length; i++) {
-      if(resList[i].anchorCount > settings.noticeCount){
+      if(resList[i].anchorCount >= settings.noticeCount){
         resList[i].isNotice = true;
         if (resList[i].isAdded){
           let j = i - 1;
@@ -452,23 +457,35 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
     let anchorExists = false;
     let isAdded = false;
     let spliter = '&gt;&gt;' + anchor;
+    let row = 0;
     for (let tmpItem of tmpItems) {
+      if(row > 0){
+        anchorContent += '<br>';
+      }
+      row++;
       if (tmpItem.indexOf(spliter) !== -1) {
         anchorExists = true;
-        anchorContent += tmpItem;
-        continue;
+        anchorContent += tmpItem.substr(0, tmpItem.indexOf(spliter) + spliter.length);
+        tmpItem = tmpItem.substr(tmpItem.indexOf(spliter) + spliter.length + 1);
       }
       if (anchorExists) {
         if (tmpItem.indexOf('&gt;&gt;') !== -1) {
+          anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
           break;
         }
-        anchorContent += '<br>' + tmpItem;
+        anchorContent += tmpItem;
+      }else{
+        anchorContent += tmpItem;
       }
+
     }
     newItem.content = anchorContent;
-    if(item.featureAnchors > 0){
-        item.content = item.content.replace(newItem.content,'');
+    // if(item.featureAnchors > 0){
+    item.content = item.content.replace(newItem.content,'');
+    if(item.content.length === 0){
+      item.content = newItem.content;
     }
+    // }
     isAdded = true;
     newItem.isAdded = isAdded;
     resList.splice(i, 0, newItem);
@@ -642,13 +659,13 @@ function readLines(line) {
       if (new RegExp(expUrl).test(tmp_item)) {
         if (new RegExp(expGifUrl).test(tmp_item)) {
           if(settings.gif_stop){
-            tmp_item = tmp_item.replace(expGifUrl, `<img class="res-img-thumb gif-pause" src="$1" alt="" width="${settings.pict_hyouji}px"><a class="res-img-link res-gif-link" href="$1">$1</a>`);
+            tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb gif-pause" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link" class="res-img-link res-gif-link">$1</a>`);
           } else{
-            tmp_item = tmp_item.replace(expGifUrl, `<img class="res-img-thumb" src="$1" alt="" width="${settings.pict_hyouji}px"><a class="res-img-link res-gif-link" href="$1">$1</a>`);
+            tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link">$1</a>`);
           }
           resItem.hasImage = true;
         } else if (new RegExp(expImgUrl).test(tmp_item)) {
-          tmp_item = tmp_item.replace(expImgUrl, `<img class="res-img-thumb" src="$1" alt="" width="${settings.pict_hyouji}px"><a class="res-img-link" href="$1">$1</a>`);
+          tmp_item = tmp_item.replace(expImgUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link">$1</a>`);
           resItem.hasImage = true;
         } else {
           tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`);

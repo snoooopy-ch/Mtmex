@@ -53,6 +53,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   moveOption: any;
   txtRemarkRes: any;
   resTopBar: any;
+  imageWidth: string;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -141,6 +142,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       if (this.settings.top_bar !== undefined) {
         this.resTopBar = `1px solid ${this.settings.top_bar}`;
       }
+
+      if (this.settings.pict_hyouji !== undefined){
+        this.imageWidth = '150px';
+      } else {
+        this.imageWidth = `${this.settings.pict_hyouji}px`;
+      }
+
       this.setHotKeys();
     });
 

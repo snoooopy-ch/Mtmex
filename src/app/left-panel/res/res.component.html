@@ -91,7 +91,7 @@
   </div>
   <div class="row-4" *ngIf="item.isEdit">
     <ckeditor class="row-4" [editor]="Editor"
-              [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar'] }"
+              [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar', 'MediaEmbed'] }"
               [(ngModel)]="resContent"
               (click)="clickCKEditor($event)" >
     </ckeditor>
