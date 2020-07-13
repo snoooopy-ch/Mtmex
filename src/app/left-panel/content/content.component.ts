@@ -31,7 +31,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
   @ViewChild('btnSearch') btnSearch: MatButtonToggle;
-  @ViewChild('btnNotice') btnImportant: MatButtonToggle;
+  @ViewChild('btnNotice') btnNotice: MatButtonToggle;
   @ViewChild('txtSearch') txtSearch: ElementRef ;
   hovered: number;
   draggable: number;
@@ -73,6 +73,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   candi1Count: number;
   candi2Count: number;
   currentScrollIndex: number;
+  originalResList: ResItem[];
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -550,7 +551,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       // 注目レス ON/OFF
       this.hotkeysService.add(new Hotkey(this.subHotKeys.chuumoku, (event: KeyboardEvent): boolean => {
-        this.btnImportant.checked = !this.btnImportant.checked;
+        this.btnNotice.checked = !this.btnNotice.checked;
         this.btnNoticeChangeHandler();
         return false; // Prevent bubbling
       }));
@@ -619,13 +620,16 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       // 描写エリアを下に移動
       this.hotkeysService.add(new Hotkey('space', (event: KeyboardEvent): boolean => {
-        this.virtualScroller.scrollToIndex(this.virtualScroller.viewPortInfo.endIndex);
+        this.virtualScroller.scrollToPosition(this.virtualScroller.viewPortInfo.scrollEndPosition);
         return false; // Prevent bubbling
       }));
 
       // 描写エリアを上に移動
       this.hotkeysService.add(new Hotkey('shift+space', (event: KeyboardEvent): boolean => {
-        this.virtualScroller.scrollToPosition(this.virtualScroller.viewPortInfo.scrollStartPosition - this.virtualScroller.ssrViewportHeight);
+        if(this.virtualScroller.viewPortInfo.scrollStartPosition !== 0) {
+          this.virtualScroller.scrollToPosition(this.virtualScroller.viewPortInfo.scrollStartPosition -
+            (this.virtualScroller.viewPortInfo.scrollEndPosition - this.virtualScroller.viewPortInfo.scrollStartPosition));
+        }
         return false; // Prevent bubbling
       }));
     }
@@ -1086,6 +1090,9 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   abstractRes(){
     this.backupResList = Object.assign([], this.resList);
+    if (!this.btnNotice.checked){
+      this.originalResList = Object.assign([], this.resList);
+    }
     let tmpResList = [];
     for (let i = 0; i < this.resList.length; i++){
       if (this.resList[i].isSearched) {
@@ -1148,8 +1155,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnNoticeChangeHandler() {
-    if (this.btnImportant.checked){
+    if (this.btnNotice.checked){
       this.noticeBackupResList = Object.assign([], this.resList);
+      if (!this.btnSearch.checked){
+        this.originalResList = Object.assign([], this.resList);
+      }
       let tmpResList = [];
       let parentRes = [];
       for (const res of this.resList){
@@ -1304,8 +1314,13 @@ export class ContentComponent implements OnInit, OnDestroy {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
-
-    const htmlTag = await this.resService.printHtmlTag(this.resList, {
+    let printResList = [];
+    if (this.btnNotice.checked || this.btnSearch.checked){
+      printResList = this.originalResList;
+    }else{
+      printResList = this.resList;
+    }
+    const htmlTag = await this.resService.printHtmlTag(printResList, {
       tabName: this.tabName,
       txtURL: this.txtURL,
       twitter: this.twitter,

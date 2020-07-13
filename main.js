@@ -315,7 +315,8 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
       const re = new RegExp(sreTitle, 'gi');
       resItem.content = resItem.content.replace(re,'');
       resItem.id = resItem.id.replace(re,'');
-      resItem.id = resItem.id.replace(re,'');
+      resItem.name = resItem.name.replace(re,'');
+      resItem.date = resItem.date.replace(re,'');
     }
     for (let anchor of resItem.anchors) {
       for (let i = 0; i < resList.length; i++) {
