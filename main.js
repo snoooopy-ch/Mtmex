@@ -258,30 +258,31 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
       resList.push(readLines(remaining));
     }
     adjustResList(isResSort, isMultiAnchor, isReplaceRes);
-    if(loadedTitles.indexOf(url) !==-1){
+    if(loadedTitles.indexOf(sreTitle) !==-1){
       let response = dialog.showMessageBoxSync(win, {buttons: ["Yes","No"],
         message: '同じタブがあります、datを読み込みますか'});
       if(response === 0){
-        loadedTitles.push(url);
+        loadedTitles.push(sreTitle);
         let suffix = uuidv4();
         suffix = suffix.replace(/-/g,'').substr(0,10);
+        const originSreTitle = sreTitle;
         sreTitle = `${sreTitle}${suffix}`;
-        win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, dataFilePath: url});
+        win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, originSreTitle: originSreTitle});
       }
     } else {
-      loadedTitles.push(url);
-      win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, dataFilePath: url});
+      loadedTitles.push(sreTitle);
+      win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, originSreTitle: sreTitle});
     }
   });
 }
 
-ipcMain.on("removeTab", (event, dataFilePath) => {
-  removeTitle(dataFilePath);
+ipcMain.on("removeTab", (event, originSreTitle) => {
+  removeTitle(originSreTitle);
 });
 
-function removeTitle(dataFilePath) {
-  if (dataFilePath.length > 0){
-    const index = loadedTitles.indexOf(dataFilePath);
+function removeTitle(originSreTitle) {
+  if (originSreTitle.length > 0){
+    const index = loadedTitles.indexOf(originSreTitle);
     if(index !== -1){
       loadedTitles.splice(index, 1);
     }
@@ -642,12 +643,16 @@ function readLines(line) {
 
     let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let index = 0;
+    const re = new RegExp(sreTitle, 'gi');
     for (let tmp_item of tmp_items) {
       if (index > 0)
         resItem.content += '<br>';
       tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
       tmp_item = tmp_item.replace(/(http|ttp):/ig, 'http:');
       tmp_item = tmp_item.replace(/(http|ttp)s:/ig, 'https:');
+      if(settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
+        tmp_item = tmp_item.replace(re, '');
+      }
       // if(tmp_item.match(/(&gt;&gt;\d*[0-9]\d*)/)){
       //   tmp_item = tmp_item.trim();
       // }
@@ -849,10 +854,10 @@ function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
     }else{
       data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
     }
-    if(data.match(/(hihyouji:)[^\r^\n]+(\r\n)/g) === null){
-      data = data.replace(/(hihyouji:)+(\r\n)/g, `$1${hideRes}$2`);
+    if(data.match(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g) === null){
+      data = data.replace(/(#非表示レス\r\nhihyouji:)+(\r\n)/g, `$1${hideRes}$2`);
     }else{
-      data = data.replace(/(hihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+      data = data.replace(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
     }
 
     let replaceString ='';

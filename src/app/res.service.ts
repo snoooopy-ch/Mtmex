@@ -68,8 +68,8 @@ export class ResService {
     electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes);
   }
 
-  removeTab(dataFilePath){
-    electron.ipcRenderer.send('removeTab',dataFilePath);
+  removeTab(originSreTitle){
+    electron.ipcRenderer.send('removeTab', originSreTitle);
   }
 
   setHiddenIds(value: string[]) {
@@ -186,8 +186,8 @@ export class ResService {
           const response = await fetch('https://publish.twitter.com/oembed?url=' + twitterURL);
           if (response.ok) {
             const data = await response.json();
-            let targetT = new RegExp(`<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a>(<br \/>|)`, "ig");
-            let replacementT = `<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a><br />` + data.html;
+            const targetT = new RegExp(`<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a>(<br \/>|)`, 'ig');
+            const replacementT = `<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a><br />` + data.html;
             content = content.replace(targetT, replacementT);
           }
         }
@@ -203,9 +203,9 @@ export class ResService {
           const response = await fetch('http://www.youtube.com/oembed?url=' + youtubeURL);
           if (response.ok) {
             const data = await response.json();
-            var youtubeTemp = youtubeURL.replace('?', '\\?');
-            let targetY = new RegExp(`<a href="` + youtubeTemp + `" target="_blank">` + youtubeTemp + `</a>(<br \/>|)`, "ig");
-            let replacementY = `<a href="` + youtubeURL + `" target="_blank">` + youtubeURL + `</a><br />` + data.html;
+            const youtubeTemp = youtubeURL.replace('?', '\\?');
+            const targetY = new RegExp(`<a href="` + youtubeTemp + `" target="_blank">` + youtubeTemp + `</a>(<br \/>|)`, 'ig');
+            const replacementY = `<a href="` + youtubeURL + `" target="_blank">` + youtubeURL + `</a><br />` + data.html;
             content = content.replace(targetY, replacementY);
           }
         }
@@ -217,23 +217,27 @@ export class ResService {
     } else {
       htmlTag += `<div class="t_h">`;
     }
-    htmlTag += `${res.num}: <span class="name">${res.name}</span>`;
-    htmlTag += ` <span style="color: gray;"> ${res.date}`;
+    const resName = res.name.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
+    const resDate = res.date.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
+    const resId = res.id.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
+
+    htmlTag += `${res.num}: <span class="name">${resName}</span>`;
+    htmlTag += ` <span style="color: gray;"> ${resDate}`;
 
     if ( options.shuturyoku) {
       if (res.id.length > 0 ) {
         if (res.idColor !== '#000') {
-          htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${res.id}</em>`;
+          htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${resId}</em>`;
         } else {
-          htmlTag += ` ID:${res.id}`;
+          htmlTag += ` ID:${resId}`;
         }
       }
     } else {
       if (res.id.length > 0 ) {
         if (res.idColor !== '#000') {
-          htmlTag += `<span class="${res.idClassNoSelect}"> ID:${res.id}</span>`;
+          htmlTag += `<span class="${res.idClassNoSelect}"> ID:${resId}</span>`;
         } else {
-          htmlTag += ` ID:${res.id}`;
+          htmlTag += ` ID:${resId}`;
         }
       }
     }

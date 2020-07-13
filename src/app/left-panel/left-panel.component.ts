@@ -155,7 +155,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.resData = this.resService.resData.subscribe( (value) => {
       if (this.tabGroup === undefined) { return; }
       this.zone.run(() => {
-        this.addTab(value.sreTitle, value.resList, value.dataFilePath);
+        this.addTab(value.sreTitle, value.resList, value.originSreTitle);
         this.selectedTabIndex = this.tabs.length - 1;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
         this.resService.setTotalRes({
@@ -181,6 +181,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           const loadResList = [];
           for (const res of value.data.resList){
             const resItem = Object.assign({}, res);
+            if (!Number.isInteger(res.resColor)){
+              continue;
+            }
             if (Number(res.resColor) === 0){
               resItem.resColor = '#000';
             }else{
@@ -194,14 +197,16 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
             loadResList.push(resItem);
           }
-          this.addTab(value.data.title, loadResList);
-          this.selectedTabIndex = this.tabs.length - 1;
-          this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
-          this.resService.setTotalRes({
-            tabIndex: this.selectedTabIndex,
-            totalCount: value.data.resList.length,
-            title: this.tabs[this.selectedTabIndex].title,
-          });
+          if (loadResList.length > 0) {
+            this.addTab(value.data.title, loadResList);
+            this.selectedTabIndex = this.tabs.length - 1;
+            this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
+            this.resService.setTotalRes({
+              tabIndex: this.selectedTabIndex,
+              totalCount: value.data.resList.length,
+              title: this.tabs[this.selectedTabIndex].title,
+            });
+          }
         });
       }
     });
@@ -258,7 +263,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     }));
   }
 
-  addTab(pTitle, pResList: ResItem[], pDataFilePath= '') {
+  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '') {
     this.tabs = [...this.tabs, {
       title: pTitle,
       active: true,
@@ -266,14 +271,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       scrollPos: 0,
       isFiltered: false,
       url: '',
-      dataFilePath: pDataFilePath
+      originSreTitle: pOriginSreTitle
     }];
     // this.tabs.push();
   }
 
   removeTab(index: number) {
-    const dataFilePath = this.tabs[index].dataFilePath;
-    this.resService.removeTab(dataFilePath);
+    const originSreTitle = this.tabs[index].originSreTitle;
+    this.resService.removeTab(originSreTitle);
     this.tabs.splice(index, 1);
     if (this.tabs.length - 1 < index){
       index = this.tabs.length - 1;

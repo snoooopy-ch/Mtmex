@@ -134,7 +134,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (value.tabIndex === this.tabIndex && this.resList.length > 0 && value.token) {
         const saveData = value;
         saveData.resList = [];
-        for (const res of this.resList){
+        let saveResList = [];
+        if (this.btnSearch.checked || this.btnNotice.checked){
+          saveResList = this.originalResList;
+        }else{
+          saveResList = this.resList;
+        }
+        for (const res of saveResList){
           const resItem = Object.assign({}, res);
           resItem.resColor = this.characterColors.indexOf(res.resColor) === -1 ? 0 : this.characterColors.indexOf(res.resColor) + 1;
 
@@ -626,7 +632,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       // 描写エリアを上に移動
       this.hotkeysService.add(new Hotkey('shift+space', (event: KeyboardEvent): boolean => {
-        if(this.virtualScroller.viewPortInfo.scrollStartPosition !== 0) {
+        if (this.virtualScroller.viewPortInfo.scrollStartPosition !== 0) {
           this.virtualScroller.scrollToPosition(this.virtualScroller.viewPortInfo.scrollStartPosition -
             (this.virtualScroller.viewPortInfo.scrollEndPosition - this.virtualScroller.viewPortInfo.scrollStartPosition));
         }
@@ -1094,24 +1100,54 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.originalResList = Object.assign([], this.resList);
     }
     let tmpResList = [];
-    for (let i = 0; i < this.resList.length; i++){
-      if (this.resList[i].isSearched) {
+    // for (let i = 0; i < this.resList.length; i++){
+    //   if (this.resList[i].isSearched) {
+    //     this.resList[i].isFiltered = true;
+    //     tmpResList = [...tmpResList, this.resList[i]];
+    //   }else {
+    //     if (i < this.resList.length - 1){
+    //       if (this.resList[i + 1].isSearched && this.resList[i + 1].isAdded){
+    //         this.resList[i].originalIndex = i;
+    //         tmpResList = [...tmpResList, this.resList[i]];
+    //         this.resList[i].isFiltered = true;
+    //         continue;
+    //       }
+    //     }
+    //     if (i > 0 && this.resList[i].isAdded && this.resList[i - 1].isFiltered){
+    //       this.resList[i].originalIndex = i;
+    //       tmpResList = [...tmpResList, this.resList[i]];
+    //       this.resList[i].isFiltered = true;
+    //     }
+    //   }
+    // }
+    for (let i = 0; i < this.resList.length; i++) {
+      if (this.resList[i].isSearched){
         this.resList[i].isFiltered = true;
-        tmpResList = [...tmpResList, this.resList[i]];
-      }else {
-        if (i < this.resList.length - 1){
-          if (this.resList[i + 1].isSearched && this.resList[i + 1].isAdded){
-            this.resList[i].originalIndex = i;
-            tmpResList = [...tmpResList, this.resList[i]];
-            this.resList[i].isFiltered = true;
-            continue;
+        if (this.resList[i].isAdded){
+          let j = i - 1;
+          while (this.resList[j].isAdded && j > -1){
+            this.resList[j].isFiltered = true;
+            j--;
+          }
+          this.resList[j].isFiltered = true;
+          j = i + 1;
+          while (this.resList[j].isAdded && j < this.resList.length){
+            this.resList[j].isFiltered = true;
+            j++;
+          }
+          i = j;
+        }else if (i < this.resList.length - 1 && this.resList[i + 1]){
+          let j = i + 1;
+          while (this.resList[j].isAdded && j < this.resList.length){
+            this.resList[j].isFiltered = true;
+            j++;
           }
         }
-        if (i > 0 && this.resList[i].isAdded && this.resList[i - 1].isFiltered){
-          this.resList[i].originalIndex = i;
-          tmpResList = [...tmpResList, this.resList[i]];
-          this.resList[i].isFiltered = true;
-        }
+      }
+    }
+    for (const res of this.resList){
+      if (res.isFiltered) {
+        tmpResList = [...tmpResList, res];
       }
     }
     this.resList = [];
@@ -1161,21 +1197,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.originalResList = Object.assign([], this.resList);
       }
       let tmpResList = [];
-      let parentRes = [];
       for (const res of this.resList){
-        if (!res.isAdded && res.anchorCount > this.noticeCount){
+        if (res.isNotice) {
           tmpResList = [...tmpResList, res];
-          parentRes = [...parentRes, res.num];
-        }else{
-          if (res.isAdded){
-            for (const parent of parentRes){
-              if (res.anchors.indexOf(parent) !== -1){
-                tmpResList = [...tmpResList, res];
-                parentRes = [...parentRes, res.num];
-                break;
-              }
-            }
-          }
         }
       }
       this.resList = [];
@@ -1223,7 +1247,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.startInRes--;
           if (this.startInRes < 0) {
             this.searchedRes--;
-            if (this.searchedRes > 0){
+            if (this.searchedRes >= 0){
               this.startInRes = this.resList[this.searchedRes].content.length - 1;
             }
           }
