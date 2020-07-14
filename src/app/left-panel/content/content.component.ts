@@ -1123,22 +1123,26 @@ export class ContentComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.resList.length; i++) {
       if (this.resList[i].isSearched){
         this.resList[i].isFiltered = true;
-        if (this.resList[i].isAdded){
+        if (this.resList[i].isAdded) {
           let j = i - 1;
-          while (this.resList[j].isAdded && j > -1){
+          if (j > -1) {
+            while (j > -1 && this.resList[j].isAdded) {
+              this.resList[j].isFiltered = true;
+              j--;
+            }
             this.resList[j].isFiltered = true;
-            j--;
           }
-          this.resList[j].isFiltered = true;
           j = i + 1;
-          while (this.resList[j].isAdded && j < this.resList.length){
-            this.resList[j].isFiltered = true;
-            j++;
+          if (j < this.resList.length) {
+            while (j < this.resList.length && this.resList[j].isAdded) {
+              this.resList[j].isFiltered = true;
+              j++;
+            }
           }
           i = j;
         }else if (i < this.resList.length - 1 && this.resList[i + 1]){
           let j = i + 1;
-          while (this.resList[j].isAdded && j < this.resList.length){
+          while (j < this.resList.length && this.resList[j].isAdded){
             this.resList[j].isFiltered = true;
             j++;
           }
