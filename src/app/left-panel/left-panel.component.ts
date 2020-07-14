@@ -279,6 +279,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   removeTab(index: number) {
     const originSreTitle = this.tabs[index].originSreTitle;
     this.resService.removeTab(originSreTitle);
+    this.tabs[index].resList.length = 0;
     this.tabs.splice(index, 1);
     if (this.tabs.length - 1 < index){
       index = this.tabs.length - 1;

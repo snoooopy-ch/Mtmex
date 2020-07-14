@@ -184,14 +184,12 @@ export class ResComponent implements OnInit {
 
   saveResHandler(event) {
     event.stopPropagation();
-    console.log(this.resContent);
     this.resContent = this.resContent.replace(/<p>&nbsp;<\/p>/gi, '<br>');
     this.resContent = this.resContent.replace(/<\/p><p>/gi, '<br>');
     this.resContent = this.resContent.replace(/(<img[^<]+>)|(<a[^<]+>)|(<\/a>)/ig, '');
     this.resContent = this.resContent.replace(/(<p>)|(<\/p>)|(<h3>)|(<\/h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)|(<\/figure>)/ig, '');
     this.resContent = this.resContent.replace(/&nbsp;/ig, '');
-    console.log(this.resContent);
     let index = 0;
     const tmpItems = this.resContent.split(/<br>\s|<br>/ig);
     const expUrl = /((https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
