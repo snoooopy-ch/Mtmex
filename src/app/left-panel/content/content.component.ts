@@ -112,7 +112,8 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.selectCommand = this.resService.selectCommand.subscribe((value) => {
       if (value.tabIndex === this.tabIndex && value.token){
-         this.multiSelection(value.command);
+        this.multiSelection(value.command);
+        value.token = false;
       }
     });
 
@@ -180,6 +181,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
+        console.log('status');
         this.txtURL = value.data.txtUrl;
         if (this.resList !== undefined) {
           this.virtualScroller.scrollToIndex(value.data.scrollIndex);
@@ -1045,7 +1047,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }
     }
-    // this.cdRef.detectChanges();
+    this.cdRef.detectChanges();
     this.changeStatus();
   }
 

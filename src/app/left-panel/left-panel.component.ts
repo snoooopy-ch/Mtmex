@@ -164,7 +164,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           title: this.tabs[this.selectedTabIndex].title,
         });
       });
-
     });
 
     // this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
