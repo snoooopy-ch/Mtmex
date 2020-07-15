@@ -1080,7 +1080,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
-    const re = new RegExp(`(?![^<>]*>)${keyword}`, 'gi');
+    const re = new RegExp(`(?![^<>]*>)${keyword}(?![&gt;])`, 'gi');
 
     for (let i = 0; i < this.resList.length; i++){
       if (this.resList[i].content.match(re) !== null){
