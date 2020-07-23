@@ -10,9 +10,6 @@ export class ResItem{
   isAdded: boolean;
   parent: number;
   isShow: boolean;
-  select: boolean;
-  candi1: boolean;
-  candi2: boolean;
   resColor: string;
   resFontSize: string;
   resSelect: string;

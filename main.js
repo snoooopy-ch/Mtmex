@@ -232,7 +232,7 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
         isFirst = false;
         if(remarkRes !== undefined && remarkRes.length > 0){
           const re = new RegExp(remarkRes,'gi');
-          if(res.content.match(re)) {
+          if(re.test(res.content) || re.test(res.name)) {
             res.isRemark = true;
           }
         }
@@ -241,7 +241,7 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
           resList.push(res);
         }else{
           const re = new RegExp(hideRes,'gi');
-          if(!res.content.match(re)) {
+          if(!re.test(res.content) && !re.test(res.name)) {
             resList.push(res);
           }
 
@@ -266,7 +266,7 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
         let suffix = uuidv4();
         suffix = suffix.replace(/-/g,'').substr(0,10);
         const originSreTitle = sreTitle;
-        sreTitle = `${sreTitle}${suffix}`;
+        sreTitle = `${sreTitle}__${suffix}`;
         win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, originSreTitle: originSreTitle});
       }
     } else {
@@ -552,9 +552,6 @@ function readLines(line) {
     isAdded: false,
     parent: 0,
     isShow: true,
-    select: false,
-    candi1: false,
-    candi2: false,
     resColor: '#000',
     resFontSize: '14px',
     resSelect: 'none',

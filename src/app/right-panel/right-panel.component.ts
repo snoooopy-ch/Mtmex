@@ -19,6 +19,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   selectCount = 0;
   candi1Count = 0;
   candi2Count = 0;
+  candi3Count = 0;
+  candi4Count = 0;
   totalCount = 0;
   selectCommand = '';
   settings;
@@ -69,6 +71,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       this.selectCount = value.select;
       this.candi1Count = value.candi1;
       this.candi2Count = value.candi2;
+      this.candi3Count = value.candi3;
+      this.candi4Count = value.candi4;
       this.totalCount = value.totalCount;
       this.title = value.title;
     });
@@ -78,6 +82,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
         this.candi2Count = value.candi2;
+        this.candi3Count = value.candi3;
+        this.candi4Count = value.candi4;
         this.cdRef.detectChanges();
       }
     });
@@ -172,7 +178,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectResHandler() {
+  btnSelectResHandler() {
     this.resService.setSelectCommand({
       tabIndex: this.tabIndex,
       command: this.selectCommand,

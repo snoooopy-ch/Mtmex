@@ -13,6 +13,8 @@ export class StatusComponent implements OnInit {
   selectCount = 0;
   candi1Count = 0;
   candi2Count = 0;
+  candi3Count = 0;
+  candi4Count = 0;
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -21,6 +23,8 @@ export class StatusComponent implements OnInit {
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
         this.candi2Count = value.candi2;
+        this.candi3Count = value.candi3;
+        this.candi4Count = value.candi4;
         this.cdRef.detectChanges();
       }
     });

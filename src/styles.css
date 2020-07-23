@@ -465,6 +465,21 @@ app-res .row-4 a {
   border-color: #0366d6;
   color: #fff;
 }
+.main-container app-right-panel .move-res .res-total {
+  padding: 5px 1px 3px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.main-container app-right-panel .move-res .res-total h3 {
+  border: 1px solid lightgray;
+  width: 100%;
+  text-align: center;
+  color: red;
+  font-size: 22px;
+  margin-bottom: 1px;
+}
 
 .main-container app-right-panel .move-res .res-count {
   padding: 5px 1px 3px;

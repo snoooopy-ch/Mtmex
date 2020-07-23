@@ -67,11 +67,15 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.backgroundColors = [this.settings.Back_color,
         this.settings.Sentaku_back,
         this.settings.YobiSentaku1_back,
-        this.settings.YobiSentaku2_back];
+        this.settings.YobiSentaku2_back,
+        this.settings.YobiSentaku3_back,
+        this.settings.YobiSentaku4_back];
       this.hovergroundColors = [this.settings.Mouseover,
         this.settings.Sentaku_MouseOver,
         this.settings.Yobi1_MouseOver,
-        this.settings.Yobi2_MouseOver];
+        this.settings.Yobi2_MouseOver,
+        this.settings.Yobi3_MouseOver,
+        this.settings.Yobi4_MouseOver];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
       this.idStyles = [{color: '#000', background: 'transparent', classNoSelect: ''},
         {color: this.settings.ID1_moji, background: this.settings.ID1_back, classNoSelect: 'same_id1'},
@@ -294,9 +298,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.tabs[this.selectedTabIndex].active = true;
     this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
     this.resService.setSelectedTab({
-      select: this.tabs[this.selectedTabIndex].resList.filter(item => item.select).length,
-      candi1: this.tabs[this.selectedTabIndex].resList.filter(item => item.candi1).length,
-      candi2: this.tabs[this.selectedTabIndex].resList.filter(item => item.candi2).length,
+      select: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'select').length,
+      candi1: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi1').length,
+      candi2: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi2').length,
+      candi3: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi3').length,
+      candi4: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi4').length,
       totalCount: this.tabs[this.selectedTabIndex].resList.length,
       tabIndex: this.selectedTabIndex,
       title: this.tabs[this.selectedTabIndex].title,

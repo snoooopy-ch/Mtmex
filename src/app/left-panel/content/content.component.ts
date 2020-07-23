@@ -72,6 +72,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   selectCount: number;
   candi1Count: number;
   candi2Count: number;
+  candi3Count: number;
+  candi4Count: number;
   currentScrollIndex: number;
   originalResList: ResItem[];
 
@@ -84,6 +86,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.selectCount = 0;
     this.candi1Count = 0;
     this.candi2Count = 0;
+    this.candi3Count = 0;
+    this.candi4Count = 0;
     this.currentScrollIndex = 0;
   }
 
@@ -486,10 +490,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'select') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered], {
-              selected: 'none',
-              select: false,
-              candi1: false,
-              candi2: false
+              selected: 'none'
             });
           }
         }
@@ -516,10 +517,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'select') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered], {
-              selected: 'none',
-              select: false,
-              candi1: false,
-              candi2: false
+              selected: 'none'
             });
           }
           this.selectedId(this.resList[this.hovered].id,
@@ -799,7 +797,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resList.splice(index, 1);
     this.resList.splice(0, 0, tmpRes);
     this.resList = [...this.resList];
-    this.virtualScroller.scrollToIndex(0);
+    // this.virtualScroller.scrollToIndex(0);
   }
 
   /**
@@ -812,7 +810,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resList.splice(index, 1);
     this.resList.push(tmpRes);
     this.resList = [...this.resList];
-    this.virtualScroller.scrollToIndex(this.resList.length);
+    // this.virtualScroller.scrollToIndex(this.resList.length);
   }
 
   /**
@@ -821,9 +819,6 @@ export class ContentComponent implements OnInit, OnDestroy {
    * @param $event: event
    */
   selectedRes(item: any, $event: any) {
-    item.select = $event.select;
-    item.candi1 = $event.candi1;
-    item.candi2 = $event.candi2;
     item.resSelect = $event.selected;
     this.resList = [...this.resList];
     this.changeStatus();
@@ -835,22 +830,24 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (res.id === id && res.resSelect === 'select'){
         res.resBackgroundColor = this.backgroundColors[0];
         res.resSelect = 'none';
-        res.select = false;
-        res.candi1 = false;
-        res.candi2 = false;
       }
     }
     this.changeStatus();
   }
 
   changeStatus(){
-    this.selectCount = this.resList.filter(item => item.select).length;
-    this.candi1Count = this.resList.filter(item => item.candi1).length;
-    this.candi2Count = this.resList.filter(item => item.candi2).length;
+    this.selectCount = this.resList.filter(item => item.resSelect === 'select').length;
+    this.candi1Count = this.resList.filter(item => item.resSelect === 'candi1').length;
+    this.candi2Count = this.resList.filter(item => item.resSelect === 'candi2').length;
+    this.candi3Count = this.resList.filter(item => item.resSelect === 'candi3').length;
+    this.candi4Count = this.resList.filter(item => item.resSelect === 'candi4').length;
+    this.cdRef.detectChanges();
     this.resService.setSelectedRes({
       select: this.selectCount,
       candi1: this.candi1Count,
       candi2: this.candi2Count,
+      candi3: this.candi3Count,
+      candi4: this.candi4Count,
       tabIndex: this.tabIndex
     });
   }
@@ -863,9 +860,6 @@ export class ContentComponent implements OnInit, OnDestroy {
         if ($event.isSelect) {
           res.resBackgroundColor = $event.resBackgroundColor;
           res.resSelect = 'select';
-          res.select = true;
-          res.candi1 = false;
-          res.candi2 = false;
           res.idClassNoSelect = $event.idClassNoSelect;
         }
       }
@@ -878,21 +872,21 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (index < this.resList.length - 1 && (this.resList[index + 1].isAdded || this.resList[index].isAdded)) {
       this.resList[index].resSelect = selectKeys[$event.select];
       this.resList[index].resBackgroundColor = $event.resBackgroundColor;
-      this.calcSelectedRes($event.select, this.resList[index]);
+      // this.calcSelectedRes($event.select, this.resList[index]);
       if (this.resList[index].isAdded){
         let i = index;
         do {
           i--;
           this.resList[i].resSelect = selectKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
-          this.calcSelectedRes($event.select, this.resList[i]);
+          // this.calcSelectedRes($event.select, this.resList[i]);
         }
         while (this.resList[i].isAdded && i > -1);
         i = index + 1;
         while (this.resList[i].isAdded && i < this.resList.length){
           this.resList[i].resSelect = selectKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
-          this.calcSelectedRes($event.select, this.resList[i]);
+          // this.calcSelectedRes($event.select, this.resList[i]);
           i++;
         }
       }else if (this.resList[index + 1]) {
@@ -902,7 +896,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           }
           this.resList[i].resSelect = selectKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
-          this.calcSelectedRes($event.select, this.resList[i]);
+          // this.calcSelectedRes($event.select, this.resList[i]);
         }
       }
 
@@ -910,30 +904,30 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.changeStatus();
   }
 
-  calcSelectedRes(selectKind: number, item: ResItem){
-    switch (selectKind) {
-      case 0:
-        item.select = false;
-        item.candi1 = false;
-        item.candi2 = false;
-        break;
-      case 1:
-        item.select = true;
-        item.candi1 = false;
-        item.candi2 = false;
-        break;
-      case 2:
-        item.select = false;
-        item.candi1 = true;
-        item.candi2 = false;
-        break;
-      case 3:
-        item.select = false;
-        item.candi1 = false;
-        item.candi2 = true;
-        break;
-    }
-  }
+  // calcSelectedRes(selectKind: number, item: ResItem){
+  //   switch (selectKind) {
+  //     case 0:
+  //       item.select = false;
+  //       item.candi1 = false;
+  //       item.candi2 = false;
+  //       break;
+  //     case 1:
+  //       item.select = true;
+  //       item.candi1 = false;
+  //       item.candi2 = false;
+  //       break;
+  //     case 2:
+  //       item.select = false;
+  //       item.candi1 = true;
+  //       item.candi2 = false;
+  //       break;
+  //     case 3:
+  //       item.select = false;
+  //       item.candi1 = false;
+  //       item.candi2 = true;
+  //       break;
+  //   }
+  // }
 
   mouseEnterHandler(index: number) {
     this.hovered = index;
@@ -977,70 +971,81 @@ export class ContentComponent implements OnInit, OnDestroy {
         switch (command) {
           case 'select':
             res.resSelect = 'select';
-            res.select = true;
-            res.candi1 = false;
-            res.candi2 = false;
             res.resBackgroundColor = this.backgroundColors[1];
             break;
           case 'candi1':
             res.resSelect = 'candi1';
-            res.select = false;
-            res.candi1 = true;
-            res.candi2 = false;
             res.resBackgroundColor = this.backgroundColors[2];
             break;
           case 'candi2':
             res.resSelect = 'candi2';
-            res.select = false;
-            res.candi1 = false;
-            res.candi2 = true;
             res.resBackgroundColor = this.backgroundColors[3];
+            break;
+          case 'candi3':
+            res.resSelect = 'candi3';
+            res.resBackgroundColor = this.backgroundColors[4];
+            break;
+          case 'candi4':
+            res.resSelect = 'candi4';
+            res.resBackgroundColor = this.backgroundColors[5];
             break;
           case 'select-image':
             if (res.hasImage) {
               res.resSelect = 'select';
-              res.select = true;
-              res.candi1 = false;
-              res.candi2 = false;
               res.resBackgroundColor = this.backgroundColors[1];
             }
             break;
           case 'candi1-image':
             if (res.hasImage) {
               res.resSelect = 'candi1';
-              res.select = false;
-              res.candi1 = true;
-              res.candi2 = false;
               res.resBackgroundColor = this.backgroundColors[2];
             }
             break;
           case 'candi2-image':
             if (res.hasImage) {
               res.resSelect = 'candi2';
-              res.select = false;
-              res.candi1 = false;
-              res.candi2 = true;
               res.resBackgroundColor = this.backgroundColors[3];
+            }
+            break;
+          case 'candi3-image':
+            if (res.hasImage) {
+              res.resSelect = 'candi3';
+              res.resBackgroundColor = this.backgroundColors[4];
+            }
+            break;
+          case 'candi4-image':
+            if (res.hasImage) {
+              res.resSelect = 'candi4';
+              res.resBackgroundColor = this.backgroundColors[5];
             }
             break;
           case 'cancel-select':
             if (res.resSelect === 'select') {
               res.resSelect = 'none';
-              res.select = false;
               res.resBackgroundColor = this.backgroundColors[0];
             }
             break;
           case 'cancel-candi1':
             if (res.resSelect === 'candi1') {
               res.resSelect = 'none';
-              res.candi1 = false;
               res.resBackgroundColor = this.backgroundColors[0];
             }
             break;
           case 'cancel-candi2':
             if (res.resSelect === 'candi2') {
               res.resSelect = 'none';
-              res.candi2 = false;
+              res.resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi3':
+            if (res.resSelect === 'candi3') {
+              res.resSelect = 'none';
+              res.resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi4':
+            if (res.resSelect === 'candi4') {
+              res.resSelect = 'none';
               res.resBackgroundColor = this.backgroundColors[0];
             }
             break;
