@@ -868,7 +868,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   selectedTreeRes(index: number, $event: any) {
-    const selectKeys = ['none', 'select', 'candi1', 'candi2'];
+    const selectKeys = ['none', 'select', 'candi1', 'candi2', 'candi3', 'candi4'];
     if (index < this.resList.length - 1 && (this.resList[index + 1].isAdded || this.resList[index].isAdded)) {
       this.resList[index].resSelect = selectKeys[$event.select];
       this.resList[index].resBackgroundColor = $event.resBackgroundColor;

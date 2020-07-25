@@ -78,22 +78,28 @@
             (click)="treeSelectHandler($event, 2)">T1</button>
     <button class="btn-tree-candi2" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku2}"
             (click)="treeSelectHandler($event, 3)">T2</button>
+    <button class="btn-tree-candi2" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku3}"
+            (click)="treeSelectHandler($event, 4)">T3</button>
+    <button class="btn-tree-candi2" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku4}"
+            (click)="treeSelectHandler($event, 5)">T4</button>
     <button class="btn-cancel-tree" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_kaijo}"
-            (click)="treeSelectHandler($event, 0)">T解除</button>
+            (click)="treeSelectHandler($event, 0)">T解</button>
     <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku1}"
-            (click)="catchIdHandler($event, 1)">ID選択1</button>
+            (click)="catchIdHandler($event, 1)">ID1</button>
     <button class="btn-catch-id2" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku2}"
-            (click)="catchIdHandler($event, 2)">ID選択2</button>
+            (click)="catchIdHandler($event, 2)">ID2</button>
     <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku3}"
-            (click)="catchIdHandler($event, 3)">ID選択3</button>
+            (click)="catchIdHandler($event, 3)">ID3</button>
+    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku4}"
+            (click)="catchIdHandler($event, 4)">ID4</button>
     <button class="btn-cancel-selected-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_kaijo}"
-            (click)="cancelSelectedIdHandler($event)">ID解除</button>
+            (click)="cancelSelectedIdHandler($event)">ID解</button>
     <button class="btn-cancel-only-catch-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro_delete}"
-            (click)="cancelOnlyCatchIdHandler($event)">ID色消</button>
+            (click)="cancelOnlyCatchIdHandler($event)">ID色</button>
     <button class="btn-cancel-select-and-catch-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_kaijo_iro_delete}"
-            (click)="cancelSelectAndCatchIdHandler($event)">ID解除＆ID色消</button>
+            (click)="cancelSelectAndCatchIdHandler($event)">ID全</button>
     <button class="btn-hide-res" [ngStyle]="{'background-color':btnBackgroundColors.color_id_hihyouji}"
-            (click)="hideHandler($event)">非表示</button>
+            (click)="hideHandler($event)">非</button>
     <button class="btn-copy-res" [ngStyle]="{'background-color':btnBackgroundColors.color_copy}"
             (click)="duplicateHandler($event)">複</button>
     <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
