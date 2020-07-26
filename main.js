@@ -1,7 +1,7 @@
 const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron');
 const fs = require('fs');
 const encoding = require('encoding-japanese');
-const { v4: uuidv4 } = require('uuid');
+const {v4: uuidv4} = require('uuid');
 
 let win;
 let num = 0;
@@ -9,10 +9,10 @@ let ids = [];
 let resList = [];
 let sreTitle = '';
 let settingPath = 'Setting.ini';
-let stateComments = ['#datパス','#指定したdatパス','#チェックボックス','#文字色','#注意レス', '#非表示レス', '#名前欄の置換',
-  '#投稿日・IDの置換','#注目レスの閾値', '#ボタンの色'];
-let curComment='';
-let yesNoKeys = ['shuturyoku','sentaku_idou1','sentaku_idou2','Left_highlight', 'res_mouse_click', 'youtube', 'twitter', 'AutoSave','gif_stop'];
+let stateComments = ['#datパス', '#指定したdatパス', '#チェックボックス', '#文字色', '#注意レス', '#非表示レス', '#名前欄の置換',
+  '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
+let curComment = '';
+let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2', 'Left_highlight', 'res_mouse_click', 'youtube', 'twitter', 'AutoSave', 'gif_stop'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];
 let settings;
@@ -56,50 +56,50 @@ function createWindow() {
     ...(isMac ? [{
       label: app.name,
       submenu: [
-        { role: 'about' },
-        { type: 'separator' },
-        { role: 'services' },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' }
+        {role: 'about'},
+        {type: 'separator'},
+        {role: 'services'},
+        {type: 'separator'},
+        {role: 'hide'},
+        {role: 'hideothers'},
+        {role: 'unhide'},
+        {type: 'separator'},
+        {role: 'quit'}
       ]
     }] : []),
     // { role: 'fileMenu' }
     {
       label: 'File',
       submenu: [
-        isMac ? { role: 'close' } : { role: 'quit' }
+        isMac ? {role: 'close'} : {role: 'quit'}
       ]
     },
     // { role: 'editMenu' }
     {
       label: 'Edit',
       submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
+        {role: 'undo'},
+        {role: 'redo'},
+        {type: 'separator'},
+        {role: 'cut'},
+        {role: 'copy'},
+        {role: 'paste'},
         ...(isMac ? [
-          { role: 'pasteAndMatchStyle' },
-          { role: 'delete' },
-          { role: 'selectAll' },
-          { type: 'separator' },
+          {role: 'pasteAndMatchStyle'},
+          {role: 'delete'},
+          {role: 'selectAll'},
+          {type: 'separator'},
           {
             label: 'Speech',
             submenu: [
-              { role: 'startspeaking' },
-              { role: 'stopspeaking' }
+              {role: 'startspeaking'},
+              {role: 'stopspeaking'}
             ]
           }
         ] : [
-          { role: 'delete' },
-          { type: 'separator' },
-          { role: 'selectAll' }
+          {role: 'delete'},
+          {type: 'separator'},
+          {role: 'selectAll'}
         ])
       ]
     },
@@ -107,23 +107,23 @@ function createWindow() {
     {
       label: 'View',
       submenu: [
-        { role: 'reload' },
-        { role: 'forcereload' },
-        { role: 'toggledevtools' },
-        { type: 'separator' },
-        { role: 'resetzoom' },
-        { role: 'zoomin' },
-        { role: 'zoomout' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' }
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'},
+        {type: 'separator'},
+        {role: 'resetzoom'},
+        {role: 'zoomin'},
+        {role: 'zoomout'},
+        {type: 'separator'},
+        {role: 'togglefullscreen'}
       ]
     },
     // { role: 'windowMenu' }
     {
       label: 'Window',
       submenu: [
-        { role: 'minimize' },
-        { role: 'zoom' }
+        {role: 'minimize'},
+        {role: 'zoom'}
       ]
     },
     {
@@ -132,7 +132,7 @@ function createWindow() {
         {
           label: 'Learn More',
           click: async () => {
-            const { shell } = require('electron');
+            const {shell} = require('electron');
             await shell.openExternal('https://electronjs.org');
           }
         }
@@ -190,7 +190,6 @@ app.on('activate', function () {
 });
 
 
-
 /**
  * Load res list from a file
  * @param url: a file path
@@ -203,77 +202,74 @@ function getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hide
     dialog.showErrorBox('読み込み', 'ファイルパスを入力してください。');
     return;
   }
-  if(!fs.existsSync(url)){
+  if (!fs.existsSync(url)) {
     dialog.showErrorBox('読み込み', 'ファイルを読めません。');
     return;
   }
+  let data = fs.readFileSync(url);
 
-  let input = fs.createReadStream(url,);
   let remaining = '';
 
   ids = [];
   resList = [];
   num = 0;
-  input.on('data', function (data) {
-    let encoded_data = encoding.convert(data, {
-      from: 'SJIS',
-      to: 'UNICODE',
-      type: 'string',
-    });
-    remaining += encoded_data;
-    var index = remaining.indexOf('\n');
-    var last = 0;
+  let encoded_data = encoding.convert(data, {
+    from: 'SJIS',
+    to: 'UNICODE',
+    type: 'string',
+  });
+  remaining += encoded_data;
+  let index = remaining.indexOf('\n');
+  let last = 0;
 
-    while (index > -1) {
-      let line = remaining.substring(last, index);
-      last = index + 1;
-      if(line.length > 1) {
-        const res = readLines(line);
-        isFirst = false;
-        if(remarkRes !== undefined && remarkRes.length > 0){
-          const re = new RegExp(remarkRes,'gi');
-          if(re.test(res.content) || re.test(res.name)) {
-            res.isRemark = true;
-          }
+  while (index > -1) {
+    let line = remaining.substring(last, index);
+    last = index + 1;
+    if (line.length > 1) {
+      const res = readLines(line);
+      isFirst = false;
+      if (remarkRes !== undefined && remarkRes.length > 0) {
+        const re = new RegExp(remarkRes, 'gi');
+        if (re.test(res.content) || re.test(res.name)) {
+          res.isRemark = true;
         }
+      }
 
-        if(hideRes.length < 1){
+      if (hideRes.length < 1) {
+        resList.push(res);
+      } else {
+        const re = new RegExp(hideRes, 'gi');
+        if (!re.test(res.content) && !re.test(res.name)) {
           resList.push(res);
-        }else{
-          const re = new RegExp(hideRes,'gi');
-          if(!re.test(res.content) && !re.test(res.name)) {
-            resList.push(res);
-          }
-
         }
-      }
-      index = remaining.indexOf('\n', last);
-    }
 
-    remaining = remaining.substring(last);
-  });
-
-  input.on('end', function () {
-    if (remaining.length > 0) {
-      resList.push(readLines(remaining));
-    }
-    adjustResList(isResSort, isMultiAnchor, isReplaceRes);
-    if(loadedTitles.indexOf(sreTitle) !==-1){
-      let response = dialog.showMessageBoxSync(win, {buttons: ["Yes","No"],
-        message: '同じタブがあります、datを読み込みますか'});
-      if(response === 0){
-        loadedTitles.push(sreTitle);
-        let suffix = uuidv4();
-        suffix = suffix.replace(/-/g,'').substr(0,10);
-        const originSreTitle = sreTitle;
-        sreTitle = `${sreTitle}__${suffix}`;
-        win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, originSreTitle: originSreTitle});
       }
-    } else {
+    }
+    index = remaining.indexOf('\n', last);
+  }
+
+  remaining = remaining.substring(last);
+  if (remaining.length > 0) {
+    resList.push(readLines(remaining));
+  }
+  adjustResList(isResSort, isMultiAnchor, isReplaceRes);
+  if (loadedTitles.indexOf(sreTitle) !== -1) {
+    let response = dialog.showMessageBoxSync(win, {
+      buttons: ["Yes", "No"],
+      message: '同じタブがあります、datを読み込みますか'
+    });
+    if (response === 0) {
       loadedTitles.push(sreTitle);
-      win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, originSreTitle: sreTitle});
+      let suffix = uuidv4();
+      suffix = suffix.replace(/-/g, '').substr(0, 10);
+      const originSreTitle = sreTitle;
+      sreTitle = `${sreTitle}__${suffix}`;
+      win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, originSreTitle: originSreTitle});
     }
-  });
+  } else {
+    loadedTitles.push(sreTitle);
+    win.webContents.send("getResResponse", {resList: resList, sreTitle: sreTitle, originSreTitle: sreTitle});
+  }
 }
 
 ipcMain.on("removeTab", (event, originSreTitle) => {
@@ -281,9 +277,9 @@ ipcMain.on("removeTab", (event, originSreTitle) => {
 });
 
 function removeTitle(originSreTitle) {
-  if (originSreTitle.length > 0){
+  if (originSreTitle.length > 0) {
     const index = loadedTitles.indexOf(originSreTitle);
-    if(index !== -1){
+    if (index !== -1) {
       loadedTitles.splice(index, 1);
     }
   }
@@ -293,6 +289,11 @@ ipcMain.on("loadRes", (event, url, isResSort, isMultiAnchor, isReplaceRes, remar
   getResList(url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
 });
 
+ipcMain.on("loadMultiRes", (event, filePaths, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes) => {
+  for (const filePath of filePaths) {
+    getResList(filePath, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
+  }
+});
 
 /**
  * Adjust the res list by user selection
@@ -312,12 +313,12 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
     }
   }
   for (let resItem of resList) {
-    if(settings.jogai && sreTitle !== undefined && sreTitle.length > 0){
+    if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
       const re = new RegExp(sreTitle, 'gi');
-      resItem.content = resItem.content.replace(re,'');
-      resItem.id = resItem.id.replace(re,'');
-      resItem.name = resItem.name.replace(re,'');
-      resItem.date = resItem.date.replace(re,'');
+      resItem.content = resItem.content.replace(re, '');
+      resItem.id = resItem.id.replace(re, '');
+      resItem.name = resItem.name.replace(re, '');
+      resItem.date = resItem.date.replace(re, '');
     }
     for (let anchor of resItem.anchors) {
       for (let i = 0; i < resList.length; i++) {
@@ -335,12 +336,12 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
         if (!isReplaceRes && resList[i].anchors.indexOf(1) !== -1) {
           continue;
         }
-        if(resList[i].anchors.length === 1 && resList[i].anchors.indexOf(resList[i].num) !== -1){
+        if (resList[i].anchors.length === 1 && resList[i].anchors.indexOf(resList[i].num) !== -1) {
           continue;
         }
         tmpResList.push(resList[i]);
-        if(resList[i].futureAnchors.length < 1 || !isMultiAnchor ) {
-          if(resList[i].anchors.indexOf(resList[i].num) === -1) {
+        if (resList[i].futureAnchors.length < 1 || !isMultiAnchor) {
+          if (resList[i].anchors.indexOf(resList[i].num) === -1) {
             resList.splice(i, 1);
             i--;
           }
@@ -351,7 +352,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
     // tmpResList.reverse();
     for (let resItem of tmpResList) {
       for (let anchor of resItem.anchors) {
-        if(resItem.num === anchor){
+        if (resItem.num === anchor) {
           continue;
         }
         for (let i = 0; i < resList.length; i++) {
@@ -359,7 +360,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
             if (isReplaceRes) {
               if (isMultiAnchor && resItem.anchors.length < settings.anker) {
                 addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
-                if(resItem.futureAnchors.length < 1) {
+                if (resItem.futureAnchors.length < 1) {
                   resItem.isAdded = true;
                 }
               } else {
@@ -372,7 +373,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
               if (resList[i].num !== 1) {
                 if (isMultiAnchor && resItem.anchors.length < settings.anker) {
                   addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker);
-                  if(resItem.futureAnchors.length < 1) {
+                  if (resItem.futureAnchors.length < 1) {
                     resItem.isAdded = true;
                   }
                 } else {
@@ -390,24 +391,24 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes) {
 
 
     for (let i = 0; i < resList.length; i++) {
-      if(resList[i].anchorCount >= settings.noticeCount){
+      if (resList[i].anchorCount >= settings.noticeCount) {
         resList[i].isNotice = true;
-        if (resList[i].isAdded){
+        if (resList[i].isAdded) {
           let j = i - 1;
-          while (resList[j].isAdded && j > -1){
+          while (resList[j].isAdded && j > -1) {
             resList[j].isNotice = true;
             j--;
           }
           resList[j].isNotice = true;
           j = i + 1;
-          while (resList[j].isAdded && j < resList.length){
+          while (resList[j].isAdded && j < resList.length) {
             resList[j].isNotice = true;
             j++;
           }
           i = j;
-        }else if(i < resList.length - 1 && resList[i + 1]){
+        } else if (i < resList.length - 1 && resList[i + 1]) {
           let j = i + 1;
-          while (resList[j].isAdded && j < resList.length){
+          while (resList[j].isAdded && j < resList.length) {
             resList[j].isNotice = true;
             j++;
           }
@@ -461,7 +462,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
     let spliter = '&gt;&gt;' + anchor;
     let row = 0;
     for (let tmpItem of tmpItems) {
-      if(row > 0){
+      if (row > 0) {
         anchorContent += '<br>';
       }
       row++;
@@ -476,15 +477,15 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
           break;
         }
         anchorContent += tmpItem;
-      }else{
+      } else {
         anchorContent += tmpItem;
       }
 
     }
     newItem.content = anchorContent;
     // if(item.featureAnchors > 0){
-    item.content = item.content.replace(newItem.content,'');
-    if(item.content.length === 0){
+    item.content = item.content.replace(newItem.content, '');
+    if (item.content.length === 0) {
       item.content = newItem.content;
     }
     // }
@@ -522,19 +523,19 @@ function addAnchorRes(index, item, anchor, isMultiAnchor) {
  *            resColor: string}}
  */
 function readLines(line) {
-  if(line === undefined) return undefined;
+  if (line === undefined) return undefined;
   let words = line.split('<>');
   if (words.length > 4 && num === 0) {
-    sreTitle = words[4].replace(/\r|\r|\r\n/gi,'');
+    sreTitle = words[4].replace(/\r|\r|\r\n/gi, '');
     sreTitle = sreTitle.trim();
   }
-  for(let i=1; i<31; i++){
+  for (let i = 1; i < 31; i++) {
     let search = settings[`toukoubi_mae${i}`];
-    if(search === undefined || search.length < 1){
+    if (search === undefined || search.length < 1) {
       continue;
     }
-    search = search.replace(/\(/gi,'\\(');
-    search = search.replace(/\)/gi,'\\)');
+    search = search.replace(/\(/gi, '\\(');
+    search = search.replace(/\)/gi, '\\)');
     const re = new RegExp(search, 'gi');
     let replacement = settings[`toukoubi_ato${i}`];
     words[2] = words[2].replace(re, replacement);
@@ -570,18 +571,19 @@ function readLines(line) {
     isRemark: false,
     futureAnchors: [],
     isNotice: false,
+    hasContinuousAnchors: false
   };
 
   num++;
   resItem.num = num;
   resItem.name = words[0].replace(/(<([^>]+)>)/ig, '');
-  for(let i=1; i<31; i++){
+  for (let i = 1; i < 31; i++) {
     let search = settings[`namae_mae${i}`];
-    if(search === undefined || search.length < 0){
+    if (search === undefined || search.length < 0) {
       continue;
     }
-    search = search.replace(/\(/gi,'\\(');
-    search = search.replace(/\)/gi,'\\)');
+    search = search.replace(/\(/gi, '\\(');
+    search = search.replace(/\)/gi, '\\)');
     const re = new RegExp(search, 'gi');
     let replacement = settings[`namae_ato${i}`];
     resItem.name = resItem.name.replace(re, replacement);
@@ -613,21 +615,21 @@ function readLines(line) {
 
   if (words.length > 2) {
     let tmp_str = words[3];
-    tmp_str = tmp_str.replace(/<hr>|<br \/>/ig,'<br>');
+    tmp_str = tmp_str.replace(/<hr>|<br \/>/ig, '<br>');
 
 
     let f_anchors = tmp_str.match(/未来アンカー[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^&]+未来アンカー$/gi);
 
-    if(f_anchors !== null) {
+    if (f_anchors !== null) {
       for (let f_anchor of f_anchors) {
-        f_anchor = f_anchor.replace(/未来アンカー[^&]+&gt;&gt;(\d+)/gi,'$1');
-        f_anchor = f_anchor.replace(/&gt;&gt;(\d+)[^&]+未来アンカー$/gi,'$1');
+        f_anchor = f_anchor.replace(/未来アンカー[^&]+&gt;&gt;(\d+)/gi, '$1');
+        f_anchor = f_anchor.replace(/&gt;&gt;(\d+)[^&]+未来アンカー$/gi, '$1');
         resItem.futureAnchors.push(parseInt(f_anchor));
       }
     }
-    let anchor_str = tmp_str.replace(/未来アンカー[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^&]+未来アンカー$/gi,'');
+    let anchor_str = tmp_str.replace(/未来アンカー[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^&]+未来アンカー$/gi, '');
     let anchors = anchor_str.match(/&gt;&gt;\d+/g);
-    if(anchors !== null) {
+    if (anchors !== null) {
       for (const anchor of anchors) {
         resItem.anchors.push(parseInt(anchor.replace(/&gt;&gt;/g, '')));
       }
@@ -647,7 +649,7 @@ function readLines(line) {
       tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
       tmp_item = tmp_item.replace(/(http|ttp):/ig, 'http:');
       tmp_item = tmp_item.replace(/(http|ttp)s:/ig, 'https:');
-      if(settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
+      if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
         tmp_item = tmp_item.replace(re, '');
       }
       // if(tmp_item.match(/(&gt;&gt;\d*[0-9]\d*)/)){
@@ -661,9 +663,9 @@ function readLines(line) {
 
       if (new RegExp(expUrl).test(tmp_item)) {
         if (new RegExp(expGifUrl).test(tmp_item)) {
-          if(settings.gif_stop){
+          if (settings.gif_stop) {
             tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb gif-pause" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link" class="res-img-link res-gif-link">$1</a>`);
-          } else{
+          } else {
             tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link">$1</a>`);
           }
           resItem.hasImage = true;
@@ -671,7 +673,7 @@ function readLines(line) {
           tmp_item = tmp_item.replace(expImgUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link">$1</a>`);
           resItem.hasImage = true;
         } else {
-          tmp_item = tmp_item.replace(expUrl,`<a class="res-link" href="$1">$1</a>`);
+          tmp_item = tmp_item.replace(expUrl, `<a class="res-link" href="$1">$1</a>`);
         }
       }
       // else {
@@ -689,6 +691,7 @@ function readLines(line) {
   }
   return resItem;
 }
+
 ipcMain.on("loadSettings", (event) => {
   getSettings();
 });
@@ -716,7 +719,7 @@ function getSettings() {
     isResSort: false,
     isMultiAnchor: false,
     isReplaceRes: false,
-    characterColors:[],
+    characterColors: [],
     cautionRes: [],
     hiddenRes: [],
     colors: [],
@@ -724,7 +727,7 @@ function getSettings() {
   num = 0;
   input.on('data', function (data) {
     remaining += data;
-    remaining = remaining.replace(/(\r)/gm,'');
+    remaining = remaining.replace(/(\r)/gm, '');
     var index = remaining.indexOf('\n');
     var last = 0;
     while (index > -1) {
@@ -732,52 +735,52 @@ function getSettings() {
 
       last = index + 1;
       index = remaining.indexOf('\n', last);
-      if(line.startsWith('#')){
+      if (line.startsWith('#')) {
         // if(stateComments.indexOf(line) !== -1) {
         curComment = line;
         // }
         continue;
       }
-      if(line.length === 0){
+      if (line.length === 0) {
         continue;
       }
-      if(line.match(/pass:/gi)){
-        settings['autoSavePath'] = line.replace(/pass:/gi,'').trim();
+      if (line.match(/pass:/gi)) {
+        settings['autoSavePath'] = line.replace(/pass:/gi, '').trim();
         continue;
       }
       let chunks = line.split(':');
       let lineArgs = [chunks.shift(), chunks.join(':')];
 
-      if(curComment === '#datパス'){
+      if (curComment === '#datパス') {
         settings['dataPath'] = line;
-      }else if(curComment === '#指定したdatパス'){
+      } else if (curComment === '#指定したdatパス') {
         settings['defaultPath'].push(lineArgs[1]);
-      }else if(curComment === '#チェックボックス'){
-        if(lineArgs[0] === '1'){
+      } else if (curComment === '#チェックボックス') {
+        if (lineArgs[0] === '1') {
           settings['isResSort'] = lineArgs[1] === 'on';
-        }else if(lineArgs[0] === '2'){
+        } else if (lineArgs[0] === '2') {
           settings['isMultiAnchor'] = lineArgs[1] === 'on';
-        }else if(lineArgs[0] === '3'){
+        } else if (lineArgs[0] === '3') {
           settings['isReplaceRes'] = lineArgs[1] === 'on';
         }
-      }else if(curComment === '#文字色'){
+      } else if (curComment === '#文字色') {
         settings['characterColors'].push(lineArgs[1]);
-      }else if(curComment === '#注意レス'){
+      } else if (curComment === '#注意レス') {
         settings['chuui'] = lineArgs[1];
-      }else if(curComment === '#非表示レス'){
+      } else if (curComment === '#非表示レス') {
         settings['hihyouji'] = lineArgs[1];
-      }else if(curComment === '#注目レスの閾値'){
+      } else if (curComment === '#注目レスの閾値') {
         settings['noticeCount'] = lineArgs[1].split(';');
-      } else{
-        if(yesNoKeys.indexOf(lineArgs[0]) !== -1) {
+      } else {
+        if (yesNoKeys.indexOf(lineArgs[0]) !== -1) {
           settings[lineArgs[0]] = (lineArgs[1] === 'yes' || lineArgs[1] === 'yes;');
-        }else if(onOffKeys.indexOf(lineArgs[0]) !== -1){
+        } else if (onOffKeys.indexOf(lineArgs[0]) !== -1) {
           settings[lineArgs[0]] = (lineArgs[1] === 'on' || lineArgs[1] === 'on;');
-        }else if(selectKeys.indexOf(lineArgs[0]) !== -1){
+        } else if (selectKeys.indexOf(lineArgs[0]) !== -1) {
           settings[lineArgs[0]] = lineArgs[1];
-        }else {
+        } else {
           if (lineArgs.length > 1) {
-            settings[lineArgs[0]] = lineArgs[1].replace(';','');
+            settings[lineArgs[0]] = lineArgs[1].replace(';', '');
           } else {
             settings[lineArgs[0]] = '';
           }
@@ -800,28 +803,30 @@ function saveStatus(saveData) {
   const showMessage = saveData.showMessage;
   const jsonString = JSON.stringify(saveData);
   const filePath = saveData.filePath;
-  if(filePath === undefined) return;
+  if (filePath === undefined) return;
   fs.writeFile(filePath, jsonString, err => {
     if (err) {
-      if(showMessage) {
+      if (showMessage) {
         dialog.showErrorBox('保存', '保存に失敗しました。');
-      }else{
+      } else {
         console.log('自動保存に失敗しました。');
       }
     } else {
-      if(showMessage) {
+      if (showMessage) {
         // dialog.showErrorBox('保存', '保存に成功しました。');
         console.log('保存に成功しました。');
-      }else{
+      } else {
         console.log('自動保存に成功しました。');
       }
     }
   });
 }
+
 ipcMain.on("loadStatus", (event, filePath, tabIndex) => {
   loadStatus(filePath, tabIndex);
 });
-function loadStatus(filePath, tabIndex){
+
+function loadStatus(filePath, tabIndex) {
   fs.readFile(filePath, 'utf8', (err, jsonString) => {
     if (err) {
       dialog.showErrorBox('復元', '復元。');
@@ -830,47 +835,48 @@ function loadStatus(filePath, tabIndex){
     try {
       const loadData = JSON.parse(jsonString)
       win.webContents.send("getStatus", {data: loadData, tabIndex: tabIndex});
-    } catch(err) {
+    } catch (err) {
       console.log('Error parsing JSON string:', err)
     }
   })
 }
+
 ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes) => {
   saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes);
 });
 
 function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes) {
-  fs.readFile('Setting.ini', 'utf8', function (err,data) {
-    if(data.match(/(#datパス\r\n)[^\r^\n]+(\r\n)/g)===null){
+  fs.readFile('Setting.ini', 'utf8', function (err, data) {
+    if (data.match(/(#datパス\r\n)[^\r^\n]+(\r\n)/g) === null) {
       data = data.replace(/(#datパス\r\n)+(\r\n)/g, `$1${dataFilePath}$2`);
-    }else{
+    } else {
       data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
     }
-    if(data.match(/(chuui:)[^\r^\n]+(\r\n)/g) === null){
+    if (data.match(/(chuui:)[^\r^\n]+(\r\n)/g) === null) {
       data = data.replace(/(chuui:)+(\r\n)/g, `$1${remarkRes}$2`);
-    }else{
+    } else {
       data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
     }
-    if(data.match(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g) === null){
+    if (data.match(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g) === null) {
       data = data.replace(/(#非表示レス\r\nhihyouji:)+(\r\n)/g, `$1${hideRes}$2`);
-    }else{
+    } else {
       data = data.replace(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
     }
 
-    let replaceString ='';
-    if(isResSort){
+    let replaceString = '';
+    if (isResSort) {
       replaceString += '$1on$2';
-    }else{
+    } else {
       replaceString += '$1off$2';
     }
-    if(isMultiAnchor){
+    if (isMultiAnchor) {
       replaceString += 'on';
-    }else{
+    } else {
       replaceString += 'off';
     }
-    if(isReplaceRes){
+    if (isReplaceRes) {
       replaceString += '$3on$4';
-    }else{
+    } else {
       replaceString += '$3off$4';
     }
     data = data.replace(/(#チェックボックス\r\n1:)\w+(\r\n2:)\w+(\r\n3:)\w+(\r\n)/gi, replaceString);
