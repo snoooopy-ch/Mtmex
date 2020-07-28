@@ -99,7 +99,12 @@ export class ResComponent implements OnInit {
         $('#preview').css('display', 'none');
       });
 
+      $('a.res-link').click(function(event) {
+        event.stopPropagation();
+      })
+
       $('.res-container label').click(function(event){
+        console.log('label click');
         event.stopPropagation();
       });
 
