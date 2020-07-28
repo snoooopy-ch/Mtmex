@@ -30,6 +30,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   private title: any;
   txtRemarkRes: string;
   txtHideRes: string;
+  isContinuousAnchor: any;
+  notMoveFutureAnchor: any;
 
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
@@ -133,7 +135,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes,
       this.isResSort, this.isMultiAnchor, this.isReplaceRes);
   }
-  onLoadUrl() {
+
+  btnLoadSingleFile(filePath) {
 
     let remarkRes = this.txtRemarkRes;
     if (remarkRes.endsWith(';')){
@@ -145,7 +148,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       hideRes = hideRes.substr(0, hideRes.length - 1);
     }
     hideRes = hideRes.replace(/;/gi, '|');
-    this.resService.loadRes(this.txtDataFilePath, this.isResSort, this.isMultiAnchor, this.isReplaceRes , remarkRes, hideRes);
+    this.resService.loadRes(filePath, this.isResSort, this.isMultiAnchor, this.isReplaceRes , remarkRes, hideRes);
   }
 
   /**
@@ -226,9 +229,31 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
 
   loadCurrentRes() {
-    electron.remote.dialog.showOpenDialog(null, {title: 'レス状態保存'}).then(result => {
+    electron.remote.dialog.showOpenDialog(null, {title: 'レス状態復元',
+      properties: ['openFile', 'multiSelections'],
+      filters: [{ name: 'Data Files', extensions: ['dat'] }]}).then(result => {
       if (!result.canceled){
         this.resService.loadStatus(result.filePaths[0], this.tabIndex);
+      }
+    });
+  }
+
+  btnLoadMultiFiles() {
+    electron.remote.dialog.showOpenDialog(null, {title: 'レス状態復元',
+      properties: ['openFile', 'multiSelections'],
+      filters: [{ name: 'Data Files', extensions: ['dat'] }]}).then(async result => {
+      if (!result.canceled){
+        let remarkRes = this.txtRemarkRes;
+        if (remarkRes.endsWith(';')){
+          remarkRes = remarkRes.substr(0, remarkRes.length - 1);
+        }
+        remarkRes = remarkRes.replace(/;/gi, '|');
+        let hideRes = this.txtHideRes;
+        if (hideRes.endsWith(';')){
+          hideRes = hideRes.substr(0, hideRes.length - 1);
+        }
+        hideRes = hideRes.replace(/;/gi, '|');
+        this.resService.loadMultiRes(result.filePaths, this.isResSort, this.isMultiAnchor, this.isReplaceRes , remarkRes, hideRes);
       }
     });
   }

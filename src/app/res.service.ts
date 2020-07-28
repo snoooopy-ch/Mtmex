@@ -52,6 +52,10 @@ export class ResService {
     electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
   }
 
+  loadMultiRes(filePaths, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, remarkRes, hideRes) {
+    electron.ipcRenderer.send('loadMultiRes', filePaths, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
+  }
+
   loadSettings(){
     electron.ipcRenderer.send('loadSettings');
   }

@@ -5,19 +5,26 @@
     <button class="sure-specific-btn btn-right-round" (click)="setDefaultPathHandler(2)">dat3</button>
   </div>
   <input type="text" [(ngModel)]="txtDataFilePath">
-  <button class="border-round" (click)="onLoadUrl()">datファイル読み込み実行</button>
+  <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
+  <button class="border-round load-multi-path" (click)="btnLoadMultiFiles()">dat直接読み込み</button>
 </div>
 <div class="res-order">
 
   <div class="reading-mode">
     <div>
-       <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替える</label>
+       <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替え</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort">複数アンカーを分割する</label>
+       <label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort">複数アンカーを分割</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="isReplaceRes">>>1へのレスを入れ替える</label>
+       <label><input type="checkbox" [(ngModel)]="isContinuousAnchor" [disabled]="!isMultiAnchor && !isResSort">連続アンカー分割</label>
+    </div>
+    <div>
+       <label><input type="checkbox" [(ngModel)]="notMoveFutureAnchor">未来アンカー移動せず</label>
+    </div>
+    <div>
+       <label><input type="checkbox" [(ngModel)]="isReplaceRes">>>1へのレスを入れ替え</label>
     </div>
   </div>
 </div>

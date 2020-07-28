@@ -256,7 +256,11 @@ app-res div.row-3 button:first-child{
   border-bottom-left-radius: 5px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+
 }
+
+
+
 app-res div.row-3 button:last-child {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -482,7 +486,7 @@ app-res .row-4 a {
 }
 
 .main-container app-right-panel .move-res .res-count {
-  padding: 5px 1px 3px;
+  padding: 0 1px;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -563,6 +567,29 @@ app-res .row-4 a {
   height: 55px;
   margin: 0px;
   /*margin-left: -1px;*/
+}
+
+.main-container app-right-panel .width-100 button.load-path{
+  background-color: #26c9ff;
+  border: solid 1px #26c9ff;
+}
+
+.main-container app-right-panel .width-100 button.load-path:hover{
+  background-color: #fff;
+  color: #26c9ff;
+  border: solid 1px #26c9ff;
+}
+
+.main-container app-right-panel .width-100 button.load-multi-path{
+  height: 60px;
+  background-color: #bfffff;
+  border: solid 1px #bfffff;
+}
+
+.main-container app-right-panel .width-100 button.load-multi-path:hover{
+  background-color: #fff;
+  color: #26c9ff;
+  border: solid 1px #bfffff;
 }
 
 .main-container app-right-panel #txt-html-tag {
