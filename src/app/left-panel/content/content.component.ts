@@ -869,10 +869,10 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (res.id === id){
         res.idBackgroundColor = $event.idBackgroundColor;
         res.idColor = $event.idColor;
+        res.idClassNoSelect = $event.idClassNoSelect;
         if ($event.isSelect) {
           res.resBackgroundColor = $event.resBackgroundColor;
           res.resSelect = 'select';
-          res.idClassNoSelect = $event.idClassNoSelect;
         }
       }
     }

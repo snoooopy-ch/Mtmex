@@ -111,9 +111,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.leftHightlight = this.settings.Left_highlight;
       this.subHotKeys = [];
       if (value.hasOwnProperty('sentaku_no1')) {
-        const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'yobi3', 'yobi4', 'up', 'down', 'big0', 'big1', 'big2', 'nasi'
-          , 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10', 'tree_sentaku'
-          , 'tree_yobi1', 'tree_yobi2', 'tree_yobi3', 'tree_yobi4', 'tree_kaijo', 'id1', 'id2', 'id3', 'id4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
+        const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'yobi3', 'yobi4', 'up', 'down'
+          , 'big0', 'big1', 'big2', 'nasi', 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8'
+          , 'color9', 'color10', 'tree_sentaku', 'tree_yobi1', 'tree_yobi2', 'tree_yobi3', 'tree_yobi4', 'tree_kaijo'
+          , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
           , 'id_hihyouji', 'henshuu', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b'];
         for (const key of arrayKeys) {
@@ -129,8 +130,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.btnBackgroundColors = [];
       if (value.hasOwnProperty('color_tree_sentaku')){
         const colorKeys = ['color_tree_sentaku', 'color_tree_yobi_sentaku1', 'color_tree_yobi_sentaku2', 'color_tree_yobi_sentaku3',
-          'color_tree_yobi_sentaku4', 'color_tree_kaijo', 'color_id_sentaku1', 'color_id_sentaku2', 'color_id_sentaku3', 'color_id_sentaku4',
-          'color_id_kaijo', 'color_id_iro_delete', 'color_id_kaijo_iro_delete', 'color_id_hihyouji', 'color_copy', 'color_edit'];
+          'color_tree_yobi_sentaku4', 'color_tree_kaijo', 'color_id_sentaku1', 'color_id_sentaku2', 'color_id_sentaku3',
+          'color_id_sentaku4', 'color_id_iro1', 'color_id_iro2', 'color_id_iro3', 'color_id_iro4', 'color_id_kaijo',
+          'color_id_iro_delete', 'color_id_kaijo_iro_delete', 'color_id_hihyouji', 'color_copy', 'color_edit'];
         for (const key of colorKeys){
           this.btnBackgroundColors[key] = this.settings[key];
         }

@@ -439,4 +439,17 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     this.deleteResEmitter.emit();
   }
+
+  btnChangeIdColorHandler(event, buttonIndex: number) {
+    event.stopPropagation();
+    this.item.idBackgroundColor = this.idStyles[buttonIndex].background;
+    this.item.idColor = this.idStyles[buttonIndex].color;
+    this.item.idClassNoSelect = this.idStyles[buttonIndex].classNoSelect;
+    this.selectedIdEmitter.emit({
+      isSelect: false,
+      idBackgroundColor: this.idStyles[buttonIndex].background,
+      idColor: this.idStyles[buttonIndex].color,
+      idClassNoSelect: this.idStyles[buttonIndex].classNoSelect
+    });
+  }
 }
