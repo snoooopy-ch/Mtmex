@@ -144,6 +144,14 @@ label {
   align-items: center;
 }
 
+.main-container app-left-panel app-content .dropdown-menu {
+  min-width: 353px;
+}
+
+.main-container app-left-panel app-content .dropdown-item {
+  width: 99%;
+}
+
 .main-container app-left-panel app-content input[type="text"] {
   width: 90%;
   height: 26px;
@@ -159,6 +167,30 @@ label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.main-container app-left-panel app-content .extract .toggle-all {
+  min-width: 95px;
+  height: 29px;
+}
+
+.main-container app-left-panel app-content .extract .toggle-context {
+  min-width: 45px;
+  height: 29px;
+}
+
+.main-container app-left-panel app-content .extract .toggle-tree {
+  min-width: 40px;
+  height: 29px;
+  margin: 0 0 0 2px;
+  border: 1px solid #0366b6;
+}
+
+.main-container app-left-panel app-content .extract .toggle-tree.active{
+  background-color: #0366b6;
+  color: #fff;
+  min-width: 40px;
+  height: 29px;
 }
 
 .main-container app-left-panel app-content .extract .btn-long {
@@ -382,14 +414,14 @@ app-res .row-4 a {
 .main-container app-right-panel {
   min-width: 260px;
   max-width: 260px;
-  padding: 9px 10px 9px 0px;
-  margin: 33px 5px 0;
+  padding: 0px 10px 9px 0px;
+  margin: 86px 5px 0;
   user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
   overflow-y: scroll;
-  height: calc(100vh - 37px);
+  height: calc(100vh - 90px);
 }
 
 .main-container app-right-panel button {
