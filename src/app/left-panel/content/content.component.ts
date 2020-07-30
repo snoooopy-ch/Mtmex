@@ -1098,25 +1098,37 @@ export class ContentComponent implements OnInit, OnDestroy {
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
     if (this.searchList.indexOf(this.searchKeyword.trim()) === -1){
-      this.searchList.push(this.searchKeyword.trim());
+      if (this.searchList.length >= 20){
+        this.searchList.splice(this.searchList.length - 1, 1);
+      }
+      this.searchList.splice(0, 0, this.searchKeyword.trim());
     }else{
-
+      const searchIndex = this.searchList.indexOf(this.searchKeyword.trim());
+      moveItemInArray(this.searchList, searchIndex, 0);
     }
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)${keyword}(?![&gt;])`, 'gi');
 
     for (let i = 0; i < this.resList.length; i++){
-      if (this.resList[i].content.match(re) !== null){
-        this.resList[i].content = this.resList[i].content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-        this.resList[i].isSearched = true;
-        this.resList[i].originalIndex = i;
-      }
-      if (this.searchOption === 'all'){
-        if (this.resList[i].name.match(re) || this.resList[i].id.match(re)){
-          this.resList[i].id = this.resList[i].id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-          this.resList[i].name = this.resList[i].name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+      if (this.searchOption === 'num'){
+        if (re.test(String(this.resList[i].num))){
+          // this.resList[i].num = this.resList[i].num.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
           this.resList[i].isSearched = true;
           this.resList[i].originalIndex = i;
+        }
+      }else {
+        if (this.resList[i].content.match(re) !== null) {
+          this.resList[i].content = this.resList[i].content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+          this.resList[i].isSearched = true;
+          this.resList[i].originalIndex = i;
+        }
+        if (this.searchOption === 'all') {
+          if (this.resList[i].name.match(re) || this.resList[i].id.match(re)) {
+            this.resList[i].id = this.resList[i].id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+            this.resList[i].name = this.resList[i].name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+            this.resList[i].isSearched = true;
+            this.resList[i].originalIndex = i;
+          }
         }
       }
     }
