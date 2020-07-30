@@ -104,6 +104,8 @@
             (click)="duplicateHandler($event)">複</button>
     <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
             (click)="editShowHandler($event)" >編集</button>
+    <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
+            (click)="btnDeleteHandler($event)" >消</button>
   </div>
   <div class="row-4" *ngIf="item.isEdit" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}">
     <ckeditor class="row-4" [editor]="Editor"

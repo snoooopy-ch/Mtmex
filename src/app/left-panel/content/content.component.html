@@ -1,7 +1,8 @@
 <div class="extract">
   <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption" (change)="tglSearchChangeHandler()">
-    <mat-button-toggle value="all" class="btn-left-round">all</mat-button-toggle>
-    <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本</mat-button-toggle>
+    <mat-button-toggle value="num" class="btn-left-round">No</mat-button-toggle>
+    <mat-button-toggle value="all">本文</mat-button-toggle>
+    <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本文</mat-button-toggle>
   </mat-button-toggle-group>
   <input type="text" [(ngModel)]="searchKeyword" #txtSearch (keyup)="txtSearchKeyUpHandler($event)" (ngModelChange)="txtSearchChangeHandler($event)">
   <mat-button-toggle-group name="btn-search" [multiple]="true">
@@ -28,6 +29,7 @@
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
              'border-left': resItem.isAdded ? leftBorder : '', 'border-top': resItem.isRemark ? topBorder : resTopBar}"
              (duplicateResEmitter)="duplicateRes(resItem)"
+             (deleteResEmitter)="deleteRes(resItem)"
              (hideResEmitter)="hideRes(resItem.id)"
              (upResEmitter)="moveUpRes(resItem)"
              (downResEmitter)="moveDownRes(resItem)"

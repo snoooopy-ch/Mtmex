@@ -149,6 +149,11 @@
   </table>
   <button class="btn-left-round btn-right-round" style="width: 100%;" (click)="btnSelectResHandler()">実行</button>
 </div>
+<div class="menu-group">
+  <button class="btn-left-round" (click)="btnSetResMenuHandler(1)">メニュー１</button>
+  <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
+  <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
+</div>
 <div class="width-100">
   <label>注意レス</label>
   <input type="text" [(ngModel)]="txtRemarkRes">

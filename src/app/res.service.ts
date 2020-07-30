@@ -33,7 +33,8 @@ export class ResService {
   printAllCommand = this.printAllCommandSource.asObservable();
   saveResStatusSource = new BehaviorSubject<any>({});
   saveResStatus = this.saveResStatusSource.asObservable();
-
+  resMenuSource = new BehaviorSubject<any>({});
+  resMenu = this.resMenuSource.asObservable();
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
@@ -48,12 +49,16 @@ export class ResService {
 
   }
 
-  loadRes(url, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, remarkRes, hideRes) {
-    electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
+  loadRes(url, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, isContinuousAnchor: boolean,
+          notMoveFutureAnchor: boolean, remarkRes, hideRes) {
+    electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor,
+      remarkRes, hideRes);
   }
 
-  loadMultiRes(filePaths, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, remarkRes, hideRes) {
-    electron.ipcRenderer.send('loadMultiRes', filePaths, isResSort, isMultiAnchor, isReplaceRes, remarkRes, hideRes);
+  loadMultiRes(filePaths, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, isContinuousAnchor: boolean,
+               notMoveFutureAnchor: boolean, remarkRes, hideRes) {
+    electron.ipcRenderer.send('loadMultiRes', filePaths, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor,
+      remarkRes, hideRes);
   }
 
   loadSettings(){
@@ -118,6 +123,10 @@ export class ResService {
 
   setSaveResStatus(value: any){
     this.saveResStatusSource.next(value);
+  }
+
+  setResMenu(value: any){
+    this.resMenuSource.next(value);
   }
 
   async printHtmlTag(resList: ResItem[], options) {

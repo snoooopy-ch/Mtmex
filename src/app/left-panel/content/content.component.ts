@@ -185,13 +185,22 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
-        console.log('status');
         this.txtURL = value.data.txtUrl;
         if (this.resList !== undefined) {
           this.virtualScroller.scrollToIndex(value.data.scrollIndex);
           this.changeStatus();
           this.cdRef.detectChanges();
         }
+      }
+    });
+
+    this.subscribers.resMenu = this.resService.resMenu.subscribe((value) => {
+      if (this.tabIndex === value.tabIndex) {
+        for (const res of this.resList){
+          res.resMenu = value.resMenu;
+        }
+        this.cdRef.detectChanges();
+        value.token = false;
       }
     });
 
@@ -751,6 +760,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     const cloneItem = Object.assign({}, item);
     this.resList.splice(index + 1, 0, cloneItem);
     this.cdRef.detectChanges();
+    this.changeStatus();
     // this.resList = [...this.resList];
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
@@ -1403,5 +1413,16 @@ export class ContentComponent implements OnInit, OnDestroy {
           {select: true, candi1: false, candi2: false, selected: 'select'});
       }
     }
+  }
+
+  deleteRes(item: any) {
+    const index = this.resList.indexOf(item);
+    this.resList.splice(index, 1);
+    this.cdRef.detectChanges();
+    this.changeStatus();
+    this.resService.setTotalRes({
+      tabIndex: this.tabIndex,
+      totalCount: this.resList.length
+    });
   }
 }

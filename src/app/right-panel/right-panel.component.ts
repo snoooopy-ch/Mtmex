@@ -138,17 +138,28 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
   btnLoadSingleFile(filePath) {
 
+    const remarkRes = this.getRemarkRes();
+    const hideRes = this.getHideRes();
+    this.resService.loadRes(filePath, this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor,
+      this.notMoveFutureAnchor, remarkRes, hideRes);
+  }
+
+  getRemarkRes(){
     let remarkRes = this.txtRemarkRes;
     if (remarkRes.endsWith(';')){
       remarkRes = remarkRes.substr(0, remarkRes.length - 1);
     }
     remarkRes = remarkRes.replace(/;/gi, '|');
+    return remarkRes;
+  }
+
+  getHideRes(){
     let hideRes = this.txtHideRes;
     if (hideRes.endsWith(';')){
       hideRes = hideRes.substr(0, hideRes.length - 1);
     }
     hideRes = hideRes.replace(/;/gi, '|');
-    this.resService.loadRes(filePath, this.isResSort, this.isMultiAnchor, this.isReplaceRes , remarkRes, hideRes);
+    return hideRes;
   }
 
   /**
@@ -243,18 +254,19 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       properties: ['openFile', 'multiSelections'],
       filters: [{ name: 'Data Files', extensions: ['dat'] }]}).then(async result => {
       if (!result.canceled){
-        let remarkRes = this.txtRemarkRes;
-        if (remarkRes.endsWith(';')){
-          remarkRes = remarkRes.substr(0, remarkRes.length - 1);
-        }
-        remarkRes = remarkRes.replace(/;/gi, '|');
-        let hideRes = this.txtHideRes;
-        if (hideRes.endsWith(';')){
-          hideRes = hideRes.substr(0, hideRes.length - 1);
-        }
-        hideRes = hideRes.replace(/;/gi, '|');
-        this.resService.loadMultiRes(result.filePaths, this.isResSort, this.isMultiAnchor, this.isReplaceRes , remarkRes, hideRes);
+        const remarkRes = this.getHideRes();
+        const hideRes = this.getHideRes();
+        this.resService.loadMultiRes(result.filePaths, this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor,
+          this.notMoveFutureAnchor, remarkRes, hideRes);
       }
+    });
+  }
+
+  btnSetResMenuHandler(value: number) {
+    this.resService.setResMenu({
+      tabIndex: this.tabIndex,
+      token: true,
+      resMenu: value
     });
   }
 }

@@ -52,6 +52,7 @@ export class ResComponent implements OnInit {
   @Output() selectedTreeResEmitter = new EventEmitter();
   @Output() setDraggableEmitter = new EventEmitter();
   @Output() selectedNumEmitter = new EventEmitter();
+  @Output() deleteResEmitter = new EventEmitter();
 
   @Input() backgroundColors;
   @Input() idStyles;
@@ -440,5 +441,10 @@ export class ResComponent implements OnInit {
 
   clickCKEditor(event) {
     event.stopPropagation();
+  }
+
+  btnDeleteHandler(event) {
+    event.stopPropagation();
+    this.deleteResEmitter.emit();
   }
 }

@@ -562,6 +562,15 @@ app-res .row-4 a {
   color: dodgerblue;
 }
 
+.main-container app-right-panel .menu-group {
+  padding: 2px 0;
+}
+
+.main-container app-right-panel .menu-group button{
+  margin: 0;
+  width: 33%;
+}
+
 .main-container app-right-panel .sure-specific button{
   width: 33.33%;
   height: 55px;
