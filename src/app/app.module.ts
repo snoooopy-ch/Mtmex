@@ -18,6 +18,8 @@ import {HotkeyModule} from 'angular2-hotkeys';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import {TabsModule} from 'ngx-bootstrap/tabs';
 import {DndModule} from 'ngx-drag-drop';
+import {ButtonsModule} from 'ngx-bootstrap/buttons';
+import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 
 
 
@@ -38,7 +40,7 @@ import {DndModule} from 'ngx-drag-drop';
     FormsModule,
     DragDropModule,
     BrowserAnimationsModule,
-    
+
     // MatTabsModule,
     MatIconModule,
     CKEditorModule,
@@ -48,6 +50,8 @@ import {DndModule} from 'ngx-drag-drop';
     HotkeyModule.forRoot(),
     TabsModule.forRoot(),
     DndModule,
+    ButtonsModule,
+    TypeaheadModule.forRoot(),
 
   ],
   providers: [],

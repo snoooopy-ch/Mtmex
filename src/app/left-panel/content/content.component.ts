@@ -76,6 +76,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   candi4Count: number;
   currentScrollIndex: number;
   originalResList: ResItem[];
+  isTreeSearch: number;
+  searchList = [];
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -939,6 +941,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   //   }
   // }
 
+
   mouseEnterHandler(index: number) {
     this.hovered = index;
   }
@@ -1094,6 +1097,11 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
+    if (this.searchList.indexOf(this.searchKeyword.trim()) === -1){
+      this.searchList.push(this.searchKeyword.trim());
+    }else{
+
+    }
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)${keyword}(?![&gt;])`, 'gi');
 
@@ -1143,31 +1151,34 @@ export class ContentComponent implements OnInit, OnDestroy {
     //     }
     //   }
     // }
+    console.log(this.isTreeSearch);
     for (let i = 0; i < this.resList.length; i++) {
       if (this.resList[i].isSearched){
         this.resList[i].isFiltered = true;
-        if (this.resList[i].isAdded) {
-          let j = i - 1;
-          if (j > -1) {
-            while (j > -1 && this.resList[j].isAdded) {
+        if (this.isTreeSearch) {
+          if (this.resList[i].isAdded) {
+            let j = i - 1;
+            if (j > -1) {
+              while (j > -1 && this.resList[j].isAdded) {
+                this.resList[j].isFiltered = true;
+                j--;
+              }
               this.resList[j].isFiltered = true;
-              j--;
             }
-            this.resList[j].isFiltered = true;
-          }
-          j = i + 1;
-          if (j < this.resList.length) {
+            j = i + 1;
+            if (j < this.resList.length) {
+              while (j < this.resList.length && this.resList[j].isAdded) {
+                this.resList[j].isFiltered = true;
+                j++;
+              }
+            }
+            i = j;
+          } else if (i < this.resList.length - 1 && this.resList[i + 1]) {
+            let j = i + 1;
             while (j < this.resList.length && this.resList[j].isAdded) {
               this.resList[j].isFiltered = true;
               j++;
             }
-          }
-          i = j;
-        }else if (i < this.resList.length - 1 && this.resList[i + 1]){
-          let j = i + 1;
-          while (j < this.resList.length && this.resList[j].isAdded){
-            this.resList[j].isFiltered = true;
-            j++;
           }
         }
       }

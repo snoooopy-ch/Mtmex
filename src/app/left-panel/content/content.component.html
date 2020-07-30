@@ -1,10 +1,16 @@
 <div class="extract">
   <mat-button-toggle-group name="search-text" [(ngModel)]="searchOption" (change)="tglSearchChangeHandler()">
     <mat-button-toggle value="num" class="btn-left-round">No</mat-button-toggle>
-    <mat-button-toggle value="all">本文</mat-button-toggle>
-    <mat-button-toggle value="context" class="btn-right-round" class="border-left: none">本文</mat-button-toggle>
+    <mat-button-toggle value="all" class="toggle-all">本文+名前+ID</mat-button-toggle>
+    <mat-button-toggle value="context" class="btn-right-round toggle-context">本文</mat-button-toggle>
   </mat-button-toggle-group>
-  <input type="text" [(ngModel)]="searchKeyword" #txtSearch (keyup)="txtSearchKeyUpHandler($event)" (ngModelChange)="txtSearchChangeHandler($event)">
+  <button type="button" class="toggle-tree" [(ngModel)]="isTreeSearch" btnCheckbox>ツリー</button>
+
+  <input type="text" [(ngModel)]="searchKeyword" #txtSearch
+         [typeahead]="searchList"
+         [typeaheadMinLength]="0"
+         (keyup)="txtSearchKeyUpHandler($event)"
+         (ngModelChange)="txtSearchChangeHandler($event)">
   <mat-button-toggle-group name="btn-search" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="btnSearchChangeHandler()" #btnSearch>抽出</mat-button-toggle>
   </mat-button-toggle-group>
