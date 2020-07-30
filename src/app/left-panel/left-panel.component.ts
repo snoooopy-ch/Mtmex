@@ -369,6 +369,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           shuturyoku: this.shuturyoku,
           resSizeList: this.resSizeList,
           characterColors: this.settings.characterColors,
+          isAll: true
         });
 
         if (index !== 0 && oneHtmlTag.length > 0) {

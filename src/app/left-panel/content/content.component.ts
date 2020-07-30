@@ -1402,6 +1402,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       shuturyoku: this.shuturyoku,
       resSizeList: this.resSizeList,
       characterColors: this.characterColors,
+      isAll: false
     });
 
     this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag});
