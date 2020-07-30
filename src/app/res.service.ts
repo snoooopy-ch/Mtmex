@@ -164,6 +164,30 @@ export class ResService {
       htmlTag += `<div style="yobi2">予備選択2</div>\n${yobi2}`;
     }
 
+    let yobi3 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi3'){
+        exists = true;
+        yobi3 += await this.printRes(res, options);
+      }
+    }
+
+    if (yobi3.length > 0){
+      htmlTag += `<div style="yobi3">予備選択3</div>\n${yobi3}`;
+    }
+
+    let yobi4 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi4'){
+        exists = true;
+        yobi4 += await this.printRes(res, options);
+      }
+    }
+
+    if (yobi4.length > 0){
+      htmlTag += `<div style="yobi4">予備選択4</div>\n${yobi4}`;
+    }
+
     if (!exists){
       htmlTag = '';
     }
@@ -237,7 +261,7 @@ export class ResService {
     htmlTag += `${res.num}: <span class="name">${resName}</span>`;
     htmlTag += ` <span style="color: gray;"> ${resDate}`;
 
-    if ( options.shuturyoku) {
+    if (options.shuturyoku) {
       if (res.id.length > 0 ) {
         if (res.idColor !== '#000') {
           htmlTag += `<em style="color:${res.idColor}; background-color: ${res.idBackgroundColor}; font-weight: bold;" class="specified"> ID:${resId}</em>`;
@@ -282,6 +306,11 @@ export class ResService {
         htmlTag += ` t_i`;
       }
       htmlTag += `"><!-- res_s -->`;
+      if (res.id.length > 0 ) {
+        if (res.idColor !== '#000') {
+          htmlTag += `<-- ${res.idClassNoSelect}_s -->`;
+        }
+      }
       let suffix = '';
       if (res.resFontSize === options.resSizeList[1].value){
         htmlTag += `<tt>`;
@@ -322,7 +351,11 @@ export class ResService {
         htmlTag += `<kbd>`;
         suffix = `</kbd>` + suffix;
       }
-      htmlTag += `${content}${suffix}<!-- res_e -->`;
+      htmlTag += `${content}${suffix}`;
+      if (res.idColor !== '#000') {
+        htmlTag += `<-- ${res.idClassNoSelect}_e -->`;
+      }
+      htmlTag += `<!-- res_e -->`;
 
     }
     htmlTag += `</div>\n`;
