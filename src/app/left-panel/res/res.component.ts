@@ -280,6 +280,14 @@ export class ResComponent implements OnInit {
     this.toBottomResEmitter.emit();
   }
 
+  setResStyle(colorIndex){
+    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
+    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
+    this.selectedResEmitter.emit({
+      selected: this.item.resSelect
+    });
+  }
+
   selectClickHandler(event) {
     event.stopPropagation();
     let colorIndex = 0;
@@ -289,11 +297,7 @@ export class ResComponent implements OnInit {
       this.item.resSelect = 'select';
       colorIndex = 1;
     }
-    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
-    this.selectedResEmitter.emit({
-        selected: colorIndex === 0 ? 'none' : 'select'
-      });
+    this.setResStyle(colorIndex);
     event.target.blur();
     this.cdRef.detectChanges();
   }
@@ -302,16 +306,13 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi1') {
-      this.item.resSelect = 'none';
+      this.item.resSelect = 'select';
+      colorIndex = 1;
     } else {
       this.item.resSelect = 'candi1';
       colorIndex = 2;
     }
-    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
-    this.selectedResEmitter.emit({
-      selected: colorIndex === 0 ? 'none' : 'candi1'
-    });
+    this.setResStyle(colorIndex);
     event.target.blur();
     this.cdRef.detectChanges();
   }
@@ -320,16 +321,13 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi2') {
-      this.item.resSelect = 'none';
+      this.item.resSelect = 'select';
+      colorIndex = 1;
     } else {
       this.item.resSelect = 'candi2';
       colorIndex = 3;
     }
-    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
-    this.selectedResEmitter.emit({
-      selected: colorIndex === 0 ? 'none' : 'candi2'
-    });
+    this.setResStyle(colorIndex);
     event.target.blur();
     this.cdRef.detectChanges();
   }
@@ -338,16 +336,13 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi3') {
-      this.item.resSelect = 'none';
+      this.item.resSelect = 'select';
+      colorIndex = 1;
     } else {
       this.item.resSelect = 'candi3';
       colorIndex = 4;
     }
-    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
-    this.selectedResEmitter.emit({
-      selected: colorIndex === 0 ? 'none' : 'candi3'
-    });
+    this.setResStyle(colorIndex);
     event.target.blur();
     this.cdRef.detectChanges();
   }
@@ -356,16 +351,13 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi4') {
-      this.item.resSelect = 'none';
+      this.item.resSelect = 'select';
+      colorIndex = 1;
     } else {
       this.item.resSelect = 'candi4';
       colorIndex = 5;
     }
-    this.item.resBackgroundColor = this.backgroundColors[colorIndex];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[colorIndex];
-    this.selectedResEmitter.emit({
-      selected: colorIndex === 0 ? 'none' : 'candi4'
-    });
+    this.setResStyle(colorIndex);
     event.target.blur();
     this.cdRef.detectChanges();
   }

@@ -553,7 +553,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // 編集
       this.hotkeysService.add(new Hotkey(this.subHotKeys.henshuu, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.resList[this.hovered].isEdit = true;
+          this.resList[this.hovered].isEdit = !this.resList[this.hovered].isEdit;
           this.cdRef.detectChanges();
         }
         return false; // Prevent bubbling
