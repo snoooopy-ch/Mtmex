@@ -415,13 +415,13 @@ app-res .row-4 a {
   min-width: 260px;
   max-width: 260px;
   padding: 0px 10px 9px 0px;
-  margin: 86px 5px 0;
+  margin: 163px 5px 0;
   user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
   overflow-y: scroll;
-  height: calc(100vh - 90px);
+  height: calc(100vh - 165px);
 }
 
 .main-container app-right-panel button {

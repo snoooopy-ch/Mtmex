@@ -93,6 +93,14 @@
             (click)="catchIdHandler($event, 3)">ID3</button>
     <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku4}"
             (click)="catchIdHandler($event, 4)">ID4</button>
+    <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro1}"
+            (click)="btnChangeIdColorHandler($event, 1)">色1</button>
+    <button class="btn-catch-id2" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro2}"
+            (click)="btnChangeIdColorHandler($event, 2)">色2</button>
+    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro3}"
+            (click)="btnChangeIdColorHandler($event, 3)">色3</button>
+    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro4}"
+            (click)="btnChangeIdColorHandler($event, 4)">色4</button>
     <button class="btn-cancel-selected-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_kaijo}"
             (click)="cancelSelectedIdHandler($event)">ID解</button>
     <button class="btn-cancel-only-catch-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro_delete}"

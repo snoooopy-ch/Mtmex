@@ -133,6 +133,10 @@ export class ResService {
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
     htmlTag += `URL入力欄：${options.txtURL}\n`;
+    const selectedCount = resList.filter(item => item.resSelect !== 'none').length;
+    if (options.isAll){
+      htmlTag += `★●レス数: ${selectedCount}で、\n`;
+    }
     let exists = false;
     for (const res of resList){
       if (res.resSelect === 'select'){
@@ -187,7 +191,9 @@ export class ResService {
     if (yobi4.length > 0){
       htmlTag += `<div style="yobi4">予備選択4</div>\n${yobi4}`;
     }
-
+    if (options.isAll){
+      htmlTag += `●★レス数: ${selectedCount}です。\n`;
+    }
     if (!exists){
       htmlTag = '';
     }
