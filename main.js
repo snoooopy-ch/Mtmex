@@ -548,6 +548,9 @@ function readLines(line) {
   if (words.length > 4 && num === 0) {
     sreTitle = words[4].replace(/\r|\r|\r\n/gi, '');
     sreTitle = sreTitle.trim();
+    if(sreTitle.length === 0){
+      sreTitle = '_';
+    }
   }
   for (let i = 1; i < 31; i++) {
     let search = settings[`toukoubi_mae${i}`];

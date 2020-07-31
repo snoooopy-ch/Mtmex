@@ -135,6 +135,8 @@ label {
 .main-container app-left-panel app-content h3 {
   color: red;
   font-size: 16px;
+  margin: 0;
+  padding: 4px 0;
 }
 
 .main-container app-left-panel app-content .content-url {
@@ -183,6 +185,7 @@ label {
   min-width: 40px;
   height: 29px;
   margin: 0 0 0 2px;
+  background-color: #fff;
   border: 1px solid #0366b6;
 }
 
@@ -415,13 +418,13 @@ app-res .row-4 a {
   min-width: 260px;
   max-width: 260px;
   padding: 0px 10px 9px 0px;
-  margin: 163px 5px 0;
+  margin: 155px 5px 0;
   user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
   overflow-y: scroll;
-  height: calc(100vh - 165px);
+  height: calc(100vh - 160px);
 }
 
 .main-container app-right-panel button {
