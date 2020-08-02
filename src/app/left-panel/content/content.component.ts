@@ -61,6 +61,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() txtRemarkRes;
   @Input() resTopBar;
   @Input() imageWidth;
+  @Input() startAbbreviations;
+  @Input() endAbbreviations;
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -1402,6 +1404,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       shuturyoku: this.shuturyoku,
       resSizeList: this.resSizeList,
       characterColors: this.characterColors,
+      startAbbreviations: this.startAbbreviations,
+      endAbbreviations: this.endAbbreviations,
       isAll: false
     });
 

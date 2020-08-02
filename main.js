@@ -833,6 +833,10 @@ function getSettings() {
         } else if (lineArgs[0] === '2') {
           settings['isMultiAnchor'] = lineArgs[1] === 'on';
         } else if (lineArgs[0] === '3') {
+          settings['isContinuousAnchor'] = lineArgs[1] === 'on';
+        } else if (lineArgs[0] === '4') {
+          settings['notMoveFutureAnchor'] = lineArgs[1] === 'on';
+        } else if (lineArgs[0] === '5') {
           settings['isReplaceRes'] = lineArgs[1] === 'on';
         }
       } else if (curComment === '#文字色') {
@@ -913,11 +917,12 @@ function loadStatus(filePath, tabIndex) {
   })
 }
 
-ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes) => {
-  saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes);
+ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
+                            , isReplaceRes, isContinuousAnchor, notMoveFutureAnchor) => {
+  saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
 });
 
-function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes) {
+function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor) {
   fs.readFile('Setting.ini', 'utf8', function (err, data) {
     if (data.match(/(#datパス\r\n)[^\r^\n]+(\r\n)/g) === null) {
       data = data.replace(/(#datパス\r\n)+(\r\n)/g, `$1${dataFilePath}$2`);
@@ -946,12 +951,22 @@ function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
     } else {
       replaceString += 'off';
     }
-    if (isReplaceRes) {
+    if (isContinuousAnchor) {
       replaceString += '$3on$4';
     } else {
       replaceString += '$3off$4';
     }
-    data = data.replace(/(#チェックボックス\r\n1:)\w+(\r\n2:)\w+(\r\n3:)\w+(\r\n)/gi, replaceString);
+    if (notMoveFutureAnchor) {
+      replaceString += 'on';
+    } else {
+      replaceString += 'off';
+    }
+    if (isReplaceRes) {
+      replaceString += '$5on$6';
+    } else {
+      replaceString += '$5off$6';
+    }
+    data = data.replace(/(#チェックボックス\r\n1:)\w+(\r\n2:)\w+(\r\n3:)\w+(\r\n4:)\w+(\r\n5:)\w+(\r\n)/gi, replaceString);
     fs.writeFile('Setting.ini', data, (err) => {
       if (err) throw err;
       console.log('The settings file has been saved!');

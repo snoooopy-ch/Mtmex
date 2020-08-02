@@ -54,6 +54,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   txtRemarkRes: any;
   resTopBar: any;
   imageWidth: string;
+  startAbbreviations;
+  endAbbreviations;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -137,7 +139,26 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           this.btnBackgroundColors[key] = this.settings[key];
         }
       }
-
+      this.startAbbreviations = [];
+      if (value.hasOwnProperty('moji_color_start1')){
+        const startAbbrKeys = ['moji_color_start1', 'moji_color_start2', 'moji_color_start3', 'moji_color_start4',
+          'moji_color_start5', 'moji_color_start6', 'moji_color_start7', 'moji_color_start8', 'moji_color_start9',
+          'moji_color_start10'];
+        for (const key of startAbbrKeys){
+          this.startAbbreviations.push(this.settings[key]);
+        }
+      }
+      this.endAbbreviations = [];
+      if (value.hasOwnProperty('moji_color_end1')){
+        const endAbbrKeys = ['moji_color_end1', 'moji_color_end2', 'moji_color_end3', 'moji_color_end4',
+          'moji_color_end5', 'moji_color_end6', 'moji_color_end7', 'moji_color_end8', 'moji_color_end9',
+          'moji_color_end10'];
+        for (const key of endAbbrKeys){
+          this.endAbbreviations.push(this.settings[key]);
+        }
+      }
+      console.log(this.startAbbreviations);
+      console.log(this.endAbbreviations);
       this.moveOption = {
         sentaku_idou1: this.settings.sentaku_idou1,
         sentaku_idou2: this.settings.sentaku_idou2,
@@ -369,6 +390,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           shuturyoku: this.shuturyoku,
           resSizeList: this.resSizeList,
           characterColors: this.settings.characterColors,
+          startAbbreviations: this.startAbbreviations,
+          endAbbreviations: this.endAbbreviations,
           isAll: true
         });
 

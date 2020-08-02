@@ -60,6 +60,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       this.txtDataFilePath = this.settings.dataPath;
       this.isReplaceRes = this.settings.isReplaceRes;
       this.isMultiAnchor = this.settings.isMultiAnchor;
+      this.isContinuousAnchor = this.settings.isContinuousAnchor;
+      this.notMoveFutureAnchor = this.settings.notMoveFutureAnchor;
       this.isResSort = this.settings.isResSort;
       if (this.settings.chuui !== undefined) {
         this.txtRemarkRes = this.settings.chuui;
@@ -133,7 +135,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   @HostListener('window:beforeunload', [ '$event' ])
   beforeUnloadHandler(event) {
     this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes,
-      this.isResSort, this.isMultiAnchor, this.isReplaceRes);
+      this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor, this.notMoveFutureAnchor);
   }
 
   btnLoadSingleFile(filePath) {
@@ -277,7 +279,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.isContinuousAnchor = this.isResSort && this.isMultiAnchor && this.isContinuousAnchor;
   }
 
-  chkMultiAnchor() {
+  chkMultiAnchorHandler() {
     this.isContinuousAnchor = this.isMultiAnchor && this.isContinuousAnchor;
   }
 }
