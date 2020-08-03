@@ -60,6 +60,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       this.txtDataFilePath = this.settings.dataPath;
       this.isReplaceRes = this.settings.isReplaceRes;
       this.isMultiAnchor = this.settings.isMultiAnchor;
+      this.isContinuousAnchor = this.settings.isContinuousAnchor;
+      this.notMoveFutureAnchor = this.settings.notMoveFutureAnchor;
       this.isResSort = this.settings.isResSort;
       if (this.settings.chuui !== undefined) {
         this.txtRemarkRes = this.settings.chuui;
@@ -133,7 +135,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   @HostListener('window:beforeunload', [ '$event' ])
   beforeUnloadHandler(event) {
     this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes,
-      this.isResSort, this.isMultiAnchor, this.isReplaceRes);
+      this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor, this.notMoveFutureAnchor);
   }
 
   btnLoadSingleFile(filePath) {
@@ -242,17 +244,19 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   loadCurrentRes() {
     electron.remote.dialog.showOpenDialog(null, {title: 'レス状態復元',
       properties: ['openFile', 'multiSelections'],
-      filters: [{ name: 'Data Files', extensions: ['dat'] }]}).then(result => {
+      filters: [{ name: '復元パイル', extensions: ['txt'] }]}).then(result => {
       if (!result.canceled){
-        this.resService.loadStatus(result.filePaths[0], this.tabIndex);
+        for (const filePath of result.filePaths) {
+          this.resService.loadStatus(filePath, this.tabIndex);
+        }
       }
     });
   }
 
   btnLoadMultiFiles() {
-    electron.remote.dialog.showOpenDialog(null, {title: 'レス状態復元',
+    electron.remote.dialog.showOpenDialog(null, {title: 'dat直接読み込み',
       properties: ['openFile', 'multiSelections'],
-      filters: [{ name: 'Data Files', extensions: ['dat'] }]}).then(async result => {
+      filters: [{ name: 'Datパイル', extensions: ['dat'] }]}).then(async result => {
       if (!result.canceled){
         const remarkRes = this.getHideRes();
         const hideRes = this.getHideRes();
@@ -268,5 +272,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       token: true,
       resMenu: value
     });
+  }
+
+  chkResSortHandler() {
+    this.isMultiAnchor = this.isResSort && this.isMultiAnchor;
+    this.isContinuousAnchor = this.isResSort && this.isMultiAnchor && this.isContinuousAnchor;
+  }
+
+  chkMultiAnchorHandler() {
+    this.isContinuousAnchor = this.isMultiAnchor && this.isContinuousAnchor;
   }
 }

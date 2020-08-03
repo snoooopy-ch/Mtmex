@@ -12,13 +12,13 @@
 
   <div class="reading-mode">
     <div>
-       <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替え</label>
+       <label><input type="checkbox" [(ngModel)]="isResSort" (change)="chkResSortHandler()" >レスの順番を入れ替え</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort">複数アンカーを分割</label>
+       <label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort"(change)="chkMultiAnchorHandler()">複数アンカーを分割</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="isContinuousAnchor" [disabled]="!isMultiAnchor && !isResSort">連続アンカー分割</label>
+       <label><input type="checkbox" [(ngModel)]="isContinuousAnchor" [disabled]="!isMultiAnchor || !isResSort">連続アンカー分割</label>
     </div>
     <div>
        <label><input type="checkbox" [(ngModel)]="notMoveFutureAnchor">未来アンカー移動せず</label>

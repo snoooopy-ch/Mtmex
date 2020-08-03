@@ -73,8 +73,9 @@ export class ResService {
     electron.ipcRenderer.send('loadStatus', filePath, tabIndex);
   }
 
-  saveSettings(dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes){
-    electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes);
+  saveSettings(dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor){
+    electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor
+      , isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
   }
 
   removeTab(originSreTitle){
@@ -130,6 +131,7 @@ export class ResService {
   }
 
   async printHtmlTag(resList: ResItem[], options) {
+    console.log(options);
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
     htmlTag += `URL入力欄：${options.txtURL}\n`;
@@ -325,37 +327,11 @@ export class ResService {
         htmlTag += `<code>`;
         suffix = `</code>` + suffix;
       }
-
-      if (res.resColor === options.characterColors[0]){
-        htmlTag += `<s>`;
-        suffix = `</s>` + suffix;
-      } else if (res.resColor === options.characterColors[1]){
-        htmlTag += `<em>`;
-        suffix = `</em>` + suffix;
-      }else if (res.resColor === options.characterColors[2]){
-        htmlTag += `<ins>`;
-        suffix = `</ins>` + suffix;
-      } else if (res.resColor === options.characterColors[3]){
-        htmlTag += `<samp>`;
-        suffix = `</samp>` + suffix;
-      } else if (res.resColor === options.characterColors[4]){
-        htmlTag += `<del>`;
-        suffix = `</del>` + suffix;
-      }else if (res.resColor === options.characterColors[5]){
-        htmlTag += `<dfn>`;
-        suffix = `</dfn>` + suffix;
-      } else if (res.resColor === options.characterColors[6]){
-        htmlTag += `<var>`;
-        suffix = `</var>` + suffix;
-      } else if (res.resColor === options.characterColors[7]){
-        htmlTag += `<cite>`;
-        suffix = `</cite>` + suffix;
-      } else if (res.resColor === options.characterColors[8]){
-        htmlTag += `<u>`;
-        suffix = `</u>` + suffix;
-      } else if (res.resColor === options.characterColors[9]){
-        htmlTag += `<kbd>`;
-        suffix = `</kbd>` + suffix;
+      for (let i = 0; i < options.characterColors.length; i++){
+        if (res.resColor === options.characterColors[i]){
+          htmlTag += options.startAbbreviations[i];
+          suffix = options.endAbbreviations[i] + suffix;
+        }
       }
       htmlTag += `${content}${suffix}`;
       if (res.idColor !== '#000') {
