@@ -32,6 +32,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   txtHideRes: string;
   isContinuousAnchor: any;
   notMoveFutureAnchor: any;
+  sortCommand: any;
 
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
@@ -281,5 +282,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
   chkMultiAnchorHandler() {
     this.isContinuousAnchor = this.isMultiAnchor && this.isContinuousAnchor;
+  }
+
+  btnSortResHandler() {
+
+    this.sortCommand = '';
   }
 }

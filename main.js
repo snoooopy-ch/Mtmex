@@ -616,7 +616,7 @@ function readLines(line) {
   resItem.name = words[0].replace(/(<([^>]+)>)/ig, '');
   for (let i = 1; i < 31; i++) {
     let search = settings[`namae_mae${i}`];
-    if (search === undefined || search.length < 0) {
+    if (search === undefined || search.length < 1) {
       continue;
     }
     search = search.replace(/\(/gi, '\\(');
@@ -652,6 +652,15 @@ function readLines(line) {
 
   if (words.length > 2) {
     let tmp_str = words[3];
+    for (let i = 1; i < 31; i++) {
+      let search = settings[`honbun_mae${i}`];
+      if (search === undefined || search.length < 1) {
+        continue;
+      }
+      const re = new RegExp(`(?![^<>]*>)${search}`, 'gi');
+      let replacement = settings[`honbun_ato${i}`];
+      tmp_str = tmp_str.replace(re, replacement);
+    }
     tmp_str = tmp_str.replace(/<hr>|<br \/>/ig, '<br>');
     const future_str = settings.mirai_anker.replace(/;/g, '|');
 

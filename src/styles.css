@@ -597,6 +597,11 @@ app-res .row-4 a {
   color: dodgerblue;
 }
 
+.main-container app-right-panel .sort-group {
+  margin: 2px 0;
+  padding: 10px 23px 10px;
+  border: 1px solid lightgrey;
+}
 .main-container app-right-panel .menu-group {
   padding: 2px 0;
 }
