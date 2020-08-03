@@ -125,9 +125,13 @@ export class ResComponent implements OnInit {
 
     });
 
-    $("img.res-img-thumb.gif-pause").one("load", function() {
-      console.log('load');
-      [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);
+    $("img.res-img-thumb.gif-pause").one("load", function(event) {
+      // console.log('load');
+      // console.log(event.target);
+      // console.log(document.images);
+      
+      // [].slice.apply(document.images).filter(is_gif_image).map(freeze_gif);
+      freeze_gif(event.target);
     });
 
     function is_gif_image(i) {
