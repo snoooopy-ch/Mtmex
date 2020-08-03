@@ -29,5 +29,5 @@ export class ResItem{
   isRemark: boolean;
   isSearched = false;
   isNotice: boolean;
-  hasContinuousAnchors: boolean;
+  anchorLevel: number;
 }

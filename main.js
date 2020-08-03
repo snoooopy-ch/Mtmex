@@ -12,7 +12,8 @@ let settingPath = 'Setting.ini';
 let stateComments = ['#datパス', '#指定したdatパス', '#チェックボックス', '#文字色', '#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
 let curComment = '';
-let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2', 'Left_highlight', 'res_mouse_click', 'youtube', 'twitter', 'AutoSave', 'gif_stop'];
+let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2', 'Left_highlight', 'res_mouse_click', 'youtube'
+  , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];
 let settings;
@@ -365,27 +366,35 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
           if (resList[i].num === anchor) {
             if (isReplaceRes) {
               if (isMultiAnchor && resItem.anchors.length < settings.anker) {
-                addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker, isContinuousAnchor);
+                addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                  isContinuousAnchor, resList[i].anchorLevel);
                 if (resItem.futureAnchors.length < 1) {
                   resItem.isAdded = true;
+                  resItem.anchorLevel = resList[i].anchorLevel + 1;
                 }
               } else {
                 if (!resItem.isAdded) {
-                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker, isContinuousAnchor);
+                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                    isContinuousAnchor, resList[i].anchorLevel);
                   resItem.isAdded = true;
+                  resItem.anchorLevel = resList[i].anchorLevel + 1;
                 }
               }
             } else {
               if (resList[i].num !== 1) {
                 if (isMultiAnchor && resItem.anchors.length < settings.anker) {
-                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker, isContinuousAnchor);
+                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                    isContinuousAnchor, resList[i].anchorLevel);
                   if (resItem.futureAnchors.length < 1) {
                     resItem.isAdded = true;
+                    resItem.anchorLevel = resList[i].anchorLevel + 1;
                   }
                 } else {
                   if (!resItem.isAdded) {
-                    addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker, isContinuousAnchor);
+                    addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                      isContinuousAnchor,resList[i].anchorLevel);
                     resItem.isAdded = true;
+                    resItem.anchorLevel = resList[i].anchorLevel + 1;
                   }
                 }
               }
@@ -432,8 +441,10 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
  * @param item
  * @param anchor
  * @param isMultiAnchor
+ * @param isContinuousAnchor
+ * @param anchorLevel
  */
-function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor) {
+function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, anchorLevel) {
   let i = index;
   let parentAnchors = [];
   while (true) {
@@ -510,6 +521,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor) {
       }
       // }
       newItem.isAdded = true;
+      newItem.anchorLevel = anchorLevel + 1;
       resList.splice(i, 0, newItem);
     }
   } else {
@@ -595,7 +607,8 @@ function readLines(line) {
     futureAnchors: [],
     isNotice: false,
     continuousAnchors: [],
-    continuousContent:''
+    continuousContent:'',
+    anchorLevel: 0
   };
 
   num++;
@@ -898,23 +911,25 @@ function saveStatus(saveData) {
   });
 }
 
-ipcMain.on("loadStatus", (event, filePath, tabIndex) => {
-  loadStatus(filePath, tabIndex);
+ipcMain.on("loadStatus", (event, filePath) => {
+  loadStatus(filePath);
 });
 
-function loadStatus(filePath, tabIndex) {
-  fs.readFile(filePath, 'utf8', (err, jsonString) => {
-    if (err) {
-      dialog.showErrorBox('復元', '復元。');
-      return
-    }
-    try {
-      const loadData = JSON.parse(jsonString)
-      win.webContents.send("getStatus", {data: loadData, tabIndex: tabIndex});
-    } catch (err) {
-      console.log('Error parsing JSON string:', err)
-    }
-  })
+function loadStatus(filePaths) {
+  for (const filePath of filePaths) {
+    fs.readFile(filePath, 'utf8', (err, jsonString) => {
+      if (err) {
+        dialog.showErrorBox('復元', '復元。');
+        return
+      }
+      try {
+        const loadData = JSON.parse(jsonString)
+        win.webContents.send("getStatus", {data: loadData});
+      } catch (err) {
+        console.log('Error parsing JSON string:', err)
+      }
+    });
+  }
 }
 
 ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor

@@ -33,7 +33,9 @@
 
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
-             'border-left': resItem.isAdded ? leftBorder : '', 'border-top': resItem.isRemark ? topBorder : resTopBar}"
+             'border-left': resItem.isAdded ? leftBorder : '', 'width': 'calc(100% - '+ (resItem.anchorLevel*resLeftMargin) +'px)',
+             'margin-left.px': resItem.isAdded ? (resItem.anchorLevel*resLeftMargin) : '',
+             'border-top': resItem.isRemark ? topBorder : resTopBar}"
              (duplicateResEmitter)="duplicateRes(resItem)"
              (deleteResEmitter)="deleteRes(resItem)"
              (hideResEmitter)="hideRes(resItem.id)"
@@ -48,7 +50,7 @@
              (setDraggableEmitter)="setDraggable(resList.indexOf(resItem), $event)"
              (selectedNumEmitter)="selectedNum(resItem)"
              [tabIndex]="tabIndex"
-             [ngClass]="{'anchor-res': resItem.isAdded,'hide-res':!resItem.isShow}"
+             [ngClass]="{'hide-res':!resItem.isShow}"
              (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"
              (mouseleave)="mouseLeaveHandler()"
              (click)="mouseClickHandler()"

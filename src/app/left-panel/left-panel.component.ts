@@ -56,6 +56,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   imageWidth: string;
   startAbbreviations;
   endAbbreviations;
+  resLeftMargin: number;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -79,6 +80,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.settings.Yobi3_MouseOver,
         this.settings.Yobi4_MouseOver];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
+      this.resLeftMargin = this.settings.anker_left;
       this.idStyles = [{color: '#000', background: 'transparent', classNoSelect: ''},
         {color: this.settings.ID1_moji, background: this.settings.ID1_back, classNoSelect: 'same_id1'},
         {color: this.settings.ID2_moji, background: this.settings.ID2_back, classNoSelect: 'same_id2'},
@@ -117,7 +119,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'big0', 'big1', 'big2', 'nasi', 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8'
           , 'color9', 'color10', 'tree_sentaku', 'tree_yobi1', 'tree_yobi2', 'tree_yobi3', 'tree_yobi4', 'tree_kaijo'
           , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
-          , 'id_hihyouji', 'henshuu', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
+          , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b'];
         for (const key of arrayKeys) {
           if (this.settings[key].toLowerCase() === 'insert'){
@@ -157,8 +159,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           this.endAbbreviations.push(this.settings[key]);
         }
       }
-      console.log(this.startAbbreviations);
-      console.log(this.endAbbreviations);
       this.moveOption = {
         sentaku_idou1: this.settings.sentaku_idou1,
         sentaku_idou2: this.settings.sentaku_idou2,
@@ -204,7 +204,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
-      if (this.selectedTabIndex === value.tabIndex && value.data.resList !== undefined) {
+      if (value.data.resList !== undefined) {
         this.zone.run(() => {
           const loadResList = [];
           for (const res of value.data.resList){

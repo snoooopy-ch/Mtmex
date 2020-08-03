@@ -69,8 +69,8 @@ export class ResService {
     electron.ipcRenderer.send('saveStatus', saveData);
   }
 
-  loadStatus(filePath, tabIndex){
-    electron.ipcRenderer.send('loadStatus', filePath, tabIndex);
+  loadStatus(filePaths){
+    electron.ipcRenderer.send('loadStatus', filePaths);
   }
 
   saveSettings(dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor){
@@ -131,7 +131,6 @@ export class ResService {
   }
 
   async printHtmlTag(resList: ResItem[], options) {
-    console.log(options);
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
     htmlTag += `URL入力欄：${options.txtURL}\n`;
@@ -293,6 +292,9 @@ export class ResService {
       if (res.isAdded) {
         htmlTag += ` t_i`;
       }
+      if (res.anchorLevel > 0){
+        htmlTag += ` left${res.anchorLevel}`;
+      }
       htmlTag += `"><!-- res_s -->`;
       let suffix = '';
       if (res.resFontSize === options.resSizeList[1].value || res.resFontSize === options.resSizeList[2].value ){
@@ -312,6 +314,9 @@ export class ResService {
       htmlTag += `<div class="t_b`;
       if (res.isAdded) {
         htmlTag += ` t_i`;
+      }
+      if (res.anchorLevel > 0){
+        htmlTag += ` left${res.anchorLevel}`;
       }
       htmlTag += `"><!-- res_s -->`;
       if (res.id.length > 0 ) {

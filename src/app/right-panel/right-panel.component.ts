@@ -53,7 +53,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         // subscribing to a observable returns a subscription object
         this.subscribers.statusTimer =  this.timer.subscribe(t => {
           if (this.title !== undefined) {
-            this.saveAppStatus(`${this.settings.autoSavePath}${this.title}.txt`, false);
+            this.saveAppStatus(null, false);
           }
         });
       }
@@ -225,10 +225,12 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveAppStatus(path, isMessage){
+  saveAppStatus(selectedPath, isMessage){
     this.resService.setSaveResStatus({
       tabIndex: this.tabIndex,
-      filePath: path,
+      filePath: selectedPath,
+      autoFilePath: this.settings.autoSavePath,
+      isAllTabSave: selectedPath === null ? this.settings.all_tab_save : false,
       isResSort: this.isResSort,
       isMultiAnchor: this.isMultiAnchor,
       isReplaceRes: this.isReplaceRes,
@@ -246,9 +248,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       properties: ['openFile', 'multiSelections'],
       filters: [{ name: '復元パイル', extensions: ['txt'] }]}).then(result => {
       if (!result.canceled){
-        for (const filePath of result.filePaths) {
-          this.resService.loadStatus(filePath, this.tabIndex);
-        }
+        this.resService.loadStatus(result.filePaths);
       }
     });
   }

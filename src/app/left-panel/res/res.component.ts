@@ -105,7 +105,6 @@ export class ResComponent implements OnInit {
       })
 
       $('.res-container label').click(function(event){
-        console.log('label click');
         event.stopPropagation();
       });
 

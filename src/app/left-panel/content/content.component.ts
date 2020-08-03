@@ -39,6 +39,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() hovergroundColors;
   @Input() characterColors;
   @Input() leftBorder;
+  @Input() resLeftMargin;
   @Input() topBorder;
   @Input() idStyles;
   @Input() resSizeList;
@@ -139,9 +140,12 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex && this.resList.length > 0 && value.token) {
+      if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token) {
         const saveData = value;
         saveData.resList = [];
+        if (value.isAllTabSave) {
+          saveData.filePath = `${value.autoFilePath}${this.tabName}.txt`;
+        }
         let saveResList = [];
         if (this.btnSearch.checked || this.btnNotice.checked){
           saveResList = this.originalResList;
@@ -183,7 +187,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         saveData.txtUrl = this.txtURL;
         saveData.scrollIndex = this.virtualScroller.viewPortInfo.startIndex;
         this.resService.saveStatus(saveData);
-        value.token = false;
+        if (!value.isAllTabSave) {
+          value.token = false;
+        }
       }
     });
 
@@ -249,11 +255,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi1') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              {select: false, candi1: false, candi2: false, selected: 'none'});
+              {selected: 'select'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[2];
             this.selectedRes(this.resList[this.hovered],
-              {select: false, candi1: true, candi2: false, selected: 'candi1'});
+              {selected: 'candi1'});
           }
         }
         return false;
@@ -265,11 +271,43 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi2') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              {select: false, candi1: false, candi2: false, selected: 'none'});
+              { selected: 'select'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
             this.selectedRes(this.resList[this.hovered],
-              {select: false, candi1: false, candi2: true, selected: 'candi2'});
+              { selected: 'candi2'});
+          }
+        }
+        return false;
+      }));
+
+      // 予備選択ボタン3
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi3, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi3') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              { selected: 'select'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
+            this.selectedRes(this.resList[this.hovered],
+              { selected: 'candi3'});
+          }
+        }
+        return false;
+      }));
+
+      // 予備選択ボタン4
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi4, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi4') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              { selected: 'select'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
+            this.selectedRes(this.resList[this.hovered],
+              { selected: 'candi4'});
           }
         }
         return false;
@@ -446,6 +484,24 @@ export class ContentComponent implements OnInit, OnDestroy {
         return false;
       }));
 
+      // ツリー予備選択3（T3）
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi3, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 4, resBackgroundColor: this.backgroundColors[4]});
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ツリー予備選択4（T4）
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi4, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 5, resBackgroundColor: this.backgroundColors[5]});
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
       // ツリー解除（T解除）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_kaijo, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
@@ -462,7 +518,8 @@ export class ContentComponent implements OnInit, OnDestroy {
             { isSelect: true,
               idColor: this.idStyles[1].color,
               idBackgroundColor: this.idStyles[1].background,
-              resBackgroundColor: this.backgroundColors[1]
+              resBackgroundColor: this.backgroundColors[1],
+              idClassNoSelect: this.idStyles[1].classNoSelect
             });
           this.cdRef.detectChanges();
         }
@@ -476,7 +533,8 @@ export class ContentComponent implements OnInit, OnDestroy {
             { isSelect: true,
               idColor: this.idStyles[2].color,
               idBackgroundColor: this.idStyles[2].background,
-              resBackgroundColor: this.backgroundColors[1]
+              resBackgroundColor: this.backgroundColors[1],
+              idClassNoSelect: this.idStyles[2].classNoSelect
             });
           this.cdRef.detectChanges();
         }
@@ -490,7 +548,79 @@ export class ContentComponent implements OnInit, OnDestroy {
             { isSelect: true,
               idColor: this.idStyles[3].color,
               idBackgroundColor: this.idStyles[3].background,
-              resBackgroundColor: this.backgroundColors[1]
+              resBackgroundColor: this.backgroundColors[1],
+              idClassNoSelect: this.idStyles[3].classNoSelect
+            });
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ID選択4
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id4, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: true,
+              idColor: this.idStyles[4].color,
+              idBackgroundColor: this.idStyles[4].background,
+              resBackgroundColor: this.backgroundColors[1],
+              idClassNoSelect: this.idStyles[4].classNoSelect
+            });
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ID色選択1
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro1, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: false,
+              idColor: this.idStyles[1].color,
+              idBackgroundColor: this.idStyles[1].background,
+              idClassNoSelect: this.idStyles[1].classNoSelect
+            });
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ID色選択2
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro2, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: false,
+              idColor: this.idStyles[2].color,
+              idBackgroundColor: this.idStyles[2].background,
+              idClassNoSelect: this.idStyles[2].classNoSelect
+            });
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ID色選択3
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro3, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: false,
+              idColor: this.idStyles[3].color,
+              idBackgroundColor: this.idStyles[3].background,
+              idClassNoSelect: this.idStyles[3].classNoSelect
+            });
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ID色選択4
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro4, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedId(this.resList[this.hovered].id,
+            { isSelect: false,
+              idColor: this.idStyles[4].color,
+              idBackgroundColor: this.idStyles[4].background,
+              idClassNoSelect: this.idStyles[4].classNoSelect
             });
           this.cdRef.detectChanges();
         }
@@ -517,7 +647,8 @@ export class ContentComponent implements OnInit, OnDestroy {
             { isSelect: false,
               idColor: this.idStyles[0].color,
               idBackgroundColor: this.idStyles[0].background,
-              resBackgroundColor: this.backgroundColors[0]
+              resBackgroundColor: this.backgroundColors[0],
+              idClassNoSelect: this.idStyles[0].classNoSelect
             });
           this.cdRef.detectChanges();
         }
@@ -537,7 +668,8 @@ export class ContentComponent implements OnInit, OnDestroy {
             { isSelect: false,
               idColor: this.idStyles[0].color,
               idBackgroundColor: this.idStyles[0].background,
-              resBackgroundColor: this.backgroundColors[0]
+              resBackgroundColor: this.backgroundColors[0],
+              idClassNoSelect: this.idStyles[0].classNoSelect
             });
           this.cdRef.detectChanges();
         }
@@ -557,6 +689,14 @@ export class ContentComponent implements OnInit, OnDestroy {
         if (this.hovered >= 0) {
           this.resList[this.hovered].isEdit = !this.resList[this.hovered].isEdit;
           this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
+
+      // 削除
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.sakujo, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.deleteRes(this.resList[this.hovered]);
         }
         return false; // Prevent bubbling
       }));

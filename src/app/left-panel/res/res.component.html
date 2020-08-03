@@ -1,8 +1,9 @@
 <div class="res-container" (click)="clickResContainer($event)">
   <div class="row-1">
     <div class="label-res-kaihei" (click)="clickResMenuKaihei($event)">
-      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"
-        [ngStyle]="{'color': item.isNotice ? '#f00' : '#000'}">{{item.num}}</h4>
+<!--      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"-->
+<!--        [ngStyle]="{'color': item.isNotice ? '#f00' : '#000'}">{{item.num}}</h4>      -->
+      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false">{{item.num}}</h4>
       <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
     </div>
     <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
