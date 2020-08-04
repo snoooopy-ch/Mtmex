@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ResService} from '../res.service';
 import { Title } from '@angular/platform-browser';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
@@ -57,6 +57,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   startAbbreviations;
   endAbbreviations;
   resLeftMargin: number;
+  searchList: any[];
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -291,6 +292,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     }));
   }
 
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHandler(event) {
+    this.resService.saveSearchList(this.searchList);
+  }
+
   addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '') {
     this.tabs = [...this.tabs, {
       title: pTitle,
@@ -352,6 +358,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     if ($event.searchOption !== undefined) {
       this.searchKeyword = $event.searchKeyword;
       this.searchOption = $event.searchOption;
+      this.searchList = $event.searchList;
       this.cdr.detectChanges();
     }
   }

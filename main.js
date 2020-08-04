@@ -941,6 +941,15 @@ function loadStatus(filePaths) {
   }
 }
 
+ipcMain.on("saveSearchList", (event, searchList) => {
+  let data = searchList.join('\n');
+
+  fs.writeFile('SearchList.txt', data, (err) => {
+    if (err) throw err;
+    console.log('The settings file has been saved!');
+  });
+});
+
 ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
                             , isReplaceRes, isContinuousAnchor, notMoveFutureAnchor) => {
   saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);

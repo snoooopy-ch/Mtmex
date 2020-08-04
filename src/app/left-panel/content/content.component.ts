@@ -65,6 +65,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() startAbbreviations;
   @Input() endAbbreviations;
   @Input() searchWordMax;
+  @Input() searchList = [];
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -81,7 +82,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   currentScrollIndex: number;
   originalResList: ResItem[];
   isTreeSearch: number;
-  searchList = [];
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -1570,6 +1570,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.searchStatusEmitter.emit({
       searchKeyword: this.searchKeyword,
       searchOption: this.searchOption,
+      searchList: this.searchList,
     });
   }
 
@@ -1577,7 +1578,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isChangedSearch = true;
     this.searchStatusEmitter.emit({
       searchKeyword: this.searchKeyword,
-      searchOption: this.searchOption
+      searchOption: this.searchOption,
+      searchList: this.searchList,
     });
   }
 
