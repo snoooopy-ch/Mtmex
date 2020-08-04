@@ -285,7 +285,12 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   btnSortResHandler() {
-
+    if (this.sortCommand === 'num-sort') {
+      this.resService.setSort({
+        tabIndex: this.tabIndex,
+        token: true
+      });
+    }
     this.sortCommand = '';
   }
 }

@@ -215,6 +215,16 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.subscribers.sortRes = this.resService.sortRes.subscribe((value) => {
+      if (this.tabIndex === value.tabIndex) {
+        this.resList.sort((a, b) => {
+          return a.num - b.num;
+        });
+        this.cdRef.detectChanges();
+        value.token = false;
+      }
+    });
+
   }
 
   /**
@@ -229,6 +239,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.printCommand.unsubscribe();
     this.subscribers.saveResStatus.unsubscribe();
     this.subscribers.status.unsubscribe();
+    this.subscribers.resMenu.unsubscribe();
+    this.subscribers.sortRes.unsubscribe();
     this.resList.length = 0;
     if (this.backupResList !== undefined){
       this.backupResList.length = 0;

@@ -35,6 +35,8 @@ export class ResService {
   saveResStatus = this.saveResStatusSource.asObservable();
   resMenuSource = new BehaviorSubject<any>({});
   resMenu = this.resMenuSource.asObservable();
+  resSortSource = new BehaviorSubject<any>({});
+  sortRes = this.resSortSource.asObservable();
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
@@ -128,6 +130,10 @@ export class ResService {
 
   setResMenu(value: any){
     this.resMenuSource.next(value);
+  }
+
+  setSort(value: any){
+    this.resSortSource.next(value);
   }
 
   async printHtmlTag(resList: ResItem[], options) {
