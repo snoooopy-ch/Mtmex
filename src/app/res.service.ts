@@ -80,6 +80,10 @@ export class ResService {
       , isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
   }
 
+  saveSearchList(searchList){
+    electron.ipcRenderer.send('saveSearchList', searchList);
+  }
+
   removeTab(originSreTitle){
     electron.ipcRenderer.send('removeTab', originSreTitle);
   }
