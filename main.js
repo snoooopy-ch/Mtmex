@@ -794,18 +794,10 @@ ipcMain.on("loadSettings", (event) => {
 
 function getSettings() {
 
-  fs.open(settingPath, 'r', (err, fd) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        console.error(url + ' does not exist');
-        return;
-      }
-      throw err;
-    }
-    fs.close(fd, (err) => {
-      if (err) throw err;
-    });
-  });
+  if(!fs.existsSync(settingPath)) {
+    dialog.showErrorBox('設定', '設定ファイルを読めません。');
+    return;
+  }
 
   let input = fs.createReadStream(settingPath);
   let remaining = '';

@@ -217,9 +217,16 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   saveCurrentRes() {
-    electron.remote.dialog.showSaveDialog(null, {title: 'レス状態保存'}).then(result => {
+    electron.remote.dialog.showSaveDialog(null, {title: 'レス状態保存',
+      filters: [{ name: '状態保存パイル', extensions: ['txt'] }]}).then(result => {
       if (!result.canceled){
-        this.saveAppStatus(result.filePath, true);
+        let filePath;
+        if (!result.filePath.endsWith('.txt')){
+          filePath = result.filePath + '.txt';
+        }else{
+          filePath = result.filePath;
+        }
+        this.saveAppStatus(filePath, true);
       }
     }).catch(err => {
       console.log(err);

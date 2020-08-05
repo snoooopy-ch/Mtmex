@@ -16,9 +16,9 @@ export class ResService {
   LoadHiddenIds = this.hideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
   scrollPos = this.scrollPosSource.asObservable();
-  selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, tabIndex: 0});
+  selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, tabIndex: 0});
   selectedRes = this.selectedResSource.asObservable();
-  selectedTabSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, totalCount: 0, tabIndex: 0});
+  selectedTabSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, totalCount: 0, tabIndex: 0});
   selectedTab = this.selectedTabSource.asObservable();
   moveResSource = new BehaviorSubject<any>({tabIndex: 0, moveKind: ''});
   moveRes = this.moveResSource.asObservable();
@@ -333,10 +333,9 @@ export class ResService {
         htmlTag += ` left${res.anchorLevel}`;
       }
       htmlTag += `"><!-- res_s -->`;
-      if (res.id.length > 0 ) {
-        if (res.idColor !== '#000') {
-          htmlTag += `<-- ${res.idClassNoSelect}_s -->`;
-        }
+
+      if (res.idColor !== '#000') {
+        htmlTag += `<-- ${res.idClassNoSelect}_s -->`;
       }
       let suffix = '';
       if (res.resFontSize === options.resSizeList[1].value){
