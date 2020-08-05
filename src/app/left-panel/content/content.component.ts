@@ -84,6 +84,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   originalResList: ResItem[];
   isTreeSearch: number;
   isSelectRes: any;
+  selectedBackupResList: ResItem[];
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -1615,19 +1616,28 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnShowSelectHandler() {
-    console.log(this.isSelectRes);
     if (this.isSelectRes){
-      if (this.originalResList === undefined || this.originalResList.length < 1){
-        this.originalResList = Object.assign({}, this.resList);
-      }
-      for (let i = 0; i < this.resList.length; i++){
-        if (this.resList[i].resSelect === 'none'){
-          this.resList.splice(i, 1);
+      this.selectedBackupResList = Object.assign({}, this.resList);
+      const tmpResList = [];
+      for (const resItem of this.resList){
+        if (resItem.resSelect !== 'none'){
+          tmpResList.push(resItem);
         }
       }
+      this.resList = tmpResList;
     }else{
-      this.resList = this.originalResList;
+      this.resList = Object.assign([], this.selectedBackupResList);
     }
+    this.resService.setTotalRes({
+      tabIndex: this.tabIndex,
+      totalCount: this.resList.length
+    });
+    this.changeStatus();
     this.cdRef.detectChanges();
+  }
+
+  btnSearchHandler() {
+    this.btnSearch.checked = true;
+    this.btnSearchChangeHandler();
   }
 }
