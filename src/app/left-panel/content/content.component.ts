@@ -1640,4 +1640,19 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.btnSearch.checked = true;
     this.btnSearchChangeHandler();
   }
+
+  cancelAllStatus() {
+    if (this.btnSearch.checked){
+      this.btnSearch.checked = false;
+      this.btnSearchChangeHandler();
+    }
+    if (this.btnNotice.checked){
+      this.btnNotice.checked = false;
+      this.btnNoticeChangeHandler();
+    }
+    if (this.isSelectRes){
+      this.isSelectRes = false;
+      this.btnShowSelectHandler();
+    }
+  }
 }

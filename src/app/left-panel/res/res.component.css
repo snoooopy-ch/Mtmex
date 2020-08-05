@@ -35,7 +35,7 @@ div h4 {
 }
 
 .drag-handle {
-  margin: 0 0 0 auto;
+  /*margin: 0 0 0 auto;*/
   color: #999;
   cursor: move;
   width: 29px;
