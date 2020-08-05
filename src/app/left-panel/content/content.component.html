@@ -9,6 +9,7 @@
   <input type="text" [(ngModel)]="searchKeyword" #txtSearch
          [typeahead]="searchList"
          [typeaheadMinLength]="0"
+         [typeaheadSelectFirstItem] = "false"
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
   <button type="button" class="btn-long" (click)="btnSearchHandler()">抽出</button>
@@ -51,6 +52,7 @@
              (selectedTreeResEmitter)="selectedTreeRes(resList.indexOf(resItem), $event)"
              (setDraggableEmitter)="setDraggable(resList.indexOf(resItem), $event)"
              (selectedNumEmitter)="selectedNum(resItem)"
+             (cancelAllStatusEmitter)="cancelAllStatus()"
              [tabIndex]="tabIndex"
              [ngClass]="{'hide-res':!resItem.isShow}"
              (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"

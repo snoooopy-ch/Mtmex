@@ -53,6 +53,7 @@ export class ResComponent implements OnInit {
   @Output() setDraggableEmitter = new EventEmitter();
   @Output() selectedNumEmitter = new EventEmitter();
   @Output() deleteResEmitter = new EventEmitter();
+  @Output() cancelAllStatusEmitter = new EventEmitter();
 
   @Input() backgroundColors;
   @Input() idStyles;
@@ -422,5 +423,10 @@ export class ResComponent implements OnInit {
       idColor: this.idStyles[buttonIndex].color,
       idClassNoSelect: this.idStyles[buttonIndex].classNoSelect
     });
+  }
+
+  btnCancelAllStatus(event) {
+    event.stopPropagation();
+    this.cancelAllStatusEmitter.emit();
   }
 }
