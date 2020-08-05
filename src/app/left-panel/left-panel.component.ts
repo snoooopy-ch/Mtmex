@@ -66,6 +66,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    this.subscribers.searchList = this.resService.searchListSource.subscribe((value) => {
+      this.searchList = value;
+    });
+
     this.subscribers.settings = this.resService.settings.subscribe((value) => {
       this.settings = value;
       this.backgroundColors = [this.settings.Back_color,
@@ -249,6 +253,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     electron.ipcRenderer.on('closeMenu', (event) => {
       this.removeTab(this.selectedTabIndex);
     });
+
+    if (this.searchList === undefined){
+      this.searchList = [];
+    }
   }
 
   /**
@@ -358,7 +366,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     if ($event.searchOption !== undefined) {
       this.searchKeyword = $event.searchKeyword;
       this.searchOption = $event.searchOption;
-      this.searchList = $event.searchList;
       this.cdr.detectChanges();
     }
   }
@@ -419,5 +426,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   changeScrollIndex(index: number, $event: any) {
     this.tabs[index].scrollPos = $event;
+  }
+
+  changeSearchList($event: any) {
+    if ($event.searchList !== undefined) {
+      this.searchList = $event.searchList;
+      this.cdr.detectChanges();
+    }
   }
 }

@@ -197,8 +197,8 @@ label {
 }
 
 .main-container app-left-panel app-content .extract .btn-long {
-  min-width: 260px;
-  width: 28%;
+  min-width: 159px;
+  width: 14%;
   height: 29px;
 }
 
@@ -207,6 +207,17 @@ label {
   width: 30%;
   height: 29px;
   margin: 0 3px;
+}
+
+.main-container app-left-panel app-content .extract .toggle-select {
+  margin: 0 0 0 2px;
+  background-color: #fff;
+  border: 1px solid #0366b6;
+}
+
+.main-container app-left-panel app-content .extract .toggle-select.active{
+  background-color: #0366b6;
+  color: #fff;
 }
 
 app-res {

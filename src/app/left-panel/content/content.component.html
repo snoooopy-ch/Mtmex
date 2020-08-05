@@ -11,12 +11,14 @@
          [typeaheadMinLength]="0"
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
+  <button type="button" class="btn-long" (click)="btnSearchChangeHandler()">抽出</button>
   <mat-button-toggle-group name="btn-search" [multiple]="true">
-    <mat-button-toggle class="btn-long border-round" (change)="btnSearchChangeHandler()" #btnSearch>抽出</mat-button-toggle>
+    <mat-button-toggle class="btn-long border-round" #btnSearch>抽出解除</mat-button-toggle>
   </mat-button-toggle-group>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="btnNoticeChangeHandler()" #btnNotice>注目レス</mat-button-toggle>
   </mat-button-toggle-group>
+  <button type="button" class="btn-long toggle-select" [(ngModel)]="isSelectRes" btnCheckbox (change)="btnShowSelectHandler()">選択レス表示</button>
 </div>
 <div class="content-url">
   <h3 class="status lbl-sts-main-of-total">{{selectCount}}/{{resList.length}}</h3>
