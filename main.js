@@ -309,6 +309,8 @@ ipcMain.on("loadMultiRes", (event, filePaths, isResSort, isMultiAnchor, isReplac
  * @param isResSort
  * @param isMultiAnchor
  * @param isReplaceRes
+ * @param isContinuousAnchor
+ * @param notMoveFutureAnchor
  */
 function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor) {
   for (let idItem of ids) {
@@ -495,7 +497,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
       let spliter = '&gt;&gt;' + anchor;
       let row = 0;
       for (let tmpItem of tmpItems) {
-        if (row > 0) {
+        if (row > 0 && isAdded) {
           anchorContent += '<br>';
         }
         row++;
@@ -510,8 +512,12 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
             break;
           }
           anchorContent += tmpItem;
+          isAdded = true;
         } else {
-          anchorContent += tmpItem;
+          if(item.continuousAnchors.length === 0) {
+            anchorContent += tmpItem;
+            isAdded = true;
+          }
         }
 
       }
@@ -525,6 +531,10 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
       newItem.isAdded = true;
       newItem.anchorLevel = anchorLevel + 1;
       resList.splice(i, 0, newItem);
+    }else {
+      if(resList.indexOf(item) === -1) {
+        resList.splice(i, 0, item);
+      }
     }
   } else {
     resList.splice(i, 0, item);
@@ -794,18 +804,10 @@ ipcMain.on("loadSettings", (event) => {
 
 function getSettings() {
 
-  fs.open(settingPath, 'r', (err, fd) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        console.error(url + ' does not exist');
-        return;
-      }
-      throw err;
-    }
-    fs.close(fd, (err) => {
-      if (err) throw err;
-    });
-  });
+  if(!fs.existsSync(settingPath)) {
+    dialog.showErrorBox('設定', '設定ファイルを読めません。');
+    return;
+  }
 
   let input = fs.createReadStream(settingPath);
   let remaining = '';

@@ -271,7 +271,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi1') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              {selected: 'select'});
+              {selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[2];
             this.selectedRes(this.resList[this.hovered],
@@ -287,7 +287,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi2') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'select'});
+              { selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
             this.selectedRes(this.resList[this.hovered],
@@ -303,7 +303,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi3') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'select'});
+              { selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
             this.selectedRes(this.resList[this.hovered],
@@ -319,7 +319,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi4') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'select'});
+              { selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
             this.selectedRes(this.resList[this.hovered],
@@ -1594,12 +1594,12 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.resList[this.hovered].resSelect === 'select' && canUnselect) {
         this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
         this.selectedRes(this.resList[this.hovered],
-          {select: false, candi1: false, candi2: false, selected: 'none'});
+          {selected: 'none'});
 
       } else {
         this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
         this.selectedRes(this.resList[this.hovered],
-          {select: true, candi1: false, candi2: false, selected: 'select'});
+          {selected: 'select'});
       }
     }
   }
@@ -1637,7 +1637,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnSearchHandler() {
-    this.btnSearch.checked = true;
+    if (this.btnSearch.checked){
+      this.resList = Object.assign([], this.backupResList);
+    }else{
+      this.btnSearch.checked = true;
+    }
     this.btnSearchChangeHandler();
   }
 
