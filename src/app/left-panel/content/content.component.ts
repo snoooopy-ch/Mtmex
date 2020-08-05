@@ -56,6 +56,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() filteredEmitter = new EventEmitter();
   @Output() searchStatusEmitter = new EventEmitter();
   @Output() scrollIndexEmitter = new EventEmitter();
+  @Output() searchListEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -82,6 +83,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   currentScrollIndex: number;
   originalResList: ResItem[];
   isTreeSearch: number;
+  isSelectRes: any;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -1097,6 +1099,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   // }
 
 
+
   mouseEnterHandler(index: number) {
     this.hovered = index;
   }
@@ -1252,6 +1255,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
+
     if (this.searchList.indexOf(this.searchKeyword.trim()) === -1){
       if (this.searchList.length >= this.searchWordMax){
         this.searchList.splice(this.searchList.length - 1, 1);
@@ -1261,6 +1265,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       const searchIndex = this.searchList.indexOf(this.searchKeyword.trim());
       moveItemInArray(this.searchList, searchIndex, 0);
     }
+
+    this.searchListEmitter.emit({
+      searchList: this.searchList
+    });
+
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)${keyword}(?![&gt;])`, 'gi');
 
@@ -1537,8 +1546,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   private async printHtmlTag() {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
@@ -1569,8 +1576,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   tglSearchChangeHandler() {
     this.searchStatusEmitter.emit({
       searchKeyword: this.searchKeyword,
-      searchOption: this.searchOption,
-      searchList: this.searchList,
+      searchOption: this.searchOption
     });
   }
 
@@ -1578,8 +1584,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isChangedSearch = true;
     this.searchStatusEmitter.emit({
       searchKeyword: this.searchKeyword,
-      searchOption: this.searchOption,
-      searchList: this.searchList,
+      searchOption: this.searchOption
     });
   }
 
@@ -1607,5 +1612,22 @@ export class ContentComponent implements OnInit, OnDestroy {
       tabIndex: this.tabIndex,
       totalCount: this.resList.length
     });
+  }
+
+  btnShowSelectHandler() {
+    console.log(this.isSelectRes);
+    if (this.isSelectRes){
+      if (this.originalResList === undefined || this.originalResList.length < 1){
+        this.originalResList = Object.assign({}, this.resList);
+      }
+      for (let i = 0; i < this.resList.length; i++){
+        if (this.resList[i].resSelect === 'none'){
+          this.resList.splice(i, 1);
+        }
+      }
+    }else{
+      this.resList = this.originalResList;
+    }
+    this.cdRef.detectChanges();
   }
 }

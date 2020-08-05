@@ -10,6 +10,7 @@ const electron = (window as any).require('electron');
 export class ResService {
   resData = new BehaviorSubject<any>({resList: [], sreTitle: ''});
   settings = new BehaviorSubject<any>({});
+  searchListSource = new BehaviorSubject<any>({});
   status = new BehaviorSubject<any>({});
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
@@ -44,6 +45,9 @@ export class ResService {
     });
     electron.ipcRenderer.on('getSettings', (event, value) => {
       this.settings.next(value);
+    });
+    electron.ipcRenderer.on('getSearchList', (event, value) => {
+      this.searchListSource.next(value);
     });
     electron.ipcRenderer.on('getStatus', (event, value) => {
       this.status.next(value);

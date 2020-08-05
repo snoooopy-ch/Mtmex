@@ -9,6 +9,8 @@ let ids = [];
 let resList = [];
 let sreTitle = '';
 let settingPath = 'Setting.ini';
+let searchListPath = 'SearchList.txt';
+
 let stateComments = ['#datパス', '#指定したdatパス', '#チェックボックス', '#文字色', '#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
 let curComment = '';
@@ -891,6 +893,16 @@ function getSettings() {
   input.on('end', function () {
     win.webContents.send("getSettings", settings);
   });
+
+  let searchList = [];
+  if(fs.existsSync(searchListPath)) {
+    let data = fs.readFileSync(searchListPath);
+    let strTmp = '' + data;
+    if(strTmp.length > 0){
+      searchList = strTmp.split('\n');
+    }
+  }
+  win.webContents.send("getSearchList", searchList);
 }
 
 ipcMain.on("saveStatus", (event, saveData) => {
@@ -942,12 +954,14 @@ function loadStatus(filePaths) {
 }
 
 ipcMain.on("saveSearchList", (event, searchList) => {
-  let data = searchList.join('\n');
+  if(searchList !== undefined && searchList.length > 0) {
+    let data = searchList.join('\n');
 
-  fs.writeFile('SearchList.txt', data, (err) => {
-    if (err) throw err;
-    console.log('The settings file has been saved!');
-  });
+    fs.writeFile('SearchList.txt', data, (err) => {
+      if (err) throw err;
+      console.log('The search keywords has been saved!');
+    });
+  }
 });
 
 ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
