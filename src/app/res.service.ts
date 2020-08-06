@@ -229,8 +229,10 @@ export class ResService {
     content = content.replace(/(\s+class="res-img-link"|\s+class="res-link"| class="res-img-link res-gif-link")/ig, ``);
     content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 target="_blank" class="image"$2`);
-    content = content.replace(/(\.[^jpg]+"|\.[^gif]+"|\.[^jpeg]+"|\.[^png]+"|\.[^bmp]+")(>https:)/ig,
-      `$1 target="_blank"$2`);
+    // content = content.replace(/(\.[^jpg]+"|\.[^gif]+"|\.[^jpeg]+"|\.[^png]+"|\.[^bmp]+" )(>https:)/ig,
+    //   `$1 target="_blank"$2`);
+    content = content.replace(/(http(?!.*?(\.jpg|\.gif|\.jpeg|\.bmp|\.png)).*")(>https:)/ig,
+      `$1 target="_blank"$3`);
     // content = content.replace(/(<br><br>)/ig, '<br>');
     // content = content.replace(/(<br><br>)/ig, '<br>');
     content = content.replace(/(<br>)/ig, '<br />');
