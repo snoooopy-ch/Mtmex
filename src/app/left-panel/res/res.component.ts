@@ -263,7 +263,7 @@ export class ResComponent implements OnInit {
   selectClickHandler(event) {
     event.stopPropagation();
     let colorIndex = 0;
-    if (this.item.resSelect === 'select') {
+    if (this.item.resSelect !== 'none') {
       this.item.resSelect = 'none';
     } else {
       this.item.resSelect = 'select';

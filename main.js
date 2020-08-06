@@ -347,7 +347,8 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
         if (!isReplaceRes && resList[i].anchors.indexOf(1) !== -1) {
           continue;
         }
-        if (resList[i].anchors.length === 1 && resList[i].anchors.indexOf(resList[i].num) !== -1) {
+        if ((resList[i].anchors.length === 1 && resList[i].anchors.indexOf(resList[i].num) !== -1)
+          || (notMoveFutureAnchor && resList[i].futureAnchors.length > 0)) {
           continue;
         }
         tmpResList.push(resList[i]);
@@ -480,12 +481,13 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
       const strAnchor = `&gt;&gt;${anchor}`;
       const re = new RegExp(strAnchor,'gi');
       if(re.test(item.continuousContent) === false){
-        newItem.content = `&gt;&gt;${anchor}<br>` + item.continuousContent.replace(re,'');
+        newItem.content = `&gt;&gt;${anchor}<br>` + item.continuousContent.replace(/&gt;&gt;\d+/gi,'');
       }else{
         newItem.content = item.continuousContent;
       }
       newItem.isAdded = true;
       item.content = item.content.replace(`&gt;&gt;${anchor}<br>`,'');
+      item.content = item.content.replace(`&gt;&gt;${anchor}`,'');
       item.content = item.content.replace(item.continuousContent,'');
       resList.splice(i, 0, newItem);
     }else if(item.continuousAnchors.indexOf(anchor) === -1) {
@@ -496,41 +498,48 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
       let isAdded = false;
       let spliter = '&gt;&gt;' + anchor;
       let row = 0;
-      for (let tmpItem of tmpItems) {
-        if (row > 0 && isAdded) {
-          anchorContent += '<br>';
-        }
-        row++;
-        if (tmpItem.indexOf(spliter) !== -1) {
-          anchorExists = true;
-          anchorContent += tmpItem.substr(0, tmpItem.indexOf(spliter) + spliter.length);
-          tmpItem = tmpItem.substr(tmpItem.indexOf(spliter) + spliter.length + 1);
-        }
-        if (anchorExists) {
-          if (tmpItem.indexOf('&gt;&gt;') !== -1) {
-            anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
-            break;
+      if(newItem.content.length > 0) {
+        for (let tmpItem of tmpItems) {
+          if (row > 0 && isAdded) {
+            anchorContent += '<br>';
           }
-          anchorContent += tmpItem;
-          isAdded = true;
-        } else {
-          if(item.continuousAnchors.length === 0) {
+          row++;
+          if (tmpItem.indexOf(spliter) !== -1) {
+            anchorExists = true;
+            // anchorContent += tmpItem.substr(0, tmpItem.indexOf(spliter) + spliter.length);
+            // tmpItem = tmpItem.substr(tmpItem.indexOf(spliter) + spliter.length);
             anchorContent += tmpItem;
             isAdded = true;
+            continue;
           }
-        }
+          if (anchorExists) {
+            if (tmpItem.indexOf('&gt;&gt;') !== -1) {
+              anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
+              break;
+            }
+            anchorContent += tmpItem;
+            isAdded = true;
+          } else {
+            if (item.continuousAnchors.length === 0) {
+              anchorContent += tmpItem;
+              isAdded = true;
+            }
+          }
 
+        }
       }
-      newItem.content = anchorContent;
-      // if(item.featureAnchors > 0){
-      item.content = item.content.replace(newItem.content, '');
-      if (item.content.length === 0) {
-        item.content = newItem.content;
+      if(isAdded && anchorExists) {
+        newItem.content = anchorContent;
+        // if(item.featureAnchors > 0){
+        item.content = item.content.replace(newItem.content, '');
+        // if (item.content.length === 0) {
+        //   item.content = newItem.content;
+        // }
+        // }
+        newItem.isAdded = true;
+        newItem.anchorLevel = anchorLevel + 1;
+        resList.splice(i, 0, newItem);
       }
-      // }
-      newItem.isAdded = true;
-      newItem.anchorLevel = anchorLevel + 1;
-      resList.splice(i, 0, newItem);
     }else {
       if(resList.indexOf(item) === -1) {
         resList.splice(i, 0, item);
@@ -675,18 +684,18 @@ function readLines(line) {
     }
     tmp_str = tmp_str.replace(/<hr>|<br \/>/ig, '<br>');
     const future_str = settings.mirai_anker.replace(/;/g, '|');
+    const reFuture = new RegExp(`(${future_str})[^&]+&gt;&gt;\\d+|&gt;&gt;\\d+[^&]+(${future_str})$`, 'gi');
 
-
-    let f_anchors = tmp_str.match(/(future_str)[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^&]+(future_str)$/gi);
+    let f_anchors = tmp_str.match(reFuture);
 
     if (f_anchors !== null) {
       for (let f_anchor of f_anchors) {
-        f_anchor = f_anchor.replace(/(future_str)[^&]+&gt;&gt;(\d+)/gi, '$1');
-        f_anchor = f_anchor.replace(/&gt;&gt;(\d+)[^&]+(future_str)$/gi, '$1');
+        f_anchor = f_anchor.replace(/[^&]*&gt;&gt;(\d+)/gi, '$1');
+        f_anchor = f_anchor.replace(/&gt;&gt;(\d+)([^&]*)/gi, '$1');
         resItem.futureAnchors.push(parseInt(f_anchor));
       }
     }
-    let anchor_str = tmp_str.replace(/(future_str)[^&]+&gt;&gt;\d+|&gt;&gt;\d+[^&]+(future_str)$/gi, '');
+    let anchor_str = tmp_str.replace(reFuture, '');
     let anchors = anchor_str.match(/&gt;&gt;\d+/g);
     if (anchors !== null) {
       for (const anchor of anchors) {
@@ -774,7 +783,7 @@ function readLines(line) {
           }
         }
       }else{
-        if (i > 1 && new RegExp(strReContinue).test(replaced_lines[i-1]) && isAddContinue){
+        if (i > 0 && new RegExp(strReContinue).test(replaced_lines[i-1]) && isAddContinue){
           let anchor = replaced_lines[i].match(/&gt;&gt;\d+/g);
           if(anchor !== null) {
             num = parseInt(anchor[0].replace(/&gt;&gt;/g, ''));
@@ -788,7 +797,7 @@ function readLines(line) {
             }
             continueContent += '<br>' + replaced_lines[j];
           }
-          resItem.continuousContent = continueContent;
+          resItem.continuousContent = continueContent.replace(/&gt;&gt;\d+/gi,'');
         }
 
       }
@@ -873,6 +882,8 @@ function getSettings() {
         settings['hihyouji'] = lineArgs[1];
       } else if (curComment === '#注目レスの閾値') {
         settings['noticeCount'] = lineArgs[1].split(';');
+      } else if (curComment === '#未来アンカー'){
+        settings[lineArgs[0]] = lineArgs[1].replace(/;/g, '|');
       } else {
         if (yesNoKeys.indexOf(lineArgs[0]) !== -1) {
           settings[lineArgs[0]] = (lineArgs[1] === 'yes' || lineArgs[1] === 'yes;');
@@ -882,7 +893,7 @@ function getSettings() {
           settings[lineArgs[0]] = lineArgs[1];
         } else {
           if (lineArgs.length > 1) {
-            settings[lineArgs[0]] = lineArgs[1].replace(';', '');
+            settings[lineArgs[0]] = lineArgs[1].replace(/;/g, '');
           } else {
             settings[lineArgs[0]] = '';
           }

@@ -394,6 +394,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     let htmlTag = '';
     let index = 0;
     let currentTab = 0;
+    let allCount = 0;
     for (const tabItem of this.tabs) {
       if (tabItem.resList.length > 0) {
         const oneHtmlTag = await this.resService.printHtmlTag(tabItem.resList, {
@@ -418,7 +419,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         currentTab = index;
       }
       index++;
+      allCount += tabItem.resList.filter(item => item.resSelect !== 'none').length;;
     }
+
+    htmlTag = `\n★●レス数: ${allCount}\n\n${htmlTag}\n●★レス数: ${allCount}`;
 
     this.resService.setPrintHtml({tabIndex: currentTab, html: htmlTag});
     $.LoadingOverlay('hide');
