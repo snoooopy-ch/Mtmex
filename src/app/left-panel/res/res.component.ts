@@ -128,7 +128,7 @@ export class ResComponent implements OnInit {
   }
 
   sizeChangeHandler($event) {
-    // $event.stopPropagation();
+    $event.stopPropagation();
     $event.target.blur();
     this.cdRef.detectChanges();
   }
@@ -425,5 +425,9 @@ export class ResComponent implements OnInit {
   btnCancelAllStatus(event) {
     event.stopPropagation();
     this.cancelAllStatusEmitter.emit();
+  }
+
+  lblResFontHandler($event: MouseEvent) {
+    $event.stopPropagation();
   }
 }

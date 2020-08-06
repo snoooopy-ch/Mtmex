@@ -49,7 +49,7 @@
   <div class="row-2" *ngIf="(item.isMenuOpen == true || item.resMenu == 3)">
     <button class="btn-move btn-left-round" (click)="upOneHandler($event)">↑</button>
     <button class="btn-move btn-right-round" (click)="downOneHandler($event)">↓</button>
-    <label class="radio-container" *ngFor="let sizeItem of resSizeList">
+    <label class="radio-container" *ngFor="let sizeItem of resSizeList" (click)="lblResFontHandler($event)">
       <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resFontSize"
              value="{{sizeItem.value}}" (change)="sizeChangeHandler($event)">{{sizeItem.name}}
     </label>
