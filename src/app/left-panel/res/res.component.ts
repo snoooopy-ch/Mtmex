@@ -128,6 +128,7 @@ export class ResComponent implements OnInit {
   }
 
   sizeChangeHandler($event) {
+    // $event.stopPropagation();
     $event.target.blur();
     this.cdRef.detectChanges();
   }
@@ -155,8 +156,8 @@ export class ResComponent implements OnInit {
 
   saveResHandler(event) {
     event.stopPropagation();
-    this.resContent = this.resContent.replace(/<p>&nbsp;<\/p>/gi, '<br>');
     this.resContent = this.resContent.replace(/<\/p><p>/gi, '<br>');
+    this.resContent = this.resContent.replace(/&nbsp;<\/p>/gi, '<br>');
     this.resContent = this.resContent.replace(/(<img[^<]+>)|(<a[^<]+>)|(<\/a>)/ig, '');
     this.resContent = this.resContent.replace(/(<p>)|(<\/p>)|(<h3>)|(<\/h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)|(<\/figure>)/ig, '');
