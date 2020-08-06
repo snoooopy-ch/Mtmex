@@ -380,6 +380,24 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     // const tabListItems = this.tabs;
     moveItemInArray(this.tabs, fromIndex, toIndex);
     moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
+    let index = 0;
+    for (const tab of this.tabs){
+      if (tab.active) {
+        this.resService.setSelectedTab({
+          select: this.tabs[index].resList.filter(item => item.resSelect === 'select').length,
+          candi1: this.tabs[index].resList.filter(item => item.resSelect === 'candi1').length,
+          candi2: this.tabs[index].resList.filter(item => item.resSelect === 'candi2').length,
+          candi3: this.tabs[index].resList.filter(item => item.resSelect === 'candi3').length,
+          candi4: this.tabs[index].resList.filter(item => item.resSelect === 'candi4').length,
+          totalCount: this.tabs[index].resList.length,
+          tabIndex: index,
+          title: this.tabs[index].title,
+        });
+        this.selectedTabIndex = index;
+        break;
+      }
+      index++;
+    }
     // this.tabs[fromIndex].active = false;
   }
 

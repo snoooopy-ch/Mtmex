@@ -409,7 +409,6 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
       }
     }
 
-
     for (let i = 0; i < resList.length; i++) {
       if (resList[i].anchorCount >= settings.noticeCount) {
         resList[i].isNotice = true;
@@ -421,14 +420,14 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
           }
           resList[j].isNotice = true;
           j = i + 1;
-          while (resList[j].isAdded && j < resList.length) {
+          while (j < resList.length && resList[j].isAdded) {
             resList[j].isNotice = true;
             j++;
           }
           i = j;
         } else if (i < resList.length - 1 && resList[i + 1]) {
           let j = i + 1;
-          while (resList[j].isAdded && j < resList.length) {
+          while (j < resList.length && resList[j].isAdded) {
             resList[j].isNotice = true;
             j++;
           }

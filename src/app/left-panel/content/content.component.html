@@ -30,9 +30,10 @@
   <label>URL</label>
   <input type="text" [(ngModel)]="txtURL">
 </div>
-<h3>{{tabName}}</h3>
+<h3 #tabTitle>{{tabName}}</h3>
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)"
-                  cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true">
+                  cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true"
+[ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + 173) + 'px)'}">
 
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),

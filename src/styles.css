@@ -162,7 +162,7 @@ label {
 .main-container app-left-panel app-content .res-content {
   border-top: 1px solid #adadad;
   width: 100%;
-  height: calc(100vh - 209px);
+  /*height: calc(100vh - 209px);*/
 }
 
 .main-container app-left-panel app-content .extract {

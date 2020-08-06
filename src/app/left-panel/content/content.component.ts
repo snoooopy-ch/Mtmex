@@ -1272,7 +1272,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
-    const re = new RegExp(`(?![^<>]*>)${keyword}(?![&gt;])`, 'gi');
+    const re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
 
     for (let i = 0; i < this.resList.length; i++){
       if (this.searchOption === 'num'){
