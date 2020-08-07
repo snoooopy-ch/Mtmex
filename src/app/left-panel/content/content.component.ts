@@ -270,9 +270,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'candi1') {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
             this.selectedRes(this.resList[this.hovered],
-              {selected: 'none'});
+              {selected: 'select'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[2];
             this.selectedRes(this.resList[this.hovered],
@@ -286,9 +286,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'candi2') {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none'});
+              { selected: 'select'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
             this.selectedRes(this.resList[this.hovered],
@@ -302,11 +302,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi3, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'candi3') {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none'});
+              { selected: 'select'});
           } else {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[4];
             this.selectedRes(this.resList[this.hovered],
               { selected: 'candi3'});
           }
@@ -318,11 +318,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi4, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           if (this.resList[this.hovered].resSelect === 'candi4') {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none'});
+              { selected: 'select'});
           } else {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[5];
             this.selectedRes(this.resList[this.hovered],
               { selected: 'candi4'});
           }
@@ -1256,7 +1256,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
-
+    console.log(this.searchWordMax);
     if (this.searchList.indexOf(this.searchKeyword.trim()) === -1){
       if (this.searchList.length >= this.searchWordMax){
         this.searchList.splice(this.searchList.length - 1, 1);
@@ -1305,7 +1305,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   abstractRes(){
     this.backupResList = Object.assign([], this.resList);
-    if (!this.btnNotice.checked){
+    if (!this.btnNotice.checked && !this.isSelectRes){
       this.originalResList = Object.assign([], this.resList);
     }
     let tmpResList = [];
@@ -1329,7 +1329,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     //     }
     //   }
     // }
-    console.log(this.isTreeSearch);
+
     for (let i = 0; i < this.resList.length; i++) {
       if (this.resList[i].isSearched){
         this.resList[i].isFiltered = true;
@@ -1409,7 +1409,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   btnNoticeChangeHandler() {
     if (this.btnNotice.checked){
       this.noticeBackupResList = Object.assign([], this.resList);
-      if (!this.btnSearch.checked){
+      if (!this.btnSearch.checked && !this.isSelectRes){
         this.originalResList = Object.assign([], this.resList);
       }
       let tmpResList = [];
@@ -1674,6 +1674,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   btnShowSelectHandler() {
     if (this.isSelectRes){
       this.selectedBackupResList = Object.assign({}, this.resList);
+      if (!this.btnSearch.checked && !this.btnNotice.checked){
+        this.originalResList = Object.assign({}, this.resList);
+      }
       const tmpResList = [];
       for (const resItem of this.resList){
         if (resItem.resSelect !== 'none'){
@@ -1714,5 +1717,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.isSelectRes = false;
       this.btnShowSelectHandler();
     }
+
+    this.resList = Object.assign([], this.originalResList);
   }
 }

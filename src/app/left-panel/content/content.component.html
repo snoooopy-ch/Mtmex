@@ -9,7 +9,10 @@
   <input type="text" [(ngModel)]="searchKeyword" #txtSearch
          [typeahead]="searchList"
          [typeaheadMinLength]="0"
-         [typeaheadSelectFirstItem] = "false"
+         [typeaheadIsFirstItemActive] = "false"
+         [typeaheadScrollable]="true"
+         [typeaheadOptionsInScrollableView]="15"
+         [typeaheadOptionsLimit]="searchWordMax"
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
   <button type="button" class="btn-long" (click)="btnSearchHandler()">抽出</button>
