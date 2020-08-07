@@ -65,6 +65,7 @@ export class ResComponent implements OnInit {
   @Input() resMouseClick;
   @Input() txtRemarkRes;
   @Input() imageWidth;
+  @Input() cancelAllColor;
   resContent = '';
   @Input() characterColors;
 
@@ -131,7 +132,6 @@ export class ResComponent implements OnInit {
     $event.stopPropagation();
     $event.target.blur();
     this.cdRef.detectChanges();
-    // return false;
   }
 
   colorChangeHandler($event) {

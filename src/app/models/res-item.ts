@@ -30,4 +30,5 @@ export class ResItem{
   isSearched = false;
   isNotice: boolean;
   anchorLevel: number;
+  numBackground = 'transparent';
 }

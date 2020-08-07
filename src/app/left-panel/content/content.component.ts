@@ -67,6 +67,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() endAbbreviations;
   @Input() searchWordMax;
   @Input() searchList = [];
+  @Input() cancelAllColor;
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -1240,12 +1241,11 @@ export class ContentComponent implements OnInit, OnDestroy {
     for (const res of this.resList){
       res.content = res.content.replace(/(<span[^<]+>)/ig, '');
       res.content = res.content.replace(/<\/span>/ig, '');
-      if (this.searchOption === 'all'){
-        res.id = res.id.replace(/(<span[^<]+>)/ig, '');
-        res.id = res.id.replace(/<\/span>/ig, '');
-        res.name = res.name.replace(/(<span[^<]+>)/ig, '');
-        res.name = res.name.replace(/<\/span>/ig, '');
-      }
+      res.numBackground = 'transparent';
+      res.id = res.id.replace(/(<span[^<]+>)/ig, '');
+      res.id = res.id.replace(/<\/span>/ig, '');
+      res.name = res.name.replace(/(<span[^<]+>)/ig, '');
+      res.name = res.name.replace(/<\/span>/ig, '');
       res.isFiltered = false;
       res.isSearched = false;
     }
@@ -1280,6 +1280,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           // this.resList[i].num = this.resList[i].num.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
           this.resList[i].isSearched = true;
           this.resList[i].originalIndex = i;
+          this.resList[i].numBackground = this.hitColor;
         }
       }else {
         if (this.resList[i].content.match(re) !== null) {
@@ -1444,43 +1445,70 @@ export class ContentComponent implements OnInit, OnDestroy {
     }else if ($event.shiftKey && $event.code === 'Enter'){
       this.isChangedSearch = false;
       if (this.searchOption !== undefined && this.searchOption.length > 0) {
-        let isExist = false;
-        while (true) {
-          if (this.searchedRes > this.resList.length - 1){
-            this.searchedRes = this.resList.length - 1;
-          }
-          if (this.searchedRes < 0) {
-            break;
-          }
-          this.startInRes = this.resList[this.searchedRes].content.lastIndexOf(`<span style="background-color: ${this.hitColor};">`,
-            this.startInRes);
-          if (this.startInRes !== -1) {
-            isExist = true;
-            break;
-          }
-
-          this.startInRes--;
-          if (this.startInRes < 0) {
-            this.searchedRes--;
-            if (this.searchedRes >= 0){
-              this.startInRes = this.resList[this.searchedRes].content.length - 1;
+        if (this.searchOption === 'num'){
+          let currentHit = 0;
+          let isExist = false;
+          for (let i = 0; i < this.resList.length; i++){
+            if (this.resList[i].numBackground === this.highLightColor){
+              currentHit = i - 1;
+              break;
             }
           }
-        }
-        if (isExist){
-          for (const res of this.resList){
-            res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
-          }
-          const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
-          this.resList[this.searchedRes].content = this.resList[this.searchedRes].content.replace(re, (match, offset) => {
-            let result = match;
-            if (this.startInRes === offset){
-              result = `<span style="background-color: ${this.highLightColor};">`;
+          for (let i = currentHit; i >= 0; i--){
+            if (this.resList[i].numBackground === this.hitColor){
+              this.searchedRes = i;
+              isExist = true;
+              break;
             }
-            return result;
-          });
-          // this.startInRes -= `<span style="background-color: ${this.highLightColor};">`.length;
-          this.virtualScroller.scrollToIndex(this.searchedRes);
+          }
+          if (isExist) {
+            for (const res of this.resList){
+              if (res.numBackground === this.highLightColor){
+                res.numBackground = this.hitColor;
+                break;
+              }
+            }
+            this.resList[this.searchedRes].numBackground = this.highLightColor;
+            this.virtualScroller.scrollToIndex(this.searchedRes);
+          }
+        }else{
+          let isExist = false;
+          while (true) {
+            if (this.searchedRes > this.resList.length - 1){
+              this.searchedRes = this.resList.length - 1;
+            }
+            if (this.searchedRes < 0) {
+              break;
+            }
+            this.startInRes = this.resList[this.searchedRes].content.lastIndexOf(`<span style="background-color: ${this.hitColor};">`,
+              this.startInRes);
+            if (this.startInRes !== -1) {
+              isExist = true;
+              break;
+            }
+            this.startInRes--;
+            if (this.startInRes < 0) {
+              this.searchedRes--;
+              if (this.searchedRes >= 0){
+                this.startInRes = this.resList[this.searchedRes].content.length - 1;
+              }
+            }
+          }
+          if (isExist){
+            for (const res of this.resList){
+              res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
+            }
+            const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
+            this.resList[this.searchedRes].content = this.resList[this.searchedRes].content.replace(re, (match, offset) => {
+              let result = match;
+              if (this.startInRes === offset){
+                result = `<span style="background-color: ${this.highLightColor};">`;
+              }
+              return result;
+            });
+            // this.startInRes -= `<span style="background-color: ${this.highLightColor};">`.length;
+            this.virtualScroller.scrollToIndex(this.searchedRes);
+          }
         }
       }
     } else if ($event.code === 'Enter'){
@@ -1496,46 +1524,73 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }else{
         if (this.searchOption !== undefined && this.searchOption.length > 0){
-          let isExist = false;
-          while (true){
-            if (this.searchedRes < 0){
-              this.searchedRes = 0;
-            }
-            if (this.searchedRes < this.virtualScroller.viewPortInfo.startIndex){
-              this.searchedRes = this.virtualScroller.viewPortInfo.startIndex;
-            }
-            if (this.searchedRes > this.resList.length - 1){
-              break;
-            }
-
-            this.startInRes = this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
-              this.startInRes);
-            if (this.startInRes !== -1){
-              isExist = true;
-              break;
-            }
-            // this.startInRes++;
-            if (this.startInRes === -1){
-              this.startInRes = 0;
-              this.searchedRes++;
-            }
-          }
-          if (isExist){
-            for (const res of this.resList){
-              res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
-            }
-            const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
-            this.resList[this.searchedRes].content = this.resList[this.searchedRes].content.replace(re, (match, offset) => {
-              let result = match;
-              if (this.startInRes === offset){
-                result = `<span style="background-color: ${this.highLightColor};">`;
+          if (this.searchOption === 'num'){
+            let currentHit = 0;
+            let isExist = false;
+            for (let i = 0; i < this.resList.length; i++){
+              if (this.resList[i].numBackground === this.highLightColor){
+                currentHit = i + 1;
+                break;
               }
-              return result;
-            });
-            this.startInRes += `<span style="background-color: ${this.highLightColor};">`.length;
-            this.virtualScroller.scrollToIndex(this.searchedRes);
-          }
+            }
+            for (let i = currentHit; i < this.resList.length; i++){
+              if (this.resList[i].numBackground === this.hitColor){
+                this.searchedRes = i;
+                isExist = true;
+                break;
+              }
+            }
+            if (isExist) {
+              for (const res of this.resList){
+                if (res.numBackground === this.highLightColor){
+                  res.numBackground = this.hitColor;
+                  break;
+                }
+              }
+              this.resList[this.searchedRes].numBackground = this.highLightColor;
+              this.virtualScroller.scrollToIndex(this.searchedRes);
+            }
+          } else {
+            let isExist = false;
+            while (true) {
+              if (this.searchedRes < 0) {
+                this.searchedRes = 0;
+              }
+              if (this.searchedRes < this.virtualScroller.viewPortInfo.startIndex) {
+                this.searchedRes = this.virtualScroller.viewPortInfo.startIndex;
+              }
+              if (this.searchedRes > this.resList.length - 1) {
+                break;
+              }
 
+              this.startInRes = this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
+                this.startInRes);
+              if (this.startInRes !== -1) {
+                isExist = true;
+                break;
+              }
+              // this.startInRes++;
+              if (this.startInRes === -1) {
+                this.startInRes = 0;
+                this.searchedRes++;
+              }
+            }
+            if (isExist) {
+              for (const res of this.resList) {
+                res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
+              }
+              const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
+              this.resList[this.searchedRes].content = this.resList[this.searchedRes].content.replace(re, (match, offset) => {
+                let result = match;
+                if (this.startInRes === offset) {
+                  result = `<span style="background-color: ${this.highLightColor};">`;
+                }
+                return result;
+              });
+              this.startInRes += `<span style="background-color: ${this.highLightColor};">`.length;
+              this.virtualScroller.scrollToIndex(this.searchedRes);
+            }
+          }
         }
       }
     }else{
@@ -1575,6 +1630,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   tglSearchChangeHandler() {
+    this.isChangedSearch = true;
     this.searchStatusEmitter.emit({
       searchKeyword: this.searchKeyword,
       searchOption: this.searchOption

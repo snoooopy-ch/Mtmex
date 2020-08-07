@@ -3,7 +3,8 @@
     <div class="label-res-kaihei" (click)="clickResMenuKaihei($event)">
 <!--      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"-->
 <!--        [ngStyle]="{'color': item.isNotice ? '#f00' : '#000'}">{{item.num}}</h4>      -->
-      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false">{{item.num}}</h4>
+      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"
+          [ngStyle]="{'background-color': item.numBackground}">{{item.num}}</h4>
       <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
     </div>
     <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
@@ -38,7 +39,7 @@
     <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}" [innerHTML]="item.id | safeHtml"
         (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
     <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
-    <button class="btn-cancel-all" (click)="btnCancelAllStatus($event)"></button>
+    <button class="btn-cancel-all" (click)="btnCancelAllStatus($event)" [ngStyle]="{'background-color': cancelAllColor}"></button>
     <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor}">
       <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
         <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
