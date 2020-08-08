@@ -747,6 +747,14 @@ export class ContentComponent implements OnInit, OnDestroy {
         return false; // Prevent bubbling
       }));
 
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.sentaku_res_gamen, (event: KeyboardEvent): boolean => {
+        if (this.isSelectRes) {
+          this.isSelectRes = !this.isSelectRes;
+          this.btnShowSelectHandler();
+        }
+        return false; // Prevent bubbling
+      }));
+
       // 抽出
       this.hotkeysService.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
         if (!this.btnSearch.checked) {
@@ -1275,25 +1283,23 @@ export class ContentComponent implements OnInit, OnDestroy {
     const re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
 
     for (let i = 0; i < this.resList.length; i++){
+      this.resList[i].originalIndex = i;
       if (this.searchOption === 'num'){
         if (re.test(String(this.resList[i].num))){
           // this.resList[i].num = this.resList[i].num.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
           this.resList[i].isSearched = true;
-          this.resList[i].originalIndex = i;
           this.resList[i].numBackground = this.hitColor;
         }
       }else {
         if (this.resList[i].content.match(re) !== null) {
           this.resList[i].content = this.resList[i].content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
           this.resList[i].isSearched = true;
-          this.resList[i].originalIndex = i;
         }
         if (this.searchOption === 'all') {
           if (this.resList[i].name.match(re) || this.resList[i].id.match(re)) {
             this.resList[i].id = this.resList[i].id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
             this.resList[i].name = this.resList[i].name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
             this.resList[i].isSearched = true;
-            this.resList[i].originalIndex = i;
           }
         }
       }
@@ -1704,7 +1710,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.btnSearchChangeHandler();
   }
 
-  cancelAllStatus() {
+  cancelAllStatus(item: ResItem) {
     if (this.btnSearch.checked){
       this.btnSearch.checked = false;
       this.btnSearchChangeHandler();
@@ -1719,5 +1725,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
 
     this.resList = Object.assign([], this.originalResList);
+    const index = this.resList.indexOf(item);
+    moveItemInArray(this.resList, index, 0);
+    this.cdRef.detectChanges();
+    this.virtualScroller.scrollToIndex(0);
   }
 }

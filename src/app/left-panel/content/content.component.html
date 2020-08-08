@@ -56,7 +56,7 @@
              (selectedTreeResEmitter)="selectedTreeRes(resList.indexOf(resItem), $event)"
              (setDraggableEmitter)="setDraggable(resList.indexOf(resItem), $event)"
              (selectedNumEmitter)="selectedNum(resItem)"
-             (cancelAllStatusEmitter)="cancelAllStatus()"
+             (cancelAllStatusEmitter)="cancelAllStatus(resItem)"
              [tabIndex]="tabIndex"
              [ngClass]="{'hide-res':!resItem.isShow}"
              (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"

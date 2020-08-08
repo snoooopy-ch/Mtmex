@@ -104,7 +104,11 @@ export class ResComponent implements OnInit {
 
       $('a.res-link').click(function(event) {
         event.stopPropagation();
-      })
+      });
+
+      $('a.res-img-link').click((event) => {
+        event.stopPropagation();
+      });
 
       $('.res-container label').click(function(event){
         event.stopPropagation();
@@ -113,6 +117,7 @@ export class ResComponent implements OnInit {
       $('.res-container .row-4').on('mousedown touchstart', function(event) {
         event.stopPropagation();
       });
+
       $('.res-container .row-4').on('mousemove touchmove', function(event) {
         event.stopPropagation();
       });
@@ -131,6 +136,7 @@ export class ResComponent implements OnInit {
   sizeChangeHandler($event) {
     $event.stopPropagation();
     $event.target.blur();
+    this.selectClickHandler($event);
     this.cdRef.detectChanges();
   }
 
