@@ -133,21 +133,27 @@ export class ResComponent implements OnInit {
     }
   }
 
+  selectRes(){
+    if (this.item.resSelect !== 'select') {
+      this.item.resSelect = 'select';
+      this.item.resBackgroundColor = this.backgroundColors[1];
+      this.ref.nativeElement.style.backgroundColor = this.backgroundColors[1];
+      this.selectedResEmitter.emit({
+        selected: 'select'
+      });
+    }
+  }
+
   sizeChangeHandler($event) {
     $event.stopPropagation();
+    this.selectRes();
     $event.target.blur();
-    this.selectClickHandler($event);
     this.cdRef.detectChanges();
   }
 
   colorChangeHandler($event) {
-    this.item.resSelect = 'select';
-
-    this.item.resBackgroundColor = this.backgroundColors[1];
-    this.ref.nativeElement.style.backgroundColor = this.backgroundColors[1];
-    this.selectedResEmitter.emit({
-        selected: 'select'
-      });
+    $event.stopPropagation();
+    this.selectRes();
     $event.target.blur();
     this.cdRef.detectChanges();
   }

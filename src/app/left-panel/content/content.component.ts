@@ -1370,10 +1370,13 @@ export class ContentComponent implements OnInit, OnDestroy {
     for (const res of this.resList){
       if (res.isFiltered) {
         tmpResList = [...tmpResList, res];
+        res.isShow = true;
+      }else{
+        res.isShow = false;
       }
     }
-    this.resList = [];
-    this.resList = tmpResList;
+    // this.resList = [];
+    // this.resList = tmpResList;
     this.changeStatus();
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
