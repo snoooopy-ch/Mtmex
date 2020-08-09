@@ -200,6 +200,7 @@ label {
   min-width: 154px;
   width: 14%;
   height: 29px;
+  font-size: 14px
 }
 
 .main-container app-left-panel app-content .extract input[type="text"] {

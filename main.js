@@ -301,7 +301,7 @@ ipcMain.on("loadMultiRes", (event, filePaths, isResSort, isMultiAnchor, isReplac
                             notMoveFutureAnchor, remarkRes, hideRes) => {
   let index = 0;
   for (const filePath of filePaths) {
-    setTimeout(getResList, 500*index, filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor, remarkRes, hideRes);
+    setTimeout(getResList, 1000*index, filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor, remarkRes, hideRes);
     index++;
   }
 
