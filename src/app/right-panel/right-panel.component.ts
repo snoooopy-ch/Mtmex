@@ -1,4 +1,13 @@
-import {ChangeDetectorRef, Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
 import { Observable, timer } from 'rxjs';
@@ -33,7 +42,6 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   isContinuousAnchor: any;
   notMoveFutureAnchor: any;
   sortCommand: any;
-
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
@@ -136,15 +144,16 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   @HostListener('window:beforeunload', [ '$event' ])
   beforeUnloadHandler(event) {
     this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes,
-      this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor, this.notMoveFutureAnchor);
+      this.isResSort, this.isMultiAnchor && this.isResSort, this.isReplaceRes,
+      this.isContinuousAnchor && this.isMultiAnchor && this.isResSort, this.notMoveFutureAnchor);
   }
 
   btnLoadSingleFile(filePath) {
 
     const remarkRes = this.getRemarkRes();
     const hideRes = this.getHideRes();
-    this.resService.loadRes(filePath, this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor,
-      this.notMoveFutureAnchor, remarkRes, hideRes);
+    this.resService.loadRes(filePath, this.isResSort, this.isMultiAnchor && this.isResSort, this.isReplaceRes,
+      this.isContinuousAnchor && this.isMultiAnchor && this.isResSort, this.notMoveFutureAnchor, remarkRes, hideRes);
   }
 
   getRemarkRes(){

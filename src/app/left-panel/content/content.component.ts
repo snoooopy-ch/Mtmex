@@ -30,9 +30,12 @@ export class ContentComponent implements OnInit, OnDestroy {
   hiddenIds: string [];
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
-  @ViewChild('btnSearch') btnSearch: MatButtonToggle;
+  @ViewChild('btnSearchStatus') btnSearchStatus: MatButtonToggle;
   @ViewChild('btnNotice') btnNotice: MatButtonToggle;
-  @ViewChild('txtSearch') txtSearch: ElementRef ;
+  @ViewChild('txtSearch') txtSearch: ElementRef;
+  @ViewChild('btnTreeSearch') btnTreeSearch: ElementRef;
+  @ViewChild('btnSearch') btnSearch: ElementRef;
+
   hovered: number;
   draggable: number;
   @Input() backgroundColors;
@@ -83,9 +86,10 @@ export class ContentComponent implements OnInit, OnDestroy {
   candi4Count: number;
   currentScrollIndex: number;
   originalResList: ResItem[];
-  isTreeSearch: number;
+  isTreeSearch: boolean;
   isSelectRes: any;
   selectedBackupResList: ResItem[];
+  private isKeyPressed: boolean;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -102,6 +106,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isTreeSearch = true;
     this.originalResList = [];
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
@@ -152,7 +157,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           saveData.filePath = `${value.autoFilePath}${this.tabName}.txt`;
         }
         let saveResList = [];
-        if (this.btnSearch.checked || this.btnNotice.checked){
+        if (this.btnSearchStatus.checked || this.btnNotice.checked){
           saveResList = this.originalResList;
         }else{
           saveResList = this.resList;
@@ -740,8 +745,8 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       // 抽出解除
       this.hotkeysService.add(new Hotkey(this.subHotKeys.chuushutu_kaijo, (event: KeyboardEvent): boolean => {
-        if (this.btnSearch.checked) {
-          this.btnSearch.checked = false;
+        if (this.btnSearchStatus.checked) {
+          this.btnSearchStatus.checked = false;
           this.btnSearchChangeHandler();
         }
         return false; // Prevent bubbling
@@ -757,8 +762,8 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       // 抽出
       this.hotkeysService.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
-        if (!this.btnSearch.checked) {
-          this.btnSearch.checked = true;
+        if (!this.btnSearchStatus.checked) {
+          this.btnSearchStatus.checked = true;
           this.btnSearchChangeHandler();
         }
         return false; // Prevent bubbling
@@ -1370,10 +1375,13 @@ export class ContentComponent implements OnInit, OnDestroy {
     for (const res of this.resList){
       if (res.isFiltered) {
         tmpResList = [...tmpResList, res];
+        res.isShow = true;
+      }else{
+        res.isShow = false;
       }
     }
-    this.resList = [];
-    this.resList = tmpResList;
+    // this.resList = [];
+    // this.resList = tmpResList;
     this.changeStatus();
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
@@ -1382,9 +1390,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnSearchChangeHandler() {
-    if (this.btnSearch.checked){
+    if (this.btnSearchStatus.checked){
       if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
-        this.btnSearch.checked = false;
+        this.btnSearchStatus.checked = false;
       }else{
         this.cancelSearchResText();
         this.searchResText();
@@ -1400,14 +1408,14 @@ export class ContentComponent implements OnInit, OnDestroy {
         totalCount: this.resList.length
       });
     }
-    this.filteredEmitter.emit(this.btnSearch.checked);
+    this.filteredEmitter.emit(this.btnSearchStatus.checked);
   }
 
   selectedNum(resItem: ResItem) {
     if (resItem.originalIndex !== null) {
       moveItemInArray(this.backupResList, resItem.originalIndex, 0);
     }
-    this.btnSearch.checked = false;
+    this.btnSearchStatus.checked = false;
     this.btnSearchChangeHandler();
     this.virtualScroller.scrollToIndex(0);
   }
@@ -1415,7 +1423,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   btnNoticeChangeHandler() {
     if (this.btnNotice.checked){
       this.noticeBackupResList = Object.assign([], this.resList);
-      if (!this.btnSearch.checked && !this.isSelectRes){
+      if (!this.btnSearchStatus.checked && !this.isSelectRes){
         this.originalResList = Object.assign([], this.resList);
       }
       let tmpResList = [];
@@ -1442,13 +1450,22 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   txtSearchKeyUpHandler($event: KeyboardEvent) {
+    $event.preventDefault();
     if (this.searchOption === undefined){
       return;
     }
-    if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
-      this.btnSearch.checked = !this.btnSearch.checked;
+    if (this.isKeyPressed && $event.shiftKey && $event.code === 'Tab'){
+      this.isKeyPressed = false;
+      this.btnTreeSearch.nativeElement.focus();
+      return;
+    } else if (this.isKeyPressed && $event.code === 'Tab'){
+      this.isKeyPressed = false;
+      this.btnSearch.nativeElement.focus();
+      return;
+    } else if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
+      this.btnSearchStatus.checked = !this.btnSearchStatus.checked;
       this.btnSearchChangeHandler();
-    }else if ($event.shiftKey && $event.code === 'Enter'){
+    } else if ($event.shiftKey && $event.code === 'Enter'){
       this.isChangedSearch = false;
       if (this.searchOption !== undefined && this.searchOption.length > 0) {
         if (this.searchOption === 'num'){
@@ -1613,7 +1630,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       imageColor: '#ffa07a',
     });
     let printResList = [];
-    if (this.btnNotice.checked || this.btnSearch.checked){
+    if (this.btnNotice.checked || this.btnSearchStatus.checked){
       printResList = this.originalResList;
     }else{
       printResList = this.resList;
@@ -1680,7 +1697,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   btnShowSelectHandler() {
     if (this.isSelectRes){
       this.selectedBackupResList = Object.assign({}, this.resList);
-      if (!this.btnSearch.checked && !this.btnNotice.checked){
+      if (!this.btnSearchStatus.checked && !this.btnNotice.checked){
         this.originalResList = Object.assign({}, this.resList);
       }
       const tmpResList = [];
@@ -1702,17 +1719,17 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnSearchHandler() {
-    if (this.btnSearch.checked){
+    if (this.btnSearchStatus.checked){
       this.resList = Object.assign([], this.backupResList);
     }else{
-      this.btnSearch.checked = true;
+      this.btnSearchStatus.checked = true;
     }
     this.btnSearchChangeHandler();
   }
 
   cancelAllStatus(item: ResItem) {
-    if (this.btnSearch.checked){
-      this.btnSearch.checked = false;
+    if (this.btnSearchStatus.checked){
+      this.btnSearchStatus.checked = false;
       this.btnSearchChangeHandler();
     }
     if (this.btnNotice.checked){
@@ -1729,5 +1746,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     moveItemInArray(this.resList, index, 0);
     this.cdRef.detectChanges();
     this.virtualScroller.scrollToIndex(0);
+  }
+
+  txtSearchKeyPressHandler($event: KeyboardEvent) {
+    $event.preventDefault();
+    this.isKeyPressed = true;
   }
 }

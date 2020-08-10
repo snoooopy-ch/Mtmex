@@ -299,9 +299,12 @@ ipcMain.on("loadRes", (event, filePath, isResSort, isMultiAnchor, isReplaceRes, 
 
 ipcMain.on("loadMultiRes", (event, filePaths, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor,
                             notMoveFutureAnchor, remarkRes, hideRes) => {
+  let index = 0;
   for (const filePath of filePaths) {
-    getResList(filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor, remarkRes, hideRes);
+    setTimeout(getResList, 1000*index, filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor, remarkRes, hideRes);
+    index++;
   }
+
 });
 
 /**
