@@ -79,9 +79,8 @@ export class ResService {
     electron.ipcRenderer.send('loadStatus', filePaths);
   }
 
-  saveSettings(dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor){
-    electron.ipcRenderer.send('saveSettings', dataFilePath, remarkRes, hiddenRes, isResSort, isMultiAnchor
-      , isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
+  saveSettings(params){
+    electron.ipcRenderer.send('saveSettings', params);
   }
 
   saveSearchList(searchList){
@@ -229,17 +228,23 @@ export class ResService {
     content = content.replace(/(\s+class="res-img-link"|\s+class="res-link"| class="res-img-link res-gif-link")/ig, ``);
     content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 target="_blank" class="image"$2`);
-    // content = content.replace(/(\.[^jpg]+"|\.[^gif]+"|\.[^jpeg]+"|\.[^png]+"|\.[^bmp]+" )(>https:)/ig,
-    //   `$1 target="_blank"$2`);
-    content = content.replace(/(http(?!.*?(\.jpg|\.gif|\.jpeg|\.bmp|\.png)).*")(>https:)/ig,
-      `$1 target="_blank"$3`);
-    // content = content.replace(/(<br><br>)/ig, '<br>');
-    // content = content.replace(/(<br><br>)/ig, '<br>');
-    content = content.replace(/(<br>)/ig, '<br />');
+    const tmpContent = content.split('<br>');
+    let row = 0;
+    content = '';
+    for (const tmpline of tmpContent){
+      if (row > 0) {
+        content += '<br />';
+      }
+      content += tmpline.replace(/(http(?!.*?(\.jpg|\.gif|\.jpeg|\.bmp|\.png)).*")(>https:)/ig,
+        `$1 target="_blank"$3`);
+      row++;
+    }
 
+    console.log(content);
     // Twitter embed code
     if (options.twitter) {
       const twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
+      console.log(twitters);
       if (Array.isArray(twitters) && twitters.length) {
         for (const twitter of twitters) {
           const twitterURL = twitter.slice(1, -1);
@@ -273,10 +278,14 @@ export class ResService {
     }
 
     if (res.isAdded) {
-      htmlTag += `<div class="t_h t_i">`;
+      htmlTag += `<div class="t_h t_i`;
     } else {
-      htmlTag += `<div class="t_h">`;
+      htmlTag += `<div class="t_h`;
     }
+    if (res.anchorLevel > 0){
+      htmlTag += ` left${res.anchorLevel}`;
+    }
+    htmlTag += '">';
     const resName = res.name.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     const resDate = res.date.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     const resId = res.id.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
@@ -337,7 +346,7 @@ export class ResService {
       htmlTag += `"><!-- res_s -->`;
 
       if (res.idColor !== '#000') {
-        htmlTag += `<-- ${res.idClassNoSelect}_s -->`;
+        htmlTag += `<!-- ${res.idClassNoSelect}_s -->`;
       }
       let suffix = '';
       if (res.resFontSize === options.resSizeList[1].value){
@@ -355,7 +364,7 @@ export class ResService {
       }
       htmlTag += `${content}${suffix}`;
       if (res.idColor !== '#000') {
-        htmlTag += `<-- ${res.idClassNoSelect}_e -->`;
+        htmlTag += `<!-- ${res.idClassNoSelect}_e -->`;
       }
       htmlTag += `<!-- res_e -->`;
 

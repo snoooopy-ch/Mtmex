@@ -42,6 +42,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   isContinuousAnchor: any;
   notMoveFutureAnchor: any;
   sortCommand: any;
+  loadDatPath: string;
+  loadStatusPath: string;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
@@ -76,6 +78,15 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.txtRemarkRes = this.settings.chuui;
         this.txtHideRes = this.settings.hihyouji;
       }
+
+      if (this.settings.default_dat_folder_path !== undefined){
+        this.loadDatPath = this.settings.default_dat_folder_path;
+      }
+
+      if (this.settings.default_status_folder_path !== undefined){
+        this.loadStatusPath = this.settings.default_status_folder_path;
+      }
+
       this.cdRef.detectChanges();
     });
 
@@ -143,9 +154,17 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
   @HostListener('window:beforeunload', [ '$event' ])
   beforeUnloadHandler(event) {
-    this.resService.saveSettings(this.txtDataFilePath, this.txtRemarkRes, this.txtHideRes,
-      this.isResSort, this.isMultiAnchor && this.isResSort, this.isReplaceRes,
-      this.isContinuousAnchor && this.isMultiAnchor && this.isResSort, this.notMoveFutureAnchor);
+    this.resService.saveSettings({dataFilePath: this.txtDataFilePath,
+      remarkRes: this.txtRemarkRes,
+      hideRes: this.txtHideRes,
+      isResSort: this.isResSort,
+      isMultiAnchor: this.isMultiAnchor && this.isResSort,
+      isReplaceRes: this.isReplaceRes,
+      isContinuousAnchor: this.isContinuousAnchor && this.isMultiAnchor && this.isResSort,
+      notMoveFutureAnchor: this.notMoveFutureAnchor,
+      defaultDatFolderPath: this.loadDatPath,
+      defaultStatusFolderPath: this.loadStatusPath
+    });
   }
 
   btnLoadSingleFile(filePath) {
@@ -263,9 +282,13 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   loadCurrentRes() {
     electron.remote.dialog.showOpenDialog(null, {title: 'レス状態復元',
       properties: ['openFile', 'multiSelections'],
+      defaultPath: this.loadStatusPath,
       filters: [{ name: '復元パイル', extensions: ['txt'] }]}).then(result => {
       if (!result.canceled){
-        this.resService.loadStatus(result.filePaths);
+        if (result.filePaths.length > 0) {
+          this.loadStatusPath = result.filePaths[0].substr(0, result.filePaths[0].lastIndexOf('\\'));
+          this.resService.loadStatus(result.filePaths);
+        }
       }
     });
   }
@@ -273,12 +296,17 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   btnLoadMultiFiles() {
     electron.remote.dialog.showOpenDialog(null, {title: 'dat直接読み込み',
       properties: ['openFile', 'multiSelections'],
+      defaultPath: this.loadDatPath,
       filters: [{ name: 'Datパイル', extensions: ['dat'] }]}).then(async result => {
       if (!result.canceled){
         const remarkRes = this.getHideRes();
         const hideRes = this.getHideRes();
-        this.resService.loadMultiRes(result.filePaths, this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor,
-          this.notMoveFutureAnchor, remarkRes, hideRes);
+        if (result.filePaths.length > 0) {
+          this.loadDatPath = result.filePaths[0].substr(0, result.filePaths[0].lastIndexOf('\\'));
+          console.log(this.loadDatPath);
+          this.resService.loadMultiRes(result.filePaths, this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor,
+            this.notMoveFutureAnchor, remarkRes, hideRes);
+        }
       }
     });
   }

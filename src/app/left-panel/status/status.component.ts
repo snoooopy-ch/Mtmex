@@ -15,6 +15,7 @@ export class StatusComponent implements OnInit {
   candi2Count = 0;
   candi3Count = 0;
   candi4Count = 0;
+  tabTitle;
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -31,6 +32,7 @@ export class StatusComponent implements OnInit {
     this.resService.totalRes.subscribe(value => {
       if (this.tabIndex === value.tabIndex){
         this.totalCount = value.totalCount;
+        this.tabTitle = value.title;
       }
     });
   }

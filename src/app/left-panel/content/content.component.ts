@@ -14,6 +14,7 @@ import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
+
 declare var jQuery: any;
 declare var $: any;
 
@@ -216,10 +217,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.resMenu = this.resService.resMenu.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
-        for (const res of this.resList){
-          res.resMenu = value.resMenu;
-        }
-        this.cdRef.detectChanges();
+        this.setResMenu(value.resMenu);
         value.token = false;
       }
     });
@@ -827,6 +825,24 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         return false; // Prevent bubbling
       }));
+
+      //
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.menu1, (event: KeyboardEvent): boolean => {
+        this.setResMenu(1);
+        return false; // Prevent bubbling
+      }));
+
+      //
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.menu2, (event: KeyboardEvent): boolean => {
+        this.setResMenu(2);
+        return false; // Prevent bubbling
+      }));
+
+      //
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.menu3, (event: KeyboardEvent): boolean => {
+        this.setResMenu(3);
+        return false; // Prevent bubbling
+      }));
     }
   }
 
@@ -911,6 +927,12 @@ export class ContentComponent implements OnInit, OnDestroy {
    * @param event: cdkdragdrop
    */
   resDropHandler(event: CdkDragDrop<any[]>) {
+    if (this.isSelectRes || this.btnNotice.checked || this.btnSearchStatus.checked) {
+      const fromRes = this.resList[this.selectedResIndex];
+      const fromIndex = this.originalResList.indexOf(fromRes);
+      const toIndex = this.originalResList.indexOf(this.resList[this.selectedResIndex + (event.currentIndex - event.previousIndex)]);
+      moveItemInArray(this.originalResList, fromIndex, toIndex);
+    }
     moveItemInArray(this.resList, this.selectedResIndex,
       this.selectedResIndex + (event.currentIndex - event.previousIndex));
     this.resList = [...this.resList];
@@ -938,7 +960,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     // this.resList = [...this.resList];
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.resList.length
+      totalCount: this.resList.length,
+      title: this.tabName
     });
   }
 
@@ -1032,7 +1055,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       candi2: this.candi2Count,
       candi3: this.candi3Count,
       candi4: this.candi4Count,
-      tabIndex: this.tabIndex
+      tabIndex: this.tabIndex,
+      title: this.tabName
     });
   }
 
@@ -1084,36 +1108,12 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }
 
+    }else{
+      this.resList[index].resSelect = selectKeys[$event.select];
+      this.resList[index].resBackgroundColor = $event.resBackgroundColor;
     }
     this.changeStatus();
   }
-
-  // calcSelectedRes(selectKind: number, item: ResItem){
-  //   switch (selectKind) {
-  //     case 0:
-  //       item.select = false;
-  //       item.candi1 = false;
-  //       item.candi2 = false;
-  //       break;
-  //     case 1:
-  //       item.select = true;
-  //       item.candi1 = false;
-  //       item.candi2 = false;
-  //       break;
-  //     case 2:
-  //       item.select = false;
-  //       item.candi1 = true;
-  //       item.candi2 = false;
-  //       break;
-  //     case 3:
-  //       item.select = false;
-  //       item.candi1 = false;
-  //       item.candi2 = true;
-  //       break;
-  //   }
-  // }
-
-
 
   mouseEnterHandler(index: number) {
     this.hovered = index;
@@ -1385,7 +1385,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.changeStatus();
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.resList.length
+      totalCount: this.resList.length,
+      title: this.tabName
     });
   }
 
@@ -1405,7 +1406,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.isChangedSearch = true;
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
-        totalCount: this.resList.length
+        totalCount: this.resList.length,
+        title: this.tabName
       });
     }
     this.filteredEmitter.emit(this.btnSearchStatus.checked);
@@ -1437,14 +1439,16 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
-        totalCount: this.resList.length
+        totalCount: this.resList.length,
+        title: this.tabName
       });
     }else{
       this.resList = Object.assign([], this.noticeBackupResList);
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
-        totalCount: this.resList.length
+        totalCount: this.resList.length,
+        title: this.tabName
       });
     }
   }
@@ -1690,15 +1694,16 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.changeStatus();
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.resList.length
+      totalCount: this.resList.length,
+      title: this.tabName
     });
   }
 
   btnShowSelectHandler() {
     if (this.isSelectRes){
-      this.selectedBackupResList = Object.assign({}, this.resList);
+      this.selectedBackupResList = [...this.resList];
       if (!this.btnSearchStatus.checked && !this.btnNotice.checked){
-        this.originalResList = Object.assign({}, this.resList);
+        this.originalResList = [...this.resList];
       }
       const tmpResList = [];
       for (const resItem of this.resList){
@@ -1708,11 +1713,12 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
       this.resList = tmpResList;
     }else{
-      this.resList = Object.assign([], this.selectedBackupResList);
+      this.resList = [...this.originalResList];
     }
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.resList.length
+      totalCount: this.resList.length,
+      title: this.tabName
     });
     this.changeStatus();
     this.cdRef.detectChanges();
@@ -1751,5 +1757,12 @@ export class ContentComponent implements OnInit, OnDestroy {
   txtSearchKeyPressHandler($event: KeyboardEvent) {
     $event.preventDefault();
     this.isKeyPressed = true;
+  }
+
+  setResMenu(value){
+    for (const res of this.resList){
+      res.resMenu = value;
+    }
+    this.cdRef.detectChanges();
   }
 }

@@ -488,6 +488,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
         newItem.content = item.continuousContent;
       }
       newItem.isAdded = true;
+      newItem.anchorLevel = anchorLevel + 1;
       item.content = item.content.replace(`&gt;&gt;${anchor}<br>`,'');
       item.content = item.content.replace(`&gt;&gt;${anchor}`,'');
       item.content = item.content.replace(item.continuousContent,'');
@@ -764,7 +765,7 @@ function readLines(line) {
       replaced_lines.push(tmp_item);
       index++;
     }
-    const strReContinue = /^&gt;&gt;\d+$/gi;
+    const strReContinue = /^\s*&gt;&gt;\d+\s*$/gi;
     let isAddContinue = false;
     for(let i=0; i<replaced_lines.length; i++){
       if(new RegExp(strReContinue).test(replaced_lines[i])){
@@ -979,51 +980,62 @@ ipcMain.on("saveSearchList", (event, searchList) => {
   }
 });
 
-ipcMain.on("saveSettings", (event, dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor
-                            , isReplaceRes, isContinuousAnchor, notMoveFutureAnchor) => {
-  saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
+ipcMain.on("saveSettings", (event, params) => {
+  saveSettings(params);
 });
 
-function saveSettings(dataFilePath, remarkRes, hideRes, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor) {
+function saveSettings(params) {
   fs.readFile('Setting.ini', 'utf8', function (err, data) {
     if (data.match(/(#datパス\r\n)[^\r^\n]+(\r\n)/g) === null) {
-      data = data.replace(/(#datパス\r\n)+(\r\n)/g, `$1${dataFilePath}$2`);
+      data = data.replace(/(#datパス\r\n)+(\r\n)/g, `$1${params.dataFilePath}$2`);
     } else {
-      data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${dataFilePath}$2`);
+      data = data.replace(/(#datパス\r\n)[^\r^\n]+(\r\n)/g, `$1${params.dataFilePath}$2`);
     }
     if (data.match(/(chuui:)[^\r^\n]+(\r\n)/g) === null) {
-      data = data.replace(/(chuui:)+(\r\n)/g, `$1${remarkRes}$2`);
+      data = data.replace(/(chuui:)+(\r\n)/g, `$1${params.remarkRes}$2`);
     } else {
-      data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${remarkRes}$2`);
+      data = data.replace(/(chuui:)[^\r^\n]+(\r\n)/g, `$1${params.remarkRes}$2`);
     }
     if (data.match(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g) === null) {
-      data = data.replace(/(#非表示レス\r\nhihyouji:)+(\r\n)/g, `$1${hideRes}$2`);
+      data = data.replace(/(#非表示レス\r\nhihyouji:)+(\r\n)/g, `$1${params.hideRes}$2`);
     } else {
-      data = data.replace(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g, `$1${hideRes}$2`);
+      data = data.replace(/(#非表示レス\r\nhihyouji:)[^\r^\n]+(\r\n)/g, `$1${params.hideRes}$2`);
+    }
+
+    if (data.match(/(default_dat_folder_path:)[^\r^\n]+(\r\n)/g) === null) {
+      data = data.replace(/(default_dat_folder_path:)+(\r\n)/g, `$1${params.defaultDatFolderPath}$2`);
+    } else {
+      data = data.replace(/(default_dat_folder_path:)[^\r^\n]+(\r\n)/g, `$1${params.defaultDatFolderPath}$2`);
+    }
+
+    if (data.match(/(default_status_folder_path:)[^\r^\n]+(\r\n)/g) === null) {
+      data = data.replace(/(default_status_folder_path:)+(\r\n)/g, `$1${params.defaultStatusFolderPath}$2`);
+    } else {
+      data = data.replace(/(default_status_folder_path:)[^\r\n]+(\r\n)/g, `$1${params.defaultStatusFolderPath}$2`);
     }
 
     let replaceString = '';
-    if (isResSort) {
+    if (params.isResSort) {
       replaceString += '$1on$2';
     } else {
       replaceString += '$1off$2';
     }
-    if (isMultiAnchor) {
+    if (params.isMultiAnchor) {
       replaceString += 'on';
     } else {
       replaceString += 'off';
     }
-    if (isContinuousAnchor) {
+    if (params.isContinuousAnchor) {
       replaceString += '$3on$4';
     } else {
       replaceString += '$3off$4';
     }
-    if (notMoveFutureAnchor) {
+    if (params.notMoveFutureAnchor) {
       replaceString += 'on';
     } else {
       replaceString += 'off';
     }
-    if (isReplaceRes) {
+    if (params.isReplaceRes) {
       replaceString += '$5on$6';
     } else {
       replaceString += '$5off$6';
