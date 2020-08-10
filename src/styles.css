@@ -439,19 +439,19 @@ app-res .row-4 a {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  padding: 8px 0;
+  padding: 5px 0;
 }
 .main-container app-right-panel {
   min-width: 260px;
   max-width: 260px;
   padding: 0px 10px 9px 0px;
-  margin: 155px 5px 0;
+  margin: 86px 5px 0;
   user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
   overflow-y: scroll;
-  height: calc(100vh - 160px);
+  height: calc(100vh - 93px);
 }
 
 .main-container app-right-panel button {
@@ -575,6 +575,7 @@ app-res .row-4 a {
 .main-container app-right-panel .sure-specific {
   width: 100%;
   display: flex;
+  margin: 34px 0 0 0;
 }
 
 .main-container app-right-panel .save-container {

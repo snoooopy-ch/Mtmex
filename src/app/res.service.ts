@@ -273,10 +273,14 @@ export class ResService {
     }
 
     if (res.isAdded) {
-      htmlTag += `<div class="t_h t_i">`;
+      htmlTag += `<div class="t_h t_i`;
     } else {
-      htmlTag += `<div class="t_h">`;
+      htmlTag += `<div class="t_h`;
     }
+    if (res.anchorLevel > 0){
+      htmlTag += ` left${res.anchorLevel}`;
+    }
+    htmlTag += '">';
     const resName = res.name.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     const resDate = res.date.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     const resId = res.id.replace(/(<span[^<]+>)|(<\/span>)/ig, '');

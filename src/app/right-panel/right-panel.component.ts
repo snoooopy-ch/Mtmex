@@ -42,6 +42,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   isContinuousAnchor: any;
   notMoveFutureAnchor: any;
   sortCommand: any;
+  loadDatPath: string;
+  loadStatusPath: string;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
