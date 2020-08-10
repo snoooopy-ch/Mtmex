@@ -488,6 +488,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
         newItem.content = item.continuousContent;
       }
       newItem.isAdded = true;
+      newItem.anchorLevel = anchorLevel + 1;
       item.content = item.content.replace(`&gt;&gt;${anchor}<br>`,'');
       item.content = item.content.replace(`&gt;&gt;${anchor}`,'');
       item.content = item.content.replace(item.continuousContent,'');
@@ -764,7 +765,7 @@ function readLines(line) {
       replaced_lines.push(tmp_item);
       index++;
     }
-    const strReContinue = /^&gt;&gt;\d+$/gi;
+    const strReContinue = /^\s*&gt;&gt;\d+\s*$/gi;
     let isAddContinue = false;
     for(let i=0; i<replaced_lines.length; i++){
       if(new RegExp(strReContinue).test(replaced_lines[i])){
@@ -1010,7 +1011,7 @@ function saveSettings(params) {
     if (data.match(/(default_status_folder_path:)[^\r^\n]+(\r\n)/g) === null) {
       data = data.replace(/(default_status_folder_path:)+(\r\n)/g, `$1${params.defaultStatusFolderPath}$2`);
     } else {
-      data = data.replace(/(default_status_folder_path:)[^\r^\n]+(\r\n)/g, `$1${params.defaultStatusFolderPath}$2`);
+      data = data.replace(/(default_status_folder_path:)[^\r\n]+(\r\n)/g, `$1${params.defaultStatusFolderPath}$2`);
     }
 
     let replaceString = '';

@@ -162,7 +162,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       isReplaceRes: this.isReplaceRes,
       isContinuousAnchor: this.isContinuousAnchor && this.isMultiAnchor && this.isResSort,
       notMoveFutureAnchor: this.notMoveFutureAnchor,
-      defaultDatFolderPath: this.loadStatusPath,
+      defaultDatFolderPath: this.loadDatPath,
       defaultStatusFolderPath: this.loadStatusPath
     });
   }
@@ -303,6 +303,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         const hideRes = this.getHideRes();
         if (result.filePaths.length > 0) {
           this.loadDatPath = result.filePaths[0].substr(0, result.filePaths[0].lastIndexOf('\\'));
+          console.log(this.loadDatPath);
           this.resService.loadMultiRes(result.filePaths, this.isResSort, this.isMultiAnchor, this.isReplaceRes, this.isContinuousAnchor,
             this.notMoveFutureAnchor, remarkRes, hideRes);
         }
