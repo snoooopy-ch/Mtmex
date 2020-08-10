@@ -13,7 +13,7 @@ import { normal } from 'color-blend';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
-import {isArray} from "util";
+
 
 declare var jQuery: any;
 declare var $: any;
@@ -217,10 +217,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.resMenu = this.resService.resMenu.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
-        for (const res of this.resList){
-          res.resMenu = value.resMenu;
-        }
-        this.cdRef.detectChanges();
+        this.setResMenu(value.resMenu);
         value.token = false;
       }
     });
@@ -828,6 +825,24 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         return false; // Prevent bubbling
       }));
+
+      //
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.menu1, (event: KeyboardEvent): boolean => {
+        this.setResMenu(1);
+        return false; // Prevent bubbling
+      }));
+
+      //
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.menu2, (event: KeyboardEvent): boolean => {
+        this.setResMenu(2);
+        return false; // Prevent bubbling
+      }));
+
+      //
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.menu3, (event: KeyboardEvent): boolean => {
+        this.setResMenu(3);
+        return false; // Prevent bubbling
+      }));
     }
   }
 
@@ -1093,6 +1108,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }
 
+    }else{
+      this.resList[index].resSelect = selectKeys[$event.select];
+      this.resList[index].resBackgroundColor = $event.resBackgroundColor;
     }
     this.changeStatus();
   }
@@ -1739,5 +1757,12 @@ export class ContentComponent implements OnInit, OnDestroy {
   txtSearchKeyPressHandler($event: KeyboardEvent) {
     $event.preventDefault();
     this.isKeyPressed = true;
+  }
+
+  setResMenu(value){
+    for (const res of this.resList){
+      res.resMenu = value;
+    }
+    this.cdRef.detectChanges();
   }
 }

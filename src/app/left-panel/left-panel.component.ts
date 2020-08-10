@@ -125,7 +125,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'color9', 'color10', 'tree_sentaku', 'tree_yobi1', 'tree_yobi2', 'tree_yobi3', 'tree_yobi4', 'tree_kaijo'
           , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
           , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
-          , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'];
+          , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'
+          , 'menu1', 'menu2', 'menu3'];
         for (const key of arrayKeys) {
           if (this.settings[key].toLowerCase() === 'insert'){
             this.subHotKeys[key] = 'ins';
@@ -199,13 +200,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         });
       });
     });
-
-    // this.subscribers.scrollPos = this.resService.scrollPos.subscribe((value) => {
-    //   if (this.tabGroup === undefined) { return; }
-    //   if (this.selectedTabIndex === value.index) {
-    //     this.tabs[this.selectedTabIndex].scrollPos = value.pos;
-    //   }
-    // });
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
