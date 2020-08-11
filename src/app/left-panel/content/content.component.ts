@@ -72,6 +72,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() searchWordMax;
   @Input() searchList = [];
   @Input() cancelAllColor;
+  @Input() isTwitterUrl: boolean;
+  @Input() isYoutubeUrl: boolean;
   backupResList;
   noticeBackupResList;
   @Input() txtURL: string;
@@ -91,6 +93,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   isSelectRes: any;
   selectedBackupResList: ResItem[];
   private isKeyPressed: boolean;
+
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -1269,7 +1272,6 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   searchResText(){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
-    console.log(this.searchWordMax);
     if (this.searchList.indexOf(this.searchKeyword.trim()) === -1){
       if (this.searchList.length >= this.searchWordMax){
         this.searchList.splice(this.searchList.length - 1, 1);
@@ -1644,6 +1646,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       txtURL: this.txtURL,
       twitter: this.twitter,
       youtube: this.youtube,
+      twitterUrl: this.isTwitterUrl,
+      youtubeUrl: this.isYoutubeUrl,
       shuturyoku: this.shuturyoku,
       resSizeList: this.resSizeList,
       characterColors: this.characterColors,

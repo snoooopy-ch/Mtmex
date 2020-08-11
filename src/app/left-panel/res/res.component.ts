@@ -169,8 +169,8 @@ export class ResComponent implements OnInit {
 
   saveResHandler(event) {
     event.stopPropagation();
-    this.resContent = this.resContent.replace(/<\/p><p>/gi, '<br>');
-    this.resContent = this.resContent.replace(/&nbsp;<\/p>/gi, '<br>');
+    this.resContent = this.resContent.replace(/(<\/h3><p>)|(<\/p><p>)/gi, '<br>');
+    this.resContent = this.resContent.replace(/(<p>&nbsp;)|(&nbsp;<\/p>)/gi, '<br>');
     this.resContent = this.resContent.replace(/(<img[^<]+>)|(<a[^<]+>)|(<\/a>)/ig, '');
     this.resContent = this.resContent.replace(/(<p>)|(<\/p>)|(<h3>)|(<\/h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)|(<\/figure>)/ig, '');
