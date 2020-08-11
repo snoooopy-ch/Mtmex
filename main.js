@@ -518,7 +518,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
             continue;
           }
           if (anchorExists) {
-            if (tmpItem.indexOf('&gt;&gt;') !== -1) {
+            if (new RegExp(/^\s*&gt;&gt;/g).test(tmpItem)) {
               // anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
               break;
             }
@@ -757,7 +757,7 @@ function readLines(line) {
         const num = parseInt(replaced_lines[i].replace(/&gt;&gt;/g, ''));
         const next = i + 1;
         if (next < replaced_lines.length){
-          if(new RegExp(/&gt;&gt;\d+/,'gi').test(replaced_lines[next])){
+          if(new RegExp(/^\s*&gt;&gt;\d+/,'gi').test(replaced_lines[next])){
             resItem.continuousAnchors.push(num);
             isAddContinue = true;
             continue;
@@ -772,20 +772,21 @@ function readLines(line) {
         }
       }else{
         if (i > 0 && new RegExp(strReContinue).test(replaced_lines[i-1]) && isAddContinue){
-          let anchor = replaced_lines[i].match(/&gt;&gt;\d+/g);
+          let anchor = replaced_lines[i].match(/^\s*&gt;&gt;\d+/g);
           if(anchor !== null) {
             num = parseInt(anchor[0].replace(/&gt;&gt;/g, ''));
             resItem.continuousAnchors.push(num);
           }
           let continueContent = replaced_lines[i];
           for (let j=i+1; j < replaced_lines.length; j++){
-            if(new RegExp(/&gt;&gt;\d+/g).test(replaced_lines[j])){
+            if(new RegExp(/^\s*&gt;&gt;\d+/g).test(replaced_lines[j])){
               isAddContinue = false;
               break;
             }
             continueContent += '<br>' + replaced_lines[j];
           }
-          resItem.continuousContent = continueContent.replace(/&gt;&gt;\d+/gi,'');
+          resItem.continuousContent = continueContent;
+          // resItem.continuousContent = continueContent.replace(/&gt;&gt;\d+/gi,'');
         }
 
       }
