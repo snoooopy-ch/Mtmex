@@ -240,11 +240,9 @@ export class ResService {
       row++;
     }
 
-    console.log(content);
     // Twitter embed code
     if (options.twitter) {
       const twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
-      console.log(twitters);
       if (Array.isArray(twitters) && twitters.length) {
         for (const twitter of twitters) {
           const twitterURL = twitter.slice(1, -1);
