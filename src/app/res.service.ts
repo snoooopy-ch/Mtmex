@@ -282,7 +282,7 @@ export class ResService {
               const idTmp = youtubeURL.replace(/(https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/gi, `$2`);
               const youtubeTemp = youtubeURL.replace('?', '\\?');
               const targetY = new RegExp(`<a href="` + youtubeTemp + `" target="_blank">` + youtubeTemp + `</a>(<br \/>|)`, 'ig');
-              let replacementY = `<iframe width="480" height="270" src="https://www.youtube.com/embed/${idTmp}?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+              let replacementY = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${idTmp}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
               if (options.youtubeUrl) {
                 replacementY = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br /><!-- -->${replacementY}<!-- -->`;
               }
