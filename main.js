@@ -712,11 +712,6 @@ function readLines(line) {
         }
       }
     }
-    // if(JSON.stringify(resItem.featureAnchors) === JSON.stringify(resItem.anchors)){
-    //   console.log(resItem.num);
-    //   resItem.anchors = [];
-    //   resItem.featureAnchors = [];
-    // }
 
     let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let replaced_lines = [];
@@ -731,10 +726,6 @@ function readLines(line) {
       if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
         tmp_item = tmp_item.replace(re, '');
       }
-      // if(tmp_item.match(/(&gt;&gt;\d*[0-9]\d*)/)){
-      //   tmp_item = tmp_item.trim();
-      // }
-      // tmp_item = tmp_item.trim();
 
       var expUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
       var expGifUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].gif)/ig;
@@ -755,14 +746,6 @@ function readLines(line) {
           tmp_item = tmp_item.replace(expUrl, `<a class="res-link" href="$1">$1</a>`);
         }
       }
-      // else {
-      //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
-      //     let tmpAnchors = tmp_item.split("&gt;&gt;");
-      //     if (tmpAnchors.length > 1) {
-      //       resItem.anchors.push(parseInt(tmpAnchors[1]));
-      //     }
-      //   }
-      // }
       resItem.content += tmp_item;
       replaced_lines.push(tmp_item);
       index++;
