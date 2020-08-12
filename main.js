@@ -15,7 +15,7 @@ let stateComments = ['#datパス', '#指定したdatパス', '#チェックボ�
   '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
 let curComment = '';
 let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2', 'Left_highlight', 'res_mouse_click', 'youtube'
-  , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save'];
+  , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save', 'twitter_url', 'youtube_url'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];
 let settings;
@@ -345,8 +345,11 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
 
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
-    for (let i = 1; i < resList.length; i++) {
-      if (resList[i].anchors.length > 0) {
+    for (let i = 0; i < resList.length; i++) {
+      if (isResSort && !notMoveFutureAnchor){
+        resList[i].anchors = resList[i].anchors.concat(resList[i].futureAnchors);
+      }
+      if (resList[i].anchors.length > 0 || resList[i].futureAnchors.length > 0) {
         if (!isReplaceRes && resList[i].anchors.indexOf(1) !== -1) {
           continue;
         }
@@ -364,7 +367,6 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
       }
     }
 
-    // tmpResList.reverse();
     for (let resItem of tmpResList) {
       for (let anchor of resItem.anchors) {
         if (resItem.num === anchor) {
@@ -517,7 +519,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
           }
           if (anchorExists) {
             if (tmpItem.indexOf('&gt;&gt;') !== -1) {
-              anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
+              // anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
               break;
             }
             anchorContent += tmpItem;

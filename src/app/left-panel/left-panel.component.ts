@@ -58,6 +58,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   endAbbreviations;
   resLeftMargin: number;
   searchList: any[];
+  isYoutubeUrl: boolean;
+  isTwitterUrl: boolean;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -116,6 +118,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.shuturyoku = this.settings.shuturyoku;
       this.youtube = this.settings.youtube;
       this.twitter = this.settings.twitter;
+      this.isYoutubeUrl = this.settings.youtube_url;
+      this.isTwitterUrl = this.settings.twitter_url;
       this.resMouseClick = this.settings.res_mouse_click;
       this.leftHightlight = this.settings.Left_highlight;
       this.subHotKeys = [];
@@ -414,6 +418,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           txtURL: tabItem.url,
           twitter: this.twitter,
           youtube: this.youtube,
+          twitterUrl: this.isTwitterUrl,
+          youtubeUrl: this.isYoutubeUrl,
           shuturyoku: this.shuturyoku,
           resSizeList: this.resSizeList,
           characterColors: this.settings.characterColors,

@@ -240,7 +240,6 @@ export class ResService {
       row++;
     }
 
-    // Twitter embed code
     if (options.twitter) {
       const twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
       if (Array.isArray(twitters) && twitters.length) {
@@ -250,8 +249,12 @@ export class ResService {
           if (response.ok) {
             const data = await response.json();
             const targetT = new RegExp(`<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a>(<br \/>|)`, 'ig');
-            const replacementT = `<a href="` + twitterURL + `" target="_blank">` + twitterURL + `</a><br />` + data.html;
+            let replacementT = `<!-- -->${data.html}<!-- -->`;
+            if (options.twitterUrl){
+              replacementT = `<a href="${twitterURL}" target="_blank">${twitterURL}</a><br />${replacementT}`;
+            }
             content = content.replace(targetT, replacementT);
+            content = content.replace(/<script async src="https:\/\/platform\.twitter\.com\/widgets\.js" charset="utf-8"><\/script>\n+/gi, '');
           }
         }
       }
@@ -268,12 +271,16 @@ export class ResService {
             const data = await response.json();
             const youtubeTemp = youtubeURL.replace('?', '\\?');
             const targetY = new RegExp(`<a href="` + youtubeTemp + `" target="_blank">` + youtubeTemp + `</a>(<br \/>|)`, 'ig');
-            const replacementY = `<a href="` + youtubeURL + `" target="_blank">` + youtubeURL + `</a><br />` + data.html;
+            let replacementY = `<!-- -->${data.html}<!-- -->`;
+            if (options.youtubeUrl) {
+              replacementY = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br /><!-- -->${data.html}<!-- -->`;
+            }
             content = content.replace(targetY, replacementY);
           }
         }
       }
     }
+    content = content.replace(/\n/g, '');
 
     if (res.isAdded) {
       htmlTag += `<div class="t_h t_i`;

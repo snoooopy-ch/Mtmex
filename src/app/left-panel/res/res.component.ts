@@ -169,8 +169,8 @@ export class ResComponent implements OnInit {
 
   saveResHandler(event) {
     event.stopPropagation();
-    this.resContent = this.resContent.replace(/<\/p><p>/gi, '<br>');
-    this.resContent = this.resContent.replace(/&nbsp;<\/p>/gi, '<br>');
+    this.resContent = this.resContent.replace(/(<\/h3><p>)|(<\/p><p>)/gi, '<br>');
+    this.resContent = this.resContent.replace(/(<p>&nbsp;)|(&nbsp;<\/p>)/gi, '<br>');
     this.resContent = this.resContent.replace(/(<img[^<]+>)|(<a[^<]+>)|(<\/a>)/ig, '');
     this.resContent = this.resContent.replace(/(<p>)|(<\/p>)|(<h3>)|(<\/h3>)/ig, '');
     this.resContent = this.resContent.replace(/(<figure[^<]+>)|(<\/figure>)/ig, '');
@@ -292,8 +292,8 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi1') {
-      this.item.resSelect = 'select';
-      colorIndex = 1;
+      this.item.resSelect = 'none';
+      colorIndex = 0;
     } else {
       this.item.resSelect = 'candi1';
       colorIndex = 2;
@@ -307,8 +307,8 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi2') {
-      this.item.resSelect = 'select';
-      colorIndex = 1;
+      this.item.resSelect = 'none';
+      colorIndex = 0;
     } else {
       this.item.resSelect = 'candi2';
       colorIndex = 3;
@@ -322,8 +322,8 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi3') {
-      this.item.resSelect = 'select';
-      colorIndex = 1;
+      this.item.resSelect = 'none';
+      colorIndex = 0;
     } else {
       this.item.resSelect = 'candi3';
       colorIndex = 4;
@@ -337,8 +337,8 @@ export class ResComponent implements OnInit {
     event.stopPropagation();
     let colorIndex = 0;
     if (this.item.resSelect === 'candi4') {
-      this.item.resSelect = 'select';
-      colorIndex = 1;
+      this.item.resSelect = 'none';
+      colorIndex = 0;
     } else {
       this.item.resSelect = 'candi4';
       colorIndex = 5;

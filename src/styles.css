@@ -440,6 +440,7 @@ app-res .row-4 a {
   white-space: nowrap;
   overflow: hidden;
   padding: 5px 0;
+  width: 460px;
 }
 .main-container app-right-panel {
   min-width: 260px;
