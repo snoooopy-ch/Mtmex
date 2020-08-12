@@ -518,7 +518,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
             continue;
           }
           if (anchorExists) {
-            if (tmpItem.indexOf('&gt;&gt;') !== -1) {
+            if (new RegExp(/^\s*&gt;&gt;/g).test(tmpItem)) {
               // anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
               break;
             }
@@ -712,11 +712,6 @@ function readLines(line) {
         }
       }
     }
-    // if(JSON.stringify(resItem.featureAnchors) === JSON.stringify(resItem.anchors)){
-    //   console.log(resItem.num);
-    //   resItem.anchors = [];
-    //   resItem.featureAnchors = [];
-    // }
 
     let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let replaced_lines = [];
@@ -731,10 +726,6 @@ function readLines(line) {
       if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
         tmp_item = tmp_item.replace(re, '');
       }
-      // if(tmp_item.match(/(&gt;&gt;\d*[0-9]\d*)/)){
-      //   tmp_item = tmp_item.trim();
-      // }
-      // tmp_item = tmp_item.trim();
 
       var expUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
       var expGifUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].gif)/ig;
@@ -755,14 +746,6 @@ function readLines(line) {
           tmp_item = tmp_item.replace(expUrl, `<a class="res-link" href="$1">$1</a>`);
         }
       }
-      // else {
-      //   if (tmp_item.match(/&gt;&gt;/g) !== null && tmp_item.match(/未来アンカー/g) === null) {
-      //     let tmpAnchors = tmp_item.split("&gt;&gt;");
-      //     if (tmpAnchors.length > 1) {
-      //       resItem.anchors.push(parseInt(tmpAnchors[1]));
-      //     }
-      //   }
-      // }
       resItem.content += tmp_item;
       replaced_lines.push(tmp_item);
       index++;
@@ -774,7 +757,7 @@ function readLines(line) {
         const num = parseInt(replaced_lines[i].replace(/&gt;&gt;/g, ''));
         const next = i + 1;
         if (next < replaced_lines.length){
-          if(new RegExp(/&gt;&gt;\d+/,'gi').test(replaced_lines[next])){
+          if(new RegExp(/^\s*&gt;&gt;\d+/,'gi').test(replaced_lines[next])){
             resItem.continuousAnchors.push(num);
             isAddContinue = true;
             continue;
@@ -789,20 +772,21 @@ function readLines(line) {
         }
       }else{
         if (i > 0 && new RegExp(strReContinue).test(replaced_lines[i-1]) && isAddContinue){
-          let anchor = replaced_lines[i].match(/&gt;&gt;\d+/g);
+          let anchor = replaced_lines[i].match(/^\s*&gt;&gt;\d+/g);
           if(anchor !== null) {
             num = parseInt(anchor[0].replace(/&gt;&gt;/g, ''));
             resItem.continuousAnchors.push(num);
           }
           let continueContent = replaced_lines[i];
           for (let j=i+1; j < replaced_lines.length; j++){
-            if(new RegExp(/&gt;&gt;\d+/g).test(replaced_lines[j])){
+            if(new RegExp(/^\s*&gt;&gt;\d+/g).test(replaced_lines[j])){
               isAddContinue = false;
               break;
             }
             continueContent += '<br>' + replaced_lines[j];
           }
-          resItem.continuousContent = continueContent.replace(/&gt;&gt;\d+/gi,'');
+          resItem.continuousContent = continueContent;
+          // resItem.continuousContent = continueContent.replace(/&gt;&gt;\d+/gi,'');
         }
 
       }
