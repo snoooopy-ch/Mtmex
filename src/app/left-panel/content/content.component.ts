@@ -92,6 +92,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   isSelectRes: any;
   private isKeyPressed: boolean;
   private searchedFiled: number;
+  private isBackup: boolean;
 
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
@@ -107,6 +108,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.candi3Count = 0;
     this.candi4Count = 0;
     this.currentScrollIndex = 0;
+    this.isBackup = true;
   }
 
   ngOnInit(): void {
@@ -1290,6 +1292,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
 
+    if (this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length){
+      this.resList = [...this.originalResList];
+    }
+
     for (let i = 0; i < this.resList.length; i++){
       this.resList[i].originalIndex = i;
       if (this.searchOption === 'num'){
@@ -1361,10 +1367,12 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   abstractRes(){
     // this.backupResList = Object.assign([], this.resList);
-    if ((!this.btnNotice.checked && !this.isSelectRes) || this.originalResList === undefined){
+    if ((!this.btnNotice.checked && !this.isSelectRes && this.isBackup) || this.originalResList === undefined){
       this.originalResList = [...this.resList];
+      this.isBackup = false;
+      console.log('new', this.originalResList.length);
     }
-
+    console.log('old', this.originalResList.length);
     let tmpResList = [...this.originalResList];
 
     tmpResList = this.getAbstractRes(tmpResList);
@@ -1397,6 +1405,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.abstractRes();
       }
     }else{
+      this.isBackup = true;
       let tmpResList = [...this.originalResList];
 
       if (this.btnNotice.checked){
@@ -1927,10 +1936,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.btnShowSelectHandler();
     }
 
-    this.resList = Object.assign([], this.originalResList);
-    const index = this.resList.indexOf(item);
-    moveItemInArray(this.resList, index, 0);
-    this.cdRef.detectChanges();
+    this.resList = [...this.originalResList];
+
     this.virtualScroller.scrollToIndex(0);
   }
 

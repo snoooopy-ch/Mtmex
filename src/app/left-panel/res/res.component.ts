@@ -129,7 +129,17 @@ export class ResComponent implements OnInit {
 
   clickResContainer(event) {
     if (this.resMouseClick) {
-     this.selectClickHandler(event);
+      if (this.item.resSelect === 'select' || this.item.resSelect === 'none') {
+        this.selectClickHandler(event);
+      } else if (this.item.resSelect === 'candi1'){
+        this.candi1ClickHandler(event);
+      } else if (this.item.resSelect === 'candi2'){
+        this.candi2ClickHandler(event);
+      } else if (this.item.resSelect === 'candi3'){
+        this.candi3ClickHandler(event);
+      } else if (this.item.resSelect === 'candi4'){
+        this.candi4ClickHandler(event);
+      }
     }
   }
 
