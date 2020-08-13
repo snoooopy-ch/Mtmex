@@ -240,6 +240,7 @@ export class ResService {
       row++;
     }
 
+     // Twitter embed code
     if (options.twitter) {
       const twitters = content.match(/"(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+))"/ig);
       if (Array.isArray(twitters) && twitters.length) {

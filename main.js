@@ -376,15 +376,15 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
           if (resList[i].num === anchor) {
             if (isReplaceRes) {
               if (isMultiAnchor && resItem.anchors.length < settings.anker) {
-                addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                const rc = addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
                   isContinuousAnchor, resList[i].anchorLevel);
-                if (resItem.futureAnchors.length < 1) {
+                if (resItem.futureAnchors.length < 1 && rc) {
                   resItem.isAdded = true;
                   resItem.anchorLevel = resList[i].anchorLevel + 1;
                 }
               } else {
                 if (!resItem.isAdded) {
-                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                   addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
                     isContinuousAnchor, resList[i].anchorLevel);
                   resItem.isAdded = true;
                   resItem.anchorLevel = resList[i].anchorLevel + 1;
@@ -393,9 +393,9 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
             } else {
               if (resList[i].num !== 1) {
                 if (isMultiAnchor && resItem.anchors.length < settings.anker) {
-                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                  const rc = addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
                     isContinuousAnchor, resList[i].anchorLevel);
-                  if (resItem.futureAnchors.length < 1) {
+                  if (resItem.futureAnchors.length < 1 && rc) {
                     resItem.isAdded = true;
                     resItem.anchorLevel = resList[i].anchorLevel + 1;
                   }
@@ -456,6 +456,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
 function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, anchorLevel) {
   let i = index;
   let parentAnchors = [];
+  let result = false;
   while (true) {
     if (resList.length - 2 < i)
       break;
@@ -495,6 +496,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
       item.content = item.content.replace(`&gt;&gt;${anchor}`,'');
       item.content = item.content.replace(item.continuousContent,'');
       resList.splice(i, 0, newItem);
+      result = true;
     }else if(item.continuousAnchors.indexOf(anchor) === -1) {
       let newItem = Object.assign({}, item);
       let tmpItems = newItem.content.split('<br>');
@@ -544,16 +546,20 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
         newItem.isAdded = true;
         newItem.anchorLevel = anchorLevel + 1;
         resList.splice(i, 0, newItem);
+        result = true;
       }
     }else {
       if(resList.indexOf(item) === -1) {
+
         resList.splice(i, 0, item);
+        result = true;
       }
     }
   } else {
     resList.splice(i, 0, item);
+    result = true;
   }
-
+  return result;
 }
 
 /**

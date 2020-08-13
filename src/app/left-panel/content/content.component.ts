@@ -1935,10 +1935,12 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.isSelectRes = false;
       this.btnShowSelectHandler();
     }
+    if (this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length) {
+      this.resList = [...this.originalResList];
+    }
+    const index = this.resList.indexOf(item);
 
-    this.resList = [...this.originalResList];
-
-    this.virtualScroller.scrollToIndex(0);
+    this.virtualScroller.scrollToIndex(index);
   }
 
   txtSearchKeyPressHandler($event: KeyboardEvent) {
