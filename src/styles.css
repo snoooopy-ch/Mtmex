@@ -393,6 +393,7 @@ app-res .row-4 a {
 }
 .main-container app-left-panel .status-label-content{
   display: flex;
+  width: 750px;
 }
 .main-container app-left-panel .status {
   text-align: center;
@@ -440,7 +441,7 @@ app-res .row-4 a {
   white-space: nowrap;
   overflow: hidden;
   padding: 5px 0;
-  width: 450px;
+  width: calc(100% - 20px);
 }
 .main-container app-right-panel {
   min-width: 260px;
