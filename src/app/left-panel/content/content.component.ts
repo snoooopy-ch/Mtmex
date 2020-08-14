@@ -879,7 +879,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         for (const item of this.resList){
           if (item.resSelect === 'select'
             || (item.resSelect === 'candi1' && this.moveOption.sentaku_idou1)
-            || (item.resSelect === 'candi2' && this.moveOption.sentaku_idou2)){
+            || (item.resSelect === 'candi2' && this.moveOption.sentaku_idou2)
+            || (item.resSelect === 'candi3' && this.moveOption.sentaku_idou3)
+            || (item.resSelect === 'candi4' && this.moveOption.sentaku_idou4)){
             this.virtualScroller.scrollToIndex(index);
             this.currentScrollIndex = index;
             break;
@@ -893,7 +895,9 @@ export class ContentComponent implements OnInit, OnDestroy {
           for (let i = this.resList.length - 1; i > 0; i--) {
             if (this.resList[i].resSelect === 'select'
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
-              || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
+              || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)
+              || (this.resList[i].resSelect === 'candi3' && this.moveOption.sentaku_idou3)
+              || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
               this.currentScrollIndex = i;
               this.virtualScroller.scrollToIndex(i);
               break;
@@ -906,7 +910,9 @@ export class ContentComponent implements OnInit, OnDestroy {
           for (let i = this.virtualScroller.viewPortInfo.startIndex - 1; i >= 0; i--) {
             if (this.resList[i].resSelect === 'select'
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
-              || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
+              || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)
+              || (this.resList[i].resSelect === 'candi3' && this.moveOption.sentaku_idou3)
+              || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
               this.virtualScroller.scrollToIndex(i);
               this.currentScrollIndex = i;
               break;
@@ -925,7 +931,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         for (let i = curIndex; i < this.resList.length; i++) {
           if (this.resList[i].resSelect === 'select'
             || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
-            || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)) {
+            || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)
+            || (this.resList[i].resSelect === 'candi3' && this.moveOption.sentaku_idou3)
+            || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
             this.currentScrollIndex = i;
             this.virtualScroller.scrollToIndex(i);
             break;

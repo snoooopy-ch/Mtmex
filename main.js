@@ -14,7 +14,7 @@ let searchListPath = 'SearchList.txt';
 let stateComments = ['#datパス', '#指定したdatパス', '#チェックボックス', '#文字色', '#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
 let curComment = '';
-let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2', 'Left_highlight', 'res_mouse_click', 'youtube'
+let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2','sentaku_idou3','sentaku_idou4', 'Left_highlight', 'res_mouse_click', 'youtube'
   , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save', 'twitter_url', 'youtube_url'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];

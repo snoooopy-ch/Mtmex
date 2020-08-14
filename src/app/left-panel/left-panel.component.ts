@@ -172,6 +172,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.moveOption = {
         sentaku_idou1: this.settings.sentaku_idou1,
         sentaku_idou2: this.settings.sentaku_idou2,
+        sentaku_idou3: this.settings.sentaku_idou3,
+        sentaku_idou4: this.settings.sentaku_idou4
       };
 
       if (this.settings.chuui !== undefined) {
