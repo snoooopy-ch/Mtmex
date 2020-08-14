@@ -61,6 +61,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() searchStatusEmitter = new EventEmitter();
   @Output() scrollIndexEmitter = new EventEmitter();
   @Output() searchListEmitter = new EventEmitter();
+  @Output() changeListEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -89,7 +90,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   currentScrollIndex: number;
   originalResList: ResItem[];
   isTreeSearch: boolean;
-  isSelectRes: any;
+  @Input() isSelectRes: any;
   private isKeyPressed: boolean;
   private searchedFiled: number;
   private isBackup: boolean;
@@ -114,6 +115,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isTreeSearch = true;
     this.originalResList = [];
+
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
 
@@ -163,7 +165,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           saveData.filePath = `${value.autoFilePath}${this.tabName}.txt`;
         }
         let saveResList = [];
-        if (this.btnSearchStatus.checked || this.btnNotice.checked){
+        if (this.btnSearchStatus.checked || this.btnNotice.checked  || this.isSelectRes){
           saveResList = this.originalResList;
         }else{
           saveResList = this.resList;
@@ -202,6 +204,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         saveData.title = this.tabName;
         saveData.txtUrl = this.txtURL;
         saveData.scrollIndex = this.virtualScroller.viewPortInfo.startIndex;
+        saveData.isSelectRes = this.isSelectRes;
         this.resService.saveStatus(saveData);
         if (!value.isAllTabSave) {
           value.token = false;
@@ -213,6 +216,10 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.tabIndex === value.tabIndex) {
         this.txtURL = value.data.txtUrl;
         if (this.resList !== undefined) {
+          this.isSelectRes = value.data.isSelectRes;
+          if (this.isSelectRes){
+            this.btnShowSelectHandler();
+          }
           this.virtualScroller.scrollToIndex(value.data.scrollIndex);
           this.changeStatus();
           this.cdRef.detectChanges();
@@ -941,7 +948,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
     moveItemInArray(this.resList, this.selectedResIndex,
       this.selectedResIndex + (event.currentIndex - event.previousIndex));
-    this.resList = [...this.resList];
+    // this.resList = [...this.resList];
   }
 
   /**
@@ -1014,15 +1021,13 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   moveResToTop(item: any) {
     const index = this.resList.indexOf(item);
-    const tmpRes = Object.assign({}, item);
-    this.resList.splice(index, 1);
-    this.resList.splice(0, 0, tmpRes);
-    this.resList = [...this.resList];
+    const startIndex = this.virtualScroller.viewPortInfo.startIndex + 1;
+    moveItemInArray(this.resList, index, 0);
     if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, 0);
     }
-    // this.virtualScroller.scrollToIndex(0);
+    this.virtualScroller.scrollToIndex(startIndex);
   }
 
   /**
@@ -1032,15 +1037,15 @@ export class ContentComponent implements OnInit, OnDestroy {
   moveResToBottom(item: any) {
     const index = this.resList.indexOf(item);
     const tmpRes = Object.assign({}, item);
+    const startIndex = this.virtualScroller.viewPortInfo.startIndex;
     this.resList.splice(index, 1);
     this.resList.push(tmpRes);
-    this.resList = [...this.resList]
     if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
       const indexOrigin = this.originalResList.indexOf(item);
       this.originalResList.splice(indexOrigin, 1);
       this.originalResList = [...this.originalResList, tmpRes];
     }
-    // this.virtualScroller.scrollToIndex(this.resList.length);
+    this.virtualScroller.scrollToIndex(startIndex);
   }
 
   /**
@@ -1079,7 +1084,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       candi3: this.candi3Count,
       candi4: this.candi4Count,
       tabIndex: this.tabIndex,
-      title: this.tabName
+      title: this.tabName,
+      token: true
     });
   }
 
@@ -1909,6 +1915,10 @@ export class ContentComponent implements OnInit, OnDestroy {
       tmpResList = this.getSelectedRes(tmpResList);
 
       this.resList = tmpResList;
+      this.changeListEmitter.emit({
+        tabIndex: this.tabIndex,
+        resList: this.resList,
+      });
     }else{
       let tmpResList = [...this.originalResList];
       if (this.btnSearchStatus.checked){
@@ -1920,6 +1930,10 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
 
       this.resList = tmpResList;
+      this.changeListEmitter.emit({
+        tabIndex: this.tabIndex,
+        resList: this.resList,
+      });
     }
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
@@ -1967,6 +1981,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   setResMenu(value){
     for (const res of this.resList){
       res.resMenu = value;
+      res.isMenuOpen = false;
     }
     this.cdRef.detectChanges();
   }

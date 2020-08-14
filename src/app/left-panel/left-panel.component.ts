@@ -229,8 +229,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             loadResList.push(resItem);
           }
           if (loadResList.length > 0) {
-            this.addTab(value.data.title, loadResList);
+            this.addTab(value.data.title, loadResList, '',  value.data.isSelectRes);
             this.selectedTabIndex = this.tabs.length - 1;
+            value.tabIndex = this.selectedTabIndex;
             this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
             this.resService.setTotalRes({
               tabIndex: this.selectedTabIndex,
@@ -303,7 +304,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.resService.saveSearchList(this.searchList);
   }
 
-  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '') {
+  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '', pIsSelectRes = false) {
     this.tabs = [...this.tabs, {
       title: pTitle,
       active: true,
@@ -311,7 +312,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       scrollPos: 0,
       isFiltered: false,
       url: '',
-      originSreTitle: pOriginSreTitle
+      originSreTitle: pOriginSreTitle,
+      isSelectRes: pIsSelectRes
     }];
     // this.tabs.push();
   }
@@ -454,6 +456,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     if ($event.searchList !== undefined) {
       this.searchList = $event.searchList;
       this.cdr.detectChanges();
+    }
+  }
+
+  changeResList($event: any) {
+    if ($event.tabIndex !== undefined) {
+      this.tabs[$event.tabIndex].resList = $event.resList;
     }
   }
 }

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ResService} from '../../res.service';
 
 @Component({
@@ -6,7 +6,7 @@ import {ResService} from '../../res.service';
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.css']
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
 
   totalCount;
   @Input() tabIndex;
@@ -16,10 +16,11 @@ export class StatusComponent implements OnInit {
   candi3Count = 0;
   candi4Count = 0;
   tabTitle;
+  public subscribers: any = {};
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.resService.selectedRes.subscribe(value => {
+    this.subscribers.selectedRes = this.resService.selectedRes.subscribe(value => {
       if (this.tabIndex === value.tabIndex) {
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
@@ -27,14 +28,20 @@ export class StatusComponent implements OnInit {
         this.candi3Count = value.candi3;
         this.candi4Count = value.candi4;
         this.cdRef.detectChanges();
+        value.token = false;
       }
     });
-    this.resService.totalRes.subscribe(value => {
+    this.subscribers.totalRes = this.resService.totalRes.subscribe(value => {
       if (this.tabIndex === value.tabIndex){
         this.totalCount = value.totalCount;
         this.tabTitle = value.title;
       }
     });
+  }
+
+  ngOnDestroy(){
+    this.subscribers.totalRes.unsubscribe();
+    this.subscribers.selectedRes.unsubscribe();
   }
 
   printHtmlTagHandler() {

@@ -109,6 +109,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.candi3Count = value.candi3;
         this.candi4Count = value.candi4;
         this.cdRef.detectChanges();
+        value.token = false;
       }
     });
 
