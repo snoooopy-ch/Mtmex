@@ -988,6 +988,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index - 1);
     this.resList = [...this.resList];
+    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+      const indexOrigin = this.originalResList.indexOf(item);
+      moveItemInArray(this.originalResList, indexOrigin, indexOrigin - 1);
+    }
   }
 
   /**
@@ -998,6 +1002,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index + 1);
     this.resList = [...this.resList];
+    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+      const indexOrigin = this.originalResList.indexOf(item);
+      moveItemInArray(this.originalResList, indexOrigin, indexOrigin + 1);
+    }
   }
 
   /**
@@ -1010,6 +1018,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resList.splice(index, 1);
     this.resList.splice(0, 0, tmpRes);
     this.resList = [...this.resList];
+    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+      const indexOrigin = this.originalResList.indexOf(item);
+      moveItemInArray(this.originalResList, indexOrigin, 0);
+    }
     // this.virtualScroller.scrollToIndex(0);
   }
 
@@ -1022,7 +1034,12 @@ export class ContentComponent implements OnInit, OnDestroy {
     const tmpRes = Object.assign({}, item);
     this.resList.splice(index, 1);
     this.resList.push(tmpRes);
-    this.resList = [...this.resList];
+    this.resList = [...this.resList]
+    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+      const indexOrigin = this.originalResList.indexOf(item);
+      this.originalResList.splice(indexOrigin, 1);
+      this.originalResList = [...this.originalResList, tmpRes];
+    }
     // this.virtualScroller.scrollToIndex(this.resList.length);
   }
 
@@ -1914,11 +1931,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnSearchHandler() {
-    if (!this.btnSearchStatus.checked){
-    //   this.resList = Object.assign([], this.backupResList);
-    // }else{
-      this.btnSearchStatus.checked = true;
+    if (this.btnSearchStatus.checked){
+      this.btnSearchStatus.checked = false;
+      this.btnSearchChangeHandler();
     }
+    this.btnSearchStatus.checked = true;
     this.btnSearchChangeHandler();
   }
 

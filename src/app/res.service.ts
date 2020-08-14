@@ -167,7 +167,7 @@ export class ResService {
       }
     }
     if (yobi1.length > 0){
-      htmlTag += `<div style="yobi1">予備選択1</div>\n${yobi1}`;
+      htmlTag += `<div class="yobi1">予備選択1</div>\n${yobi1}`;
     }
 
     let yobi2 = ``;
@@ -179,7 +179,7 @@ export class ResService {
     }
 
     if (yobi2.length > 0){
-      htmlTag += `<div style="yobi2">予備選択2</div>\n${yobi2}`;
+      htmlTag += `<div class="yobi2">予備選択2</div>\n${yobi2}`;
     }
 
     let yobi3 = ``;
@@ -191,7 +191,7 @@ export class ResService {
     }
 
     if (yobi3.length > 0){
-      htmlTag += `<div style="yobi3">予備選択3</div>\n${yobi3}`;
+      htmlTag += `<div class="yobi3">予備選択3</div>\n${yobi3}`;
     }
 
     let yobi4 = ``;
@@ -203,7 +203,7 @@ export class ResService {
     }
 
     if (yobi4.length > 0){
-      htmlTag += `<div style="yobi4">予備選択4</div>\n${yobi4}`;
+      htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4}`;
     }
     // if (options.isAll){
     //   htmlTag += `●★レス数: ${selectedCount}です。\n`;
