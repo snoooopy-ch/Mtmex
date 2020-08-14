@@ -90,7 +90,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   currentScrollIndex: number;
   originalResList: ResItem[];
   isTreeSearch: boolean;
-  @Input() isSelectRes: any;
+  isSelectRes: any;
   private isKeyPressed: boolean;
   private searchedFiled: number;
   private isBackup: boolean;
@@ -204,7 +204,6 @@ export class ContentComponent implements OnInit, OnDestroy {
         saveData.title = this.tabName;
         saveData.txtUrl = this.txtURL;
         saveData.scrollIndex = this.virtualScroller.viewPortInfo.startIndex;
-        saveData.isSelectRes = this.isSelectRes;
         this.resService.saveStatus(saveData);
         if (!value.isAllTabSave) {
           value.token = false;
@@ -214,16 +213,12 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
-        this.txtURL = value.data.txtUrl;
-        if (this.resList !== undefined) {
-          this.isSelectRes = value.data.isSelectRes;
-          if (this.isSelectRes){
-            this.btnShowSelectHandler();
-          }
-          this.virtualScroller.scrollToIndex(value.data.scrollIndex);
-          this.changeStatus();
-          this.cdRef.detectChanges();
-        }
+        // this.txtURL = value.data.txtUrl;
+        // if (this.resList !== undefined) {
+        //   this.virtualScroller.scrollToIndex(value.data.scrollIndex);
+        //   this.changeStatus();
+        //   this.cdRef.detectChanges();
+        // }
       }
     });
 
@@ -1401,9 +1396,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     if ((!this.btnNotice.checked && !this.isSelectRes && this.isBackup) || this.originalResList === undefined){
       this.originalResList = [...this.resList];
       this.isBackup = false;
-      console.log('new', this.originalResList.length);
     }
-    console.log('old', this.originalResList.length);
     let tmpResList = [...this.originalResList];
 
     tmpResList = this.getAbstractRes(tmpResList);

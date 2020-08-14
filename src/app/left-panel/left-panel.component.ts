@@ -231,7 +231,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             loadResList.push(resItem);
           }
           if (loadResList.length > 0) {
-            this.addTab(value.data.title, loadResList, '',  value.data.isSelectRes);
+            this.addTab(value.data.title, loadResList, '');
             this.selectedTabIndex = this.tabs.length - 1;
             value.tabIndex = this.selectedTabIndex;
             this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
@@ -306,7 +306,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.resService.saveSearchList(this.searchList);
   }
 
-  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '', pIsSelectRes = false) {
+  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '') {
     this.tabs = [...this.tabs, {
       title: pTitle,
       active: true,
@@ -314,8 +314,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       scrollPos: 0,
       isFiltered: false,
       url: '',
-      originSreTitle: pOriginSreTitle,
-      isSelectRes: pIsSelectRes
+      originSreTitle: pOriginSreTitle
     }];
     // this.tabs.push();
   }
