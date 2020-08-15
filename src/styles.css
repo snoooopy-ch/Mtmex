@@ -79,7 +79,7 @@ label {
 }
 
 .main-container app-left-panel {
-  width: calc(100% - 230px);
+  width: calc(100% - 220px);
   padding: 5px 0 5px 5px;
 }
 
@@ -204,7 +204,7 @@ label {
 }
 
 .main-container app-left-panel app-content .extract input[type="text"] {
-  min-width: 353px;
+  min-width: 366px;
   width: 30%;
   height: 29px;
   margin: 0 3px;
@@ -387,7 +387,7 @@ app-res .row-4 a {
   border: 1px solid lightgrey;
   width: 100%;
   padding: 5px;
-  max-width: 956px;
+  max-width: 968px;
   display: flex;
   justify-content: space-between;
 }
