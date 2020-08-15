@@ -695,7 +695,7 @@ function readLines(line) {
     }
     tmp_str = tmp_str.replace(/<hr>|<br \/>/ig, '<br>');
     const future_str = settings.mirai_anker.replace(/;/g, '|');
-    const reFuture = new RegExp(`(${future_str})[^&]+&gt;&gt;\\d+|&gt;&gt;\\d+[^&]+(${future_str})*$`, 'gi');
+    const reFuture = new RegExp(`(${future_str})[^&]+&gt;&gt;\\d+|&gt;&gt;\\d+[^&]+(${future_str})`, 'gi');
 
     let f_anchors = tmp_str.match(reFuture);
 
