@@ -328,7 +328,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
   }
   for (let resItem of resList) {
     if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
-      const re = new RegExp(sreTitle, 'gi');
+      const re = new RegExp(sreTitle.replace(/\?/gi,'\\?'), 'gi');
       resItem.content = resItem.content.replace(re, '');
       resItem.id = resItem.id.replace(re, '');
       resItem.name = resItem.name.replace(re, '');
@@ -722,7 +722,7 @@ function readLines(line) {
     let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let replaced_lines = [];
     let index = 0;
-    const re = new RegExp(sreTitle, 'gi');
+    const re = new RegExp(sreTitle.replace(/\?/gi,'\\?'), 'gi');
     for (let tmp_item of tmp_items) {
       if (index > 0)
         resItem.content += '<br>';
