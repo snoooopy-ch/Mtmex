@@ -1270,7 +1270,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     // });
   }
 
-  cancelSearchResText(){
+  clearSearchStatus(resList: ResItem[]){
     for (const res of this.resList){
       res.content = res.content.replace(/(<span[^<]+>)/ig, '');
       res.content = res.content.replace(/<\/span>/ig, '');
@@ -1282,6 +1282,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       res.isFiltered = false;
       res.isSearched = false;
     }
+  }
+
+  cancelSearchResText(){
+    this.clearSearchStatus(this.resList);
+    this.clearSearchStatus(this.originalResList);
     this.startInRes = 0;
     this.searchedRes = 0;
     // this.isChangedSearch = true;
@@ -1308,6 +1313,14 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     if (this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length){
       this.resList = [...this.originalResList];
+    }
+
+    if (this.btnNotice.checked){
+      this.resList = this.getNoticeRes(this.resList);
+    }
+
+    if (this.isSelectRes){
+      this.resList = this.getSelectedRes(this.resList);
     }
 
     for (let i = 0; i < this.resList.length; i++){
