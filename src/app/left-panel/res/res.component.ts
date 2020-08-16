@@ -374,7 +374,7 @@ export class ResComponent implements OnInit {
 
   cancelSelectedIdHandler(event) {
     event.stopPropagation();
-    if (this.item.resSelect === 'select') {
+    if (this.item.resSelect !== 'none') {
       this.cancelSelectedId();
     }
   }
