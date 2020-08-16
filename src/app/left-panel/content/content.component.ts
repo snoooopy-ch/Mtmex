@@ -223,14 +223,14 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.resMenu = this.resService.resMenu.subscribe((value) => {
-      if (this.tabIndex === value.tabIndex) {
+      if (this.tabIndex === value.tabIndex && value.token) {
         this.setResMenu(value.resMenu);
-        value.token = false;
       }
+      value.token = false;
     });
 
     this.subscribers.sortRes = this.resService.sortRes.subscribe((value) => {
-      if (this.tabIndex === value.tabIndex) {
+      if (this.tabIndex === value.tabIndex && value.token) {
         this.resList.sort((a, b) => {
           return a.num - b.num;
         });
@@ -388,7 +388,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // なし
       this.hotkeysService.add(new Hotkey(this.subHotKeys.nasi, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.resList[this.hovered].resColor = '#f00';
+          this.resList[this.hovered].resColor = '#000';
           this.cdRef.detectChanges();
         }
         return false; // Prevent bubbling
@@ -657,12 +657,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ID解除
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_kaijo, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          if (this.resList[this.hovered].resSelect === 'select') {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
-            this.selectedRes(this.resList[this.hovered], {
-              selected: 'none'
-            });
-          }
+          this.cancelSelectedIdRes(this.resList[this.hovered].id, event);
         }
         return false;
       }));
@@ -685,12 +680,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ID解除＆ID色消
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_kaijo_irokesi, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          if (this.resList[this.hovered].resSelect === 'select') {
-            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
-            this.selectedRes(this.resList[this.hovered], {
-              selected: 'none'
-            });
-          }
+          this.cancelSelectedIdRes(this.resList[this.hovered].id, event);
           this.selectedId(this.resList[this.hovered].id,
             { isSelect: false,
               idColor: this.idStyles[0].color,
@@ -759,10 +749,8 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       // 選択レス表示
       this.hotkeysService.add(new Hotkey(this.subHotKeys.sentaku_res_gamen, (event: KeyboardEvent): boolean => {
-        if (this.isSelectRes) {
-          this.isSelectRes = !this.isSelectRes;
-          this.btnShowSelectHandler();
-        }
+        this.isSelectRes = !this.isSelectRes;
+        this.btnShowSelectHandler();
         return false; // Prevent bubbling
       }));
 
@@ -1065,7 +1053,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   cancelSelectedIdRes(id: any, $event: any) {
     for (const res of this.resList){
-      if (res.id === id && res.resSelect === 'select'){
+      if (res.id === id && res.resSelect !== 'none'){
         res.resBackgroundColor = this.backgroundColors[0];
         res.resSelect = 'none';
       }
@@ -1399,8 +1387,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
     let tmpResList = [...this.originalResList];
 
-    tmpResList = this.getAbstractRes(tmpResList);
-
     if (this.btnNotice.checked){
       tmpResList = this.getNoticeRes(tmpResList);
     }
@@ -1408,6 +1394,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (this.isSelectRes){
       tmpResList = this.getSelectedRes(tmpResList);
     }
+
+    tmpResList = this.getAbstractRes(tmpResList);
 
     this.resList = [];
     this.resList = tmpResList;
@@ -1483,11 +1471,11 @@ export class ContentComponent implements OnInit, OnDestroy {
         tmpResList = this.getAbstractRes(tmpResList);
       }
 
-      tmpResList = this.getNoticeRes(tmpResList);
-
       if (this.isSelectRes){
         tmpResList = this.getSelectedRes(tmpResList);
       }
+
+      tmpResList = this.getNoticeRes(tmpResList);
 
       this.resList = [];
       this.resList = tmpResList;
