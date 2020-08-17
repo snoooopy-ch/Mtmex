@@ -203,6 +203,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           tabIndex: this.selectedTabIndex,
           totalCount: value.resList.length,
           title: this.tabs[this.selectedTabIndex].title,
+          rightToken: true,
+          statusToken: true
         });
       });
     });
@@ -239,6 +241,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
               tabIndex: this.selectedTabIndex,
               totalCount: value.data.resList.length,
               title: this.tabs[this.selectedTabIndex].title,
+              rightToken: true,
+              statusToken: true
             });
           }
         });
@@ -314,12 +318,16 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       scrollPos: 0,
       isFiltered: false,
       url: '',
-      originSreTitle: pOriginSreTitle
+      originSreTitle: pOriginSreTitle,
+      originalResList: pResList
     }];
     // this.tabs.push();
   }
 
   removeTab(index: number) {
+    if (this.tabs[index] === undefined){
+      return;
+    }
     const originSreTitle = this.tabs[index].originSreTitle;
     this.resService.removeTab(originSreTitle);
     this.tabs[index].resList.length = 0;
@@ -330,6 +338,25 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
     if (this.tabs.length > index && this.tabs.length > 0){
       this.tabChangedHandler(index);
+    }else{
+      this.resService.setSelectedRes({
+        select: 0,
+        candi1: 0,
+        candi2: 0,
+        candi3: 0,
+        candi4: 0,
+        tabIndex: 0,
+        title: '',
+        rightToken: true,
+        statusToken: false
+      });
+      this.resService.setTotalRes({
+        tabIndex: 0,
+        totalCount: 0,
+        title: '',
+        rightToken: true,
+        statusToken: false
+      });
     }
   }
 
@@ -415,8 +442,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     let currentTab = 0;
     let allCount = 0;
     for (const tabItem of this.tabs) {
-      if (tabItem.resList.length > 0) {
-        const oneHtmlTag = await this.resService.printHtmlTag(tabItem.resList, {
+      if (tabItem.originalResList.length > 0) {
+        const oneHtmlTag = await this.resService.printHtmlTag(tabItem.originalResList, {
           tabName: tabItem.title,
           txtURL: tabItem.url,
           twitter: this.twitter,
@@ -440,7 +467,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         currentTab = index;
       }
       index++;
-      allCount += tabItem.resList.filter(item => item.resSelect !== 'none').length;;
+      allCount += tabItem.originalResList.filter(item => item.resSelect !== 'none').length;
     }
 
     htmlTag = `\n★●レス数: ${allCount}\n\n${htmlTag}\n●★レス数: ${allCount}`;
@@ -462,7 +489,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   changeResList($event: any) {
     if ($event.tabIndex !== undefined) {
-      this.tabs[$event.tabIndex].resList = $event.resList;
+      this.tabs[$event.tabIndex].originalResList = $event.resList;
     }
   }
 }

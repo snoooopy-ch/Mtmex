@@ -419,7 +419,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
         resList[i].isNotice = true;
         if (resList[i].isAdded) {
           let j = i - 1;
-          while (resList[j].isAdded && j > -1) {
+          while (resList[j].isAdded !== undefined && resList[j].isAdded && j > -1) {
             resList[j].isNotice = true;
             j--;
           }

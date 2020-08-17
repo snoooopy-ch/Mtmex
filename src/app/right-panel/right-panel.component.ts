@@ -102,23 +102,25 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.selectedRes = this.resService.selectedRes.subscribe((value) => {
-      if (this.tabIndex === value.tabIndex) {
+      if (this.tabIndex === value.tabIndex && value.rightToken) {
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
         this.candi2Count = value.candi2;
         this.candi3Count = value.candi3;
         this.candi4Count = value.candi4;
         this.cdRef.detectChanges();
-        value.token = false;
+        value.rightToken = false;
       }
     });
 
     this.subscribers.totalRes = this.resService.totalRes.subscribe((value) => {
-      if (this.tabIndex === value.tabIndex){
+      if (this.tabIndex === value.tabIndex && value.rightToken){
         this.totalCount = value.totalCount;
         if (value.title !== undefined){
           this.title = value.title;
         }
+        this.cdRef.detectChanges();
+        value.rightToken = false;
       }
     });
 
