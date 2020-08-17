@@ -21,20 +21,21 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscribers.selectedRes = this.resService.selectedRes.subscribe(value => {
-      if (this.tabIndex === value.tabIndex) {
+      if (this.tabIndex === value.tabIndex && value.statusToken) {
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
         this.candi2Count = value.candi2;
         this.candi3Count = value.candi3;
         this.candi4Count = value.candi4;
         this.cdRef.detectChanges();
-        value.token = false;
+        value.statusToken = false;
       }
     });
     this.subscribers.totalRes = this.resService.totalRes.subscribe(value => {
-      if (this.tabIndex === value.tabIndex){
+      if (this.tabIndex === value.tabIndex && value.statusToken){
         this.totalCount = value.totalCount;
         this.tabTitle = value.title;
+        value.statusToken = false;
       }
     });
   }

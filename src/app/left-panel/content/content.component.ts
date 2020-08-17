@@ -965,7 +965,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length,
-      title: this.tabName
+      title: this.tabName,
+      rightToken: true,
+      statusToken: true
     });
   }
 
@@ -985,7 +987,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   moveUpRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index - 1);
-    this.resList = [...this.resList];
+    // this.resList = [...this.resList];
     if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, indexOrigin - 1);
@@ -999,7 +1001,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   moveDownRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index + 1);
-    this.resList = [...this.resList];
+    // this.resList = [...this.resList];
     if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, indexOrigin + 1);
@@ -1035,6 +1037,10 @@ export class ContentComponent implements OnInit, OnDestroy {
       const indexOrigin = this.originalResList.indexOf(item);
       this.originalResList.splice(indexOrigin, 1);
       this.originalResList = [...this.originalResList, tmpRes];
+      this.changeListEmitter.emit({
+        tabIndex: this.tabIndex,
+        resList: this.originalResList,
+      });
     }
     this.virtualScroller.scrollToIndex(startIndex);
   }
@@ -1046,7 +1052,7 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   selectedRes(item: any, $event: any) {
     item.resSelect = $event.selected;
-    this.resList = [...this.resList];
+    // this.resList = [...this.resList];
     this.changeStatus();
     this.cdRef.detectChanges();
   }
@@ -1076,7 +1082,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       candi4: this.candi4Count,
       tabIndex: this.tabIndex,
       title: this.tabName,
-      token: true
+      rightToken: true,
+      statusToken: true
     });
   }
 
@@ -1396,6 +1403,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     // this.backupResList = Object.assign([], this.resList);
     if ((!this.btnNotice.checked && !this.isSelectRes && this.isBackup) || this.originalResList === undefined){
       this.originalResList = [...this.resList];
+      this.changeListEmitter.emit({
+        tabIndex: this.tabIndex,
+        resList: this.originalResList,
+      });
       this.isBackup = false;
     }
     let tmpResList = [...this.originalResList];
@@ -1416,7 +1427,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length,
-      title: this.tabName
+      title: this.tabName,
+      rightToken: true,
+      statusToken: true
     });
   }
 
@@ -1448,7 +1461,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
         totalCount: this.resList.length,
-        title: this.tabName
+        title: this.tabName,
+        rightToken: true,
+        statusToken: true
       });
     }
     this.filteredEmitter.emit(this.btnSearchStatus.checked);
@@ -1477,6 +1492,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (this.btnNotice.checked){
       if ((!this.btnSearchStatus.checked && !this.isSelectRes) || this.originalResList === undefined){
         this.originalResList = [...this.resList];
+        this.changeListEmitter.emit({
+          tabIndex: this.tabIndex,
+          resList: this.originalResList,
+        });
       }
       let tmpResList = [...this.originalResList];
 
@@ -1496,8 +1515,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
         totalCount: this.resList.length,
-        title: this.tabName
+        title: this.tabName,
+        rightToken: true,
+        statusToken: true
       });
+
     }else{
 
       let tmpResList = [...this.originalResList];
@@ -1513,7 +1535,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
         totalCount: this.resList.length,
-        title: this.tabName
+        title: this.tabName,
+        rightToken: true,
+        statusToken: true
       });
     }
   }
@@ -1886,7 +1910,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length,
-      title: this.tabName
+      title: this.tabName,
+      rightToken: true,
+      statusToken: true
     });
   }
 
@@ -1904,6 +1930,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (this.isSelectRes){
       if ((!this.btnSearchStatus.checked && !this.btnNotice.checked) || this.originalResList === undefined){
         this.originalResList = [...this.resList];
+        this.changeListEmitter.emit({
+          tabIndex: this.tabIndex,
+          resList: this.originalResList,
+        });
       }
       let tmpResList = [...this.originalResList];
       if (this.btnSearchStatus.checked){
@@ -1917,10 +1947,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       tmpResList = this.getSelectedRes(tmpResList);
 
       this.resList = tmpResList;
-      this.changeListEmitter.emit({
-        tabIndex: this.tabIndex,
-        resList: this.resList,
-      });
+
     }else{
       let tmpResList = [...this.originalResList];
       if (this.btnSearchStatus.checked){
@@ -1940,7 +1967,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length,
-      title: this.tabName
+      title: this.tabName,
+      rightToken: true,
+      statusToken: true
     });
     this.changeStatus();
     this.cdRef.detectChanges();
