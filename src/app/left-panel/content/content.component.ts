@@ -1292,7 +1292,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     // this.isChangedSearch = true;
   }
 
-  searchResText(){
+  searchResText(isOnlySearch){
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
     if (this.searchList.indexOf(this.searchKeyword.trim()) === -1){
       if (this.searchList.length >= this.searchWordMax){
@@ -1311,7 +1311,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
 
-    if (this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length){
+    if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length){
       this.resList = [...this.originalResList];
     }
 
@@ -1426,7 +1426,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.btnSearchStatus.checked = false;
       }else{
         this.cancelSearchResText();
-        this.searchResText();
+        this.searchResText(false);
         this.abstractRes();
       }
     }else{
@@ -1669,7 +1669,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.cancelSearchResText();
         } else {
           this.cancelSearchResText();
-          this.searchResText();
+          this.searchResText(true);
         }
       }else{
         if (this.searchOption === 'num'){
