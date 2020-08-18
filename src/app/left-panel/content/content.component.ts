@@ -75,7 +75,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() cancelAllColor;
   @Input() isTwitterUrl: boolean;
   @Input() isYoutubeUrl: boolean;
-  backupResList;
   @Input() txtURL: string;
   public subscribers: any = {};
   private isChangedSearch: boolean;
@@ -124,12 +123,6 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
       this.cdRef.detectChanges();
     });
-
-    // this.subscribers.scrollPos = this.resService.scrollPos.subscribe((scrollPos) => {
-    //      if (scrollPos.index === this.tabIndex && scrollPos.isTab){
-    //       this.virtualScroller.scrollToIndex(scrollPos.pos);
-    //     }
-    // });
 
     this.subscribers.moveRes = this.resService.moveRes.subscribe((value) => {
       if (value.tabIndex === this.tabIndex){
@@ -226,7 +219,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.tabIndex === value.tabIndex && value.token) {
         this.setResMenu(value.resMenu);
         value.token = false;
-      }      
+      }
     });
 
     this.subscribers.sortRes = this.resService.sortRes.subscribe((value) => {
@@ -256,9 +249,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.resMenu.unsubscribe();
     this.subscribers.sortRes.unsubscribe();
     this.resList.length = 0;
-    if (this.backupResList !== undefined){
-      this.backupResList.length = 0;
-    }
+
     if (this.originalResList !== undefined){
       this.originalResList.length = 0;
     }
@@ -931,7 +922,7 @@ export class ContentComponent implements OnInit, OnDestroy {
    * @param event: cdkdragdrop
    */
   resDropHandler(event: CdkDragDrop<any[]>) {
-    if (this.isSelectRes || this.btnNotice.checked || this.btnSearchStatus.checked) {
+    if (this.originalResList !== undefined) {
       const fromRes = this.resList[this.selectedResIndex];
       const fromIndex = this.originalResList.indexOf(fromRes);
       const toIndex = this.originalResList.indexOf(this.resList[this.selectedResIndex + (event.currentIndex - event.previousIndex)]);
@@ -939,7 +930,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
     moveItemInArray(this.resList, this.selectedResIndex,
       this.selectedResIndex + (event.currentIndex - event.previousIndex));
-    // this.resList = [...this.resList];
   }
 
   /**
@@ -961,7 +951,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resList.splice(index + 1, 0, cloneItem);
     this.cdRef.detectChanges();
     this.changeStatus();
-    // this.resList = [...this.resList];
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length,
@@ -987,8 +976,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   moveUpRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index - 1);
-    // this.resList = [...this.resList];
-    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+    if (this.originalResList !== undefined){
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, indexOrigin - 1);
     }
@@ -1001,8 +989,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   moveDownRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index + 1);
-    // this.resList = [...this.resList];
-    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+    if (this.originalResList !== undefined){
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, indexOrigin + 1);
     }
@@ -1016,7 +1003,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     const index = this.resList.indexOf(item);
     const startIndex = this.virtualScroller.viewPortInfo.startIndex + 1;
     moveItemInArray(this.resList, index, 0);
-    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+    if (this.originalResList !== undefined){
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, 0);
     }
@@ -1052,7 +1039,6 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   selectedRes(item: any, $event: any) {
     item.resSelect = $event.selected;
-    // this.resList = [...this.resList];
     this.changeStatus();
     this.cdRef.detectChanges();
   }
@@ -1400,7 +1386,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   abstractRes(){
-    // this.backupResList = Object.assign([], this.resList);
     if ((!this.btnNotice.checked && !this.isSelectRes && this.isBackup) || this.originalResList === undefined){
       this.originalResList = [...this.resList];
       this.changeListEmitter.emit({
@@ -1470,8 +1455,9 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   selectedNum(resItem: ResItem) {
-    if (resItem.originalIndex !== null) {
-      moveItemInArray(this.backupResList, resItem.originalIndex, 0);
+    if (resItem !== undefined) {
+      const fromIndex = this.originalResList.indexOf(resItem);
+      moveItemInArray(this.originalResList, fromIndex, 0);
     }
     this.btnSearchStatus.checked = false;
     this.btnSearchChangeHandler();
@@ -1987,15 +1973,12 @@ export class ContentComponent implements OnInit, OnDestroy {
   cancelAllStatus(item: ResItem) {
     if (this.btnSearchStatus.checked){
       this.btnSearchStatus.checked = false;
-      this.btnSearchChangeHandler();
     }
     if (this.btnNotice.checked){
       this.btnNotice.checked = false;
-      this.btnNoticeChangeHandler();
     }
     if (this.isSelectRes){
       this.isSelectRes = false;
-      this.btnShowSelectHandler();
     }
     if (this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length) {
       this.resList = [...this.originalResList];
