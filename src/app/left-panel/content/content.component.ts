@@ -225,8 +225,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.resMenu = this.resService.resMenu.subscribe((value) => {
       if (this.tabIndex === value.tabIndex && value.token) {
         this.setResMenu(value.resMenu);
-      }
-      value.token = false;
+        value.token = false;
+      }      
     });
 
     this.subscribers.sortRes = this.resService.sortRes.subscribe((value) => {
