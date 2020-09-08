@@ -157,7 +157,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
-      console.log(this.isSaveStatus);
+
       if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token && this.isSaveStatus) {
         const saveData = value;
         saveData.resList = [];
@@ -208,7 +208,6 @@ export class ContentComponent implements OnInit, OnDestroy {
         if (!value.isAllTabSave) {
           value.token = false;
         }
-        console.log(value.token);
       }
     });
 

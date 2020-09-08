@@ -184,7 +184,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.resTopBar = `1px solid ${this.settings.top_bar}`;
       }
 
-      if (this.settings.pict_hyouji !== undefined){
+      if (this.settings.pict_hyouji === undefined){
         this.imageWidth = '150px';
       } else {
         this.imageWidth = `${this.settings.pict_hyouji}px`;

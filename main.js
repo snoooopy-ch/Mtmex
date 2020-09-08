@@ -350,7 +350,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
         resList[i].anchors = resList[i].anchors.concat(resList[i].futureAnchors);
       }
       if (resList[i].anchors.length > 0 || resList[i].futureAnchors.length > 0) {
-        if (!isReplaceRes && resList[i].anchors.indexOf(1) !== -1) {
+        if (!isReplaceRes &&(resList[i].anchors.indexOf(1) !== -1 && resList[i].anchors.length === 1)) {
           continue;
         }
         if ((resList[i].anchors.length === 1 && resList[i].anchors.indexOf(resList[i].num) !== -1)

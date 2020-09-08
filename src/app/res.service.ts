@@ -213,7 +213,7 @@ export class ResService {
       htmlTag = '';
     }
 
-    if (options.isAll && options.isOutputCandiBelow) {
+    if (options.isAll && options.isOutputCandiBelow && yobi.length > 0) {
       yobi = `★■●${options.tabName}●■★\nURL入力欄：${options.txtURL}\\n${yobi}`;
     }
     else{

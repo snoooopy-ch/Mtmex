@@ -10,11 +10,6 @@ import {
   PipeTransform, ViewChild,
 } from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// import Image from '@ckeditor/ckeditor5-image/src/image';
-// import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
-// import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
-// import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize';
-// import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ResItem} from '../../models/res-item';
 
@@ -106,7 +101,7 @@ export class ResComponent implements OnInit {
         event.stopPropagation();
       });
 
-      $('a.res-img-link').click((event) => {
+      $('a.res-img-link').click(function(event) {
         event.stopPropagation();
       });
 
@@ -230,6 +225,14 @@ export class ResComponent implements OnInit {
     }
     this.item.isEdit = false;
     this.cdRef.detectChanges();
+
+    $('a.res-link').click((event) => {
+      event.stopPropagation();
+    });
+
+    $('a.res-img-link').click((event) => {
+      event.stopPropagation();
+    });
   }
 
   cancelEditHandler(event) {
