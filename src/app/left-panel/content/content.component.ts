@@ -733,6 +733,24 @@ export class ContentComponent implements OnInit, OnDestroy {
         return false; // Prevent bubbling
       }));
 
+      // レスの一番上に移動
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.res_most_up, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          let item = this.resList[this.hovered];
+          this.moveResToTop(item);
+        }
+        return false; // Prevent bubbling
+      }));
+
+      // レスの一番下に移動
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.res_most_down, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          let item = this.resList[this.hovered];
+          this.moveResToBottom(item);
+        }
+        return false; // Prevent bubbling
+      }));
+
       // 注目レス ON/OFF
       this.hotkeysService.add(new Hotkey(this.subHotKeys.chuumoku, (event: KeyboardEvent): boolean => {
         this.btnNotice.checked = !this.btnNotice.checked;

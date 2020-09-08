@@ -130,7 +130,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
           , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'
-          , 'menu1', 'menu2', 'menu3'];
+          , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down'];
         for (const key of arrayKeys) {
           if (this.settings[key].toLowerCase() === 'insert'){
             this.subHotKeys[key] = 'ins';
