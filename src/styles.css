@@ -75,11 +75,11 @@ label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 1197px;
+  max-width: 1220px;
 }
 
 .main-container app-left-panel {
-  width: calc(100% - 220px);
+  width: calc(100% - 240px);
   padding: 5px 0 5px 5px;
 }
 
@@ -444,9 +444,9 @@ app-res .row-4 a {
   width: calc(100% - 20px);
 }
 .main-container app-right-panel {
-  min-width: 260px;
-  max-width: 260px;
-  padding: 0px 10px 9px 0px;
+  min-width: 230px;
+  max-width: 230px;
+  padding: 0px 0px 9px 0px;
   margin: 86px 5px 0;
   user-select: none;
   -moz-user-select: none;
@@ -803,4 +803,8 @@ input[type='radio']:checked:before {
 
 .main-container app-right-panel .move-res div button:last-child {
   margin-left: -2px;
+}
+
+.main-container app-right-panel::-webkit-scrollbar {
+  display: none;
 }

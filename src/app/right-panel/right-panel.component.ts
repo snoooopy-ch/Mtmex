@@ -44,6 +44,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   sortCommand: any;
   loadDatPath: string;
   loadStatusPath: string;
+  isReplaceName: boolean;
+  isOutputCandiBelow: boolean;
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
@@ -85,6 +87,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
       if (this.settings.default_status_folder_path !== undefined){
         this.loadStatusPath = this.settings.default_status_folder_path;
+      }
+
+      if (this.settings.yobi_kabu_shuturyoku !== undefined){
+        this.isOutputCandiBelow = this.settings.yobi_kabu_shuturyoku;
       }
 
       this.cdRef.detectChanges();
@@ -240,11 +246,17 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   printHtmlTagHandler() {
-    this.resService.setPrintCommand({tabIndex: this.tabIndex, token: true});
+    this.resService.setPrintCommand({
+      tabIndex: this.tabIndex,
+      isReplaceName: this.isReplaceName,
+      token: true});
   }
 
   printAllHtmlTagHandler() {
-    this.resService.setPrintAllCommand({ token: true});
+    this.resService.setPrintAllCommand({
+      isOutputCandiBelow: this.isOutputCandiBelow,
+      isReplaceName: this.isReplaceName,
+      token: true});
   }
 
   saveCurrentRes() {
@@ -300,7 +312,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     electron.remote.dialog.showOpenDialog(null, {title: 'dat直接読み込み',
       properties: ['openFile', 'multiSelections'],
       defaultPath: this.loadDatPath,
-      filters: [{ name: 'Datパイル', extensions: ['dat'] }]}).then(async result => {
+      filters: [{ name: 'Datパイル', extensions: ['dat'] },
+        { name: 'すべてのファイル', extensions: ['*'] }]}).then(async result => {
       if (!result.canceled){
         const remarkRes = this.getHideRes();
         const hideRes = this.getHideRes();
@@ -320,15 +333,6 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       token: true,
       resMenu: value
     });
-  }
-
-  chkResSortHandler() {
-    this.isMultiAnchor = this.isResSort && this.isMultiAnchor;
-    this.isContinuousAnchor = this.isResSort && this.isMultiAnchor && this.isContinuousAnchor;
-  }
-
-  chkMultiAnchorHandler() {
-    this.isContinuousAnchor = this.isMultiAnchor && this.isContinuousAnchor;
   }
 
   btnSortResHandler() {

@@ -251,7 +251,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.allPrint = this.resService.printAllCommand.subscribe((value) => {
       if (value.token){
-        this.printAllHtmlTag();
+        this.printAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName);
       }
     });
 
@@ -433,11 +433,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.previousTabId = $event.target['id'];
   }
 
-  private async printAllHtmlTag() {
+  private async printAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
     let htmlTag = '';
+    let yobiHtml = '';
     let index = 0;
     let currentTab = 0;
     let allCount = 0;
@@ -455,19 +456,36 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           characterColors: this.settings.characterColors,
           startAbbreviations: this.startAbbreviations,
           endAbbreviations: this.endAbbreviations,
-          isAll: true
+          isAll: true,
+          isOutputCandiBelow: pIsOutputCandiBelow,
+          isReplaceName: pIsReplaceName,
+          replaceName: this.settings.namae_mae,
+          replacedName: this.settings.namae_ato,
         });
 
-        if (index !== 0 && oneHtmlTag.length > 0) {
+        if (index !== 0 && oneHtmlTag.allHtml.length > 0) {
           htmlTag += '\n';
         }
-        htmlTag += oneHtmlTag;
+
+        if (index !== 0 && pIsOutputCandiBelow && oneHtmlTag.yobiHtml.length > 0) {
+          yobiHtml += '\n';
+        }
+
+        htmlTag += oneHtmlTag.allHtml;
+
+        if (pIsOutputCandiBelow){
+          yobiHtml += oneHtmlTag.yobiHtml;
+        }
       }
       if (tabItem.active){
         currentTab = index;
       }
       index++;
       allCount += tabItem.originalResList.filter(item => item.resSelect !== 'none').length;
+    }
+
+    if (pIsOutputCandiBelow){
+      htmlTag += `\n${yobiHtml}`;
     }
 
     htmlTag = `\n★●レス数: ${allCount}\n\n${htmlTag}\n●★レス数: ${allCount}`;
@@ -490,6 +508,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   changeResList($event: any) {
     if ($event.tabIndex !== undefined) {
       this.tabs[$event.tabIndex].originalResList = $event.resList;
+    }
+  }
+
+  changeUrl($event: any) {
+    if ($event.tabIndex !== undefined) {
+      this.tabs[$event.tabIndex].url = $event.txtURL;
     }
   }
 }

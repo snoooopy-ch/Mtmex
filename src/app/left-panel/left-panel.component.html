@@ -50,12 +50,15 @@
                (scrollIndexEmitter)="changeScrollIndex(index,$event)"
                (searchListEmitter)="changeSearchList($event)"
                (changeListEmitter)="changeResList($event)"
+               (changeUrlEmitter)="changeUrl($event)"
                [resSizeList] = "resSizeList"
                [searchKeyword] = "searchKeyword"
                [searchOption] = "searchOption"
                [searchList] = "searchList"
                [searchWordMax] = "settings.search_word_max"
                [cancelAllColor] = "settings.all_kaijo_button"
+               [replaceName] = "settings.namae_mae"
+               [replacedName] = "settings.namae_ato"
                [imageWidth] = "imageWidth"
                [tabIndex]="index">
   </app-content>

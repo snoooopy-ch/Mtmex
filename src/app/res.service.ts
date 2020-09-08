@@ -147,6 +147,7 @@ export class ResService {
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
     htmlTag += `URL入力欄：${options.txtURL}\n`;
+    let yobi = ``;
     const selectedCount = resList.filter(item => item.resSelect !== 'none').length;
     // if (options.isAll){
     //   htmlTag += `★●レス数: ${selectedCount}で、\n`;
@@ -167,7 +168,7 @@ export class ResService {
       }
     }
     if (yobi1.length > 0){
-      htmlTag += `<div class="yobi1">予備選択1</div>\n${yobi1}`;
+      yobi += `<div class="yobi1">予備選択1</div>\n${yobi1}`;
     }
 
     let yobi2 = ``;
@@ -179,7 +180,7 @@ export class ResService {
     }
 
     if (yobi2.length > 0){
-      htmlTag += `<div class="yobi2">予備選択2</div>\n${yobi2}`;
+      yobi += `<div class="yobi2">予備選択2</div>\n${yobi2}`;
     }
 
     let yobi3 = ``;
@@ -191,7 +192,7 @@ export class ResService {
     }
 
     if (yobi3.length > 0){
-      htmlTag += `<div class="yobi3">予備選択3</div>\n${yobi3}`;
+      yobi += `<div class="yobi3">予備選択3</div>\n${yobi3}`;
     }
 
     let yobi4 = ``;
@@ -203,7 +204,7 @@ export class ResService {
     }
 
     if (yobi4.length > 0){
-      htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4}`;
+      yobi += `<div class="yobi4">予備選択4</div>\n${yobi4}`;
     }
     // if (options.isAll){
     //   htmlTag += `●★レス数: ${selectedCount}です。\n`;
@@ -211,10 +212,19 @@ export class ResService {
     if (!exists){
       htmlTag = '';
     }
+
+    if (options.isAll && options.isOutputCandiBelow) {
+      yobi = `★■●${options.tabName}●■★\nURL入力欄：${options.txtURL}\\n${yobi}`;
+    }
+    else{
+      htmlTag += yobi;
+      yobi = '';
+    }
+
     // else{
     //   htmlTag = htmlTag.substr(0, htmlTag.length - 1);
     // }
-    return htmlTag;
+    return {allHtml: htmlTag, yobiHtml: yobi};
   }
 
   async printRes(res: ResItem, options){
@@ -303,7 +313,11 @@ export class ResService {
       htmlTag += ` left${res.anchorLevel}`;
     }
     htmlTag += '">';
-    const resName = res.name.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
+    let resName = res.name.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
+    if (options.isReplaceName){
+      const re = new RegExp(options.replacedName.replace(/,/g, '|'), 'gi');
+      resName = resName.replace(re, options.replacedName);
+    }
     const resDate = res.date.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     const resId = res.id.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
 
