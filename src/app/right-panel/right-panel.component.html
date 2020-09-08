@@ -56,6 +56,14 @@
     <h3>{{candi4Count}}</h3>
   </div>
 </div>
+<div class="mt-1">
+  <div>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isReplaceName">出力時に名前変更</label>
+  </div>
+  <div>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isOutputCandiBelow">予備選択を下部に出力</label>
+  </div>
+</div>
 <div class="width-100">
   <button id="btn-print-all-tag" class="border-round" (click)="printAllHtmlTagHandler()">全タブのタグ出力</button>
   <button id="btn-print-html-tag" class="border-round" (click)="printHtmlTagHandler()">タグ出力</button>
@@ -164,6 +172,7 @@
   <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
 </div>
 <div class="width-100">
+  <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
   <label>注意レス</label>
   <input type="text" [(ngModel)]="txtRemarkRes">
   <label>非表示レス</label>

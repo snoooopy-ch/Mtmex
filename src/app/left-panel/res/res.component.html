@@ -1,5 +1,11 @@
 <div class="res-container" (click)="clickResContainer($event)">
   <div class="row-1">
+    <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor}">
+      <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+        <path d="M0 0h24v24H0z" fill="none"></path>
+      </svg>
+    </div>
     <div class="label-res-kaihei" (click)="clickResMenuKaihei($event)">
 <!--      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"-->
 <!--        [ngStyle]="{'color': item.isNotice ? '#f00' : '#000'}">{{item.num}}</h4>      -->
@@ -40,12 +46,7 @@
         (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
     <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
     <button class="btn-cancel-all" (click)="btnCancelAllStatus($event)" [ngStyle]="{'background-color': cancelAllColor}"></button>
-    <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor}">
-      <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-        <path d="M0 0h24v24H0z" fill="none"></path>
-      </svg>
-    </div>
+
   </div>
   <div class="row-2" *ngIf="(item.isMenuOpen == true || item.resMenu == 3)">
     <button class="btn-move btn-left-round" (click)="upOneHandler($event)">↑</button>

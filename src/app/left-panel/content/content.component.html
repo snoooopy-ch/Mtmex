@@ -32,7 +32,7 @@
   <h3 class="status">{{candi3Count}}</h3>
   <h3 class="status">{{candi4Count}}</h3>
   <label>URL</label>
-  <input type="text" [(ngModel)]="txtURL">
+  <input type="text" [(ngModel)]="txtURL" (ngModelChange)="txtUrlChangeHandler()">
 </div>
 <h3 #tabTitle>{{tabName}}</h3>
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)"

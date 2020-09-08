@@ -62,6 +62,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() scrollIndexEmitter = new EventEmitter();
   @Output() searchListEmitter = new EventEmitter();
   @Output() changeListEmitter = new EventEmitter();
+  @Output() changeUrlEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -76,6 +77,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() isTwitterUrl: boolean;
   @Input() isYoutubeUrl: boolean;
   @Input() txtURL: string;
+  @Input() replaceName: string;
+  @Input() replacedName: string;
   public subscribers: any = {};
   private isChangedSearch: boolean;
   private searchedRes: number;
@@ -93,7 +96,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   private isKeyPressed: boolean;
   private searchedFiled: number;
   private isBackup: boolean;
-
+  isSaveStatus: boolean;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -109,11 +112,14 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.candi4Count = 0;
     this.currentScrollIndex = 0;
     this.isBackup = true;
+    this.isSaveStatus = false;
   }
 
   ngOnInit(): void {
     this.isTreeSearch = true;
     this.originalResList = [];
+
+    setTimeout(this.setSaveStatus.bind(this), 30000);
 
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
@@ -146,12 +152,13 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.printCommand =  this.resService.printCommand.subscribe((value) => {
       if (value.tabIndex === this.tabIndex && value.token){
-        this.printHtmlTag();
+        this.printHtmlTag(value.isReplaceName);
       }
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
-      if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token) {
+      console.log(this.isSaveStatus);
+      if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token && this.isSaveStatus) {
         const saveData = value;
         saveData.resList = [];
         if (value.isAllTabSave) {
@@ -201,6 +208,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         if (!value.isAllTabSave) {
           value.token = false;
         }
+        console.log(value.token);
       }
     });
 
@@ -239,7 +247,6 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(){
     this.subscribers.LoadHiddenIds.unsubscribe();
-    // this.subscribers.scrollPos.unsubscribe();
     this.subscribers.moveRes.unsubscribe();
     this.subscribers.selectCommand.unsubscribe();
     this.subscribers.selectedTab.unsubscribe();
@@ -255,6 +262,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  setSaveStatus(){
+    this.isSaveStatus = true;
+    this.cdRef.detectChanges();
+  }
   /**
    * ショートカットキー値を設定します。
    */
@@ -1828,7 +1839,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     return content;
   }
 
-  private async printHtmlTag() {
+  private async printHtmlTag(pIsReplaceName) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
@@ -1850,10 +1861,14 @@ export class ContentComponent implements OnInit, OnDestroy {
       characterColors: this.characterColors,
       startAbbreviations: this.startAbbreviations,
       endAbbreviations: this.endAbbreviations,
-      isAll: false
+      isAll: false,
+      isOutputCandiBelow: false,
+      isReplaceName: pIsReplaceName,
+      replaceName: this.replaceName,
+      replacedName: this.replacedName,
     });
 
-    this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag});
+    this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag.allHtml});
     $.LoadingOverlay('hide');
   }
 
@@ -1998,5 +2013,12 @@ export class ContentComponent implements OnInit, OnDestroy {
       res.isMenuOpen = false;
     }
     this.cdRef.detectChanges();
+  }
+
+  txtUrlChangeHandler() {
+    this.changeUrlEmitter.emit({
+      tabIndex: this.tabIndex,
+      txtURL: this.txtURL,
+    });
   }
 }
