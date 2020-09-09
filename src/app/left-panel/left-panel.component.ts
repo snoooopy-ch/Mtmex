@@ -533,26 +533,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           replacedName: this.settings.namae_ato,
         });
 
-        // if (index !== 0 && oneHtmlTag.allHtml.length > 0) {
-        //   htmlTag += '\n';
-        // }
-        //
-        // if (index !== 0 && oneHtmlTag.yobi1Html.length > 0) {
-        //   yobi1Html += '\n';
-        // }
-        //
-        // if (index !== 0 && oneHtmlTag.yobi2Html.length > 0) {
-        //   yobi2Html += '\n';
-        // }
-        //
-        // if (index !== 0 && oneHtmlTag.yobi3Html.length > 0) {
-        //   yobi3Html += '\n';
-        // }
-        //
-        // if (index !== 0 && oneHtmlTag.yobi4Html.length > 0) {
-        //   yobi4Html += '\n';
-        // }
-
         if (oneHtmlTag.allHtml.length > 0 || oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
           || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0){
           tabNameAndUrl += oneHtmlTag.tabNameAndUrl;

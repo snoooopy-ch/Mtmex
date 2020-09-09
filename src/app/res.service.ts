@@ -358,7 +358,7 @@ export class ResService {
     htmlTag += '">';
     let resName = res.name.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     if (options.isReplaceName){
-      const re = new RegExp(options.replacedName.replace(/,/g, '|'), 'gi');
+      const re = new RegExp(options.replaceName.replace(/,/g, '|'), 'gi');
       resName = resName.replace(re, options.replacedName);
     }
     const resDate = res.date.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
