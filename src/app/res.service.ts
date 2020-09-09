@@ -148,10 +148,7 @@ export class ResService {
     let htmlTag = `★■●${options.tabName}●■★\n`;
     htmlTag += `URL入力欄：${options.txtURL}\n`;
     let yobi = ``;
-    const selectedCount = resList.filter(item => item.resSelect !== 'none').length;
-    // if (options.isAll){
-    //   htmlTag += `★●レス数: ${selectedCount}で、\n`;
-    // }
+
     let exists = false;
     for (const res of resList){
       if (res.resSelect === 'select'){
@@ -206,25 +203,71 @@ export class ResService {
     if (yobi4.length > 0){
       yobi += `<div class="yobi4">予備選択4</div>\n${yobi4}`;
     }
-    // if (options.isAll){
-    //   htmlTag += `●★レス数: ${selectedCount}です。\n`;
-    // }
+
     if (!exists){
       htmlTag = '';
     }
 
-    if (options.isAll && options.isOutputCandiBelow && yobi.length > 0) {
-      yobi = `★■●${options.tabName}●■★\nURL入力欄：${options.txtURL}\\n${yobi}`;
-    }
-    else{
+    if (yobi.length > 0) {
       htmlTag += yobi;
       yobi = '';
     }
 
-    // else{
-    //   htmlTag = htmlTag.substr(0, htmlTag.length - 1);
-    // }
     return {allHtml: htmlTag, yobiHtml: yobi};
+  }
+
+  async printAllHtmlTag(resList: ResItem[], options) {
+
+    let htmlTag = ``;
+
+    let title = `★■●${options.tabName}●■★\n`;
+    title += `URL入力欄：${options.txtURL}\n`;
+
+    let exists = false;
+    for (const res of resList){
+      if (res.resSelect === 'select'){
+        exists = true;
+        htmlTag += await this.printRes(res, options);
+      }
+    }
+
+    let yobi1 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi1'){
+        exists = true;
+        yobi1 += await this.printRes(res, options);
+      }
+    }
+
+    let yobi2 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi2'){
+        exists = true;
+        yobi2 += await this.printRes(res, options);
+      }
+    }
+
+    let yobi3 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi3'){
+        exists = true;
+        yobi3 += await this.printRes(res, options);
+      }
+    }
+
+    let yobi4 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi4'){
+        exists = true;
+        yobi4 += await this.printRes(res, options);
+      }
+    }
+
+    if (!exists){
+      htmlTag = '';
+    }
+
+    return {allHtml: htmlTag, yobi1Html: yobi1, yobi2Html: yobi2, yobi3Html: yobi3, yobi4Html: yobi4, tabNameAndUrl: title };
   }
 
   async printRes(res: ResItem, options){

@@ -251,7 +251,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.allPrint = this.resService.printAllCommand.subscribe((value) => {
       if (value.token){
-        this.printAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName);
+        if (value.isOutputCandiBelow){
+          this.printIntegrateAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName);
+        }else{
+          this.printNormalAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName);
+        }
       }
     });
 
@@ -433,7 +437,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.previousTabId = $event.target['id'];
   }
 
-  private async printAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName) {
+  private async printNormalAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
@@ -486,6 +490,103 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     if (pIsOutputCandiBelow){
       htmlTag += `\n${yobiHtml}`;
+    }
+
+    htmlTag = `\n★●レス数: ${allCount}\n\n${htmlTag}\n●★レス数: ${allCount}`;
+
+    this.resService.setPrintHtml({tabIndex: currentTab, html: htmlTag});
+    $.LoadingOverlay('hide');
+  }
+
+  private async printIntegrateAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName) {
+    $.LoadingOverlay('show', {
+      imageColor: '#ffa07a',
+    });
+    let htmlTag = '';
+    let yobi1Html = '';
+    let yobi2Html = '';
+    let yobi3Html = '';
+    let yobi4Html = '';
+    let index = 0;
+    let currentTab = 0;
+    let allCount = 0;
+    let tabNameAndUrl = '';
+
+    for (const tabItem of this.tabs) {
+      if (tabItem.originalResList.length > 0) {
+        const oneHtmlTag = await this.resService.printAllHtmlTag(tabItem.originalResList, {
+          tabName: tabItem.title,
+          txtURL: tabItem.url,
+          twitter: this.twitter,
+          youtube: this.youtube,
+          twitterUrl: this.isTwitterUrl,
+          youtubeUrl: this.isYoutubeUrl,
+          shuturyoku: this.shuturyoku,
+          resSizeList: this.resSizeList,
+          characterColors: this.settings.characterColors,
+          startAbbreviations: this.startAbbreviations,
+          endAbbreviations: this.endAbbreviations,
+          isAll: true,
+          isOutputCandiBelow: pIsOutputCandiBelow,
+          isReplaceName: pIsReplaceName,
+          replaceName: this.settings.namae_mae,
+          replacedName: this.settings.namae_ato,
+        });
+
+        // if (index !== 0 && oneHtmlTag.allHtml.length > 0) {
+        //   htmlTag += '\n';
+        // }
+        //
+        // if (index !== 0 && oneHtmlTag.yobi1Html.length > 0) {
+        //   yobi1Html += '\n';
+        // }
+        //
+        // if (index !== 0 && oneHtmlTag.yobi2Html.length > 0) {
+        //   yobi2Html += '\n';
+        // }
+        //
+        // if (index !== 0 && oneHtmlTag.yobi3Html.length > 0) {
+        //   yobi3Html += '\n';
+        // }
+        //
+        // if (index !== 0 && oneHtmlTag.yobi4Html.length > 0) {
+        //   yobi4Html += '\n';
+        // }
+
+        if (oneHtmlTag.allHtml.length > 0 || oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
+          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0){
+          tabNameAndUrl += oneHtmlTag.tabNameAndUrl;
+        }
+
+        htmlTag += oneHtmlTag.allHtml;
+        yobi1Html += oneHtmlTag.yobi1Html;
+        yobi2Html += oneHtmlTag.yobi2Html;
+        yobi3Html += oneHtmlTag.yobi3Html;
+        yobi4Html += oneHtmlTag.yobi4Html;
+
+      }
+      if (tabItem.active){
+        currentTab = index;
+      }
+      index++;
+      allCount += tabItem.originalResList.filter(item => item.resSelect !== 'none').length;
+    }
+    htmlTag += `\n${tabNameAndUrl}`;
+
+    if (yobi1Html.length > 0){
+      htmlTag += `<div class="yobi1">予備選択1</div>\n${yobi1Html}`;
+    }
+
+    if (yobi2Html.length > 0){
+      htmlTag += `<div class="yobi2">予備選択2</div>\n${yobi1Html}`;
+    }
+
+    if (yobi3Html.length > 0){
+      htmlTag += `<div class="yobi3">予備選択3</div>\n${yobi3Html}`;
+    }
+
+    if (yobi4Html.length > 0){
+      htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4Html}`;
     }
 
     htmlTag = `\n★●レス数: ${allCount}\n\n${htmlTag}\n●★レス数: ${allCount}`;
