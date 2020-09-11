@@ -510,7 +510,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     let index = 0;
     let currentTab = 0;
     let allCount = 0;
-    let tabNameAndUrl = '';
+    let tabName = '';
+    let tabUrl = '';
 
     for (const tabItem of this.tabs) {
       if (tabItem.originalResList.length > 0) {
@@ -533,11 +534,16 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           replacedName: this.settings.namae_ato,
         });
 
-        if (oneHtmlTag.allHtml.length > 0 || oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
-          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0){
-          tabNameAndUrl += oneHtmlTag.tabNameAndUrl;
+        if (oneHtmlTag.allHtml.length > 0 ){
+          tabName = oneHtmlTag.tabName;
         }
 
+        if (oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
+          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0){
+          tabUrl += oneHtmlTag.tabUrl;
+        }
+
+        htmlTag += tabName;
         htmlTag += oneHtmlTag.allHtml;
         yobi1Html += oneHtmlTag.yobi1Html;
         yobi2Html += oneHtmlTag.yobi2Html;
@@ -551,14 +557,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       index++;
       allCount += tabItem.originalResList.filter(item => item.resSelect !== 'none').length;
     }
-    htmlTag += `\n${tabNameAndUrl}`;
+    htmlTag += `\n${tabUrl}`;
 
     if (yobi1Html.length > 0){
       htmlTag += `<div class="yobi1">予備選択1</div>\n${yobi1Html}`;
     }
 
     if (yobi2Html.length > 0){
-      htmlTag += `<div class="yobi2">予備選択2</div>\n${yobi1Html}`;
+      htmlTag += `<div class="yobi2">予備選択2</div>\n${yobi2Html}`;
     }
 
     if (yobi3Html.length > 0){

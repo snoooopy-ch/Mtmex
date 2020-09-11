@@ -325,11 +325,23 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   btnLoadMultiFiles() {
-    electron.remote.dialog.showOpenDialog(null, {title: 'dat直接読み込み',
-      properties: ['openFile', 'multiSelections'],
-      defaultPath: this.loadDatPath,
-      filters: [{ name: 'すべてのファイル', extensions: ['*'] },
-      { name: 'Datパイル', extensions: ['dat'] }]}).then(async result => {
+    electron.remote.dialog.showOpenDialog(null, 
+      {
+        title: 'dat直接読み込み',
+        properties: ['openFile', 'multiSelections'],
+        defaultPath: this.loadDatPath,
+        filters: [
+          { 
+            name: 'すべてのファイル', extensions: ['*'] 
+          },
+          {
+            name: 'Datファイル', extensions: ['dat'] 
+          },
+          {
+            name: 'Datファイル2', extensions: ['dat', ''] 
+          }
+        ]
+      }).then(async result => {
       if (!result.canceled){
         const remarkRes = this.getHideRes();
         const hideRes = this.getHideRes();

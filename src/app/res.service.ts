@@ -220,8 +220,8 @@ export class ResService {
 
     let htmlTag = ``;
 
-    let title = `★■●${options.tabName}●■★\n`;
-    title += `URL入力欄：${options.txtURL}\n`;
+    let tabName = `★■●${options.tabName}●■★\n`;
+    let tabUrl = `URL入力欄：${options.txtURL}\n`;
 
     let exists = false;
     for (const res of resList){
@@ -267,7 +267,7 @@ export class ResService {
       htmlTag = '';
     }
 
-    return {allHtml: htmlTag, yobi1Html: yobi1, yobi2Html: yobi2, yobi3Html: yobi3, yobi4Html: yobi4, tabNameAndUrl: title };
+    return {allHtml: htmlTag, yobi1Html: yobi1, yobi2Html: yobi2, yobi3Html: yobi3, yobi4Html: yobi4, tabName: tabName,  tabUrl: tabUrl};
   }
 
   async printRes(res: ResItem, options){
