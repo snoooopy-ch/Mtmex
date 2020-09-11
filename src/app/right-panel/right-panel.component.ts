@@ -192,8 +192,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
     const remarkRes = this.getRemarkRes();
     const hideRes = this.getHideRes();
+    this.stop();
     this.resService.loadRes(filePath, this.isResSort, this.isMultiAnchor && this.isResSort, this.isReplaceRes,
       this.isContinuousAnchor && this.isMultiAnchor && this.isResSort, this.notMoveFutureAnchor, remarkRes, hideRes);
+    this.start();
   }
 
   getRemarkRes(){
