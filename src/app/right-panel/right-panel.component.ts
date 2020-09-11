@@ -336,9 +336,6 @@ export class RightPanelComponent implements OnInit, OnDestroy {
           },
           {
             name: 'Datファイル', extensions: ['dat'] 
-          },
-          {
-            name: 'Datファイル2', extensions: ['dat', ''] 
           }
         ]
       }).then(async result => {
