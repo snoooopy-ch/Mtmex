@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
-import { Observable, timer } from 'rxjs';
+import {Observable, Subject, timer} from 'rxjs';
+import {switchMap, takeUntil, repeatWhen} from 'rxjs/operators';
 const electron = (window as any).require('electron');
 
 @Component({
@@ -46,6 +47,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   loadStatusPath: string;
   isReplaceName: boolean;
   isOutputCandiBelow: boolean;
+  private readonly stopTimer = new Subject<void>();
+  private readonly startTimer = new Subject<void>();
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
@@ -62,9 +65,12 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
       if (this.settings.AutoSave){
         const min = Number(this.settings.min);
-        this.timer = timer(2000, min * 60000);
+        this.timer = timer(30000, min * 60000);
         // subscribing to a observable returns a subscription object
-        this.subscribers.statusTimer =  this.timer.subscribe(t => {
+        this.subscribers.statusTimer =  this.timer.pipe(
+          takeUntil(this.stopTimer),
+          repeatWhen(() => this.startTimer)
+        ).subscribe(t => {
           if (this.title !== undefined) {
             this.saveAppStatus(null, false);
           }
@@ -174,6 +180,12 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       defaultDatFolderPath: this.loadDatPath,
       defaultStatusFolderPath: this.loadStatusPath
     });
+  }
+  start(): void {
+    this.startTimer.next();
+  }
+  stop(): void {
+    this.stopTimer.next();
   }
 
   btnLoadSingleFile(filePath) {
@@ -301,8 +313,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       filters: [{ name: '復元パイル', extensions: ['txt'] }]}).then(result => {
       if (!result.canceled){
         if (result.filePaths.length > 0) {
+          this.stop();
           this.loadStatusPath = result.filePaths[0].substr(0, result.filePaths[0].lastIndexOf('\\'));
           this.resService.loadStatus(result.filePaths);
+          this.start();
         }
       }
     });
@@ -318,10 +332,12 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         const remarkRes = this.getHideRes();
         const hideRes = this.getHideRes();
         if (result.filePaths.length > 0) {
+          this.stop();
           this.loadDatPath = result.filePaths[0].substr(0, result.filePaths[0].lastIndexOf('\\'));
           this.resService.loadMultiRes(result.filePaths, this.isResSort, this.isMultiAnchor && this.isResSort,
             this.isReplaceRes, this.isContinuousAnchor && this.isMultiAnchor && this.isResSort,
             this.notMoveFutureAnchor, remarkRes, hideRes);
+          this.start();
         }
       }
     });

@@ -119,7 +119,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isTreeSearch = true;
     this.originalResList = [];
 
-    setTimeout(this.setSaveStatus.bind(this), 30000);
+    setTimeout(this.setSaveStatus.bind(this), 2000);
 
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
