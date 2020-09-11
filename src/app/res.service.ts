@@ -359,7 +359,9 @@ export class ResService {
     let resName = res.name.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     if (options.isReplaceName){
       const re = new RegExp(options.replaceName.replace(/,/g, '|'), 'gi');
-      resName = resName.replace(re, options.replacedName);
+      if (re.test(resName)) {
+        resName = options.replacedName;
+      }
     }
     const resDate = res.date.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
     const resId = res.id.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
