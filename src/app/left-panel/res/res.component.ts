@@ -233,6 +233,25 @@ export class ResComponent implements OnInit {
     $('a.res-img-link').click((event) => {
       event.stopPropagation();
     });
+
+    const xOffset = 150;
+    const yOffset = 40;
+    const imgPop = $('#preview img');
+    $('a.res-img-link').hover(function(e) {
+      this.t = this.href;
+      this.title = '';
+      imgPop.attr('src', this.href);
+      const c = (this.t !== '') ? '<br/>' + this.t : '';
+      $('#preview').css('display', 'block');
+      $('#preview')
+        .css('top', (e.pageY - xOffset) + 'px')
+        .css('left', (e.pageX + yOffset) + 'px')
+        .fadeIn('slow');
+    }, function() {
+      this.title = this.t;
+      $('#preview').css('display', 'none');
+    });
+
   }
 
   cancelEditHandler(event) {
