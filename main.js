@@ -932,10 +932,10 @@ function saveStatus(saveData) {
       }
     } else {
       if (showMessage) {
-        // dialog.showErrorBox('保存', '保存に成功しました。');
         console.log('保存に成功しました。');
       } else {
-        console.log('自動保存に成功しました。');
+        let now = new Date();
+        console.log(now.toString(), '自動保存に成功しました。');
       }
     }
   });
