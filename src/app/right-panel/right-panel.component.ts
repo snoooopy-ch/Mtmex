@@ -52,6 +52,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
+    this.isReplaceName = true;
   }
 
   ngOnInit(): void {
