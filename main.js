@@ -29,7 +29,7 @@ function createWindow() {
     minWidth: 1238,
     title: 'スレ編集',
     backgroundColor: '#ffffff',
-    icon: `file://${__dirname}/dist/assets/logo.png`,
+    icon: `${__dirname}\\src\\assets\\yellow_circle.png`,
     webPreferences: {
       nodeIntegration: true
     }
@@ -260,6 +260,7 @@ function getResList(filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuo
     resList.push(readLines(remaining));
   }
   adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
+
   if (loadedTitles.indexOf(sreTitle) !== -1) {
     let response = dialog.showMessageBoxSync(win, {
       buttons: ["Yes", "No"],
@@ -953,7 +954,8 @@ function loadStatus(filePaths) {
         return
       }
       try {
-        const loadData = JSON.parse(jsonString)
+        const loadData = JSON.parse(jsonString);
+        loadedTitles.push(loadData.title);
         win.webContents.send("getStatus", {data: loadData});
       } catch (err) {
         console.log('Error parsing JSON string:', err)

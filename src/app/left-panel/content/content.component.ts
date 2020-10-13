@@ -6,13 +6,13 @@ import {
   OnInit, Output,
   ViewChild
 } from '@angular/core';
-import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ResItem} from '../../models/res-item';
-import {ResService} from '../../res.service';
+import { CdkDragDrop, CdkDragStart, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ResItem } from '../../models/res-item';
+import { ResService } from '../../res.service';
 import { normal } from 'color-blend';
-import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
-import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
-import {Hotkey, HotkeysService} from 'angular2-hotkeys';
+import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
+import { MatButtonToggle, MatButtonToggleChange } from '@angular/material/button-toggle';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 
 declare var jQuery: any;
@@ -28,7 +28,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() tabName = 'New Tab';
   @Input() resList: ResItem[];
   @Input() tabIndex;
-  hiddenIds: string [];
+  hiddenIds: string[];
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
   @ViewChild('btnSearchStatus') btnSearchStatus: MatButtonToggle;
@@ -124,35 +124,35 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
 
-      for (const res of this.resList){
+      for (const res of this.resList) {
         res.isShow = this.hiddenIds.indexOf(res.id) === -1;
       }
       this.cdRef.detectChanges();
     });
 
     this.subscribers.moveRes = this.resService.moveRes.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex){
+      if (value.tabIndex === this.tabIndex) {
         this.moveScroller(value.moveKind);
       }
     });
 
     this.subscribers.selectCommand = this.resService.selectCommand.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex && value.token){
+      if (value.tabIndex === this.tabIndex && value.token) {
         this.multiSelection(value.command);
         value.token = false;
       }
     });
 
     this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex){
+      if (value.tabIndex === this.tabIndex) {
         this.tabIndex = value.tabIndex;
         this.setHotKeys();
       }
     });
 
-    this.subscribers.printCommand =  this.resService.printCommand.subscribe((value) => {
-      if (value.tabIndex === this.tabIndex && value.token){
-        this.printHtmlTag(value.isReplaceName);
+    this.subscribers.printCommand = this.resService.printCommand.subscribe((value) => {
+      if (value.tabIndex === this.tabIndex && value.token) {
+        this.printHtmlTag(value.isReplaceName, value.isSurroundImage);
       }
     });
 
@@ -165,36 +165,36 @@ export class ContentComponent implements OnInit, OnDestroy {
           saveData.filePath = `${value.autoFilePath}${this.tabName}.txt`;
         }
         let saveResList = [];
-        if (this.btnSearchStatus.checked || this.btnNotice.checked  || this.isSelectRes){
+        if (this.btnSearchStatus.checked || this.btnNotice.checked || this.isSelectRes) {
           saveResList = this.originalResList;
-        }else{
+        } else {
           saveResList = this.resList;
         }
-        for (const res of saveResList){
+        for (const res of saveResList) {
           const resItem = Object.assign({}, res);
           resItem.resColor = this.characterColors.indexOf(res.resColor) === -1 ? 0 : this.characterColors.indexOf(res.resColor) + 1;
 
-          if (this.resSizeList[0].value === res.resFontSize){
+          if (this.resSizeList[0].value === res.resFontSize) {
             resItem.resFontSize = '1';
-          }else if (this.resSizeList[1].value === res.resFontSize){
+          } else if (this.resSizeList[1].value === res.resFontSize) {
             resItem.resFontSize = '2';
-          }else if (this.resSizeList[2].value === res.resFontSize){
+          } else if (this.resSizeList[2].value === res.resFontSize) {
             resItem.resFontSize = '3';
           }
           resItem.resBackgroundColor = this.backgroundColors.indexOf(res.resBackgroundColor) === -1 ? 0 :
             this.backgroundColors.indexOf(res.resBackgroundColor);
           resItem.resHovergroundColor = this.hovergroundColors.indexOf(res.resHovergroundColor) === -1 ? 0 :
             this.hovergroundColors.indexOf(res.resHovergroundColor);
-          if (this.idStyles[0].color === res.idColor){
+          if (this.idStyles[0].color === res.idColor) {
             resItem.idColor = '0';
             resItem.idBackgroundColor = '0';
-          } else if (this.idStyles[1].color === res.idColor){
+          } else if (this.idStyles[1].color === res.idColor) {
             resItem.idColor = '1';
             resItem.idBackgroundColor = '1';
-          }else if (this.idStyles[2].color === res.idColor){
+          } else if (this.idStyles[2].color === res.idColor) {
             resItem.idColor = '2';
             resItem.idBackgroundColor = '2';
-          }else if (this.idStyles[3].color === res.idColor){
+          } else if (this.idStyles[3].color === res.idColor) {
             resItem.idColor = '3';
             resItem.idBackgroundColor = '3';
           }
@@ -213,12 +213,11 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
-        // this.txtURL = value.data.txtUrl;
-        // if (this.resList !== undefined) {
-        //   this.virtualScroller.scrollToIndex(value.data.scrollIndex);
-        //   this.changeStatus();
-        //   this.cdRef.detectChanges();
-        // }
+        this.selectCount = value.data.selectCount;
+        this.candi1Count = value.data.candi1Count;
+        this.candi2Count = value.data.candi2Count;
+        this.candi3Count = value.data.candi3Count;
+        this.candi4Count = value.data.candi4Count;
       }
     });
 
@@ -244,7 +243,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   /**
    * Unsubscribe the completed service subscribers
    */
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscribers.LoadHiddenIds.unsubscribe();
     this.subscribers.moveRes.unsubscribe();
     this.subscribers.selectCommand.unsubscribe();
@@ -256,24 +255,29 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.sortRes.unsubscribe();
     this.resList.length = 0;
 
-    if (this.originalResList !== undefined){
+    if (this.originalResList !== undefined) {
       this.originalResList.length = 0;
     }
   }
 
-  setSaveStatus(){
+  setSaveStatus() {
     this.isSaveStatus = true;
     this.cdRef.detectChanges();
   }
   /**
    * ショートカットキー値を設定します。
    */
-  setHotKeys(){
+  setHotKeys() {
     // 選択ボタン
     if (this.subHotKeys.hasOwnProperty('sentaku_no1')) {
       this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_no1,
-        this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
-        this.selectHoveredRes(true);
+      this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
+        this.reverseHoveredRes(true);
+        return false;
+      }));
+
+      this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_off1, this.subHotKeys.sentaku_off2], (event: KeyboardEvent): boolean => {
+        this.deSelectHoveredRes(true);
         return false;
       }));
 
@@ -283,11 +287,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi1') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              {selected: 'none'});
+              { selected: 'none' });
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[2];
             this.selectedRes(this.resList[this.hovered],
-              {selected: 'candi1'});
+              { selected: 'candi1' });
           }
         }
         return false;
@@ -299,11 +303,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi2') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none'});
+              { selected: 'none' });
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'candi2'});
+              { selected: 'candi2' });
           }
         }
         return false;
@@ -315,11 +319,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi3') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none'});
+              { selected: 'none' });
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[4];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'candi3'});
+              { selected: 'candi3' });
           }
         }
         return false;
@@ -331,11 +335,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi4') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none'});
+              { selected: 'none' });
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[5];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'candi4'});
+              { selected: 'candi4' });
           }
         }
         return false;
@@ -488,7 +492,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー選択（T選択）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_sentaku, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, {select: 1, resBackgroundColor: this.backgroundColors[1]});
+          this.selectedTreeRes(this.hovered, { select: 1, resBackgroundColor: this.backgroundColors[1] });
           this.cdRef.detectChanges();
         }
         return false; // Prevent bubbling
@@ -497,7 +501,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択1（T1）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, {select: 2, resBackgroundColor: this.backgroundColors[2]});
+          this.selectedTreeRes(this.hovered, { select: 2, resBackgroundColor: this.backgroundColors[2] });
           this.cdRef.detectChanges();
         }
         return false;
@@ -506,7 +510,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択2（T2）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, {select: 3, resBackgroundColor: this.backgroundColors[3]});
+          this.selectedTreeRes(this.hovered, { select: 3, resBackgroundColor: this.backgroundColors[3] });
           this.cdRef.detectChanges();
         }
         return false;
@@ -515,7 +519,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択3（T3）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi3, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, {select: 4, resBackgroundColor: this.backgroundColors[4]});
+          this.selectedTreeRes(this.hovered, { select: 4, resBackgroundColor: this.backgroundColors[4] });
           this.cdRef.detectChanges();
         }
         return false;
@@ -524,7 +528,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択4（T4）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi4, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, {select: 5, resBackgroundColor: this.backgroundColors[5]});
+          this.selectedTreeRes(this.hovered, { select: 5, resBackgroundColor: this.backgroundColors[5] });
           this.cdRef.detectChanges();
         }
         return false;
@@ -533,7 +537,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー解除（T解除）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_kaijo, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, {select: 0, resBackgroundColor: this.backgroundColors[0]});
+          this.selectedTreeRes(this.hovered, { select: 0, resBackgroundColor: this.backgroundColors[0] });
           this.cdRef.detectChanges();
         }
         return false;
@@ -543,7 +547,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: true,
+            {
+              isSelect: true,
               idColor: this.idStyles[1].color,
               idBackgroundColor: this.idStyles[1].background,
               resBackgroundColor: this.backgroundColors[1],
@@ -558,7 +563,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: true,
+            {
+              isSelect: true,
               idColor: this.idStyles[2].color,
               idBackgroundColor: this.idStyles[2].background,
               resBackgroundColor: this.backgroundColors[1],
@@ -573,7 +579,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id3, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: true,
+            {
+              isSelect: true,
               idColor: this.idStyles[3].color,
               idBackgroundColor: this.idStyles[3].background,
               resBackgroundColor: this.backgroundColors[1],
@@ -588,7 +595,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id4, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: true,
+            {
+              isSelect: true,
               idColor: this.idStyles[4].color,
               idBackgroundColor: this.idStyles[4].background,
               resBackgroundColor: this.backgroundColors[1],
@@ -603,7 +611,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: false,
+            {
+              isSelect: false,
               idColor: this.idStyles[1].color,
               idBackgroundColor: this.idStyles[1].background,
               idClassNoSelect: this.idStyles[1].classNoSelect
@@ -617,7 +626,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: false,
+            {
+              isSelect: false,
               idColor: this.idStyles[2].color,
               idBackgroundColor: this.idStyles[2].background,
               idClassNoSelect: this.idStyles[2].classNoSelect
@@ -631,7 +641,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro3, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: false,
+            {
+              isSelect: false,
               idColor: this.idStyles[3].color,
               idBackgroundColor: this.idStyles[3].background,
               idClassNoSelect: this.idStyles[3].classNoSelect
@@ -645,7 +656,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_iro4, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: false,
+            {
+              isSelect: false,
               idColor: this.idStyles[4].color,
               idBackgroundColor: this.idStyles[4].background,
               idClassNoSelect: this.idStyles[4].classNoSelect
@@ -667,7 +679,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.id_irokesi, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: false,
+            {
+              isSelect: false,
               idColor: this.idStyles[0].color,
               idBackgroundColor: this.idStyles[0].background,
               resBackgroundColor: this.backgroundColors[0],
@@ -683,7 +696,8 @@ export class ContentComponent implements OnInit, OnDestroy {
         if (this.hovered >= 0) {
           this.cancelSelectedIdRes(this.resList[this.hovered].id, event);
           this.selectedId(this.resList[this.hovered].id,
-            { isSelect: false,
+            {
+              isSelect: false,
               idColor: this.idStyles[0].color,
               idBackgroundColor: this.idStyles[0].background,
               resBackgroundColor: this.backgroundColors[0],
@@ -722,9 +736,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       // メニューの開閉
       this.hotkeysService.add(new Hotkey(this.subHotKeys.menu_kaihei, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          if (this.resList[this.hovered].isMenuOpen === undefined){
+          if (this.resList[this.hovered].isMenuOpen === undefined) {
             this.resList[this.hovered].isMenuOpen = true;
-          }else{
+          } else {
             this.resList[this.hovered].isMenuOpen = !this.resList[this.hovered].isMenuOpen;
           }
           this.cdRef.detectChanges();
@@ -794,9 +808,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       // レス描写エリアの一番上に移動
       this.hotkeysService.add(new Hotkey(['ctrl+home', this.subHotKeys.res_area_move_top],
         (event: KeyboardEvent): boolean => {
-        this.moveScroller('top');
-        return false; // Prevent bubbling
-      }));
+          this.moveScroller('top');
+          return false; // Prevent bubbling
+        }));
 
       // レス描写エリアの一番下に移動
       this.hotkeysService.add(new Hotkey(['ctrl+end', this.subHotKeys.res_area_move_bottom], (event: KeyboardEvent): boolean => {
@@ -867,7 +881,7 @@ export class ContentComponent implements OnInit, OnDestroy {
    * Move the scroll of res list
    * @param moveKind: 'top', 'bottom', 'selected-top', 'selected-bottom'
    */
-  moveScroller(moveKind: string){
+  moveScroller(moveKind: string) {
 
     switch (moveKind) {
       case 'top':
@@ -880,12 +894,12 @@ export class ContentComponent implements OnInit, OnDestroy {
         break;
       case 'selected-top':
         let index = 0;
-        for (const item of this.resList){
+        for (const item of this.resList) {
           if (item.resSelect === 'select'
             || (item.resSelect === 'candi1' && this.moveOption.sentaku_idou1)
             || (item.resSelect === 'candi2' && this.moveOption.sentaku_idou2)
             || (item.resSelect === 'candi3' && this.moveOption.sentaku_idou3)
-            || (item.resSelect === 'candi4' && this.moveOption.sentaku_idou4)){
+            || (item.resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
             this.virtualScroller.scrollToIndex(index);
             this.currentScrollIndex = index;
             break;
@@ -910,7 +924,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         break;
       case 'selected-prev':
-        if (this.virtualScroller.viewPortInfo.startIndex  >= 0) {
+        if (this.virtualScroller.viewPortInfo.startIndex >= 0) {
           for (let i = this.virtualScroller.viewPortInfo.startIndex - 1; i >= 0; i--) {
             if (this.resList[i].resSelect === 'select'
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
@@ -926,9 +940,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         break;
       case 'selected-next':
         let curIndex;
-        if (this.currentScrollIndex - 1 === this.virtualScroller.viewPortInfo.startIndex){
+        if (this.currentScrollIndex - 1 === this.virtualScroller.viewPortInfo.startIndex) {
           curIndex = this.currentScrollIndex + 1;
-        }else{
+        } else {
           curIndex = this.virtualScroller.viewPortInfo.startIndex + 1;
         }
 
@@ -1006,7 +1020,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   moveUpRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index - 1);
-    if (this.originalResList !== undefined){
+    if (this.originalResList !== undefined) {
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, indexOrigin - 1);
     }
@@ -1019,7 +1033,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   moveDownRes(item: any) {
     const index = this.resList.indexOf(item);
     moveItemInArray(this.resList, index, index + 1);
-    if (this.originalResList !== undefined){
+    if (this.originalResList !== undefined) {
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, indexOrigin + 1);
     }
@@ -1033,7 +1047,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     const index = this.resList.indexOf(item);
     const startIndex = this.virtualScroller.viewPortInfo.startIndex + 1;
     moveItemInArray(this.resList, index, 0);
-    if (this.originalResList !== undefined){
+    if (this.originalResList !== undefined) {
       const indexOrigin = this.originalResList.indexOf(item);
       moveItemInArray(this.originalResList, indexOrigin, 0);
     }
@@ -1050,7 +1064,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     const startIndex = this.virtualScroller.viewPortInfo.startIndex;
     this.resList.splice(index, 1);
     this.resList.push(tmpRes);
-    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes){
+    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes) {
       const indexOrigin = this.originalResList.indexOf(item);
       this.originalResList.splice(indexOrigin, 1);
       this.originalResList = [...this.originalResList, tmpRes];
@@ -1074,8 +1088,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   cancelSelectedIdRes(id: any, $event: any) {
-    for (const res of this.resList){
-      if (res.id === id && res.resSelect !== 'none'){
+    for (const res of this.resList) {
+      if (res.id === id && res.resSelect !== 'none') {
         res.resBackgroundColor = this.backgroundColors[0];
         res.resSelect = 'none';
       }
@@ -1083,7 +1097,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.changeStatus();
   }
 
-  changeStatus(){
+  changeStatus() {
     this.selectCount = this.resList.filter(item => item.resSelect === 'select').length;
     this.candi1Count = this.resList.filter(item => item.resSelect === 'candi1').length;
     this.candi2Count = this.resList.filter(item => item.resSelect === 'candi2').length;
@@ -1104,8 +1118,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   selectedId(id: any, $event: any) {
-    for (const res of this.resList){
-      if (res.id === id){
+    for (const res of this.resList) {
+      if (res.id === id) {
         res.idBackgroundColor = $event.idBackgroundColor;
         res.idColor = $event.idColor;
         res.idClassNoSelect = $event.idClassNoSelect;
@@ -1124,7 +1138,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.resList[index].resSelect = selectKeys[$event.select];
       this.resList[index].resBackgroundColor = $event.resBackgroundColor;
       // this.calcSelectedRes($event.select, this.resList[index]);
-      if (this.resList[index].isAdded){
+      if (this.resList[index].isAdded) {
         let i = index;
         do {
           i--;
@@ -1134,13 +1148,13 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         while (this.resList[i].isAdded && i > -1);
         i = index + 1;
-        while (this.resList[i].isAdded && i < this.resList.length){
+        while (this.resList[i].isAdded && i < this.resList.length) {
           this.resList[i].resSelect = selectKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
           // this.calcSelectedRes($event.select, this.resList[i]);
           i++;
         }
-      }else if (this.resList[index + 1]) {
+      } else if (this.resList[index + 1]) {
         for (let i = index + 1; i < this.resList.length; i++) {
           if (!this.resList[i].isAdded) {
             break;
@@ -1151,7 +1165,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }
 
-    }else{
+    } else {
       this.resList[index].resSelect = selectKeys[$event.select];
       this.resList[index].resBackgroundColor = $event.resBackgroundColor;
     }
@@ -1185,17 +1199,17 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   setDraggable(index: number, $event: any) {
-    if ($event){
+    if ($event) {
       this.draggable = index;
-    }else{
+    } else {
       this.draggable = -1;
     }
   }
 
-  multiSelection(command: string){
+  multiSelection(command: string) {
 
     // for (let i = this.virtualScroller.viewPortInfo.startIndex; i <= this.virtualScroller.viewPortInfo.endIndex; i++){
-    for (const res of this.resList){
+    for (const res of this.resList) {
       if (res.isShow) {
         switch (command) {
           case 'select':
@@ -1293,8 +1307,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     // });
   }
 
-  clearSearchStatus(resList: ResItem[]){
-    for (const res of this.resList){
+  clearSearchStatus(resList: ResItem[]) {
+    for (const res of this.resList) {
       res.content = res.content.replace(/(<span[^<]+>)/ig, '');
       res.content = res.content.replace(/<\/span>/ig, '');
       res.numBackground = 'transparent';
@@ -1307,7 +1321,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  cancelSearchResText(){
+  cancelSearchResText() {
     this.clearSearchStatus(this.resList);
     this.clearSearchStatus(this.originalResList);
     this.startInRes = 0;
@@ -1315,14 +1329,14 @@ export class ContentComponent implements OnInit, OnDestroy {
     // this.isChangedSearch = true;
   }
 
-  searchResText(isOnlySearch){
+  searchResText(isOnlySearch) {
     const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
-    if (this.searchList.indexOf(this.searchKeyword.trim()) === -1){
-      if (this.searchList.length >= this.searchWordMax){
+    if (this.searchList.indexOf(this.searchKeyword.trim()) === -1) {
+      if (this.searchList.length >= this.searchWordMax) {
         this.searchList.splice(this.searchList.length - 1, 1);
       }
       this.searchList.splice(0, 0, this.searchKeyword.trim());
-    }else{
+    } else {
       const searchIndex = this.searchList.indexOf(this.searchKeyword.trim());
       moveItemInArray(this.searchList, searchIndex, 0);
     }
@@ -1334,27 +1348,27 @@ export class ContentComponent implements OnInit, OnDestroy {
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
 
-    if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length){
+    if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length) {
       this.resList = [...this.originalResList];
     }
 
-    if (this.btnNotice.checked){
+    if (this.btnNotice.checked) {
       this.resList = this.getNoticeRes(this.resList);
     }
 
-    if (this.isSelectRes){
+    if (this.isSelectRes) {
       this.resList = this.getSelectedRes(this.resList);
     }
 
-    for (let i = 0; i < this.resList.length; i++){
+    for (let i = 0; i < this.resList.length; i++) {
       this.resList[i].originalIndex = i;
-      if (this.searchOption === 'num'){
-        if (re.test(String(this.resList[i].num))){
+      if (this.searchOption === 'num') {
+        if (re.test(String(this.resList[i].num))) {
           // this.resList[i].num = this.resList[i].num.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
           this.resList[i].isSearched = true;
           this.resList[i].numBackground = this.hitColor;
         }
-      }else {
+      } else {
         if (this.resList[i].content.match(re) !== null) {
           this.resList[i].content = this.resList[i].content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
           this.resList[i].isSearched = true;
@@ -1373,11 +1387,11 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isChangedSearch = false;
   }
 
-  getAbstractRes(tmpResList: ResItem[]){
+  getAbstractRes(tmpResList: ResItem[]) {
     let result = [];
 
     for (let i = 0; i < tmpResList.length; i++) {
-      if (tmpResList[i].isSearched){
+      if (tmpResList[i].isSearched) {
         tmpResList[i].isFiltered = true;
         if (this.isTreeSearch) {
           if (tmpResList[i].isAdded) {
@@ -1407,7 +1421,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }
     }
-    for (const res of tmpResList){
+    for (const res of tmpResList) {
       if (res.isFiltered) {
         result = [...result, res];
       }
@@ -1415,8 +1429,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  abstractRes(){
-    if ((!this.btnNotice.checked && !this.isSelectRes && this.isBackup) || this.originalResList === undefined){
+  abstractRes() {
+    if ((!this.btnNotice.checked && !this.isSelectRes && this.isBackup) || this.originalResList === undefined) {
       this.originalResList = [...this.resList];
       this.changeListEmitter.emit({
         tabIndex: this.tabIndex,
@@ -1426,11 +1440,11 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
     let tmpResList = [...this.originalResList];
 
-    if (this.btnNotice.checked){
+    if (this.btnNotice.checked) {
       tmpResList = this.getNoticeRes(tmpResList);
     }
 
-    if (this.isSelectRes){
+    if (this.isSelectRes) {
       tmpResList = this.getSelectedRes(tmpResList);
     }
 
@@ -1449,23 +1463,23 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnSearchChangeHandler() {
-    if (this.btnSearchStatus.checked){
+    if (this.btnSearchStatus.checked) {
       if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
         this.btnSearchStatus.checked = false;
-      }else{
+      } else {
         this.cancelSearchResText();
         this.searchResText(false);
         this.abstractRes();
       }
-    }else{
+    } else {
       this.isBackup = true;
       let tmpResList = [...this.originalResList];
 
-      if (this.btnNotice.checked){
+      if (this.btnNotice.checked) {
         tmpResList = this.getNoticeRes(tmpResList);
       }
 
-      if (this.isSelectRes){
+      if (this.isSelectRes) {
         tmpResList = this.getSelectedRes(tmpResList);
       }
       this.resList = tmpResList;
@@ -1494,9 +1508,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.virtualScroller.scrollToIndex(0);
   }
 
-  getNoticeRes(tmpResList: ResItem[]){
+  getNoticeRes(tmpResList: ResItem[]) {
     let result = [];
-    for (const res of tmpResList){
+    for (const res of tmpResList) {
       if (res.isNotice) {
         result = [...result, res];
       }
@@ -1505,8 +1519,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnNoticeChangeHandler() {
-    if (this.btnNotice.checked){
-      if ((!this.btnSearchStatus.checked && !this.isSelectRes) || this.originalResList === undefined){
+    if (this.btnNotice.checked) {
+      if ((!this.btnSearchStatus.checked && !this.isSelectRes) || this.originalResList === undefined) {
         this.originalResList = [...this.resList];
         this.changeListEmitter.emit({
           tabIndex: this.tabIndex,
@@ -1515,11 +1529,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
       let tmpResList = [...this.originalResList];
 
-      if (this.btnSearchStatus.checked){
+      if (this.btnSearchStatus.checked) {
         tmpResList = this.getAbstractRes(tmpResList);
       }
 
-      if (this.isSelectRes){
+      if (this.isSelectRes) {
         tmpResList = this.getSelectedRes(tmpResList);
       }
 
@@ -1536,13 +1550,13 @@ export class ContentComponent implements OnInit, OnDestroy {
         statusToken: true
       });
 
-    }else{
+    } else {
 
       let tmpResList = [...this.originalResList];
-      if (this.btnSearchStatus.checked){
+      if (this.btnSearchStatus.checked) {
         tmpResList = this.getAbstractRes(tmpResList);
       }
-      if (this.isSelectRes){
+      if (this.isSelectRes) {
         tmpResList = this.getSelectedRes(tmpResList);
       }
 
@@ -1559,42 +1573,42 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   txtSearchKeyUpHandler($event: KeyboardEvent) {
-    if (this.searchOption === undefined){
+    if (this.searchOption === undefined) {
       return;
     }
-    if (this.isKeyPressed && $event.shiftKey && $event.code === 'Tab'){
+    if (this.isKeyPressed && $event.shiftKey && $event.code === 'Tab') {
       this.isKeyPressed = false;
       this.btnTreeSearch.nativeElement.focus();
       return;
-    } else if (this.isKeyPressed && $event.code === 'Tab'){
+    } else if (this.isKeyPressed && $event.code === 'Tab') {
       this.isKeyPressed = false;
       this.btnSearch.nativeElement.focus();
       return;
-    } else if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter'){
+    } else if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter') {
       this.btnSearchStatus.checked = !this.btnSearchStatus.checked;
       this.btnSearchChangeHandler();
-    } else if ($event.shiftKey && $event.code === 'Enter'){
+    } else if ($event.shiftKey && $event.code === 'Enter') {
       this.isChangedSearch = false;
 
-      if (this.searchOption === 'num'){
+      if (this.searchOption === 'num') {
         let currentHit = 0;
         let isExist = false;
-        for (let i = 0; i < this.resList.length; i++){
-          if (this.resList[i].numBackground === this.highLightColor){
+        for (let i = 0; i < this.resList.length; i++) {
+          if (this.resList[i].numBackground === this.highLightColor) {
             currentHit = i - 1;
             break;
           }
         }
-        for (let i = currentHit; i >= 0; i--){
-          if (this.resList[i].numBackground === this.hitColor){
+        for (let i = currentHit; i >= 0; i--) {
+          if (this.resList[i].numBackground === this.hitColor) {
             this.searchedRes = i;
             isExist = true;
             break;
           }
         }
         if (isExist) {
-          for (const res of this.resList){
-            if (res.numBackground === this.highLightColor){
+          for (const res of this.resList) {
+            if (res.numBackground === this.highLightColor) {
               res.numBackground = this.hitColor;
               break;
             }
@@ -1602,10 +1616,10 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.resList[this.searchedRes].numBackground = this.highLightColor;
           this.virtualScroller.scrollToIndex(this.searchedRes);
         }
-      }else if (this.searchOption === 'context'){
+      } else if (this.searchOption === 'context') {
         let isExist = false;
         while (true) {
-          if (this.searchedRes > this.resList.length - 1){
+          if (this.searchedRes > this.resList.length - 1) {
             this.searchedRes = this.resList.length - 1;
           }
           if (this.searchedRes < 0) {
@@ -1620,19 +1634,19 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.startInRes--;
           if (this.startInRes < 0) {
             this.searchedRes--;
-            if (this.searchedRes >= 0){
+            if (this.searchedRes >= 0) {
               this.startInRes = this.resList[this.searchedRes].content.length - 1;
             }
           }
         }
-        if (isExist){
-          for (const res of this.resList){
+        if (isExist) {
+          for (const res of this.resList) {
             res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
           }
           const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
           this.resList[this.searchedRes].content = this.resList[this.searchedRes].content.replace(re, (match, offset) => {
             let result = match;
-            if (this.startInRes === offset){
+            if (this.startInRes === offset) {
               result = `<span style="background-color: ${this.highLightColor};">`;
             }
             return result;
@@ -1640,23 +1654,23 @@ export class ContentComponent implements OnInit, OnDestroy {
           // this.startInRes -= `<span style="background-color: ${this.highLightColor};">`.length;
           this.virtualScroller.scrollToIndex(this.searchedRes);
         }
-      }else {
+      } else {
         let isExist = false;
         while (true) {
-          if (this.searchedRes > this.resList.length - 1){
+          if (this.searchedRes > this.resList.length - 1) {
             this.searchedRes = this.resList.length - 1;
           }
           if (this.searchedRes < 0) {
             break;
           }
 
-          if (this.searchedFiled === 0){
+          if (this.searchedFiled === 0) {
             this.startInRes = this.resList[this.searchedRes].name.lastIndexOf(`<span style="background-color: ${this.hitColor};">`,
               this.startInRes);
-          }else if (this.searchedFiled === 1){
+          } else if (this.searchedFiled === 1) {
             this.startInRes = this.resList[this.searchedRes].id.lastIndexOf(`<span style="background-color: ${this.hitColor};">`,
               this.startInRes);
-          }else {
+          } else {
             this.startInRes = this.resList[this.searchedRes].content.lastIndexOf(`<span style="background-color: ${this.hitColor};">`,
               this.startInRes);
           }
@@ -1667,42 +1681,42 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.startInRes--;
           if (this.startInRes < 0) {
             this.searchedFiled--;
-            if (this.searchedFiled < 0){
+            if (this.searchedFiled < 0) {
               this.searchedFiled = 2;
               this.searchedRes--;
             }
-            if (this.searchedRes >= 0){
+            if (this.searchedRes >= 0) {
               if (this.searchedFiled === 0) {
                 this.startInRes = this.resList[this.searchedRes].name.length - 1;
-              }else if (this.searchedFiled === 1){
+              } else if (this.searchedFiled === 1) {
                 this.startInRes = this.resList[this.searchedRes].id.length - 1;
-              }else {
+              } else {
                 this.startInRes = this.resList[this.searchedRes].content.length - 1;
               }
             }
           }
         }
 
-        if (isExist){
-          for (const res of this.resList){
+        if (isExist) {
+          for (const res of this.resList) {
             res.name = res.name.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
             res.id = res.id.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
             res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
           }
-          if (this.searchedFiled === 0){
+          if (this.searchedFiled === 0) {
             this.resList[this.searchedRes].name = this.getHitContent(this.resList[this.searchedRes].name);
-          }else if (this.searchedFiled === 1){
+          } else if (this.searchedFiled === 1) {
             this.resList[this.searchedRes].id = this.getHitContent(this.resList[this.searchedRes].id);
-          }else {
+          } else {
             this.resList[this.searchedRes].content = this.getHitContent(this.resList[this.searchedRes].content);
           }
           // this.startInRes -= `<span style="background-color: ${this.highLightColor};">`.length;
           this.virtualScroller.scrollToIndex(this.searchedRes);
         }
       }
-    } else if ($event.code === 'Enter'){
+    } else if ($event.code === 'Enter') {
       if (this.isChangedSearch) {
-        if (this.searchKeyword === undefined){
+        if (this.searchKeyword === undefined) {
           return;
         }
         if (this.searchKeyword.match(/^\s+$/g) !== null || this.searchKeyword.length === 0) {
@@ -1711,26 +1725,26 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.cancelSearchResText();
           this.searchResText(true);
         }
-      }else{
-        if (this.searchOption === 'num'){
+      } else {
+        if (this.searchOption === 'num') {
           let currentHit = 0;
           let isExist = false;
-          for (let i = 0; i < this.resList.length; i++){
-            if (this.resList[i].numBackground === this.highLightColor){
+          for (let i = 0; i < this.resList.length; i++) {
+            if (this.resList[i].numBackground === this.highLightColor) {
               currentHit = i + 1;
               break;
             }
           }
-          for (let i = currentHit; i < this.resList.length; i++){
-            if (this.resList[i].numBackground === this.hitColor){
+          for (let i = currentHit; i < this.resList.length; i++) {
+            if (this.resList[i].numBackground === this.hitColor) {
               this.searchedRes = i;
               isExist = true;
               break;
             }
           }
           if (isExist) {
-            for (const res of this.resList){
-              if (res.numBackground === this.highLightColor){
+            for (const res of this.resList) {
+              if (res.numBackground === this.highLightColor) {
                 res.numBackground = this.hitColor;
                 break;
               }
@@ -1738,7 +1752,7 @@ export class ContentComponent implements OnInit, OnDestroy {
             this.resList[this.searchedRes].numBackground = this.highLightColor;
             this.virtualScroller.scrollToIndex(this.searchedRes);
           }
-        } else if (this.searchOption === 'context'){
+        } else if (this.searchOption === 'context') {
           let isExist = false;
           while (true) {
             if (this.searchedRes < 0) {
@@ -1793,13 +1807,13 @@ export class ContentComponent implements OnInit, OnDestroy {
               break;
             }
 
-            if (this.searchedFiled === 0){
+            if (this.searchedFiled === 0) {
               this.startInRes = this.resList[this.searchedRes].name.indexOf(`<span style="background-color: ${this.hitColor};">`,
                 this.startInRes);
-            }else if (this.searchedFiled === 1){
+            } else if (this.searchedFiled === 1) {
               this.startInRes = this.resList[this.searchedRes].id.indexOf(`<span style="background-color: ${this.hitColor};">`,
                 this.startInRes);
-            }else {
+            } else {
               this.startInRes = this.resList[this.searchedRes].content.indexOf(`<span style="background-color: ${this.hitColor};">`,
                 this.startInRes);
             }
@@ -1812,7 +1826,7 @@ export class ContentComponent implements OnInit, OnDestroy {
             if (this.startInRes === -1) {
               this.startInRes = 0;
               this.searchedFiled++;
-              if (this.searchedFiled > 2){
+              if (this.searchedFiled > 2) {
                 this.searchedFiled = 0;
                 this.searchedRes++;
               }
@@ -1824,11 +1838,11 @@ export class ContentComponent implements OnInit, OnDestroy {
               res.id = res.id.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
               res.content = res.content.replace(`<span style="background-color: ${this.highLightColor};">`, `<span style="background-color: ${this.hitColor};">`);
             }
-            if (this.searchedFiled === 0){
+            if (this.searchedFiled === 0) {
               this.resList[this.searchedRes].name = this.getHitContent(this.resList[this.searchedRes].name);
-            }else if (this.searchedFiled === 1){
+            } else if (this.searchedFiled === 1) {
               this.resList[this.searchedRes].id = this.getHitContent(this.resList[this.searchedRes].id);
-            }else {
+            } else {
               this.resList[this.searchedRes].content = this.getHitContent(this.resList[this.searchedRes].content);
             }
 
@@ -1837,7 +1851,7 @@ export class ContentComponent implements OnInit, OnDestroy {
           }
         }
       }
-    }else{
+    } else {
       // console.log(this.searchKeyword);
       // this.searchStatusEmitter.emit({
       //   searchKeyword: this.searchKeyword,
@@ -1846,7 +1860,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getHitContent(content: string){
+  private getHitContent(content: string) {
     const re = new RegExp(`<span style="background-color: ${this.hitColor};">`, 'gi');
     content = content.replace(re, (match, offset) => {
       let result = match;
@@ -1858,14 +1872,14 @@ export class ContentComponent implements OnInit, OnDestroy {
     return content;
   }
 
-  private async printHtmlTag(pIsReplaceName) {
+  private async printHtmlTag(pIsReplaceName, pSurroundImage) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
     let printResList = [];
-    if (this.btnNotice.checked || this.btnSearchStatus.checked){
+    if (this.btnNotice.checked || this.btnSearchStatus.checked) {
       printResList = this.originalResList;
-    }else{
+    } else {
       printResList = this.resList;
     }
     const htmlTag = await this.resService.printHtmlTag(printResList, {
@@ -1885,9 +1899,10 @@ export class ContentComponent implements OnInit, OnDestroy {
       isReplaceName: pIsReplaceName,
       replaceName: this.replaceName,
       replacedName: this.replacedName,
+      isSurroundImage: pSurroundImage,
     });
 
-    this.resService.setPrintHtml({tabIndex: this.tabIndex, html: htmlTag.allHtml});
+    this.resService.setPrintHtml({ tabIndex: this.tabIndex, html: htmlTag.allHtml });
     $.LoadingOverlay('hide');
   }
 
@@ -1907,17 +1922,27 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectHoveredRes(canUnselect){
+  reverseHoveredRes(canUnselect) {
     if (this.hovered >= 0) {
       if (this.resList[this.hovered].resSelect === 'select' && canUnselect) {
         this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
         this.selectedRes(this.resList[this.hovered],
-          {selected: 'none'});
+          { selected: 'none' });
 
       } else {
         this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
         this.selectedRes(this.resList[this.hovered],
-          {selected: 'select'});
+          { selected: 'select' });
+      }
+    }
+  }
+
+  deSelectHoveredRes(canUnselect) {
+    if (this.hovered >= 0) {
+      if (this.resList[this.hovered].resSelect === 'select' && canUnselect) {
+        this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+        this.selectedRes(this.resList[this.hovered],
+          { selected: 'none' });
       }
     }
   }
@@ -1936,10 +1961,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
   }
 
-  getSelectedRes(tmpResList: ResItem[]){
+  getSelectedRes(tmpResList: ResItem[]) {
     let result = [];
-    for (const resItem of tmpResList){
-      if (resItem.resSelect !== 'none'){
+    for (const resItem of tmpResList) {
+      if (resItem.resSelect !== 'none') {
         result = [...result, resItem];
       }
     }
@@ -1947,8 +1972,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnShowSelectHandler() {
-    if (this.isSelectRes){
-      if ((!this.btnSearchStatus.checked && !this.btnNotice.checked) || this.originalResList === undefined){
+    if (this.isSelectRes) {
+      if ((!this.btnSearchStatus.checked && !this.btnNotice.checked) || this.originalResList === undefined) {
         this.originalResList = [...this.resList];
         this.changeListEmitter.emit({
           tabIndex: this.tabIndex,
@@ -1956,11 +1981,11 @@ export class ContentComponent implements OnInit, OnDestroy {
         });
       }
       let tmpResList = [...this.originalResList];
-      if (this.btnSearchStatus.checked){
+      if (this.btnSearchStatus.checked) {
         tmpResList = this.getAbstractRes(tmpResList);
       }
 
-      if (this.btnNotice.checked){
+      if (this.btnNotice.checked) {
         tmpResList = this.getNoticeRes(tmpResList);
       }
 
@@ -1968,13 +1993,13 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       this.resList = tmpResList;
 
-    }else{
+    } else {
       let tmpResList = [...this.originalResList];
-      if (this.btnSearchStatus.checked){
+      if (this.btnSearchStatus.checked) {
         tmpResList = this.getAbstractRes(tmpResList);
       }
 
-      if (this.btnNotice.checked){
+      if (this.btnNotice.checked) {
         tmpResList = this.getNoticeRes(tmpResList);
       }
 
@@ -1996,7 +2021,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   btnSearchHandler() {
-    if (this.btnSearchStatus.checked){
+    if (this.btnSearchStatus.checked) {
       this.btnSearchStatus.checked = false;
       this.btnSearchChangeHandler();
     }
@@ -2005,13 +2030,13 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   cancelAllStatus(item: ResItem) {
-    if (this.btnSearchStatus.checked){
+    if (this.btnSearchStatus.checked) {
       this.btnSearchStatus.checked = false;
     }
-    if (this.btnNotice.checked){
+    if (this.btnNotice.checked) {
       this.btnNotice.checked = false;
     }
-    if (this.isSelectRes){
+    if (this.isSelectRes) {
       this.isSelectRes = false;
     }
     if (this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length) {
@@ -2026,8 +2051,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isKeyPressed = true;
   }
 
-  setResMenu(value){
-    for (const res of this.resList){
+  setResMenu(value) {
+    for (const res of this.resList) {
       res.resMenu = value;
       res.isMenuOpen = false;
     }
@@ -2039,5 +2064,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       tabIndex: this.tabIndex,
       txtURL: this.txtURL,
     });
+  }
+
+  btnImageSearchHandler() {
+    this.searchKeyword = 'jpg|png|gif';
   }
 }

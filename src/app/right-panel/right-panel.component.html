@@ -58,10 +58,13 @@
 </div>
 <div class="mt-1">
   <div>
-    <label class="ml-0"><input type="checkbox" [(ngModel)]="isReplaceName">出力時に名前変更</label>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isSurroundImage" (click)="clickSurroundImageHandler()">画像をdivで囲む</label>
   </div>
   <div>
-    <label class="ml-0"><input type="checkbox" [(ngModel)]="isOutputCandiBelow">予備選択を下部に出力</label>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isReplaceName" (click)="clickReplaceNameHandler()">出力時に名前変更</label>
+  </div>
+  <div>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isOutputCandiBelow" (click)="clickOutputCandiBelowHandler()">予備選択を下部に出力</label>
   </div>
 </div>
 <div class="width-100">

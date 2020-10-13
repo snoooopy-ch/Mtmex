@@ -38,6 +38,12 @@ export class ResService {
   resMenu = this.resMenuSource.asObservable();
   resSortSource = new BehaviorSubject<any>({});
   sortRes = this.resSortSource.asObservable();
+  surroundImageSource = new BehaviorSubject<any>({});
+  surroundImage = this.surroundImageSource.asObservable();
+  replaceNameSource = new BehaviorSubject<any>({});
+  replaceName = this.replaceNameSource.asObservable();
+  outputCandiBelowSource = new BehaviorSubject<any>({});
+  outputCandiBelow = this.outputCandiBelowSource.asObservable();
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
@@ -143,10 +149,25 @@ export class ResService {
     this.resSortSource.next(value);
   }
 
+  setSurroundImageOption(value: any) {
+    this.surroundImageSource.next(value);
+  }
+
+  setReplaceNameOption(value: any) {
+    this.replaceNameSource.next(value);
+  }
+
+  setOutputCandiBelowOption(value: any) {
+    this.outputCandiBelowSource.next(value);
+  }
+
   async printHtmlTag(resList: ResItem[], options) {
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
-    htmlTag += `URL入力欄：${options.txtURL}\n`;
+
+    if (options.txtURL !== '')
+      htmlTag += `URL入力欄：${options.txtURL}\n`;
+
     let yobi = ``;
 
     let exists = false;
@@ -221,7 +242,9 @@ export class ResService {
     let htmlTag = ``;
 
     let tabName = `★■●${options.tabName}●■★\n`;
-    let tabUrl = `URL入力欄：${options.txtURL}\n`;
+    let tabUrl = ``;
+    if (options.txtURL !== '')
+      tabUrl = `URL入力欄：${options.txtURL}\n`;
 
     let exists = false;
     for (const res of resList){
@@ -273,14 +296,35 @@ export class ResService {
   async printRes(res: ResItem, options){
     let htmlTag = '';
     let content = res.content;
+
+    // remove img tag
     content = content.replace(/(<img[^<]+>)/ig, '');
     content = content.replace(/(<span[^<]+>)/ig, '');
     content = content.replace(/(<\/span>)/ig, '');
-    // content = content.replace(/(<iframe[^<]+>|<\/iframe>)/ig, '');
     content = content.replace(/(&gt;&gt;\d*[0-9]\d*)/ig, `<span class="anchor">$1</span>`);
+
+    // remove res-img-link, res-gif-link, res-img-link, res-gif-link
     content = content.replace(/(\s+class="res-img-link"|\s+class="res-link"| class="res-img-link res-gif-link")/ig, ``);
-    content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
+
+    if (options.isSurroundImage) {
+      content = content.replace(/<a href="https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)">https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)<\/a>/ig, 
+      function(match){
+        return `<div>` + match + `</div><!-- div end -->`
+      });
+      let rel = this.generateRelValue(res.num);
+
+      content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
+      `$1 class="swipe" rel="${rel}" title="" target="_blank"$2`);
+
+      content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->(<br><div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig, 
+      function(match){
+        return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`
+      });
+    } else {
+      content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 target="_blank" class="image"$2`);
+    }
+    
     const tmpContent = content.split('<br>');
     let row = 0;
     content = '';
@@ -448,4 +492,14 @@ export class ResService {
     htmlTag += `</div>\n`;
     return htmlTag;
   }
+
+  generateRelValue(resNum) {
+    var result = '';
+    var characters = 'abcdefghijklmnopqrstuvwxyz';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < 4; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return "res_" + result + resNum;
+ }
 }

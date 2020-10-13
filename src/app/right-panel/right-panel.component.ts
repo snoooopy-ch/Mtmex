@@ -46,6 +46,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   loadDatPath: string;
   loadStatusPath: string;
   isReplaceName: boolean;
+  isSurroundImage: boolean;
   isOutputCandiBelow: boolean;
   private readonly stopTimer = new Subject<void>();
   private readonly startTimer = new Subject<void>();
@@ -53,6 +54,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
     this.hiddenIds = [];
     this.isReplaceName = true;
+    this.isSurroundImage = false;
   }
 
   ngOnInit(): void {
@@ -150,6 +152,12 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.isReplaceRes = value.data.isReplaceRes;
         this.isMultiAnchor = value.data.isMultiAnchor;
         this.txtDataFilePath = value.data.txtPath;
+        this.selectCount = value.data.selectCount;
+        this.totalCount = value.data.totalCount;
+        this.candi1Count = value.data.candi1Count;
+        this.candi2Count = value.data.candi2Count;
+        this.candi3Count = value.data.candi3Count;
+        this.candi4Count = value.data.candi4Count;
       }
     });
   }
@@ -264,6 +272,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.setPrintCommand({
       tabIndex: this.tabIndex,
       isReplaceName: this.isReplaceName,
+      isSurroundImage: this.isSurroundImage,
       token: true});
   }
 
@@ -271,6 +280,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.setPrintAllCommand({
       isOutputCandiBelow: this.isOutputCandiBelow,
       isReplaceName: this.isReplaceName,
+      isSurroundImage: this.isSurroundImage,
       token: true});
   }
 
@@ -304,7 +314,13 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       remarkRes: this.txtRemarkRes,
       hideRes: this.txtHideRes,
       token: true,
-      showMessage: isMessage
+      showMessage: isMessage,
+      selectCount: this.selectCount,
+      totalCount: this.totalCount,
+      candi1Count: this.candi1Count,
+      candi2Count: this.candi2Count,
+      candi3Count: this.candi3Count,
+      candi4Count: this.candi4Count,
     });
   }
 
@@ -371,5 +387,17 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       });
     }
     this.sortCommand = '';
+  }
+
+  clickSurroundImageHandler() {
+    this.resService.setSurroundImageOption(!this.isSurroundImage);
+  }
+
+  clickReplaceNameHandler() {
+    this.resService.setReplaceNameOption(!this.isReplaceName);
+  }
+
+  clickOutputCandiBelowHandler() {
+    this.resService.setOutputCandiBelowOption(!this.isOutputCandiBelow);
   }
 }

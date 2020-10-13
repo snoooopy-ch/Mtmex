@@ -130,7 +130,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
           , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'
-          , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down'];
+          , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down', 'sentaku_off1', 'sentaku_off2'];
         for (const key of arrayKeys) {
           if (this.settings[key].toLowerCase() === 'insert'){
             this.subHotKeys[key] = 'ins';
@@ -252,9 +252,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.allPrint = this.resService.printAllCommand.subscribe((value) => {
       if (value.token){
         if (value.isOutputCandiBelow){
-          this.printIntegrateAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName);
+          this.printIntegrateAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage);
         }else{
-          this.printNormalAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName);
+          this.printNormalAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage);
         }
       }
     });
@@ -437,7 +437,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.previousTabId = $event.target['id'];
   }
 
-  private async printNormalAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName) {
+  private async printNormalAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName, pSurroundImage) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
@@ -446,6 +446,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     let index = 0;
     let currentTab = 0;
     let allCount = 0;
+    let selectedCount = 0;
+    let yobiCount = 0;
     for (const tabItem of this.tabs) {
       if (tabItem.originalResList.length > 0) {
         const oneHtmlTag = await this.resService.printHtmlTag(tabItem.originalResList, {
@@ -465,6 +467,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           isReplaceName: pIsReplaceName,
           replaceName: this.settings.namae_mae,
           replacedName: this.settings.namae_ato,
+          isSurroundImage: pSurroundImage,
         });
 
         if (index !== 0 && oneHtmlTag.allHtml.length > 0) {
@@ -486,19 +489,21 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
       index++;
       allCount += tabItem.originalResList.filter(item => item.resSelect !== 'none').length;
+      selectedCount += tabItem.originalResList.filter(item => item.resSelect === 'select').length;
     }
+    yobiCount = allCount - selectedCount;
 
     if (pIsOutputCandiBelow){
       htmlTag += `\n${yobiHtml}`;
     }
 
-    htmlTag = `\n★●レス数: ${allCount}\n\n${htmlTag}\n●★レス数: ${allCount}`;
+    htmlTag = `\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}\n\n${htmlTag}\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}`;
 
     this.resService.setPrintHtml({tabIndex: currentTab, html: htmlTag});
     $.LoadingOverlay('hide');
   }
 
-  private async printIntegrateAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName) {
+  private async printIntegrateAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName, pSurroundImage) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
@@ -510,6 +515,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     let index = 0;
     let currentTab = 0;
     let allCount = 0;
+    let selectedCount = 0;
+    let yobiCount = 0;
     let tabName = '';
     let tabUrl = '';
 
@@ -532,14 +539,16 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           isReplaceName: pIsReplaceName,
           replaceName: this.settings.namae_mae,
           replacedName: this.settings.namae_ato,
+          isSurroundImage: pSurroundImage,
         });
 
+        tabName = '';
         if (oneHtmlTag.allHtml.length > 0 ){
           tabName = oneHtmlTag.tabName;
         }
 
-        if (oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
-          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0){
+        if (oneHtmlTag.allHtml.length > 0 || oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
+          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0 || oneHtmlTag.tabUrl !== ''){
           tabUrl += oneHtmlTag.tabUrl;
         }
 
@@ -556,8 +565,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
       index++;
       allCount += tabItem.originalResList.filter(item => item.resSelect !== 'none').length;
+      selectedCount += tabItem.originalResList.filter(item => item.resSelect === 'select').length;
     }
-    htmlTag += `\n${tabUrl}`;
+    yobiCount = allCount - selectedCount;
+
+    htmlTag += `\n`;
 
     if (yobi1Html.length > 0){
       htmlTag += `<div class="yobi1">予備選択1</div>\n${yobi1Html}`;
@@ -575,7 +587,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4Html}`;
     }
 
-    htmlTag = `\n★●レス数: ${allCount}\n\n${htmlTag}\n●★レス数: ${allCount}`;
+    if (tabUrl !== '')
+      htmlTag += `\n${tabUrl}`;
+
+    htmlTag = `\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}\n\n${htmlTag}\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}`;
 
     this.resService.setPrintHtml({tabIndex: currentTab, html: htmlTag});
     $.LoadingOverlay('hide');

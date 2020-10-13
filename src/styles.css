@@ -197,15 +197,21 @@ label {
 }
 
 .main-container app-left-panel app-content .extract .btn-long {
-  min-width: 154px;
+  min-width: 149px;
   width: 14%;
   height: 29px;
   font-size: 14px
 }
 
+.main-container app-left-panel app-content .extract .btn-short {
+  width: 41px;
+  height: 29px;
+  font-size: 14px
+}
+
 .main-container app-left-panel app-content .extract input[type="text"] {
-  min-width: 366px;
-  width: 30%;
+  min-width: 342px;
+  width: 342px;
   height: 29px;
   margin: 0 3px;
 }
@@ -807,4 +813,8 @@ input[type='radio']:checked:before {
 
 .main-container app-right-panel::-webkit-scrollbar {
   display: none;
+}
+
+#btn-load {
+  background-color: #bfffff;
 }
