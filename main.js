@@ -108,18 +108,6 @@ function createWindow() {
       ]
     },
     {
-      role: 'help',
-      submenu: [
-        {
-          label: 'Learn More',
-          click: async () => {
-            const {shell} = require('electron');
-            await shell.openExternal('https://electronjs.org');
-          }
-        }
-      ]
-    },
-    {
       label: 'タブを閉じる',
       submenu: [{
         label: 'タブを閉じる',
