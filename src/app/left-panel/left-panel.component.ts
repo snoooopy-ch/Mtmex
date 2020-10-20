@@ -252,9 +252,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.allPrint = this.resService.printAllCommand.subscribe((value) => {
       if (value.token){
         if (value.isOutputCandiBelow){
-          this.printIntegrateAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage);
+          this.printIntegrateAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage, value.gazouReplaceUrl);
         }else{
-          this.printNormalAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage);
+          this.printNormalAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage, value.gazouReplaceUrl);
         }
       }
     });
@@ -437,7 +437,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.previousTabId = $event.target['id'];
   }
 
-  private async printNormalAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName, pSurroundImage) {
+  private async printNormalAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName, pSurroundImage, pGazouReplaceUrl) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
@@ -468,6 +468,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           replaceName: this.settings.namae_mae,
           replacedName: this.settings.namae_ato,
           isSurroundImage: pSurroundImage,
+          gazouReplaceUrl: pGazouReplaceUrl
         });
 
         if (index !== 0 && oneHtmlTag.allHtml.length > 0) {
@@ -503,7 +504,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     $.LoadingOverlay('hide');
   }
 
-  private async printIntegrateAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName, pSurroundImage) {
+  private async printIntegrateAllHtmlTag(pIsOutputCandiBelow, pIsReplaceName, pSurroundImage, pGazouReplaceUrl) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
@@ -540,6 +541,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           replaceName: this.settings.namae_mae,
           replacedName: this.settings.namae_ato,
           isSurroundImage: pSurroundImage,
+          gazouReplaceUrl: pGazouReplaceUrl,
         });
 
         tabName = '';

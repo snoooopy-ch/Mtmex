@@ -97,6 +97,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   private searchedFiled: number;
   private isBackup: boolean;
   isSaveStatus: boolean;
+  selectCommandWithHeader: string = '';
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -152,7 +153,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.printCommand = this.resService.printCommand.subscribe((value) => {
       if (value.tabIndex === this.tabIndex && value.token) {
-        this.printHtmlTag(value.isReplaceName, value.isSurroundImage);
+        this.printHtmlTag(value.isReplaceName, value.isSurroundImage, value.gazouReplaceUrl);
       }
     });
 
@@ -1207,8 +1208,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   multiSelection(command: string) {
-
-    // for (let i = this.virtualScroller.viewPortInfo.startIndex; i <= this.virtualScroller.viewPortInfo.endIndex; i++){
     for (const res of this.resList) {
       if (res.isShow) {
         switch (command) {
@@ -1291,6 +1290,10 @@ export class ContentComponent implements OnInit, OnDestroy {
               res.resSelect = 'none';
               res.resBackgroundColor = this.backgroundColors[0];
             }
+            break;
+          case 'cancel-allselect':
+            res.resSelect = 'none';
+            res.resBackgroundColor = this.backgroundColors[0];
             break;
         }
       }
@@ -1872,7 +1875,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     return content;
   }
 
-  private async printHtmlTag(pIsReplaceName, pSurroundImage) {
+  private async printHtmlTag(pIsReplaceName, pSurroundImage, pGazouReplaceUrl) {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
@@ -1900,6 +1903,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       replaceName: this.replaceName,
       replacedName: this.replacedName,
       isSurroundImage: pSurroundImage,
+      gazouReplaceUrl: pGazouReplaceUrl,
     });
 
     this.resService.setPrintHtml({ tabIndex: this.tabIndex, html: htmlTag.allHtml });
@@ -2069,4 +2073,10 @@ export class ContentComponent implements OnInit, OnDestroy {
   btnImageSearchHandler() {
     this.searchKeyword = 'jpg|png|gif';
   }
+
+  btnAllSelHeaderClickHandler() {
+    this.resService.setAllSelHeaderCommand(this.selectCommandWithHeader);
+    this.selectCommandWithHeader = '';
+  }
+
 }

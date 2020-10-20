@@ -142,7 +142,6 @@ label {
 .main-container app-left-panel app-content .content-url {
   display: flex;
   padding: 3px 0;
-  justify-content: center;
   align-items: center;
 }
 
@@ -155,7 +154,7 @@ label {
 }
 
 .main-container app-left-panel app-content input[type="text"] {
-  width: 90%;
+  width: 50%;
   height: 26px;
 }
 
@@ -583,7 +582,6 @@ app-res .row-4 a {
 .main-container app-right-panel .sure-specific {
   width: 100%;
   display: flex;
-  margin: 34px 0 0 0;
 }
 
 .main-container app-right-panel .save-container {
@@ -645,6 +643,7 @@ app-res .row-4 a {
 .main-container app-right-panel .menu-group button{
   margin: 0;
   width: 33%;
+  background-color: #dcdcba;
 }
 
 .main-container app-right-panel .sure-specific button{
@@ -817,4 +816,29 @@ input[type='radio']:checked:before {
 
 #btn-load {
   background-color: #bfffff;
+}
+
+.lbl-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.select-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+
+.select-container button{
+  padding: 0 15px !important;
+  margin-left: 10px
+}
+
+.text-red {
+  color: #ff0000 !important;
+}
+
+.content-url label {
+  white-space:pre;
 }

@@ -12,6 +12,8 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
 import {Observable, Subject, timer} from 'rxjs';
 import {switchMap, takeUntil, repeatWhen} from 'rxjs/operators';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
+
 const electron = (window as any).require('electron');
 
 @Component({
@@ -33,6 +35,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   candi4Count = 0;
   totalCount = 0;
   selectCommand = '';
+  selectCommandWithButton = '';
   settings;
   htmlTag: string;
   private timer;
@@ -48,10 +51,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   isReplaceName: boolean;
   isSurroundImage: boolean;
   isOutputCandiBelow: boolean;
+  gazouReplaceUrl: string = '';
   private readonly stopTimer = new Subject<void>();
   private readonly startTimer = new Subject<void>();
 
-  constructor(private resService: ResService, private cdRef: ChangeDetectorRef, private clipboard: Clipboard) {
+  constructor(private resService: ResService, 
+    private cdRef: ChangeDetectorRef, 
+    private clipboard: Clipboard,
+    private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
     this.isReplaceName = true;
     this.isSurroundImage = false;
@@ -98,11 +105,16 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.loadStatusPath = this.settings.default_status_folder_path;
       }
 
+      if (this.settings.t_media2_mtm_URL !== undefined){
+        this.gazouReplaceUrl = this.settings.t_media2_mtm_URL;
+      }
+
       if (this.settings.yobi_kabu_shuturyoku !== undefined){
         this.isOutputCandiBelow = this.settings.yobi_kabu_shuturyoku;
       }
 
       this.cdRef.detectChanges();
+      this.setHotKeys();
     });
 
     this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value ) => {
@@ -146,6 +158,18 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.subscribers.printHtmlOnStatus = this.resService.printHtmlOnStatus.subscribe( (value) => {
+      if (value !== undefined && value === 0){
+        this.printHtmlTagHandler();  
+      }
+    })
+
+    this.subscribers.printAllHtmlOnStatus = this.resService.printAllHtmlOnStatus.subscribe( (value) => {
+      if (value !== undefined && value === 0){
+        this.printAllHtmlTagHandler();  
+      }
+    })
+
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
         this.isResSort = value.data.isResSort;
@@ -160,6 +184,41 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.candi4Count = value.data.candi4Count;
       }
     });
+
+    this.subscribers.btnAllSelCommand = this.resService.btnAllSelCommand.subscribe((value) => {
+      if (value !== undefined && value === 'select'){
+        this.resService.setSelectCommand({
+          tabIndex: this.tabIndex,
+          command: value,
+          token: true,
+        });
+      }
+    })
+
+    electron.ipcRenderer.on('printAllHtmlMenuClick', (event) => {
+      this.printAllHtmlTagHandler();
+    });
+
+    electron.ipcRenderer.on('printHtmlMenuClick', (event) => {
+      this.printHtmlTagHandler();
+    });
+  }
+
+  setHotKeys() {
+    // 全タブの出力
+    if (this.settings.all_tab_shuturyoku !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.all_tab_shuturyoku.toLowerCase(), (event: KeyboardEvent): boolean => {
+        this.printAllHtmlTagHandler();
+        return false;
+      }));
+    }
+    // タブ出力
+    if (this.settings.tab_shuturyoku !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.tab_shuturyoku.toLowerCase(), (event: KeyboardEvent): boolean => {
+        this.printHtmlTagHandler();
+        return false;
+      }));
+    }
   }
 
   /**
@@ -174,6 +233,9 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.subscribers.printHtml.unsubscribe();
     this.subscribers.status.unsubscribe();
     this.subscribers.statusTimer.unsubscribe();
+    this.subscribers.printHtmlOnStatus.unsubscribe();
+    this.subscribers.printAllHtmlOnStatus.unsubscribe();
+    this.subscribers.btnAllSelCommandSource.unsubscribe();
   }
 
   @HostListener('window:beforeunload', [ '$event' ])
@@ -187,7 +249,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       isContinuousAnchor: this.isContinuousAnchor,
       notMoveFutureAnchor: this.notMoveFutureAnchor,
       defaultDatFolderPath: this.loadDatPath,
-      defaultStatusFolderPath: this.loadStatusPath
+      defaultStatusFolderPath: this.loadStatusPath,
+      tMedia2MtmURL: this.gazouReplaceUrl
     });
   }
   start(): void {
@@ -264,6 +327,16 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.selectCommand = '';
   }
 
+  btnAllSelSideBarClickHandler() {
+    console.log(this.selectCommandWithButton);
+    this.resService.setSelectCommand({
+      tabIndex: this.tabIndex,
+      command: this.selectCommandWithButton,
+      token: true,
+    });
+    this.selectCommandWithButton = '';
+  }
+
   setDefaultPathHandler(dataIndex) {
     this.txtDataFilePath = this.settings.defaultPath[dataIndex];
   }
@@ -273,6 +346,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       tabIndex: this.tabIndex,
       isReplaceName: this.isReplaceName,
       isSurroundImage: this.isSurroundImage,
+      gazouReplaceUrl: this.gazouReplaceUrl,
       token: true});
   }
 
@@ -281,6 +355,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       isOutputCandiBelow: this.isOutputCandiBelow,
       isReplaceName: this.isReplaceName,
       isSurroundImage: this.isSurroundImage,
+      gazouReplaceUrl: this.gazouReplaceUrl,
       token: true});
   }
 
@@ -389,15 +464,4 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.sortCommand = '';
   }
 
-  clickSurroundImageHandler() {
-    this.resService.setSurroundImageOption(!this.isSurroundImage);
-  }
-
-  clickReplaceNameHandler() {
-    this.resService.setReplaceNameOption(!this.isReplaceName);
-  }
-
-  clickOutputCandiBelowHandler() {
-    this.resService.setOutputCandiBelowOption(!this.isOutputCandiBelow);
-  }
 }

@@ -72,39 +72,17 @@ function createWindow() {
     }] : []),
     // { role: 'fileMenu' }
     {
-      label: 'File',
-      submenu: [
-        isMac ? {role: 'close'} : {role: 'quit'}
-      ]
+      label: '　　　　　全タグ出力　　　　　|',
+      click: function () {
+        win.webContents.send("printAllHtmlMenuClick");
+      }
     },
     // { role: 'editMenu' }
     {
-      label: 'Edit',
-      submenu: [
-        {role: 'undo'},
-        {role: 'redo'},
-        {type: 'separator'},
-        {role: 'cut'},
-        {role: 'copy'},
-        {role: 'paste'},
-        ...(isMac ? [
-          {role: 'pasteAndMatchStyle'},
-          {role: 'delete'},
-          {role: 'selectAll'},
-          {type: 'separator'},
-          {
-            label: 'Speech',
-            submenu: [
-              {role: 'startspeaking'},
-              {role: 'stopspeaking'}
-            ]
-          }
-        ] : [
-          {role: 'delete'},
-          {type: 'separator'},
-          {role: 'selectAll'}
-        ])
-      ]
+      label: '　　　　　タグ出力　　　　　|',
+      click: function() {
+        win.webContents.send("printHtmlMenuClick");
+      }
     },
     // { role: 'viewMenu' }
     {
@@ -155,22 +133,8 @@ function createWindow() {
   const temp_menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(temp_menu);
 
-  // const menu = Menu.getApplicationMenu();
-  // menu.items[3].submenu.items.splice(2, 1);
-  //
-  // menu.append(new MenuItem({
-  //   label: 'タブを閉じる',
-  //   submenu: [{
-  //     label: 'タブを閉じる',
-  //     click: function () {
-  //       win.webContents.send("closeMenu");
-  //     }
-  //   }]
-  // }));
-
   win.webContents.on('will-navigate', handleRedirect)
   win.webContents.on('new-window', handleRedirect)
-  // win.setMenu(menu);
 }
 
 // Create window on electron intialization
@@ -954,7 +918,8 @@ function loadStatus(filePaths) {
         return
       }
       try {
-        const loadData = JSON.parse(jsonString);
+        let loadData = JSON.parse(jsonString);
+        loadData.title = filePath.replace(/^(.*)\\(.*)(\..*)$/ig, `$2`);
         loadedTitles.push(loadData.title);
         win.webContents.send("getStatus", {data: loadData});
       } catch (err) {
@@ -1007,6 +972,12 @@ function saveSettings(params) {
       data = data.replace(/(default_status_folder_path:)+(\r\n)/g, `$1${params.defaultStatusFolderPath}$2`);
     } else {
       data = data.replace(/(default_status_folder_path:)[^\r\n]+(\r\n)/g, `$1${params.defaultStatusFolderPath}$2`);
+    }
+
+    if (data.match(/(t_media2_mtm_URL:)[^\r^\n]+(\r\n)/g) === null) {
+      data = data.replace(/(t_media2_mtm_URL:)+(\r\n)/g, `$1${params.tMedia2MtmURL}$2`);
+    } else {
+      data = data.replace(/(t_media2_mtm_URL:)[^\r\n]+(\r\n)/g, `$1${params.tMedia2MtmURL}$2`);
     }
 
     let replaceString = '';

@@ -3,6 +3,10 @@
   <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
   <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
 </div>
+<div class="select-container">
+  <label class="lbl-input-container"><input type="radio" name="opt-select-side" [(ngModel)]="selectCommandWithButton" value="select">選択＿＿＿</label>
+  <button class="border-round" (click)="btnAllSelSideBarClickHandler()">実行</button>
+</div>
 <div class="width-100">
   <div class="sure-specific">
     <button class="sure-specific-btn btn-left-round" (click)="setDefaultPathHandler(0)">dat1</button>
@@ -14,22 +18,21 @@
   <button class="border-round load-multi-path" (click)="btnLoadMultiFiles()">dat直接読み込み</button>
 </div>
 <div class="res-order">
-
   <div class="reading-mode">
     <div>
        <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替え</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort">複数アンカーを分割</label>
+      ┣&nbsp;<label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort">複数アンカーを分割</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="isContinuousAnchor" [disabled]="!isMultiAnchor || !isResSort">連続アンカー分割</label>
+      ┃&nbsp;┗&nbsp;<label><input type="checkbox" [(ngModel)]="isContinuousAnchor" [disabled]="!isMultiAnchor || !isResSort">連続アンカー分割</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="notMoveFutureAnchor">未来アンカー移動せず</label>
+      ┣&nbsp;<label><input type="checkbox" [(ngModel)]="notMoveFutureAnchor" [disabled]="!isResSort">未来アンカー移動せず</label>
     </div>
     <div>
-       <label><input type="checkbox" [(ngModel)]="isReplaceRes">>>1へのレスを入れ替え</label>
+      ┗&nbsp;<label><input type="checkbox" [(ngModel)]="isReplaceRes" [disabled]="!isResSort">>>1へのレスを入れ替え</label>
     </div>
   </div>
 </div>
@@ -58,18 +61,24 @@
 </div>
 <div class="mt-1">
   <div>
-    <label class="ml-0"><input type="checkbox" [(ngModel)]="isSurroundImage" (click)="clickSurroundImageHandler()">画像をdivで囲む</label>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isSurroundImage">画像をdivで囲む</label>
+  </div>
+  <div style="display:flex">
+    ┗<label>拡張子までの文字例</label><input style="width: 80px" type="text" [(ngModel)]="gazouReplaceUrl">
   </div>
   <div>
-    <label class="ml-0"><input type="checkbox" [(ngModel)]="isReplaceName" (click)="clickReplaceNameHandler()">出力時に名前変更</label>
+    &nbsp;<label>（空欄時はURL変更しない）</label>
   </div>
   <div>
-    <label class="ml-0"><input type="checkbox" [(ngModel)]="isOutputCandiBelow" (click)="clickOutputCandiBelowHandler()">予備選択を下部に出力</label>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isReplaceName">出力時に名前変更</label>
+  </div>
+  <div>
+    <label class="ml-0"><input type="checkbox" [(ngModel)]="isOutputCandiBelow">予備選択を下部に出力</label>
   </div>
 </div>
 <div class="width-100">
-  <button id="btn-print-all-tag" class="border-round" (click)="printAllHtmlTagHandler()">全タブのタグ出力</button>
-  <button id="btn-print-html-tag" class="border-round" (click)="printHtmlTagHandler()">タグ出力</button>
+  <button id="btn-print-all-tag" class="border-round" (click)="printAllHtmlTagHandler()">全タブ出力</button>
+  <button id="btn-print-html-tag" class="border-round" (click)="printHtmlTagHandler()">出力</button>
   <button id="btn-copy-tag" class="border-round" [cdkCopyToClipboard]="htmlTag">コピー</button>
   <textarea id="txt-html-tag" [(ngModel)]="htmlTag"></textarea>
 </div>
@@ -119,7 +128,6 @@
       </td>
       <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-candi4">予備4 解除</label>
-
       </td>
     </tr>
     <tr>
@@ -127,7 +135,7 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select-image">画像選択</label>
       </td>
       <td>
-
+        <label class="canel-radio text-red"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-allselect">全解除</label>
       </td>
     </tr>
     <tr>

@@ -44,6 +44,12 @@ export class ResService {
   replaceName = this.replaceNameSource.asObservable();
   outputCandiBelowSource = new BehaviorSubject<any>({});
   outputCandiBelow = this.outputCandiBelowSource.asObservable();
+  printHtmlOnStatusSource = new BehaviorSubject<any>({});
+  printHtmlOnStatus = this.printHtmlOnStatusSource.asObservable();
+  printAllHtmlOnStatusSource = new BehaviorSubject<any>({});
+  printAllHtmlOnStatus = this.printAllHtmlOnStatusSource.asObservable();
+  btnAllSelCommandSource = new BehaviorSubject<any>({});
+  btnAllSelCommand = this.btnAllSelCommandSource.asObservable();
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
@@ -125,6 +131,10 @@ export class ResService {
     this.selectCommandSource.next(value);
   }
 
+  setAllSelHeaderCommand(value: any) {
+    this.btnAllSelCommandSource.next(value);
+  }
+
   setPrintCommand(value: any){
     this.printCommandSource.next(value);
   }
@@ -149,18 +159,14 @@ export class ResService {
     this.resSortSource.next(value);
   }
 
-  setSurroundImageOption(value: any) {
-    this.surroundImageSource.next(value);
+  setPrintHtmlOnStatus(value: any) {
+    this.printHtmlOnStatusSource.next(value);
   }
 
-  setReplaceNameOption(value: any) {
-    this.replaceNameSource.next(value);
+  setPrintAllHtmlOnStatusSource(value: any) {
+    this.printAllHtmlOnStatusSource.next(value);
   }
-
-  setOutputCandiBelowOption(value: any) {
-    this.outputCandiBelowSource.next(value);
-  }
-
+  
   async printHtmlTag(resList: ResItem[], options) {
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
@@ -320,6 +326,10 @@ export class ResService {
       function(match){
         return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`
       });
+
+      if (options.gazouReplaceUrl !== undefined && options.gazouReplaceUrl !== '') {
+        content = content.replace(/(https:\/\/[^"><]*)(\/[^"<>]*)/ig, `${options.gazouReplaceUrl}$2`);
+      }
     } else {
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 target="_blank" class="image"$2`);
