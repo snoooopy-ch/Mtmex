@@ -63,6 +63,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() searchListEmitter = new EventEmitter();
   @Output() changeListEmitter = new EventEmitter();
   @Output() changeUrlEmitter = new EventEmitter();
+  @Output() selectAllEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -79,6 +80,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() txtURL: string;
   @Input() replaceName: string;
   @Input() replacedName: string;
+  @Input() selectCommandWithHeader: string;
+
   public subscribers: any = {};
   private isChangedSearch: boolean;
   private searchedRes: number;
@@ -97,7 +100,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   private searchedFiled: number;
   private isBackup: boolean;
   isSaveStatus: boolean;
-  selectCommandWithHeader: string = '';
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -1003,6 +1005,12 @@ export class ContentComponent implements OnInit, OnDestroy {
       rightToken: true,
       statusToken: true
     });
+
+    if (this.originalResList !== undefined) {
+      const indexOrigin = this.originalResList.indexOf(item);
+      const cloneOriginItem = Object.assign({}, item);
+      this.originalResList.splice(indexOrigin + 1, 0, cloneOriginItem);
+    }
   }
 
   /**
@@ -1855,11 +1863,6 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      // console.log(this.searchKeyword);
-      // this.searchStatusEmitter.emit({
-      //   searchKeyword: this.searchKeyword,
-      //   searchOption: this.searchOption
-      // });
     }
   }
 
@@ -1963,6 +1966,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       rightToken: true,
       statusToken: true
     });
+
+    if (this.originalResList !== undefined) {
+      const indexOrigin = this.originalResList.indexOf(item);
+      this.originalResList.splice(indexOrigin, 1);
+    }
   }
 
   getSelectedRes(tmpResList: ResItem[]) {
@@ -2070,13 +2078,26 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
   }
 
+  selectAllChangeHandler() {
+    this.selectAllEmitter.emit({
+      tabIndex: this.tabIndex,
+      selectAllOption: this.selectCommandWithHeader,
+    });
+  }
+
   btnImageSearchHandler() {
     this.searchKeyword = 'jpg|png|gif';
   }
 
   btnAllSelHeaderClickHandler() {
+
     this.resService.setAllSelHeaderCommand(this.selectCommandWithHeader);
     this.selectCommandWithHeader = '';
-  }
 
+    this.selectAllEmitter.emit({
+      tabIndex: this.tabIndex,
+      selectAllOption: this.selectCommandWithHeader,
+    });
+    this.cdRef.detectChanges();
+  }
 }

@@ -32,7 +32,7 @@
   <h3 class="status">{{candi2Count}}</h3>
   <h3 class="status">{{candi3Count}}</h3>
   <h3 class="status">{{candi4Count}}</h3>
-  <label><input type="radio" name="opt-select-header" [(ngModel)]="selectCommandWithHeader" value="select">選択＿＿＿</label>
+  <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select" (click)="selectAllChangeHandler()">選択＿＿＿</label>
   <button class="btn-short" [ngStyle]="{'width': '100px'}" (click)="btnAllSelHeaderClickHandler()">実行</button>
   <label>URL</label>
   <input type="text" [(ngModel)]="txtURL" (ngModelChange)="txtUrlChangeHandler()">

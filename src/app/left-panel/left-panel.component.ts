@@ -5,7 +5,6 @@ import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 import {ResItem} from '../models/res-item';
-// import {appendHtmlElementToHead} from '@angular/cdk/schematics';
 const electron = (window as any).require('electron');
 declare var jQuery: any;
 declare var $: any;
@@ -233,7 +232,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             loadResList.push(resItem);
           }
           if (loadResList.length > 0) {
-            this.addTab(value.data.title, loadResList, '');
+            let originSreTitle = value.data.title.replace(/__[\w,\s-]{10}/ig, '');
+            this.addTab(value.data.title, loadResList, originSreTitle);
             this.selectedTabIndex = this.tabs.length - 1;
             value.tabIndex = this.selectedTabIndex;
             this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
@@ -325,13 +325,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       originSreTitle: pOriginSreTitle,
       originalResList: pResList
     }];
-    // this.tabs.push();
   }
 
   removeTab(index: number) {
     if (this.tabs[index] === undefined){
       return;
     }
+
     const originSreTitle = this.tabs[index].originSreTitle;
     this.resService.removeTab(originSreTitle);
     this.tabs[index].resList.length = 0;
@@ -619,5 +619,15 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     if ($event.tabIndex !== undefined) {
       this.tabs[$event.tabIndex].url = $event.txtURL;
     }
+  }
+
+  changeSelectAll($event: any) {
+    if ($event.tabIndex !== undefined) {
+      this.tabs[$event.tabIndex].selectAllOption = $event.selectAllOption;
+    }
+  }
+
+  selectCommandHeaderValue(value: any) {
+    return value === undefined? '' : value;
   }
 }

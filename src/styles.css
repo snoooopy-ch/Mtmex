@@ -640,17 +640,20 @@ app-res .row-4 a {
   padding: 2px 0;
 }
 
-.main-container app-right-panel .menu-group button{
+.main-container app-right-panel .menu-group button {
   margin: 0;
   width: 33%;
   background-color: #dcdcba;
+}
+
+.main-container app-right-panel .menu-group button:hover {
+  background-color: #0366d6;
 }
 
 .main-container app-right-panel .sure-specific button{
   width: 33.33%;
   height: 55px;
   margin: 0px;
-  /*margin-left: -1px;*/
 }
 
 .main-container app-right-panel .width-100 button.load-path{
@@ -831,8 +834,8 @@ input[type='radio']:checked:before {
 }
 
 .select-container button{
-  padding: 0 15px !important;
-  margin-left: 10px
+  padding: 0 51px !important;
+  margin-left: 4px
 }
 
 .text-red {

@@ -55,7 +55,6 @@ function createWindow() {
   const isMac = process.platform === 'darwin'
 
   const template = [
-    // { role: 'appMenu' }
     ...(isMac ? [{
       label: app.name,
       submenu: [
@@ -70,21 +69,18 @@ function createWindow() {
         {role: 'quit'}
       ]
     }] : []),
-    // { role: 'fileMenu' }
     {
-      label: '　　　　　全タグ出力　　　　　|',
+      label: '　　　　　全タブ出力　　　　　|',
       click: function () {
         win.webContents.send("printAllHtmlMenuClick");
       }
     },
-    // { role: 'editMenu' }
     {
-      label: '　　　　　タグ出力　　　　　|',
+      label: '　　　　　出力　　　　　|',
       click: function() {
         win.webContents.send("printHtmlMenuClick");
       }
     },
-    // { role: 'viewMenu' }
     {
       label: 'View',
       submenu: [
@@ -99,7 +95,6 @@ function createWindow() {
         {role: 'togglefullscreen'}
       ]
     },
-    // { role: 'windowMenu' }
     {
       label: 'Window',
       submenu: [
@@ -237,6 +232,7 @@ ipcMain.on("removeTab", (event, originSreTitle) => {
 });
 
 function removeTitle(originSreTitle) {
+
   if (originSreTitle.length > 0) {
     const index = loadedTitles.indexOf(originSreTitle);
     if (index !== -1) {
@@ -294,6 +290,11 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
         }
       }
     }
+  }
+
+  if (!isResSort) {
+    notMoveFutureAnchor = false;
+    isReplaceRes = false;
   }
 
   let tmpResList = [];
@@ -471,15 +472,12 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
           row++;
           if (tmpItem.indexOf(spliter) !== -1) {
             anchorExists = true;
-            // anchorContent += tmpItem.substr(0, tmpItem.indexOf(spliter) + spliter.length);
-            // tmpItem = tmpItem.substr(tmpItem.indexOf(spliter) + spliter.length);
             anchorContent += tmpItem;
             isAdded = true;
             continue;
           }
           if (anchorExists) {
             if (new RegExp(/^\s*&gt;&gt;/g).test(tmpItem)) {
-              // anchorContent += tmpItem.substr(0, tmpItem.indexOf('&gt;&gt;'));
               break;
             }
             anchorContent += tmpItem;
@@ -495,12 +493,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
       }
       if(isAdded && anchorExists) {
         newItem.content = anchorContent;
-        // if(item.featureAnchors > 0){
         item.content = item.content.replace(newItem.content, '');
-        // if (item.content.length === 0) {
-        //   item.content = newItem.content;
-        // }
-        // }
         newItem.isAdded = true;
         newItem.anchorLevel = anchorLevel + 1;
         resList.splice(i, 0, newItem);
@@ -622,7 +615,6 @@ function readLines(line) {
   resItem.isMenuOpen = false;
   resItem.resFontSize = `${settings['font-size1']}px`;
 
-  // add id to id array
   let idExists = false;
 
   for (let i = 0; i < ids.length; i++) {
@@ -751,12 +743,10 @@ function readLines(line) {
             continueContent += '<br>' + replaced_lines[j];
           }
           resItem.continuousContent = continueContent;
-          // resItem.continuousContent = continueContent.replace(/&gt;&gt;\d+/gi,'');
         }
 
       }
     }
-    // resItem.content = words[3];
   }
   return resItem;
 }
@@ -797,9 +787,7 @@ function getSettings() {
       last = index + 1;
       index = remaining.indexOf('\n', last);
       if (line.startsWith('#')) {
-        // if(stateComments.indexOf(line) !== -1) {
         curComment = line;
-        // }
         continue;
       }
       if (line.length === 0) {
@@ -913,8 +901,23 @@ function loadStatus(filePaths) {
       try {
         let loadData = JSON.parse(jsonString);
         loadData.title = filePath.replace(/^(.*)\\(.*)(\..*)$/ig, `$2`);
-        loadedTitles.push(loadData.title);
-        win.webContents.send("getStatus", {data: loadData});
+        if (loadedTitles.indexOf(loadData.title) !== -1) {
+          let response = dialog.showMessageBoxSync(win, {
+            buttons: ["Yes", "No"],
+            message: '同じタブがあります、datを読み込みますか'
+          });
+          if (response === 0) {
+            loadedTitles.push(loadData.title);
+            let suffix = uuidv4();
+            suffix = suffix.replace(/-/g, '').substr(0, 10);
+            loadData.title = `${loadData.title}__${suffix}`;
+            win.webContents.send("getStatus", {data: loadData});
+          }
+        } else {
+          loadedTitles.push(loadData.title);
+          win.webContents.send("getStatus", {data: loadData});
+        }
+
       } catch (err) {
         console.log('Error parsing JSON string:', err)
       }

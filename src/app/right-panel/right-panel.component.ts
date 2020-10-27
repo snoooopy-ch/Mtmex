@@ -328,7 +328,6 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   btnAllSelSideBarClickHandler() {
-    console.log(this.selectCommandWithButton);
     this.resService.setSelectCommand({
       tabIndex: this.tabIndex,
       command: this.selectCommandWithButton,
