@@ -12,6 +12,7 @@ export class ResService {
   settings = new BehaviorSubject<any>({});
   searchListSource = new BehaviorSubject<any>({});
   status = new BehaviorSubject<any>({});
+  loadResStatus = new BehaviorSubject<any>({});
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
@@ -62,7 +63,7 @@ export class ResService {
       this.searchListSource.next(value);
     });
     electron.ipcRenderer.on('getStatus', (event, value) => {
-      this.status.next(value);
+      this.loadResStatus.next(value);
     });
 
   }
@@ -166,7 +167,7 @@ export class ResService {
   setPrintAllHtmlOnStatusSource(value: any) {
     this.printAllHtmlOnStatusSource.next(value);
   }
-  
+
   async printHtmlTag(resList: ResItem[], options) {
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
@@ -313,7 +314,7 @@ export class ResService {
     content = content.replace(/(\s+class="res-img-link"|\s+class="res-link"| class="res-img-link res-gif-link")/ig, ``);
 
     if (options.isSurroundImage) {
-      content = content.replace(/<a href="https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)">https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)<\/a>/ig, 
+      content = content.replace(/<a href="https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)">https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)<\/a>/ig,
       function(match){
         return `<div>` + match + `</div><!-- div end -->`
       });
@@ -322,7 +323,7 @@ export class ResService {
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 class="swipe" rel="${rel}" title="" target="_blank"$2`);
 
-      content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->(<br><div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig, 
+      content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->(<br><div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
       function(match){
         return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`
       });
@@ -334,7 +335,7 @@ export class ResService {
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 target="_blank" class="image"$2`);
     }
-    
+
     const tmpContent = content.split('<br>');
     let row = 0;
     content = '';

@@ -208,7 +208,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.subscribers.status = this.resService.status.subscribe((value) => {
+    this.subscribers.loadStatus = this.resService.loadResStatus.subscribe((value) => {
       if (this.tabGroup === undefined) { return; }
       if (value.data.resList !== undefined) {
         this.zone.run(() => {
@@ -232,7 +232,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             loadResList.push(resItem);
           }
           if (loadResList.length > 0) {
-            let originSreTitle = value.data.title.replace(/__[\w,\s-]{10}/ig, '');
+            const originSreTitle = value.data.title.replace(/__[\w,\s-]{10}/ig, '');
             this.addTab(value.data.title, loadResList, originSreTitle);
             this.selectedTabIndex = this.tabs.length - 1;
             value.tabIndex = this.selectedTabIndex;
@@ -276,6 +276,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.resData.unsubscribe();
     // this.subscribers.scrollPos.unsubscribe();
     this.subscribers.status.unsubscribe();
+    this.subscribers.loadStatus.unsubscribe();
     this.subscribers.allPrint.unsubscribe();
   }
 

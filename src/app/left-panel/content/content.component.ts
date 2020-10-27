@@ -126,10 +126,13 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
-
-      for (const res of this.resList) {
+      if (this.originalResList.length === 0){
+        this.originalResList = [...this.resList];
+      }
+      for (const res of this.originalResList) {
         res.isShow = this.hiddenIds.indexOf(res.id) === -1;
       }
+      this.resList = [...this.originalResList.filter(item => item.isShow)];
       this.cdRef.detectChanges();
     });
 
@@ -749,7 +752,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         return false; // Prevent bubbling
       }));
 
-      // レスの一番上に移動 
+      // レスの一番上に移動
       this.hotkeysService.add(new Hotkey(this.subHotKeys.res_most_up, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           let item = this.resList[this.hovered];

@@ -299,7 +299,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
 
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
-    for (let i = 1; i < resList.length; i++) {
+    for (let i = 0; i < resList.length; i++) {
       if (isResSort && !notMoveFutureAnchor){
         resList[i].anchors = resList[i].anchors.concat(resList[i].futureAnchors);
       }
@@ -329,10 +329,10 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
         if (resItem.num === anchor) {
           continue;
         }
-        for (let i = 1; i < resList.length; i++) {
+        for (let i = 0; i < resList.length; i++) {
           if (resList[i].num === anchor) {
             if (isReplaceRes) {
-              if (resList[i].num !== 1) {
+
                 if (isMultiAnchor && resItem.anchors.length < settings.anker) {
                   const rc = addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
                     isContinuousAnchor, resList[i].anchorLevel);
@@ -348,7 +348,6 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
                     resItem.anchorLevel = resList[i].anchorLevel + 1;
                   }
                 }
-              }
             } else {
               if (resList[i].num !== 1) {
                 if (isMultiAnchor && resItem.anchors.length < settings.anker) {
