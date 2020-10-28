@@ -233,7 +233,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           }
           if (loadResList.length > 0) {
             const originSreTitle = value.data.title.replace(/__[\w,\s-]{10}/ig, '');
-            this.addTab(value.data.title, loadResList, originSreTitle);
+            this.addTab(value.data.title, loadResList, originSreTitle, value.data.filePath);
             this.selectedTabIndex = this.tabs.length - 1;
             value.tabIndex = this.selectedTabIndex;
             this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
@@ -315,7 +315,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.resService.saveSearchList(this.searchList);
   }
 
-  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '') {
+  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '', pStatusFilePath = '') {
     this.tabs = [...this.tabs, {
       title: pTitle,
       active: true,
@@ -324,7 +324,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       isFiltered: false,
       url: '',
       originSreTitle: pOriginSreTitle,
-      originalResList: pResList
+      originalResList: pResList,
+      statusFilePath: pStatusFilePath
     }];
   }
 

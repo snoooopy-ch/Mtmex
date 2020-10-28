@@ -81,6 +81,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() replaceName: string;
   @Input() replacedName: string;
   @Input() selectCommandWithHeader: string;
+  @Input() isReplaceStatusFile: boolean;
+  @Input() statusFilePath: string;
 
   public subscribers: any = {};
   private isChangedSearch: boolean;
@@ -169,6 +171,9 @@ export class ContentComponent implements OnInit, OnDestroy {
         saveData.resList = [];
         if (value.isAllTabSave) {
           saveData.filePath = `${value.autoFilePath}${this.tabName}.txt`;
+        }
+        if (this.isReplaceStatusFile && this.statusFilePath.length > 0){
+          saveData.filePath = this.statusFilePath;
         }
         let saveResList = [];
         if (this.btnSearchStatus.checked || this.btnNotice.checked || this.isSelectRes) {

@@ -15,7 +15,7 @@ let stateComments = ['#datパス', '#指定したdatパス', '#チェックボ�
   '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
 let curComment = '';
 let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2','sentaku_idou3','sentaku_idou4', 'Left_highlight', 'res_mouse_click', 'youtube'
-  , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save', 'twitter_url', 'youtube_url', 'yobi_kabu_shuturyoku'];
+  , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save', 'twitter_url', 'youtube_url', 'yobi_kabu_shuturyoku', 'fukugen_uwagaki'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];
 let settings;
@@ -900,6 +900,7 @@ function loadStatus(filePaths) {
       try {
         let loadData = JSON.parse(jsonString);
         loadData.title = filePath.replace(/^(.*)\\(.*)(\..*)$/ig, `$2`);
+        loadData.filePath = filePath;
         if (loadedTitles.indexOf(loadData.title) !== -1) {
           let response = dialog.showMessageBoxSync(win, {
             buttons: ["Yes", "No"],

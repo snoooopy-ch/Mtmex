@@ -38,7 +38,7 @@
   <input type="text" [(ngModel)]="txtURL" (ngModelChange)="txtUrlChangeHandler()">
 </div>
 <h3 #tabTitle>{{tabName}}</h3>
-<virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)"
+<virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="100"
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true"
 [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + 173) + 'px)'}">
 
