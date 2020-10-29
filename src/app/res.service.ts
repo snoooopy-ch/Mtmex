@@ -15,6 +15,8 @@ export class ResService {
   loadResStatus = new BehaviorSubject<any>({});
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
+  removeHideIdSource = new BehaviorSubject<any>({});
+  loadRemoveHideIds = this.removeHideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
   scrollPos = this.scrollPosSource.asObservable();
   selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, tabIndex: 0});
@@ -108,6 +110,9 @@ export class ResService {
     this.hideIdSource.next(value);
   }
 
+  removeHiddenIds(value: any) {
+    this.removeHideIdSource.next(value);
+  }
   setScrollPos(value: any){
     this.scrollPosSource.next(value);
   }

@@ -325,7 +325,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       url: '',
       originSreTitle: pOriginSreTitle,
       originalResList: pResList,
-      statusFilePath: pStatusFilePath
+      statusFilePath: pStatusFilePath,
+      hiddenIds: []
     }];
   }
 
@@ -379,6 +380,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       totalCount: this.tabs[this.selectedTabIndex].resList.length,
       tabIndex: this.selectedTabIndex,
       title: this.tabs[this.selectedTabIndex].title,
+      hiddenIds: this.tabs[this.selectedTabIndex].hiddenIds,
     });
     const pos = {
       index: this.selectedTabIndex,
@@ -617,6 +619,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     }
   }
 
+  changeResListStatus($event: any) {
+    if ($event.tabIndex !== undefined) {
+      this.tabs[$event.tabIndex].resList = $event.resList;
+      this.tabs[$event.tabIndex].hiddenIds = $event.hiddenIds;
+    }
+  }
+
   changeUrl($event: any) {
     if ($event.tabIndex !== undefined) {
       this.tabs[$event.tabIndex].url = $event.txtURL;
@@ -630,6 +639,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   selectCommandHeaderValue(value: any) {
-    return value === undefined? '' : value;
+    return value === undefined ? '' : value;
   }
 }

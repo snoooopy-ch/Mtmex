@@ -28,7 +28,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() tabName = 'New Tab';
   @Input() resList: ResItem[];
   @Input() tabIndex;
-  hiddenIds: string[];
+  @Input() hiddenIds: string[];
   private selectedResIndex;
   @ViewChild('resListContainer') virtualScroller: VirtualScrollerComponent;
   @ViewChild('btnSearchStatus') btnSearchStatus: MatButtonToggle;
@@ -62,6 +62,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() scrollIndexEmitter = new EventEmitter();
   @Output() searchListEmitter = new EventEmitter();
   @Output() changeListEmitter = new EventEmitter();
+  @Output() changeListStatusEmitter = new EventEmitter();
   @Output() changeUrlEmitter = new EventEmitter();
   @Output() selectAllEmitter = new EventEmitter();
   @Input() searchOption;
@@ -126,16 +127,12 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     setTimeout(this.setSaveStatus.bind(this), 2000);
 
-    this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
-      this.hiddenIds = hiddenIds;
-      if (this.originalResList.length === 0){
-        this.originalResList = [...this.resList];
+    this.subscribers.LoadHiddenIds = this.resService.loadRemoveHideIds.subscribe((value) => {
+      if (value.token === true && this.tabIndex === value.tabIndex){
+        this.hiddenIds = value.hiddenIds;
+        this.hideResList();
+        value.token = false;
       }
-      for (const res of this.originalResList) {
-        res.isShow = this.hiddenIds.indexOf(res.id) === -1;
-      }
-      this.resList = [...this.originalResList.filter(item => item.isShow)];
-      this.cdRef.detectChanges();
     });
 
     this.subscribers.moveRes = this.resService.moveRes.subscribe((value) => {
@@ -1027,7 +1024,33 @@ export class ContentComponent implements OnInit, OnDestroy {
    */
   hideRes(resId: string) {
     this.hiddenIds = [...this.hiddenIds, resId];
+    this.hideResList();
     this.resService.setHiddenIds(this.hiddenIds);
+  }
+
+  hideResList(){
+    if (this.originalResList.length === 0){
+      this.originalResList = [...this.resList];
+    }
+    for (const res of this.originalResList) {
+      res.isShow = this.hiddenIds.indexOf(res.id) === -1;
+    }
+
+    this.resList = [...this.originalResList.filter(item => item.isShow)];
+    this.changeListStatusEmitter.emit({
+      tabIndex: this.tabIndex,
+      resList: this.resList,
+      hiddenIds: this.hiddenIds
+    });
+
+    this.resService.setTotalRes({
+      tabIndex: this.tabIndex,
+      totalCount: this.resList.length,
+      title: this.tabName,
+      rightToken: true,
+      statusToken: true
+    });
+    this.cdRef.detectChanges();
   }
 
   /**
@@ -1471,6 +1494,11 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     this.resList = [];
     this.resList = tmpResList;
+    this.changeListStatusEmitter.emit({
+      tabIndex: this.tabIndex,
+      resList: this.resList,
+      hiddenIds: this.hiddenIds
+    });
     this.changeStatus();
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
@@ -1502,7 +1530,11 @@ export class ContentComponent implements OnInit, OnDestroy {
         tmpResList = this.getSelectedRes(tmpResList);
       }
       this.resList = tmpResList;
-
+      this.changeListStatusEmitter.emit({
+        tabIndex: this.tabIndex,
+        resList: this.resList,
+        hiddenIds: this.hiddenIds
+      });
       this.cancelSearchResText();
       this.changeStatus();
       this.isChangedSearch = true;
@@ -1560,6 +1592,11 @@ export class ContentComponent implements OnInit, OnDestroy {
 
       this.resList = [];
       this.resList = tmpResList;
+      this.changeListStatusEmitter.emit({
+        tabIndex: this.tabIndex,
+        resList: this.resList,
+        hiddenIds: this.hiddenIds
+      });
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
@@ -1580,6 +1617,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
 
       this.resList = tmpResList;
+      this.changeListStatusEmitter.emit({
+        tabIndex: this.tabIndex,
+        resList: this.resList,
+        hiddenIds: this.hiddenIds
+      });
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,

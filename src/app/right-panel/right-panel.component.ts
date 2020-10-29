@@ -55,8 +55,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   private readonly stopTimer = new Subject<void>();
   private readonly startTimer = new Subject<void>();
 
-  constructor(private resService: ResService, 
-    private cdRef: ChangeDetectorRef, 
+  constructor(private resService: ResService,
+    private cdRef: ChangeDetectorRef,
     private clipboard: Clipboard,
     private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -126,6 +126,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       this.candi4Count = value.candi4;
       this.totalCount = value.totalCount;
       this.title = value.title;
+      this.hiddenIds = value.hiddenIds;
     });
 
     this.subscribers.selectedRes = this.resService.selectedRes.subscribe((value) => {
@@ -160,13 +161,13 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.printHtmlOnStatus = this.resService.printHtmlOnStatus.subscribe( (value) => {
       if (value !== undefined && value === 0){
-        this.printHtmlTagHandler();  
+        this.printHtmlTagHandler();
       }
     })
 
     this.subscribers.printAllHtmlOnStatus = this.resService.printAllHtmlOnStatus.subscribe( (value) => {
       if (value !== undefined && value === 0){
-        this.printAllHtmlTagHandler();  
+        this.printAllHtmlTagHandler();
       }
     })
 
@@ -303,7 +304,11 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     }
     if (exists){
       this.cdRef.detectChanges();
-      this.resService.setHiddenIds(this.hiddenIds);
+      this.resService.removeHiddenIds ({
+        hiddenIds: this.hiddenIds,
+        tabIndex: this.tabIndex,
+        token: true
+      });
     }
   }
 
