@@ -131,6 +131,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.selectedRes = this.resService.selectedRes.subscribe((value) => {
       if (this.tabIndex === value.tabIndex && value.rightToken) {
+
         this.selectCount = value.select;
         this.candi1Count = value.candi1;
         this.candi2Count = value.candi2;

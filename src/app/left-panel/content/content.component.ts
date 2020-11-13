@@ -133,6 +133,18 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.hideResList();
         value.token = false;
       }
+      this.cdRef.detectChanges();
+    });
+
+    this.subscribers.selectedRes = this.resService.selectedRes.subscribe((value) => {
+      if (this.tabIndex === value.tabIndex) {
+        this.selectCount = value.select;
+        this.candi1Count = value.candi1;
+        this.candi2Count = value.candi2;
+        this.candi3Count = value.candi3;
+        this.candi4Count = value.candi4;
+        this.cdRef.detectChanges();
+      }
     });
 
     this.subscribers.moveRes = this.resService.moveRes.subscribe((value) => {
@@ -162,6 +174,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
+      console.log(value);
 
       if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token && this.isSaveStatus) {
         const saveData = value;
@@ -1003,6 +1016,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resList.splice(index + 1, 0, cloneItem);
     this.cdRef.detectChanges();
     this.changeStatus();
+
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length,
@@ -1143,6 +1157,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.candi2Count = this.resList.filter(item => item.resSelect === 'candi2').length;
     this.candi3Count = this.resList.filter(item => item.resSelect === 'candi3').length;
     this.candi4Count = this.resList.filter(item => item.resSelect === 'candi4').length;
+
     this.cdRef.detectChanges();
     this.resService.setSelectedRes({
       select: this.selectCount,
@@ -1500,6 +1515,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       hiddenIds: this.hiddenIds
     });
     this.changeStatus();
+
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
       totalCount: this.resList.length,
@@ -1959,7 +1975,10 @@ export class ContentComponent implements OnInit, OnDestroy {
       gazouReplaceUrl: pGazouReplaceUrl,
     });
 
-    this.resService.setPrintHtml({ tabIndex: this.tabIndex, html: htmlTag.allHtml });
+    this.resService.setPrintHtml({ 
+      tabIndex: this.tabIndex, 
+      html: htmlTag.allHtml 
+    });
     $.LoadingOverlay('hide');
   }
 

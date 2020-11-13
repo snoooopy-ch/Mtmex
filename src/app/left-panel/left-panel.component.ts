@@ -198,6 +198,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.addTab(value.sreTitle, value.resList, value.originSreTitle);
         this.selectedTabIndex = this.tabs.length - 1;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
+
         this.resService.setTotalRes({
           tabIndex: this.selectedTabIndex,
           totalCount: value.resList.length,
@@ -205,7 +206,26 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           rightToken: true,
           statusToken: true
         });
+
+        const selectCount = value.resList.filter(item => item.resSelect === 'select').length;
+        const candi1Count = value.resList.filter(item => item.resSelect === 'candi1').length;
+        const candi2Count = value.resList.filter(item => item.resSelect === 'candi2').length;
+        const candi3Count = value.resList.filter(item => item.resSelect === 'candi3').length;
+        const candi4Count = value.resList.filter(item => item.resSelect === 'candi4').length;
+        
+        this.resService.setSelectedRes({
+          select: selectCount,
+          candi1: candi1Count,
+          candi2: candi2Count,
+          candi3: candi3Count,
+          candi4: candi4Count,
+          tabIndex: this.selectedTabIndex,
+          title: this.tabs[this.selectedTabIndex].title,
+          rightToken: true,
+          statusToken: true
+        });
       });
+
     });
 
     this.subscribers.loadStatus = this.resService.loadResStatus.subscribe((value) => {
@@ -237,9 +257,28 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             this.selectedTabIndex = this.tabs.length - 1;
             value.tabIndex = this.selectedTabIndex;
             this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
+
             this.resService.setTotalRes({
               tabIndex: this.selectedTabIndex,
               totalCount: value.data.resList.length,
+              title: this.tabs[this.selectedTabIndex].title,
+              rightToken: true,
+              statusToken: true
+            });
+
+            const selectCount = value.data.resList.filter(item => item.resSelect === 'select').length;
+            const candi1Count = value.data.resList.filter(item => item.resSelect === 'candi1').length;
+            const candi2Count = value.data.resList.filter(item => item.resSelect === 'candi2').length;
+            const candi3Count = value.data.resList.filter(item => item.resSelect === 'candi3').length;
+            const candi4Count = value.data.resList.filter(item => item.resSelect === 'candi4').length;
+            
+            this.resService.setSelectedRes({
+              select: selectCount,
+              candi1: candi1Count,
+              candi2: candi2Count,
+              candi3: candi3Count,
+              candi4: candi4Count,
+              tabIndex: this.selectedTabIndex,
               title: this.tabs[this.selectedTabIndex].title,
               rightToken: true,
               statusToken: true
@@ -357,6 +396,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         rightToken: true,
         statusToken: false
       });
+
       this.resService.setTotalRes({
         tabIndex: 0,
         totalCount: 0,
@@ -641,4 +681,5 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   selectCommandHeaderValue(value: any) {
     return value === undefined ? '' : value;
   }
+
 }

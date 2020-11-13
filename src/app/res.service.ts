@@ -67,7 +67,6 @@ export class ResService {
     electron.ipcRenderer.on('getStatus', (event, value) => {
       this.loadResStatus.next(value);
     });
-
   }
 
   loadRes(url, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, isContinuousAnchor: boolean,
