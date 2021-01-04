@@ -176,8 +176,9 @@ export class ResService {
 
     let htmlTag = `★■●${options.tabName}●■★\n`;
 
-    if (options.txtURL !== '')
+    if (options.txtURL !== '') {
       htmlTag += `URL入力欄：${options.txtURL}\n`;
+    }
 
     let yobi = ``;
 
@@ -252,10 +253,11 @@ export class ResService {
 
     let htmlTag = ``;
 
-    let tabName = `★■●${options.tabName}●■★\n`;
+    const tabName = `★■●${options.tabName}●■★\n`;
     let tabUrl = ``;
-    if (options.txtURL !== '')
+    if (options.txtURL !== '') {
       tabUrl = `URL入力欄：${options.txtURL}\n`;
+    }
 
     let exists = false;
     for (const res of resList){
@@ -317,19 +319,20 @@ export class ResService {
     // remove res-img-link, res-gif-link, res-img-link, res-gif-link
     content = content.replace(/(\s+class="res-img-link"|\s+class="res-link"| class="res-img-link res-gif-link")/ig, ``);
 
-    if (options.isSurroundImage) {
+    const imgUrls = content.match(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig);
+    if (options.isSurroundImage && imgUrls !== null && imgUrls.length > 1) {
       content = content.replace(/<a href="https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)">https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)<\/a>/ig,
-      function(match){
-        return `<div>` + match + `</div><!-- div end -->`
+      (match) => {
+        return `<div>` + match + `</div><!-- div end -->`;
       });
-      let rel = this.generateRelValue(res.num);
+      const rel = this.generateRelValue(res.num);
 
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
       `$1 class="swipe" rel="${rel}" title="" target="_blank"$2`);
 
       content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->(<br><div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
-      function(match){
-        return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`
+      (match) => {
+        return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`;
       });
 
       if (options.gazouReplaceUrl !== undefined && options.gazouReplaceUrl !== '') {
@@ -509,12 +512,12 @@ export class ResService {
   }
 
   generateRelValue(resNum) {
-    var result = '';
-    var characters = 'abcdefghijklmnopqrstuvwxyz';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < 4; i++ ) {
+    let result = '';
+    const characters = 'abcdefghijklmnopqrstuvwxyz';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < 4; i++ ) {
        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-    return "res_" + result + resNum;
+    return 'res_' + result + resNum;
  }
 }

@@ -8,3 +8,7 @@
   padding: 0 4px;
   margin: 0 2px 0 0;
 }
+
+label.full-width{
+  width: 100%;
+}

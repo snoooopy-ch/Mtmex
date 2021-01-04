@@ -12,6 +12,7 @@ import {
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ResItem} from '../../models/res-item';
+import {ResService} from '../../res.service';
 
 declare var jQuery: any;
 declare var $: any;
@@ -64,7 +65,7 @@ export class ResComponent implements OnInit {
   resContent = '';
   @Input() characterColors;
 
-  constructor(private cdRef: ChangeDetectorRef, private ref: ElementRef) {
+  constructor(private cdRef: ChangeDetectorRef, private ref: ElementRef, private resService: ResService) {
 
   }
 
@@ -97,7 +98,7 @@ export class ResComponent implements OnInit {
         $('#preview').css('display', 'none');
       });
 
-      $('a.res-link').click(function(event) {
+      $('a.res-link').click((event) => {
         event.stopPropagation();
       });
 
@@ -266,7 +267,7 @@ export class ResComponent implements OnInit {
     $('a.res-img-link').click((event) => {
       event.stopPropagation();
     });
-    
+
     const xOffset = 150;
     const yOffset = 40;
     const imgPop = $('#preview img');

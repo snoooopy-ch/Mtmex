@@ -51,14 +51,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   isReplaceName: boolean;
   isSurroundImage: boolean;
   isOutputCandiBelow: boolean;
-  gazouReplaceUrl: string = '';
+  gazouReplaceUrl = '';
   private readonly stopTimer = new Subject<void>();
   private readonly startTimer = new Subject<void>();
 
   constructor(private resService: ResService,
-    private cdRef: ChangeDetectorRef,
-    private clipboard: Clipboard,
-    private hotkeysService: HotkeysService) {
+              private cdRef: ChangeDetectorRef,
+              private clipboard: Clipboard,
+              private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
     this.isReplaceName = true;
     this.isSurroundImage = false;
@@ -164,13 +164,13 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       if (value !== undefined && value === 0){
         this.printHtmlTagHandler();
       }
-    })
+    });
 
     this.subscribers.printAllHtmlOnStatus = this.resService.printAllHtmlOnStatus.subscribe( (value) => {
       if (value !== undefined && value === 0){
         this.printAllHtmlTagHandler();
       }
-    })
+    });
 
     this.subscribers.status = this.resService.status.subscribe((value) => {
       if (this.tabIndex === value.tabIndex) {
@@ -195,7 +195,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
           token: true,
         });
       }
-    })
+    });
 
     electron.ipcRenderer.on('printAllHtmlMenuClick', (event) => {
       this.printAllHtmlTagHandler();

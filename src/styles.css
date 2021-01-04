@@ -202,8 +202,8 @@ label {
   font-size: 14px
 }
 
-.main-container app-left-panel app-content .extract .btn-short {
-  width: 41px;
+.main-container app-left-panel app-content .btn-short {
+  min-width: 41px;
   height: 29px;
   font-size: 14px
 }
@@ -417,24 +417,24 @@ app-res .row-4 a {
   margin: 0 5px 0 0;
 }
 
-.main-container app-left-panel app-status .btn-print-html-tag {
+.main-container app-left-panel .btn-print-html-tag {
   width: 95px;
   background-color: lightsalmon;
   border:solid 1px lightsalmon;
 }
 
-.main-container app-left-panel app-status .btn-print-html-tag:hover {
+.main-container app-left-panel .btn-print-html-tag:hover {
   background-color: white;
   color: lightsalmon;
 }
 
-.main-container app-left-panel app-status .btn-print-all-tag {
+.main-container app-left-panel .btn-print-all-tag {
   width: 95px;
   background-color: #cc99FF;
   border:solid 1px #cc99FF;
 }
 
-.main-container app-left-panel app-status .btn-print-all-tag:hover {
+.main-container app-left-panel .btn-print-all-tag:hover {
   background-color: white;
   color: #cc99FF;
 }

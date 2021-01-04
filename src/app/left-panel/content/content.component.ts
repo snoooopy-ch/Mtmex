@@ -1975,9 +1975,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       gazouReplaceUrl: pGazouReplaceUrl,
     });
 
-    this.resService.setPrintHtml({ 
-      tabIndex: this.tabIndex, 
-      html: htmlTag.allHtml 
+    this.resService.setPrintHtml({
+      tabIndex: this.tabIndex,
+      html: htmlTag.allHtml
     });
     $.LoadingOverlay('hide');
   }
@@ -2168,5 +2168,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       selectAllOption: this.selectCommandWithHeader,
     });
     this.cdRef.detectChanges();
+  }
+
+  printHtmlTagHandler() {
+    this.resService.setPrintHtmlOnStatus(0);
+  }
+
+  printAllHtmlTagHandler() {
+    this.resService.setPrintAllHtmlOnStatusSource(0);
   }
 }
