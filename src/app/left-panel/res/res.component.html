@@ -38,7 +38,7 @@
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
              [(ngModel)]="item.resSelect" value="candi4" (click)="candi4ClickHandler($event)">4</label>
-    <h4 class="label-res-name" [innerHTML]="item.name | safeHtml" (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
+    <h4 class="label-res-name" [ngClass]="{'red': item.isInserted}" [innerHTML]="item.name | safeHtml" (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
     <h4 class="res-date" (click)="item.isFiltered ? selectedNumHandler() : false">{{item.date}}</h4>
     <h4 class="label-res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}"
         (click)="item.isFiltered ? selectedNumHandler() : false">ID:</h4>
@@ -61,6 +61,7 @@
              [(ngModel)]="item.resColor" [checked]=true (change)="colorChangeHandler($event)" value="#000">
       なし
     </label>
+    <button class="btn-edit-text" (click)="btnInsertClickHandler($event)" >挿入</button>
     <label class="radio-container" *ngFor="let colorItem of characterColors">
       <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
              [(ngModel)]="item.resColor" (change)="colorChangeHandler($event)" [value]="colorItem">

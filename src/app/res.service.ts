@@ -429,7 +429,7 @@ export class ResService {
     const resId = res.id.replace(/(<span[^<]+>)|(<\/span>)/ig, '');
 
     htmlTag += `${res.num}: <span class="name">${resName}</span>`;
-    htmlTag += ` <span style="color: gray;"> ${resDate}`;
+    htmlTag += ` <span style="color: #808080;"> ${resDate}`;
 
     if (options.shuturyoku) {
       if (res.id.length > 0 ) {
@@ -459,6 +459,9 @@ export class ResService {
         htmlTag += ` left${res.anchorLevel}`;
       }
       htmlTag += `"><!-- res_s -->`;
+      if (res.isInserted) {
+        htmlTag += options.insertPrefix;
+      }
       let suffix = '';
       if (res.resFontSize === options.resSizeList[1].value || res.resFontSize === options.resSizeList[2].value ){
         htmlTag += `<span style="font-size:${res.resFontSize};">`;
@@ -469,7 +472,9 @@ export class ResService {
         htmlTag += `<span style="color:${res.resColor};">`;
         suffix = `</span>` + suffix;
       }
-
+      if (res.isInserted) {
+        suffix += options.insertSuffix;
+      }
       htmlTag += `${content}${suffix}<!-- res_e -->`;
 
     } else {
@@ -482,7 +487,9 @@ export class ResService {
         htmlTag += ` left${res.anchorLevel}`;
       }
       htmlTag += `"><!-- res_s -->`;
-
+      if (res.isInserted) {
+        htmlTag += options.insertPrefix;
+      }
       if (res.idColor !== '#000') {
         htmlTag += `<!-- ${res.idClassNoSelect}_s -->`;
       }
@@ -503,6 +510,10 @@ export class ResService {
       htmlTag += `${content}${suffix}`;
       if (res.idColor !== '#000') {
         htmlTag += `<!-- ${res.idClassNoSelect}_e -->`;
+      }
+
+      if (res.isInserted) {
+        htmlTag += options.insertSuffix;
       }
       htmlTag += `<!-- res_e -->`;
 

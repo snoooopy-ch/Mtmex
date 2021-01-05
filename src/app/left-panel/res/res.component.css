@@ -20,6 +20,10 @@ div h4 {
   text-overflow: ellipsis;
   max-width: 294px;
 }
+.row-1 .label-res-name.red{
+  color: red;
+  font-weight: bold;
+}
 .row-1 .res-date {
   color: grey;
   min-width: 130px;

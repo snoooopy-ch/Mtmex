@@ -41,9 +41,12 @@
   <input type="text" [(ngModel)]="txtURL" (ngModelChange)="txtUrlChangeHandler()">
 </div>
 <h3 #tabTitle>{{tabName}}</h3>
+<div *ngIf="suffixNumber?.length>0">
+  <h3 class="light-blue">{{titleUrl}}{{suffixNumber}}</h3>
+</div>
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="100"
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true"
-[ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + 173) + 'px)'}">
+[ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 196 : 173)) + 'px)'}">
 
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
              [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
@@ -64,6 +67,7 @@
              (setDraggableEmitter)="setDraggable(resList.indexOf(resItem), $event)"
              (selectedNumEmitter)="selectedNum(resItem)"
              (cancelAllStatusEmitter)="cancelAllStatus(resItem)"
+             (insertResEmitter)="insertRes(resItem)"
              [tabIndex]="tabIndex"
              [ngClass]="{'hide-res':!resItem.isShow}"
              (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"

@@ -50,6 +50,7 @@ export class ResComponent implements OnInit {
   @Output() selectedNumEmitter = new EventEmitter();
   @Output() deleteResEmitter = new EventEmitter();
   @Output() cancelAllStatusEmitter = new EventEmitter();
+  @Output() insertResEmitter = new EventEmitter();
 
   @Input() backgroundColors;
   @Input() idStyles;
@@ -505,5 +506,10 @@ export class ResComponent implements OnInit {
 
   lblResFontHandler($event: MouseEvent) {
     $event.stopPropagation();
+  }
+
+  btnInsertClickHandler($event: MouseEvent) {
+    $event.stopPropagation();
+    this.insertResEmitter.emit();
   }
 }

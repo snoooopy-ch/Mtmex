@@ -6,13 +6,13 @@ import {
   OnInit, Output,
   ViewChild
 } from '@angular/core';
-import { CdkDragDrop, CdkDragStart, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ResItem } from '../../models/res-item';
-import { ResService } from '../../res.service';
-import { normal } from 'color-blend';
-import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
-import { MatButtonToggle, MatButtonToggleChange } from '@angular/material/button-toggle';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
+import {ResItem} from '../../models/res-item';
+import {ResService} from '../../res.service';
+import {normal} from 'color-blend';
+import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
+import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
 
 declare var jQuery: any;
@@ -84,6 +84,10 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() selectCommandWithHeader: string;
   @Input() isReplaceStatusFile: boolean;
   @Input() statusFilePath: string;
+  @Input() insertPrefix: string;
+  @Input() insertSuffix: string;
+  @Input() suffixNumber: string;
+  @Input() titleUrl: string;
 
   public subscribers: any = {};
   private isChangedSearch: boolean;
@@ -128,7 +132,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     setTimeout(this.setSaveStatus.bind(this), 2000);
 
     this.subscribers.LoadHiddenIds = this.resService.loadRemoveHideIds.subscribe((value) => {
-      if (value.token === true && this.tabIndex === value.tabIndex){
+      if (value.token === true && this.tabIndex === value.tabIndex) {
         this.hiddenIds = value.hiddenIds;
         this.hideResList();
         value.token = false;
@@ -186,7 +190,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         if (value.isAllTabSave) {
           saveData.filePath = `${value.autoFilePath}${this.tabName}.txt`;
         }
-        if (this.isReplaceStatusFile && this.statusFilePath.length > 0){
+        if (this.isReplaceStatusFile && this.statusFilePath.length > 0) {
           saveData.filePath = this.statusFilePath;
         }
         let saveResList = [];
@@ -201,7 +205,7 @@ export class ContentComponent implements OnInit, OnDestroy {
             || i.resSelect === 'candi1'
             || i.resSelect === 'candi2'
             || i.resSelect === 'candi3'
-            || i.resSelect === 'candi4')).length < 1){
+            || i.resSelect === 'candi4')).length < 1) {
           return;
         }
         for (const res of saveResList) {
@@ -298,6 +302,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isSaveStatus = true;
     this.cdRef.detectChanges();
   }
+
   /**
    * ショートカットキー値を設定します。
    */
@@ -305,7 +310,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     // 選択ボタン
     if (this.subHotKeys.hasOwnProperty('sentaku_no1')) {
       this.hotkeysService.add(new Hotkey([this.subHotKeys.sentaku_no1,
-      this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
+        this.subHotKeys.sentaku_no2, this.subHotKeys.sentaku_no3], (event: KeyboardEvent): boolean => {
         this.reverseHoveredRes(true);
         return false;
       }));
@@ -321,11 +326,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi1') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none' });
+              {selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[2];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'candi1' });
+              {selected: 'candi1'});
           }
         }
         return false;
@@ -337,11 +342,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi2') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none' });
+              {selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[3];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'candi2' });
+              {selected: 'candi2'});
           }
         }
         return false;
@@ -353,11 +358,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi3') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none' });
+              {selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[4];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'candi3' });
+              {selected: 'candi3'});
           }
         }
         return false;
@@ -369,11 +374,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           if (this.resList[this.hovered].resSelect === 'candi4') {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'none' });
+              {selected: 'none'});
           } else {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[5];
             this.selectedRes(this.resList[this.hovered],
-              { selected: 'candi4' });
+              {selected: 'candi4'});
           }
         }
         return false;
@@ -526,7 +531,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー選択（T選択）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_sentaku, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, { select: 1, resBackgroundColor: this.backgroundColors[1] });
+          this.selectedTreeRes(this.hovered, {select: 1, resBackgroundColor: this.backgroundColors[1]});
           this.cdRef.detectChanges();
         }
         return false; // Prevent bubbling
@@ -535,7 +540,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択1（T1）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi1, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, { select: 2, resBackgroundColor: this.backgroundColors[2] });
+          this.selectedTreeRes(this.hovered, {select: 2, resBackgroundColor: this.backgroundColors[2]});
           this.cdRef.detectChanges();
         }
         return false;
@@ -544,7 +549,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択2（T2）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi2, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, { select: 3, resBackgroundColor: this.backgroundColors[3] });
+          this.selectedTreeRes(this.hovered, {select: 3, resBackgroundColor: this.backgroundColors[3]});
           this.cdRef.detectChanges();
         }
         return false;
@@ -553,7 +558,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択3（T3）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi3, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, { select: 4, resBackgroundColor: this.backgroundColors[4] });
+          this.selectedTreeRes(this.hovered, {select: 4, resBackgroundColor: this.backgroundColors[4]});
           this.cdRef.detectChanges();
         }
         return false;
@@ -562,7 +567,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー予備選択4（T4）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi4, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, { select: 5, resBackgroundColor: this.backgroundColors[5] });
+          this.selectedTreeRes(this.hovered, {select: 5, resBackgroundColor: this.backgroundColors[5]});
           this.cdRef.detectChanges();
         }
         return false;
@@ -571,7 +576,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // ツリー解除（T解除）
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_kaijo, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          this.selectedTreeRes(this.hovered, { select: 0, resBackgroundColor: this.backgroundColors[0] });
+          this.selectedTreeRes(this.hovered, {select: 0, resBackgroundColor: this.backgroundColors[0]});
           this.cdRef.detectChanges();
         }
         return false;
@@ -908,6 +913,16 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.setResMenu(3);
         return false; // Prevent bubbling
       }));
+
+      // 挿入
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.sounyuu, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          const item = this.resList[this.hovered];
+          this.insertRes(item);
+          this.cdRef.detectChanges();
+        }
+        return false; // Prevent bubbling
+      }));
     }
   }
 
@@ -1026,23 +1041,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   duplicateRes(item: any) {
     const index = this.resList.indexOf(item);
     const cloneItem = Object.assign({}, item);
-    this.resList.splice(index + 1, 0, cloneItem);
-    this.cdRef.detectChanges();
-    this.changeStatus();
-
-    this.resService.setTotalRes({
-      tabIndex: this.tabIndex,
-      totalCount: this.resList.length,
-      title: this.tabName,
-      rightToken: true,
-      statusToken: true
-    });
-
-    if (this.originalResList !== undefined) {
-      const indexOrigin = this.originalResList.indexOf(item);
-      const cloneOriginItem = Object.assign({}, item);
-      this.originalResList.splice(indexOrigin + 1, 0, cloneOriginItem);
-    }
+    this.insertResToList(index, cloneItem);
   }
 
   /**
@@ -1055,8 +1054,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.resService.setHiddenIds(this.hiddenIds);
   }
 
-  hideResList(){
-    if (this.originalResList.length === 0){
+  hideResList() {
+    if (this.originalResList.length === 0) {
       this.originalResList = [...this.resList];
     }
     for (const res of this.originalResList) {
@@ -1194,6 +1193,19 @@ export class ContentComponent implements OnInit, OnDestroy {
         if ($event.isSelect) {
           res.resBackgroundColor = $event.resBackgroundColor;
           res.resSelect = 'select';
+        }
+      }
+    }
+    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes) {
+      for (const res of this.originalResList) {
+        if (res.id === id) {
+          res.idBackgroundColor = $event.idBackgroundColor;
+          res.idColor = $event.idColor;
+          res.idClassNoSelect = $event.idClassNoSelect;
+          if ($event.isSelect) {
+            res.resBackgroundColor = $event.resBackgroundColor;
+            res.resSelect = 'select';
+          }
         }
       }
     }
@@ -1987,6 +1999,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       replacedName: this.replacedName,
       isSurroundImage: pSurroundImage,
       gazouReplaceUrl: pGazouReplaceUrl,
+      insertPrefix: this.insertPrefix,
+      insertSuffix: this.insertSuffix
     });
 
     this.resService.setPrintHtml({
@@ -2017,12 +2031,12 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.resList[this.hovered].resSelect === 'select' && canUnselect) {
         this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
         this.selectedRes(this.resList[this.hovered],
-          { selected: 'none' });
+          {selected: 'none'});
 
       } else {
         this.resList[this.hovered].resBackgroundColor = this.backgroundColors[1];
         this.selectedRes(this.resList[this.hovered],
-          { selected: 'select' });
+          {selected: 'select'});
       }
     }
   }
@@ -2032,7 +2046,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.resList[this.hovered].resSelect === 'select' && canUnselect) {
         this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
         this.selectedRes(this.resList[this.hovered],
-          { selected: 'none' });
+          {selected: 'none'});
       }
     }
   }
@@ -2190,5 +2204,32 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   printAllHtmlTagHandler() {
     this.resService.setPrintAllHtmlOnStatusSource(0);
+  }
+
+  private insertResToList(index, item) {
+    this.resList.splice(index + 1, 0, item);
+    this.cdRef.detectChanges();
+    this.changeStatus();
+
+    this.resService.setTotalRes({
+      tabIndex: this.tabIndex,
+      totalCount: this.resList.length,
+      title: this.tabName,
+      rightToken: true,
+      statusToken: true
+    });
+
+    if (this.originalResList !== undefined) {
+      const indexOrigin = this.originalResList.indexOf(item);
+      const cloneOriginItem = Object.assign({}, item);
+      this.originalResList.splice(indexOrigin + 1, 0, cloneOriginItem);
+    }
+  }
+
+  insertRes(item: any) {
+    const index = this.resList.indexOf(item);
+    const cloneItem = Object.assign({}, item);
+    cloneItem.isInserted = !item.isInserted;
+    this.insertResToList(index, cloneItem);
   }
 }

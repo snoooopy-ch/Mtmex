@@ -129,7 +129,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
           , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'
-          , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down', 'sentaku_off1', 'sentaku_off2'];
+          , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down', 'sentaku_off1', 'sentaku_off2', 'sounyuu'];
         for (const key of arrayKeys) {
           if (this.settings[key].toLowerCase() === 'insert'){
             this.subHotKeys[key] = 'ins';
@@ -195,7 +195,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.resData = this.resService.resData.subscribe( (value) => {
       if (this.tabGroup === undefined) { return; }
       this.zone.run(() => {
-        this.addTab(value.sreTitle, value.resList, value.originSreTitle);
+        const numberSuffixes = value.originSreTitle.match(/_(\d+)/gi);
+        let suffixNumber;
+        if (numberSuffixes?.length > 0) {
+          suffixNumber = numberSuffixes[0].replace(/_/i, '');
+        }
+        this.addTab(value.sreTitle, value.resList, value.originSreTitle, '', suffixNumber);
         this.selectedTabIndex = this.tabs.length - 1;
         this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
 
@@ -212,7 +217,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         const candi2Count = value.resList.filter(item => item.resSelect === 'candi2').length;
         const candi3Count = value.resList.filter(item => item.resSelect === 'candi3').length;
         const candi4Count = value.resList.filter(item => item.resSelect === 'candi4').length;
-        
+
         this.resService.setSelectedRes({
           select: selectCount,
           candi1: candi1Count,
@@ -271,7 +276,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             const candi2Count = value.data.resList.filter(item => item.resSelect === 'candi2').length;
             const candi3Count = value.data.resList.filter(item => item.resSelect === 'candi3').length;
             const candi4Count = value.data.resList.filter(item => item.resSelect === 'candi4').length;
-            
+
             this.resService.setSelectedRes({
               select: selectCount,
               candi1: candi1Count,
@@ -354,7 +359,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.resService.saveSearchList(this.searchList);
   }
 
-  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '', pStatusFilePath = '') {
+  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '', pStatusFilePath = '', pSuffixNumber = '') {
     this.tabs = [...this.tabs, {
       title: pTitle,
       active: true,
@@ -365,7 +370,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       originSreTitle: pOriginSreTitle,
       originalResList: pResList,
       statusFilePath: pStatusFilePath,
-      hiddenIds: []
+      hiddenIds: [],
+      suffixNumber: pSuffixNumber
     }];
   }
 
@@ -512,7 +518,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           replaceName: this.settings.namae_mae,
           replacedName: this.settings.namae_ato,
           isSurroundImage: pSurroundImage,
-          gazouReplaceUrl: pGazouReplaceUrl
+          gazouReplaceUrl: pGazouReplaceUrl,
+          insertPrefix: this.settings.sounyuu_mae,
+          insertSuffix: this.settings.sounyuu_usiro
         });
 
         if (index !== 0 && oneHtmlTag.allHtml.length > 0) {

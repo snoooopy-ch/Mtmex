@@ -31,4 +31,5 @@ export class ResItem{
   isNotice: boolean;
   anchorLevel: number;
   numBackground = 'transparent';
+  isInserted = false;
 }
