@@ -174,11 +174,15 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
-      console.log(value);
 
       if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token && this.isSaveStatus) {
         const saveData = value;
         saveData.resList = [];
+
+        if (this.statusFilePath.length > 0 && !value.isSaveOfLoadFile) {
+          return;
+        }
+
         if (value.isAllTabSave) {
           saveData.filePath = `${value.autoFilePath}${this.tabName}.txt`;
         }
@@ -190,6 +194,15 @@ export class ContentComponent implements OnInit, OnDestroy {
           saveResList = this.originalResList;
         } else {
           saveResList = this.resList;
+        }
+
+        if (this.statusFilePath.length > 0 &&
+          (saveResList.filter(i => i.resSelect === 'select'
+            || i.resSelect === 'candi1'
+            || i.resSelect === 'candi2'
+            || i.resSelect === 'candi3'
+            || i.resSelect === 'candi4')).length < 1){
+          return;
         }
         for (const res of saveResList) {
           const resItem = Object.assign({}, res);
@@ -770,7 +783,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // レスの一番上に移動
       this.hotkeysService.add(new Hotkey(this.subHotKeys.res_most_up, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          let item = this.resList[this.hovered];
+          const item = this.resList[this.hovered];
           this.moveResToTop(item);
           this.cdRef.detectChanges();
         }
@@ -780,7 +793,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // レスの一番下に移動
       this.hotkeysService.add(new Hotkey(this.subHotKeys.res_most_down, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          let item = this.resList[this.hovered];
+          const item = this.resList[this.hovered];
           this.moveResToBottom(item);
           this.cdRef.detectChanges();
         }
@@ -1405,7 +1418,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     const re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
 
-    if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length) {
+    if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0
+      && this.resList.length !== this.originalResList.length) {
       this.resList = [...this.originalResList];
     }
 

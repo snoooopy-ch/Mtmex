@@ -54,6 +54,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   gazouReplaceUrl = '';
   private readonly stopTimer = new Subject<void>();
   private readonly startTimer = new Subject<void>();
+  isSaveOfLoadFile: boolean;
 
   constructor(private resService: ResService,
               private cdRef: ChangeDetectorRef,
@@ -65,6 +66,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isSaveOfLoadFile = true;
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
       this.cdRef.detectChanges();
@@ -401,6 +403,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       candi2Count: this.candi2Count,
       candi3Count: this.candi3Count,
       candi4Count: this.candi4Count,
+      isSaveOfLoadFile: this.isSaveOfLoadFile
     });
   }
 

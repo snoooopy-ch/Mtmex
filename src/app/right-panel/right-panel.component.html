@@ -3,6 +3,9 @@
   <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
   <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
 </div>
+<div class="mt-1">
+  <label class="full-width"><input type="checkbox" [(ngModel)]="isSaveOfLoadFile">復元ファイル自動生成を行う</label>
+</div>
 <div class="select-container">
   <label class="lbl-input-container"><input type="radio" name="opt-select-side" [(ngModel)]="selectCommandWithButton" value="select">選択＿＿＿</label>
   <button class="border-round" (click)="btnAllSelSideBarClickHandler()">実行</button>
@@ -181,6 +184,9 @@
   <button class="btn-left-round" (click)="btnSetResMenuHandler(1)">メニュー１</button>
   <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
   <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
+</div>
+<div class="mt-1">
+  <label class="full-width"><input type="checkbox" [(ngModel)]="isSaveOfLoadFile">復元ファイル自動生成を行う</label>
 </div>
 <div class="width-100">
   <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
