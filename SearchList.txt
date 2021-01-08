@@ -1,3 +1,4 @@
+jpg
 a
 jpg|png|gif
 jpg

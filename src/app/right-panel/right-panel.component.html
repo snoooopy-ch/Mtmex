@@ -80,8 +80,8 @@
   </div>
 </div>
 <div class="width-100">
-  <button id="btn-print-all-tag" class="border-round" (click)="printAllHtmlTagHandler()">全タブ出力</button>
-  <button id="btn-print-html-tag" class="border-round" (click)="printHtmlTagHandler()">出力</button>
+  <button class="border-round btn-print-all-tag" (click)="printAllHtmlTagHandler()">全タブ出力</button>
+  <button class="border-round btn-print-html-tag" (click)="printHtmlTagHandler()">出力</button>
   <button id="btn-copy-tag" class="border-round" [cdkCopyToClipboard]="htmlTag">コピー</button>
   <textarea id="txt-html-tag" [(ngModel)]="htmlTag"></textarea>
 </div>
@@ -194,6 +194,8 @@
   <input type="text" [(ngModel)]="txtRemarkRes">
   <label>非表示レス</label>
   <input type="text" [(ngModel)]="txtHideRes">
+  <button class="border-round btn-print-all-tag" (click)="printAllHtmlTagHandler()">全タブ出力</button>
+  <button class="border-round btn-print-html-tag" (click)="printHtmlTagHandler()">出力</button>
   <label>非表示のID</label>
   <div class="hidden-ids-container">
     <button class="btn-show-id" *ngFor="let id of hiddenIds;" (click)="ShowIdHandler(id)">[X]{{id}}</button>

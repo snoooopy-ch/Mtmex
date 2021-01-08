@@ -691,25 +691,27 @@ app-res .row-4 a {
   padding: 0;
 }
 
-.main-container app-right-panel #btn-print-html-tag {
+.main-container app-right-panel .width-100 .btn-print-html-tag {
   height: 100px;
   background-color: lightsalmon;
   border:solid 1px lightsalmon;
 }
 
-.main-container app-right-panel #btn-print-html-tag:hover {
+.main-container app-right-panel .width-100 .btn-print-html-tag:hover {
   background-color: white;
+  border:solid 1px lightsalmon;
   color: lightsalmon;
 }
 
-.main-container app-right-panel #btn-print-all-tag {
+.main-container app-right-panel .width-100 .btn-print-all-tag {
   height: 55px;
   background-color: #cc99FF;
   border:solid 1px #cc99FF;
 }
 
-.main-container app-right-panel #btn-print-all-tag:hover {
+.main-container app-right-panel .width-100 .btn-print-all-tag:hover {
   background-color: white;
+  border:solid 1px #cc99FF;
   color: #cc99FF;
 }
 
