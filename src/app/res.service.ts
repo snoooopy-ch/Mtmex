@@ -319,7 +319,7 @@ export class ResService {
     // remove res-img-link, res-gif-link, res-img-link, res-gif-link
     content = content.replace(/(\s+class="res-img-link"|\s+class="res-link"| class="res-img-link res-gif-link")/ig, ``);
 
-    const imgUrls = content.match(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig);
+    const imgUrls = content.match(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https?:)/ig);
     if (options.isSurroundImage && imgUrls !== null && imgUrls.length > 1) {
       content = content.replace(/<a href="https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)">https?:?\/\/[^"']*\.(?:png|jpg|jpeg|gif)<\/a>/ig,
       (match) => {
@@ -327,7 +327,7 @@ export class ResService {
       });
       const rel = this.generateRelValue(res.num);
 
-      content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
+      content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https?:)/ig,
       `$1 class="swipe" rel="${rel}" title="" target="_blank"$2`);
 
       content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->(<br><div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
@@ -336,10 +336,10 @@ export class ResService {
       });
 
       if (options.gazouReplaceUrl !== undefined && options.gazouReplaceUrl !== '') {
-        content = content.replace(/(https:\/\/[^"><]*)(\/[^"<>]*)/ig, `${options.gazouReplaceUrl}$2`);
+        content = content.replace(/(https?:\/\/[^"><]*)(\/[^"<>]*)/ig, `${options.gazouReplaceUrl}$2`);
       }
     } else {
-      content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https:)/ig,
+      content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https?:)/ig,
       `$1 target="_blank" class="image"$2`);
     }
 

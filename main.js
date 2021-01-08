@@ -683,8 +683,8 @@ function readLines(line) {
       }
 
       var expUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-      var expGifUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].gif)/ig;
-      var expImgUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|].(jpg|jpeg|png|bmp))/ig;
+      var expGifUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]\.gif)/ig;
+      var expImgUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]\.(jpg|jpeg|png|bmp))/ig;
 
       if (new RegExp(expUrl).test(tmp_item)) {
         if (new RegExp(expGifUrl).test(tmp_item)) {

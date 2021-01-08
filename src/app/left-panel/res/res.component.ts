@@ -84,7 +84,8 @@ export class ResComponent implements OnInit {
       const xOffset = 150;
       const yOffset = 40;
       const imgPop = $('#preview img');
-      $('a.res-img-link').hover(function(e) {
+      $('.res-container').on('mouseenter', 'a.res-img-link', function(e) {
+
         this.t = this.href;
         this.title = '';
         imgPop.attr('src', this.href);
@@ -94,7 +95,8 @@ export class ResComponent implements OnInit {
           .css('top', (e.pageY - xOffset) + 'px')
           .css('left', (e.pageX + yOffset) + 'px')
           .fadeIn('slow');
-      }, function() {
+      });
+      $('.res-container').on('mouseleave', 'a.res-img-link', function(e) {
         this.title = this.t;
         $('#preview').css('display', 'none');
       });

@@ -1214,7 +1214,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   selectedTreeRes(index: number, $event: any) {
     const selectKeys = ['none', 'select', 'candi1', 'candi2', 'candi3', 'candi4'];
-    if (index < this.resList.length - 1 && (this.resList[index + 1].isAdded || this.resList[index].isAdded)) {
+    if (index < this.resList.length && (this.resList[index + 1]?.isAdded || this.resList[index]?.isAdded)) {
       this.resList[index].resSelect = selectKeys[$event.select];
       this.resList[index].resBackgroundColor = $event.resBackgroundColor;
       // this.calcSelectedRes($event.select, this.resList[index]);
@@ -1226,9 +1226,9 @@ export class ContentComponent implements OnInit, OnDestroy {
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
           // this.calcSelectedRes($event.select, this.resList[i]);
         }
-        while (this.resList[i].isAdded && i > -1);
+        while (this.resList[i]?.isAdded && i > -1);
         i = index + 1;
-        while (this.resList[i].isAdded && i < this.resList.length) {
+        while (this.resList[i]?.isAdded && i < this.resList.length) {
           this.resList[i].resSelect = selectKeys[$event.select];
           this.resList[i].resBackgroundColor = $event.resBackgroundColor;
           // this.calcSelectedRes($event.select, this.resList[i]);
@@ -1236,7 +1236,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       } else if (this.resList[index + 1]) {
         for (let i = index + 1; i < this.resList.length; i++) {
-          if (!this.resList[i].isAdded) {
+          if (!this.resList[i]?.isAdded) {
             break;
           }
           this.resList[i].resSelect = selectKeys[$event.select];
@@ -2184,6 +2184,10 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   btnImageSearchHandler() {
     this.searchKeyword = 'jpg|png|gif';
+    this.searchStatusEmitter.emit({
+      searchKeyword: this.searchKeyword,
+      searchOption: this.searchOption
+    });
   }
 
   btnAllSelHeaderClickHandler() {
