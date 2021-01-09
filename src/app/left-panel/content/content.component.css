@@ -21,6 +21,15 @@ app-res:last-child{border:none;}
   color: #3981e6;
 }
 
+.searched{
+  background: #ffa500;
+}
+
+.searched button{
+  background: #ffa500;
+  border: 1px solid #ffa500;
+}
+
 
 
 

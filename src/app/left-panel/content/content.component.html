@@ -14,13 +14,14 @@
          [typeaheadScrollable]="true"
          [typeaheadOptionsInScrollableView]="15"
          [typeaheadOptionsLimit]="searchWordMax"
+         (typeaheadOnSelect)="txtSearchSelectHander($event)"
          (keydown)="txtSearchKeyPressHandler($event)"
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
   <button type="button" class="btn-short" (click)="btnImageSearchHandler()">画像</button>
   <button type="button" class="btn-long" (click)="btnSearchHandler()" #btnSearch>抽出</button>
   <mat-button-toggle-group name="btn-search" [multiple]="true">
-    <mat-button-toggle class="btn-long border-round" #btnSearchStatus (change)="btnSearchChangeHandler()">抽出解除</mat-button-toggle>
+    <mat-button-toggle class="btn-long border-round" [ngClass]="{'searched': isSearched}"  #btnSearchStatus (change)="btnSearchChangeHandler()">抽出解除</mat-button-toggle>
   </mat-button-toggle-group>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="btnNoticeChangeHandler()" #btnNotice>注目レス</mat-button-toggle>

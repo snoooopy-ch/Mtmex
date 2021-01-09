@@ -13,6 +13,7 @@ import {normal} from 'color-blend';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
+import {TypeaheadMatch} from "ngx-bootstrap/typeahead";
 
 
 declare var jQuery: any;
@@ -107,6 +108,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   private searchedFiled: number;
   private isBackup: boolean;
   isSaveStatus: boolean;
+  isSearched: boolean;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -127,6 +129,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isTreeSearch = true;
+    this.isSearched = false;
     this.originalResList = [];
 
     setTimeout(this.setSaveStatus.bind(this), 2000);
@@ -816,7 +819,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.chuushutu_kaijo, (event: KeyboardEvent): boolean => {
         if (this.btnSearchStatus.checked) {
           this.btnSearchStatus.checked = false;
-          this.btnSearchChangeHandler();
+          this.searchChangeStatus();
         }
         return false; // Prevent bubbling
       }));
@@ -832,7 +835,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.hotkeysService.add(new Hotkey('ctrl+enter', (event: KeyboardEvent): boolean => {
         if (!this.btnSearchStatus.checked) {
           this.btnSearchStatus.checked = true;
-          this.btnSearchChangeHandler();
+          this.searchChangeStatus();
         }
         return false; // Prevent bubbling
       }));
@@ -1551,7 +1554,14 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
   }
 
-  btnSearchChangeHandler() {
+  btnSearchChangeHandler(){
+    if (!this.btnSearchStatus.checked) {
+      this.isSearched = false;
+    }
+    this.searchChangeStatus();
+  }
+
+  private searchChangeStatus() {
     if (this.btnSearchStatus.checked) {
       if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
         this.btnSearchStatus.checked = false;
@@ -1563,7 +1573,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     } else {
       this.isBackup = true;
       let tmpResList = [...this.originalResList];
-
       if (this.btnNotice.checked) {
         tmpResList = this.getNoticeRes(tmpResList);
       }
@@ -1597,7 +1606,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       moveItemInArray(this.originalResList, fromIndex, 0);
     }
     this.btnSearchStatus.checked = false;
-    this.btnSearchChangeHandler();
+    this.searchChangeStatus();
     this.virtualScroller.scrollToIndex(0);
   }
 
@@ -1689,7 +1698,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       return;
     } else if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter') {
       this.btnSearchStatus.checked = !this.btnSearchStatus.checked;
-      this.btnSearchChangeHandler();
+      this.searchChangeStatus();
     } else if ($event.shiftKey && $event.code === 'Enter') {
       this.isChangedSearch = false;
 
@@ -2132,10 +2141,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   btnSearchHandler() {
     if (this.btnSearchStatus.checked) {
       this.btnSearchStatus.checked = false;
-      this.btnSearchChangeHandler();
+      this.searchChangeStatus();
+      this.isSearched = !this.isSearched;
     }
     this.btnSearchStatus.checked = true;
-    this.btnSearchChangeHandler();
+    this.searchChangeStatus();
   }
 
   cancelAllStatus(item: ResItem) {
@@ -2235,5 +2245,11 @@ export class ContentComponent implements OnInit, OnDestroy {
     const cloneItem = Object.assign({}, item);
     cloneItem.isInserted = !item.isInserted;
     this.insertResToList(index, cloneItem);
+  }
+
+  txtSearchSelectHander($event: TypeaheadMatch) {
+    this.txtSearch.nativeElement.focus();
+    this.txtSearch.nativeElement.selectionStart = this.searchKeyword.length;
+    this.txtSearch.nativeElement.selectionEnd = this.searchKeyword.length;
   }
 }
