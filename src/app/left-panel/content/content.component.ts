@@ -2241,10 +2241,10 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   insertRes(item: any) {
-    const index = this.resList.indexOf(item);
-    const cloneItem = Object.assign({}, item);
-    cloneItem.isInserted = !item.isInserted;
-    this.insertResToList(index, cloneItem);
+    // const index = this.resList.indexOf(item);
+    // const cloneItem = Object.assign({}, item);
+    item.isInserted = !item.isInserted;
+    // this.insertResToList(index, cloneItem);
   }
 
   txtSearchSelectHander($event: TypeaheadMatch) {
