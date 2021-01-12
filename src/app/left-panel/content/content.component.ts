@@ -1163,6 +1163,14 @@ export class ContentComponent implements OnInit, OnDestroy {
         res.resSelect = 'none';
       }
     }
+    if (this.btnNotice.checked || this.btnSearchStatus.checked || this.isSelectRes) {
+      for (const res of this.originalResList) {
+        if (res.id === id && res.resSelect !== 'none') {
+          res.resBackgroundColor = this.backgroundColors[0];
+          res.resSelect = 'none';
+        }
+      }
+    }
     this.changeStatus();
   }
 
