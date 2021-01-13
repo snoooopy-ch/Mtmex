@@ -719,6 +719,12 @@ app-res .row-4 a {
   width: 162px;
   height: 32px;
 }
+.main-container app-right-panel .btn-all-select,
+.main-container app-right-panel .btn-all-unselect {
+  background: #c8c86e;
+  height: 45px;
+  width: 50%;
+}
 
 app-res {
   width: 100%;

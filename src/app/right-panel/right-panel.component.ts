@@ -472,4 +472,17 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.sortCommand = '';
   }
 
+  btnSetAllSelectedHandler($event: MouseEvent) {
+    this.resService.setDisplayAllSelectedRes({
+      display: true,
+      token: true
+    });
+  }
+
+  btnSetAllUnselectedHandler($event: MouseEvent) {
+    this.resService.setDisplayAllSelectedRes({
+      display: false,
+      token: true
+    });
+  }
 }

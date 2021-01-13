@@ -303,6 +303,20 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe(((value) => {
+
+      if (value.token){
+        for (let i = 0; i < this.tabs.length; i++){
+          this.resService.setDisplaySelectedRes({
+            tabIndex: i,
+            token: true,
+            display: value.display
+          });
+        }
+      }
+      value.token = false;
+    }));
+
     electron.ipcRenderer.on('closeMenu', (event) => {
       this.removeTab(this.selectedTabIndex);
     });
@@ -318,7 +332,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.subscribers.settings.unsubscribe();
     this.subscribers.resData.unsubscribe();
-    // this.subscribers.scrollPos.unsubscribe();
+    this.subscribers.displayAllSelectRes.unsubscribe();
     this.subscribers.status.unsubscribe();
     this.subscribers.loadStatus.unsubscribe();
     this.subscribers.allPrint.unsubscribe();

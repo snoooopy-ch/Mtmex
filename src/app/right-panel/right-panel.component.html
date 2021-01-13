@@ -3,11 +3,16 @@
   <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
   <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
 </div>
+<div class="d-flex mt-1">
+  <button class="btn-left-round btn-all-select" (click)="btnSetAllSelectedHandler($event)">メンニュ1<br>全タブ選択画面ON</button>
+  <button class="btn-right-round btn-all-unselect" (click)="btnSetAllUnselectedHandler($event)">全タブ選択画面OFF</button>
+</div>
 <div class="mt-1">
   <label class="full-width"><input type="checkbox" [(ngModel)]="isSaveOfLoadFile">復元ファイル自動生成を行う</label>
 </div>
 <div class="select-container">
-  <label class="lbl-input-container"><input type="radio" name="opt-select-side" [(ngModel)]="selectCommandWithButton" value="select">選択＿＿＿</label>
+  <label class="lbl-input-container"><input type="radio" name="opt-select-side" [(ngModel)]="selectCommandWithButton"
+                                            value="select">選択＿＿＿</label>
   <button class="border-round" (click)="btnAllSelSideBarClickHandler()">実行</button>
 </div>
 <div class="width-100">
@@ -23,13 +28,14 @@
 <div class="res-order">
   <div class="reading-mode">
     <div>
-       <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替え</label>
+      <label><input type="checkbox" [(ngModel)]="isResSort">レスの順番を入れ替え</label>
     </div>
     <div>
       ┣&nbsp;<label><input type="checkbox" [(ngModel)]="isMultiAnchor" [disabled]="!isResSort">複数アンカーを分割</label>
     </div>
     <div>
-      ┃&nbsp;┗&nbsp;<label><input type="checkbox" [(ngModel)]="isContinuousAnchor" [disabled]="!isMultiAnchor || !isResSort">連続アンカー分割</label>
+      ┃&nbsp;┗&nbsp;<label><input type="checkbox" [(ngModel)]="isContinuousAnchor"
+                                  [disabled]="!isMultiAnchor || !isResSort">連続アンカー分割</label>
     </div>
     <div>
       ┣&nbsp;<label><input type="checkbox" [(ngModel)]="notMoveFutureAnchor" [disabled]="!isResSort">未来アンカー移動せず</label>
@@ -42,15 +48,20 @@
 <div class="move-res">
   <div>
     <button id="btn-top-res-list" style="border-top-left-radius: 5px;" (click)="moveResViewHandler('top')">▲</button>
-    <button id="btn-bottom-res-list" style="border-top-right-radius: 5px;" (click)="moveResViewHandler('bottom')">▼</button>
+    <button id="btn-bottom-res-list" style="border-top-right-radius: 5px;" (click)="moveResViewHandler('bottom')">▼
+    </button>
   </div>
   <div>
     <button id="btn-prev-selected-list" (click)="moveResViewHandler('selected-prev')">↑<br>選択</button>
     <button id="btn-next-selected-list" (click)="moveResViewHandler('selected-next')">↓<br>選択</button>
   </div>
   <div>
-    <button id="btn-top-selected-list"  style="border-bottom-left-radius: 5px;" (click)="moveResViewHandler('selected-top')">△<br>選択 TOP</button>
-    <button id="btn-bottom-selected-list" style="border-bottom-right-radius: 5px;"  (click)="moveResViewHandler('selected-bottom')">▽<br>選択END</button>
+    <button id="btn-top-selected-list" style="border-bottom-left-radius: 5px;"
+            (click)="moveResViewHandler('selected-top')">△<br>選択 TOP
+    </button>
+    <button id="btn-bottom-selected-list" style="border-bottom-right-radius: 5px;"
+            (click)="moveResViewHandler('selected-bottom')">▽<br>選択END
+    </button>
   </div>
   <div class="res-total">
     <h3 id="lbl-main-of-total">{{selectCount}}/{{totalCount}}</h3>
@@ -97,7 +108,8 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select">選択</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-select">選択解除</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-select">選択解除</label>
       </td>
     </tr>
     <tr>
@@ -105,7 +117,8 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi1">予備1</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-candi1">予備1 解除</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi1">予備1 解除</label>
       </td>
     </tr>
     <tr>
@@ -113,7 +126,8 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi2">予備2</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-candi2">予備2 解除</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi2">予備2 解除</label>
 
       </td>
     </tr>
@@ -122,7 +136,8 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi3">予備3</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-candi3">予備3 解除</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi3">予備3 解除</label>
       </td>
     </tr>
     <tr>
@@ -130,7 +145,8 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi4">予備4</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-candi4">予備4 解除</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi4">予備4 解除</label>
       </td>
     </tr>
     <tr>
@@ -138,7 +154,8 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select-image">画像選択</label>
       </td>
       <td>
-        <label class="canel-radio text-red"><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-allselect">全解除</label>
+        <label class="canel-radio text-red"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                                   value="cancel-allselect">全解除</label>
       </td>
     </tr>
     <tr>
