@@ -402,6 +402,18 @@ export class ResService {
                 replacementY = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br /><!-- -->${replacementY}<!-- -->`;
               }
               content = content.replace(targetY, replacementY);
+            } else if (response.status === 403) {
+              const sslresponse = await fetch('https://www.youtube.com/oembed?url=' + youtubeURL);
+              if (sslresponse.ok) {
+                const data = await sslresponse.json();
+                const youtubeTemp = youtubeURL.replace('?', '\\?');
+                const targetY = new RegExp(`<a href="` + youtubeTemp + `" target="_blank">` + youtubeTemp + `</a>(<br \/>|)`, 'ig');
+                let replacementY = `<!-- -->${data.html}<!-- -->`;
+                if (options.youtubeUrl) {
+                  replacementY = `<a href="${youtubeURL}" target="_blank">${youtubeURL}</a><br /><!-- -->${data.html}<!-- -->`;
+                }
+                content = content.replace(targetY, replacementY);
+              }
             }
           }
         }
