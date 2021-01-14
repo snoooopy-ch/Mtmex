@@ -13,7 +13,8 @@ import {normal} from 'color-blend';
 import {VirtualScrollerComponent} from 'ngx-virtual-scroller';
 import {MatButtonToggle, MatButtonToggleChange} from '@angular/material/button-toggle';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
-import {TypeaheadMatch} from "ngx-bootstrap/typeahead";
+import {TypeaheadMatch} from 'ngx-bootstrap/typeahead';
+
 
 
 declare var jQuery: any;
@@ -180,6 +181,22 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.subscribers.displaySelectRes = this.resService.displaySelectRes.subscribe(((value) => {
+
+      if (value.tabIndex === this.tabIndex && value.token){
+        if (value.display){
+          this.setResMenu(value.resMenu);
+          this.isSelectRes = true;
+          this.btnShowSelectHandler();
+        } else{
+          this.isSelectRes = false;
+          this.btnShowSelectHandler();
+        }
+        value.token = false;
+      }
+
+    }));
+
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
 
       if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token && this.isSaveStatus) {
@@ -293,6 +310,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.saveResStatus.unsubscribe();
     this.subscribers.status.unsubscribe();
     this.subscribers.resMenu.unsubscribe();
+    this.subscribers.displaySelectRes.unsubscribe();
     this.subscribers.sortRes.unsubscribe();
     this.resList.length = 0;
 
@@ -1438,8 +1456,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       searchList: this.searchList
     });
 
-    // const re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
-    const re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
+    let re;
+    if (keyword === 'sta' || keyword === 'twi' || keyword === 'twit'){
+      re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
+    } else {
+      re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
+    }
+
 
     if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0
       && this.resList.length !== this.originalResList.length) {

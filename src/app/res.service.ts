@@ -21,20 +21,20 @@ export class ResService {
   scrollPos = this.scrollPosSource.asObservable();
   selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, tabIndex: 0});
   selectedRes = this.selectedResSource.asObservable();
-  selectedTabSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, totalCount: 0, tabIndex: 0});
-  selectedTab = this.selectedTabSource.asObservable();
-  moveResSource = new BehaviorSubject<any>({tabIndex: 0, moveKind: ''});
-  moveRes = this.moveResSource.asObservable();
-  totalResSource = new BehaviorSubject<any>({tabIndex: 0, totalCount: 0});
-  totalRes = this.totalResSource.asObservable();
-  selectCommandSource = new BehaviorSubject<any>({tabIndex: 0, command: ''});
-  selectCommand = this.selectCommandSource.asObservable();
-  printCommandSource = new BehaviorSubject<any>({tabIndex: 0});
-  printCommand = this.printCommandSource.asObservable();
-  printHtmlSource = new BehaviorSubject<any>({tabIndex: 0, html: ''});
-  printHtml = this.printHtmlSource.asObservable();
-  printAllCommandSource = new BehaviorSubject<any>({});
-  printAllCommand = this.printAllCommandSource.asObservable();
+  bsSelectedTab = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, totalCount: 0, tabIndex: 0});
+  selectedTab = this.bsSelectedTab.asObservable();
+  bsMoveRes = new BehaviorSubject<any>({tabIndex: 0, moveKind: ''});
+  moveRes = this.bsMoveRes.asObservable();
+  bsTotalRes = new BehaviorSubject<any>({tabIndex: 0, totalCount: 0});
+  totalRes = this.bsTotalRes.asObservable();
+  bsSelectCommand = new BehaviorSubject<any>({tabIndex: 0, command: ''});
+  selectCommand = this.bsSelectCommand.asObservable();
+  bsPrintCommand = new BehaviorSubject<any>({tabIndex: 0});
+  printCommand = this.bsPrintCommand.asObservable();
+  bsPrintHtml = new BehaviorSubject<any>({tabIndex: 0, html: ''});
+  printHtml = this.bsPrintHtml.asObservable();
+  bsPrintAllCommand = new BehaviorSubject<any>({});
+  printAllCommand = this.bsPrintAllCommand.asObservable();
   saveResStatusSource = new BehaviorSubject<any>({});
   saveResStatus = this.saveResStatusSource.asObservable();
   resMenuSource = new BehaviorSubject<any>({});
@@ -53,6 +53,11 @@ export class ResService {
   printAllHtmlOnStatus = this.printAllHtmlOnStatusSource.asObservable();
   btnAllSelCommandSource = new BehaviorSubject<any>({});
   btnAllSelCommand = this.btnAllSelCommandSource.asObservable();
+  bsDisplaySelectedRes = new BehaviorSubject<any>({});
+  displaySelectRes = this.bsDisplaySelectedRes.asObservable();
+  bsDisplayAllSelectedRes = new BehaviorSubject<any>({});
+  displayAllSelectRes = this.bsDisplayAllSelectedRes.asObservable();
+
 
   constructor() {
     electron.ipcRenderer.on('getResResponse', (event, value) => {
@@ -121,19 +126,19 @@ export class ResService {
   }
 
   setSelectedTab(value: any){
-    this.selectedTabSource.next(value);
+    this.bsSelectedTab.next(value);
   }
 
   setMoveRes(value: any){
-    this.moveResSource.next(value);
+    this.bsMoveRes.next(value);
   }
 
   setTotalRes(value: any){
-    this.totalResSource.next(value);
+    this.bsTotalRes.next(value);
   }
 
   setSelectCommand(value: any){
-    this.selectCommandSource.next(value);
+    this.bsSelectCommand.next(value);
   }
 
   setAllSelHeaderCommand(value: any) {
@@ -141,15 +146,15 @@ export class ResService {
   }
 
   setPrintCommand(value: any){
-    this.printCommandSource.next(value);
+    this.bsPrintCommand.next(value);
   }
 
   setPrintAllCommand(value: any){
-    this.printAllCommandSource.next(value);
+    this.bsPrintAllCommand.next(value);
   }
 
   setPrintHtml(value: any){
-    this.printHtmlSource.next(value);
+    this.bsPrintHtml.next(value);
   }
 
   setSaveResStatus(value: any){
@@ -170,6 +175,14 @@ export class ResService {
 
   setPrintAllHtmlOnStatusSource(value: any) {
     this.printAllHtmlOnStatusSource.next(value);
+  }
+
+  setDisplaySelectedRes(value: any) {
+    this.bsDisplaySelectedRes.next(value);
+  }
+
+  setDisplayAllSelectedRes(value: any) {
+    this.bsDisplayAllSelectedRes.next(value);
   }
 
   async printHtmlTag(resList: ResItem[], options) {
