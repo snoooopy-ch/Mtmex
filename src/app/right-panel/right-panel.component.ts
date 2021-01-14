@@ -1,17 +1,14 @@
 import {
   ChangeDetectorRef,
   Component,
-  ElementRef,
   HostListener,
-  Input,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
-import {Observable, Subject, timer} from 'rxjs';
-import {switchMap, takeUntil, repeatWhen} from 'rxjs/operators';
+import {Subject, timer} from 'rxjs';
+import {takeUntil, repeatWhen} from 'rxjs/operators';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
 const electron = (window as any).require('electron');
@@ -220,6 +217,22 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     if (this.settings.tab_shuturyoku !== undefined) {
       this.hotkeysService.add(new Hotkey(this.settings.tab_shuturyoku.toLowerCase(), (event: KeyboardEvent): boolean => {
         this.printHtmlTagHandler();
+        return false;
+      }));
+    }
+
+    // メンニュ1全タブ選択画面ON
+    if (this.settings.show_all_tab_selected_res !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.show_all_tab_selected_res.toLowerCase(), (event: KeyboardEvent): boolean => {
+        this.btnSetAllSelectedHandler(null);
+        return false;
+      }));
+    }
+
+    // 全タブ選択画面OFF
+    if (this.settings.show_all_tab_res !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.show_all_tab_res.toLowerCase(), (event: KeyboardEvent): boolean => {
+        this.btnSetAllUnselectedHandler(null);
         return false;
       }));
     }
@@ -472,14 +485,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.sortCommand = '';
   }
 
-  btnSetAllSelectedHandler($event: MouseEvent) {
+  btnSetAllSelectedHandler($event) {
     this.resService.setDisplayAllSelectedRes({
       display: true,
       token: true
     });
   }
 
-  btnSetAllUnselectedHandler($event: MouseEvent) {
+  btnSetAllUnselectedHandler($event) {
     this.resService.setDisplayAllSelectedRes({
       display: false,
       token: true

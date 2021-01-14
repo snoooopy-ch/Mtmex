@@ -202,6 +202,10 @@
   <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
   <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
 </div>
+<div class="d-flex mt-1">
+  <button class="btn-left-round btn-all-select" (click)="btnSetAllSelectedHandler($event)">メンニュ1<br>全タブ選択画面ON</button>
+  <button class="btn-right-round btn-all-unselect" (click)="btnSetAllUnselectedHandler($event)">全タブ選択画面OFF</button>
+</div>
 <div class="mt-1">
   <label class="full-width"><input type="checkbox" [(ngModel)]="isSaveOfLoadFile">復元ファイル自動生成を行う</label>
 </div>
