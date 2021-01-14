@@ -37,8 +37,10 @@ export class ResService {
   printAllCommand = this.bsPrintAllCommand.asObservable();
   saveResStatusSource = new BehaviorSubject<any>({});
   saveResStatus = this.saveResStatusSource.asObservable();
-  resMenuSource = new BehaviorSubject<any>({});
-  resMenu = this.resMenuSource.asObservable();
+  bsResMenu = new BehaviorSubject<any>({});
+  resMenu = this.bsResMenu.asObservable();
+  bsAllResMenu = new BehaviorSubject<any>({});
+  allResMenu = this.bsAllResMenu.asObservable();
   resSortSource = new BehaviorSubject<any>({});
   sortRes = this.resSortSource.asObservable();
   surroundImageSource = new BehaviorSubject<any>({});
@@ -162,7 +164,11 @@ export class ResService {
   }
 
   setResMenu(value: any){
-    this.resMenuSource.next(value);
+    this.bsResMenu.next(value);
+  }
+
+  setAllResMenu(value: any){
+    this.bsAllResMenu.next(value);
   }
 
   setSort(value: any){

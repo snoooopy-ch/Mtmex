@@ -229,7 +229,7 @@ export class ContentComponent implements OnInit, OnDestroy {
             || i.resSelect === 'candi1'
             || i.resSelect === 'candi2'
             || i.resSelect === 'candi3'
-            || i.resSelect === 'candi4')).length < 1) {
+            || i.resSelect === 'candi4').length < 1)) {
           return;
         }
         for (const res of saveResList) {
@@ -1720,6 +1720,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   txtSearchKeyUpHandler($event: KeyboardEvent) {
+
     if (this.searchOption === undefined) {
       return;
     }
@@ -2204,8 +2205,10 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.virtualScroller.scrollToIndex(index);
   }
 
-  txtSearchKeyPressHandler($event: KeyboardEvent) {
+  txtSearchKeyPressHandler($event: KeyboardEvent){
+    // if ($event.code === 'Tab') {
     this.isKeyPressed = true;
+    // }
   }
 
   setResMenu(value) {
@@ -2289,5 +2292,13 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.txtSearch.nativeElement.focus();
     this.txtSearch.nativeElement.selectionStart = this.searchKeyword.length;
     this.txtSearch.nativeElement.selectionEnd = this.searchKeyword.length;
+  }
+
+  btnSearchFocusInHandler() {
+    this.isKeyPressed = false;
+  }
+
+  btnTreeSearchFocusInHandler() {
+    this.isKeyPressed = false;
   }
 }

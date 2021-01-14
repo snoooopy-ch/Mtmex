@@ -5,7 +5,7 @@
     <mat-button-toggle value="context" class="btn-right-round toggle-context">本文</mat-button-toggle>
 
   </mat-button-toggle-group>
-  <button type="button" class="toggle-tree" [(ngModel)]="isTreeSearch" btnCheckbox #btnTreeSearch>ツリー</button>
+  <button type="button" class="toggle-tree" [(ngModel)]="isTreeSearch" (focusin)="btnTreeSearchFocusInHandler()" btnCheckbox #btnTreeSearch>ツリー</button>
 
   <input type="text" [(ngModel)]="searchKeyword" #txtSearch
          [typeahead]="searchList"
@@ -18,8 +18,8 @@
          (keydown)="txtSearchKeyPressHandler($event)"
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
-  <button type="button" class="btn-short" (click)="btnImageSearchHandler()">画像</button>
-  <button type="button" class="btn-long" (click)="btnSearchHandler()" #btnSearch>抽出</button>
+  <button type="button" class="btn-short yellow" (click)="btnImageSearchHandler()" tabindex="-1">画像</button>
+  <button type="button" class="btn-long" (click)="btnSearchHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>抽出</button>
   <mat-button-toggle-group name="btn-search" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" [ngClass]="{'searched': isSearched}"  #btnSearchStatus (change)="btnSearchChangeHandler()">抽出解除</mat-button-toggle>
   </mat-button-toggle-group>
