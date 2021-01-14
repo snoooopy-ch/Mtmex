@@ -186,11 +186,15 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (value.tabIndex === this.tabIndex && value.token){
         if (value.display){
           this.setResMenu(value.resMenu);
-          this.isSelectRes = true;
-          this.btnShowSelectHandler();
+          if (value.display !== this.isSelectRes) {
+            this.isSelectRes = true;
+            this.btnShowSelectHandler();
+          }
         } else{
-          this.isSelectRes = false;
-          this.btnShowSelectHandler();
+          if (value.display !== this.isSelectRes) {
+            this.isSelectRes = false;
+            this.btnShowSelectHandler();
+          }
         }
         value.token = false;
       }
@@ -2130,6 +2134,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         });
       }
       let tmpResList = [...this.originalResList];
+      console.log(this.originalResList);
       if (this.btnSearchStatus.checked) {
         tmpResList = this.getAbstractRes(tmpResList);
       }
@@ -2143,20 +2148,22 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.resList = tmpResList;
 
     } else {
-      let tmpResList = [...this.originalResList];
-      if (this.btnSearchStatus.checked) {
-        tmpResList = this.getAbstractRes(tmpResList);
-      }
+      if (this.originalResList?.length > 0) {
+        let tmpResList = [...this.originalResList];
+        if (this.btnSearchStatus.checked) {
+          tmpResList = this.getAbstractRes(tmpResList);
+        }
 
-      if (this.btnNotice.checked) {
-        tmpResList = this.getNoticeRes(tmpResList);
-      }
+        if (this.btnNotice.checked) {
+          tmpResList = this.getNoticeRes(tmpResList);
+        }
 
-      this.resList = tmpResList;
-      this.changeListEmitter.emit({
-        tabIndex: this.tabIndex,
-        resList: this.resList,
-      });
+        this.resList = tmpResList;
+        this.changeListEmitter.emit({
+          tabIndex: this.tabIndex,
+          resList: this.resList,
+        });
+      }
     }
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
