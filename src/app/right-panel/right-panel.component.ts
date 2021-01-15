@@ -205,7 +205,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  setHotKeys() {
+  private setHotKeys() {
     // 全タブの出力
     if (this.settings.all_tab_shuturyoku !== undefined) {
       this.hotkeysService.add(new Hotkey(this.settings.all_tab_shuturyoku.toLowerCase(), (event: KeyboardEvent): boolean => {
@@ -468,8 +468,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   btnSetResMenuHandler(value: number) {
-    this.resService.setResMenu({
-      tabIndex: this.tabIndex,
+    this.resService.setAllResMenu({
       token: true,
       resMenu: value
     });

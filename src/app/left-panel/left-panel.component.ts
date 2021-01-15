@@ -303,7 +303,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe(((value) => {
+    this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe((value) => {
 
       if (value.token){
         for (let i = 0; i < this.tabs.length; i++){
@@ -315,7 +315,20 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         }
       }
       value.token = false;
-    }));
+    });
+
+    this.subscribers.allResMenu = this.resService.allResMenu.subscribe((value) => {
+      if (value.token){
+        for (let i = 0; i < this.tabs.length; i++){
+          this.resService.setResMenu({
+            tabIndex: i,
+            token: true,
+            resMenu: value.resMenu
+          });
+        }
+      }
+      value.token = false;
+    });
 
     electron.ipcRenderer.on('closeMenu', (event) => {
       this.removeTab(this.selectedTabIndex);
