@@ -222,16 +222,16 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     }
 
     // メンニュ1全タブ選択画面ON
-    if (this.settings.show_all_tab_selected_res !== undefined) {
-      this.hotkeysService.add(new Hotkey(this.settings.show_all_tab_selected_res.toLowerCase(), (event: KeyboardEvent): boolean => {
+    if (this.settings.all_tab_sentaku_on !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.all_tab_sentaku_on.toLowerCase(), (event: KeyboardEvent): boolean => {
         this.btnSetAllSelectedHandler(null);
         return false;
       }));
     }
 
     // 全タブ選択画面OFF
-    if (this.settings.show_all_tab_res !== undefined) {
-      this.hotkeysService.add(new Hotkey(this.settings.show_all_tab_res.toLowerCase(), (event: KeyboardEvent): boolean => {
+    if (this.settings.all_tab_sentaku_off !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.all_tab_sentaku_off.toLowerCase(), (event: KeyboardEvent): boolean => {
         this.btnSetAllUnselectedHandler(null);
         return false;
       }));
