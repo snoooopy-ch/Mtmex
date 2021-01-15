@@ -224,12 +224,11 @@ export class ContentComponent implements OnInit, OnDestroy {
           saveResList = this.resList;
         }
 
-        if (this.statusFilePath.length > 0 &&
-          (saveResList.filter(i => i.resSelect === 'select'
+        if (saveResList.filter(i => i.resSelect === 'select'
             || i.resSelect === 'candi1'
             || i.resSelect === 'candi2'
             || i.resSelect === 'candi3'
-            || i.resSelect === 'candi4').length < 1)) {
+            || i.resSelect === 'candi4').length < 1) {
           return;
         }
         for (const res of saveResList) {
