@@ -397,27 +397,29 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   }
 
   saveAppStatus(selectedPath, isMessage){
-    this.resService.setSaveResStatus({
-      tabIndex: this.tabIndex,
-      filePath: selectedPath,
-      autoFilePath: this.settings.autoSavePath,
-      isAllTabSave: selectedPath === null ? this.settings.all_tab_save : false,
-      isResSort: this.isResSort,
-      isMultiAnchor: this.isMultiAnchor,
-      isReplaceRes: this.isReplaceRes,
-      txtPath: this.txtDataFilePath,
-      remarkRes: this.txtRemarkRes,
-      hideRes: this.txtHideRes,
-      token: true,
-      showMessage: isMessage,
-      selectCount: this.selectCount,
-      totalCount: this.totalCount,
-      candi1Count: this.candi1Count,
-      candi2Count: this.candi2Count,
-      candi3Count: this.candi3Count,
-      candi4Count: this.candi4Count,
-      isSaveOfLoadFile: this.isSaveOfLoadFile
-    });
+    if (this.isSaveOfLoadFile) {
+      this.resService.setSaveResStatus({
+        tabIndex: this.tabIndex,
+        filePath: selectedPath,
+        autoFilePath: this.settings.autoSavePath,
+        isAllTabSave: selectedPath === null ? this.settings.all_tab_save : false,
+        isResSort: this.isResSort,
+        isMultiAnchor: this.isMultiAnchor,
+        isReplaceRes: this.isReplaceRes,
+        txtPath: this.txtDataFilePath,
+        remarkRes: this.txtRemarkRes,
+        hideRes: this.txtHideRes,
+        token: true,
+        showMessage: isMessage,
+        selectCount: this.selectCount,
+        totalCount: this.totalCount,
+        candi1Count: this.candi1Count,
+        candi2Count: this.candi2Count,
+        candi3Count: this.candi3Count,
+        candi4Count: this.candi4Count,
+        isSaveOfLoadFile: this.isSaveOfLoadFile
+      });
+    }
   }
 
 
