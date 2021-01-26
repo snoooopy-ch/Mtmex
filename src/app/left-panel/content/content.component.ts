@@ -207,7 +207,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         const saveData = value;
         saveData.resList = [];
 
-        if (this.statusFilePath.length > 0 && !value.isSaveOfLoadFile) {
+        if (!value.isSaveOfLoadFile) {
           return;
         }
 
