@@ -500,7 +500,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           candi4: this.tabs[index].resList.filter(item => item.resSelect === 'candi4').length,
           totalCount: this.tabs[index].resList.length,
           tabIndex: index,
-          title: this.tabs[index].title,
+          title: this.tabs[index].title
         });
         this.selectedTabIndex = index;
         break;

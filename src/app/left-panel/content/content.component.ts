@@ -196,6 +196,13 @@ export class ContentComponent implements OnInit, OnDestroy {
             this.btnShowSelectHandler();
           }
         }
+
+        this.isSearched = false;
+        this.isSearchChecked = false;
+        this.searchChangeStatus();
+
+        this.btnNotice.checked = false;
+        this.btnNoticeChangeHandler();
         value.token = false;
       }
 
@@ -942,6 +949,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       // 挿入
       this.hotkeysService.add(new Hotkey(this.subHotKeys.sounyuu, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
+          console.log('@@@@', this.hovered);
           const item = this.resList[this.hovered];
           this.insertRes(item);
           this.cdRef.detectChanges();
