@@ -1,10 +1,22 @@
-import {ChangeDetectorRef, Component, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit, QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {ResService} from '../res.service';
-import { Title } from '@angular/platform-browser';
+import {Title} from '@angular/platform-browser';
 import {TabDirective, TabsetComponent} from 'ngx-bootstrap/tabs';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 import {ResItem} from '../models/res-item';
+import {ContentComponent} from './content/content.component';
+
 const electron = (window as any).require('electron');
 declare var jQuery: any;
 declare var $: any;
@@ -16,6 +28,7 @@ declare var $: any;
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
+  @ViewChildren(ContentComponent) contentComponent!: QueryList<ContentComponent>;
 
   tabs = [];
   draggable = {
@@ -129,42 +142,43 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
           , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'
-          , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down', 'sentaku_off1', 'sentaku_off2', 'sounyuu'];
+          , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down', 'sentaku_off1', 'sentaku_off2', 'sounyuu'
+          , 'all_tab_chuushutu', 'all_tab_chuushutu_kaijo', 'res_sinshuku'];
         for (const key of arrayKeys) {
-          if (this.settings[key].toLowerCase() === 'insert'){
+          if (this.settings[key].toLowerCase() === 'insert') {
             this.subHotKeys[key] = 'ins';
-          }else if (this.settings[key].toLowerCase() === 'delete'){
+          } else if (this.settings[key].toLowerCase() === 'delete') {
             this.subHotKeys[key] = 'del';
-          }else{
+          } else {
             this.subHotKeys[key] = this.settings[key].toLowerCase();
           }
         }
       }
       this.btnBackgroundColors = [];
-      if (value.hasOwnProperty('color_tree_sentaku')){
+      if (value.hasOwnProperty('color_tree_sentaku')) {
         const colorKeys = ['color_tree_sentaku', 'color_tree_yobi_sentaku1', 'color_tree_yobi_sentaku2', 'color_tree_yobi_sentaku3',
           'color_tree_yobi_sentaku4', 'color_tree_kaijo', 'color_id_sentaku1', 'color_id_sentaku2', 'color_id_sentaku3',
           'color_id_sentaku4', 'color_id_iro1', 'color_id_iro2', 'color_id_iro3', 'color_id_iro4', 'color_id_kaijo',
           'color_id_iro_delete', 'color_id_kaijo_iro_delete', 'color_id_hihyouji', 'color_copy', 'color_edit'];
-        for (const key of colorKeys){
+        for (const key of colorKeys) {
           this.btnBackgroundColors[key] = this.settings[key];
         }
       }
       this.startAbbreviations = [];
-      if (value.hasOwnProperty('moji_color_start1')){
+      if (value.hasOwnProperty('moji_color_start1')) {
         const startAbbrKeys = ['moji_color_start1', 'moji_color_start2', 'moji_color_start3', 'moji_color_start4',
           'moji_color_start5', 'moji_color_start6', 'moji_color_start7', 'moji_color_start8', 'moji_color_start9',
           'moji_color_start10'];
-        for (const key of startAbbrKeys){
+        for (const key of startAbbrKeys) {
           this.startAbbreviations.push(this.settings[key]);
         }
       }
       this.endAbbreviations = [];
-      if (value.hasOwnProperty('moji_color_end1')){
+      if (value.hasOwnProperty('moji_color_end1')) {
         const endAbbrKeys = ['moji_color_end1', 'moji_color_end2', 'moji_color_end3', 'moji_color_end4',
           'moji_color_end5', 'moji_color_end6', 'moji_color_end7', 'moji_color_end8', 'moji_color_end9',
           'moji_color_end10'];
-        for (const key of endAbbrKeys){
+        for (const key of endAbbrKeys) {
           this.endAbbreviations.push(this.settings[key]);
         }
       }
@@ -183,7 +197,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.resTopBar = `1px solid ${this.settings.top_bar}`;
       }
 
-      if (this.settings.pict_hyouji === undefined){
+      if (this.settings.pict_hyouji === undefined) {
         this.imageWidth = '150px';
       } else {
         this.imageWidth = `${this.settings.pict_hyouji}px`;
@@ -192,8 +206,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.setHotKeys();
     });
 
-    this.subscribers.resData = this.resService.resData.subscribe( (value) => {
-      if (this.tabGroup === undefined) { return; }
+    this.subscribers.resData = this.resService.resData.subscribe((value) => {
+      if (this.tabGroup === undefined) {
+        return;
+      }
       this.zone.run(() => {
         const numberSuffixes = value.originSreTitle.match(/_(\d+)/gi);
         let suffixNumber;
@@ -234,18 +250,20 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.loadStatus = this.resService.loadResStatus.subscribe((value) => {
-      if (this.tabGroup === undefined) { return; }
+      if (this.tabGroup === undefined) {
+        return;
+      }
       if (value.data.resList !== undefined) {
         this.zone.run(() => {
           const loadResList = [];
-          for (const res of value.data.resList){
+          for (const res of value.data.resList) {
             const resItem = Object.assign({}, res);
-            if (!Number.isInteger(res.resColor)){
+            if (!Number.isInteger(res.resColor)) {
               continue;
             }
-            if (Number(res.resColor) === 0){
+            if (Number(res.resColor) === 0) {
               resItem.resColor = '#000';
-            }else{
+            } else {
               resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
             }
 
@@ -294,10 +312,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.allPrint = this.resService.printAllCommand.subscribe((value) => {
-      if (value.token){
-        if (value.isOutputCandiBelow){
+      if (value.token) {
+        if (value.isOutputCandiBelow) {
           this.printIntegrateAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage, value.gazouReplaceUrl);
-        }else{
+        } else {
           this.printNormalAllHtmlTag(value.isOutputCandiBelow, value.isReplaceName, value.isSurroundImage, value.gazouReplaceUrl);
         }
       }
@@ -305,8 +323,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe((value) => {
 
-      if (value.token){
-        for (let i = 0; i < this.tabs.length; i++){
+      if (value.token) {
+        for (let i = 0; i < this.tabs.length; i++) {
           this.resService.setDisplaySelectedRes({
             tabIndex: i,
             token: true,
@@ -318,8 +336,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.allResMenu = this.resService.allResMenu.subscribe((value) => {
-      if (value.token){
-        for (let i = 0; i < this.tabs.length; i++){
+      if (value.token) {
+        for (let i = 0; i < this.tabs.length; i++) {
           this.resService.setResMenu({
             tabIndex: i,
             token: true,
@@ -334,7 +352,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.removeTab(this.selectedTabIndex);
     });
 
-    if (this.searchList === undefined){
+    if (this.searchList === undefined) {
       this.searchList = [];
     }
   }
@@ -342,7 +360,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   /**
    * Unsubscribe the completed service subscribers
    */
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscribers.settings.unsubscribe();
     this.subscribers.resData.unsubscribe();
     this.subscribers.displayAllSelectRes.unsubscribe();
@@ -354,7 +372,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   setHotKeys() {
     // 前のタブ
     if (this.settings.tab_prev !== undefined) {
-      this.hotkeysService.add(new Hotkey(this.settings.tab_prev.toLowerCase(), (event: KeyboardEvent): boolean => {
+      this.hotkeysService.add(new Hotkey(this.settings?.tab_prev.toLowerCase(), (event: KeyboardEvent): boolean => {
         let prevTabIndex = this.selectedTabIndex - 1;
         if (prevTabIndex < 0) {
           prevTabIndex = this.tabs.length - 1;
@@ -365,7 +383,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     }
     // 次のタブ
     if (this.settings.tab_next !== undefined) {
-      this.hotkeysService.add(new Hotkey(this.settings.tab_next.toLowerCase(), (event: KeyboardEvent): boolean => {
+      this.hotkeysService.add(new Hotkey(this.settings?.tab_next.toLowerCase(), (event: KeyboardEvent): boolean => {
         let prevTabIndex = this.selectedTabIndex + 1;
         if (prevTabIndex > this.tabs.length - 1) {
           prevTabIndex = 0;
@@ -379,14 +397,34 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.removeTab(this.selectedTabIndex);
       return false;
     }));
+
+    // 全タブ選択抽出
+    if (this.settings.all_tab_chuushutu !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings?.all_tab_chuushutu.toLowerCase(), (event: KeyboardEvent): boolean => {
+        this.changeSearchAll({
+          isSearch: true
+        });
+        return false;
+      }));
+    }
+
+    // // 全タブ選択抽出解除
+    if (this.settings.all_tab_chuushutu_kaijo !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings?.all_tab_chuushutu_kaijo.toLowerCase(), (event: KeyboardEvent): boolean => {
+        this.changeSearchAll({
+          isSearch: false
+        });
+        return false;
+      }));
+    }
   }
 
-  @HostListener('window:beforeunload', [ '$event' ])
+  @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event) {
     this.resService.saveSearchList(this.searchList);
   }
 
-  addTab(pTitle, pResList: ResItem[], pOriginSreTitle= '', pStatusFilePath = '', pSuffixNumber = '') {
+  addTab(pTitle, pResList: ResItem[], pOriginSreTitle = '', pStatusFilePath = '', pSuffixNumber = '') {
     this.tabs = [...this.tabs, {
       title: pTitle,
       active: true,
@@ -403,7 +441,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   removeTab(index: number) {
-    if (this.tabs[index] === undefined){
+    if (this.tabs[index] === undefined) {
       return;
     }
 
@@ -411,13 +449,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.resService.removeTab(originSreTitle);
     this.tabs[index].resList.length = 0;
     this.tabs.splice(index, 1);
-    if (this.tabs.length - 1 < index){
+    if (this.tabs.length - 1 < index) {
       index = this.tabs.length - 1;
     }
     this.cdr.detectChanges();
-    if (this.tabs.length > index && this.tabs.length > 0){
+    if (this.tabs.length > index && this.tabs.length > 0) {
       this.tabChangedHandler(index);
-    }else{
+    } else {
       this.resService.setSelectedRes({
         select: 0,
         candi1: 0,
@@ -490,7 +528,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     moveItemInArray(this.tabs, fromIndex, toIndex);
     moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
     let index = 0;
-    for (const tab of this.tabs){
+    for (const tab of this.tabs) {
       if (tab.active) {
         this.resService.setSelectedTab({
           select: this.tabs[index].resList.filter(item => item.resSelect === 'select').length,
@@ -560,11 +598,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
         htmlTag += oneHtmlTag.allHtml;
 
-        if (pIsOutputCandiBelow){
+        if (pIsOutputCandiBelow) {
           yobiHtml += oneHtmlTag.yobiHtml;
         }
       }
-      if (tabItem.active){
+      if (tabItem.active) {
         currentTab = index;
       }
       index++;
@@ -573,7 +611,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     }
     yobiCount = allCount - selectedCount;
 
-    if (pIsOutputCandiBelow){
+    if (pIsOutputCandiBelow) {
       htmlTag += `\n${yobiHtml}`;
     }
 
@@ -624,12 +662,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         });
 
         tabName = '';
-        if (oneHtmlTag.allHtml.length > 0 ){
+        if (oneHtmlTag.allHtml.length > 0) {
           tabName = oneHtmlTag.tabName;
         }
 
         if (oneHtmlTag.allHtml.length > 0 || oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
-          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0 || oneHtmlTag.tabUrl !== ''){
+          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0 || oneHtmlTag.tabUrl !== '') {
           tabUrl += oneHtmlTag.tabUrl;
         }
 
@@ -641,7 +679,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         yobi4Html += oneHtmlTag.yobi4Html;
 
       }
-      if (tabItem.active){
+      if (tabItem.active) {
         currentTab = index;
       }
       index++;
@@ -652,19 +690,19 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     htmlTag += `\n`;
 
-    if (yobi1Html.length > 0){
+    if (yobi1Html.length > 0) {
       htmlTag += `<div class="yobi1">予備選択1</div>\n${yobi1Html}`;
     }
 
-    if (yobi2Html.length > 0){
+    if (yobi2Html.length > 0) {
       htmlTag += `<div class="yobi2">予備選択2</div>\n${yobi2Html}`;
     }
 
-    if (yobi3Html.length > 0){
+    if (yobi3Html.length > 0) {
       htmlTag += `<div class="yobi3">予備選択3</div>\n${yobi3Html}`;
     }
 
-    if (yobi4Html.length > 0){
+    if (yobi4Html.length > 0) {
       htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4Html}`;
     }
 
@@ -717,4 +755,17 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     return value === undefined ? '' : value;
   }
 
+  changeSearchAll($event: any) {
+    if (this.contentComponent.length) {
+      if ($event.isSearch) {
+        for (const child of this.contentComponent) {
+          child.searchAll();
+        }
+      } else {
+        for (const child of this.contentComponent) {
+          child.cancelSearchAll();
+        }
+      }
+    }
+  }
 }

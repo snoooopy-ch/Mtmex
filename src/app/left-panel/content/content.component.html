@@ -21,8 +21,8 @@
   <button type="button" class="btn-short yellow" (click)="btnImageSearchHandler()" tabindex="-1">画像</button>
   <button type="button" class="btn-long" (click)="btnSearchHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>抽出</button>
   <button class="btn-long light-green" [ngClass]="{'searched': isSearched, 'search-checked': isSearchChecked }" (click)="btnSearchChangeHandler()">抽出解除</button>
-  <button type="button" class="btn-long" (click)="btnSearchHandler()" (focusin)="btnSearchFocusInHandler()">全タブ抽出</button>
-  <button class="btn-long light-green" (click)="btnSearchChangeHandler()">全タブ抽出解除</button>
+  <button type="button" class="btn-long" (click)="btnSearchAllHandler()">全タブ抽出</button>
+  <button class="btn-long light-green" (click)="btnSearchAllChangeHandler()" [ngClass]="{'searched': searchAllStatus === 2, 'search-checked':  searchAllStatus === 1 }">全タブ抽出解除</button>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="btnNoticeChangeHandler()" #btnNotice>注目レス</mat-button-toggle>
   </mat-button-toggle-group>

@@ -32,4 +32,5 @@ export class ResItem{
   anchorLevel: number;
   numBackground = 'transparent';
   isInserted = false;
+  isCollapsed = false;
 }

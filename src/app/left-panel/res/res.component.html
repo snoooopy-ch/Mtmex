@@ -48,7 +48,7 @@
     <button class="btn-cancel-all" (click)="btnCancelAllStatus($event)" [ngStyle]="{'background-color': cancelAllColor}"></button>
 
   </div>
-  <div class="row-2" *ngIf="(item.isMenuOpen == true || item.resMenu == 3)">
+  <div class="row-2" *ngIf="((item.isMenuOpen == true || item.resMenu == 3) && !item.isCollapsed)">
     <button class="btn-move btn-left-round" (click)="upOneHandler($event)">↑</button>
     <button class="btn-move btn-right-round" (click)="downOneHandler($event)">↓</button>
     <label class="radio-container" *ngFor="let sizeItem of resSizeList" (click)="lblResFontHandler($event)">
@@ -71,7 +71,7 @@
     <button class="btn-move btn-left-round" (click)="toTopHandler($event)">▲</button>
     <button class="btn-move btn-right-round" (click)="toBottomHandler($event)">▼</button>
   </div >
-  <div class="row-3" *ngIf="(item.isMenuOpen == true || item.resMenu >= 2)">
+  <div class="row-3" *ngIf="((item.isMenuOpen == true || item.resMenu >= 2) && !item.isCollapsed)">
     <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor, 'margin':'0'}">
         <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
             <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
@@ -121,7 +121,7 @@
     <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
             (click)="btnDeleteHandler($event)" >消</button>
   </div>
-  <div class="row-4" *ngIf="item.isEdit" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}">
+  <div class="row-4" *ngIf="item.isEdit && !item.isCollapsed" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}">
     <ckeditor class="row-4" [editor]="Editor"
               [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar', 'MediaEmbed'] }"
               [(ngModel)]="resContent"
@@ -130,5 +130,5 @@
     <button class="btn-save btn-left-round" (click)="saveResHandler($event)">保存する</button>
     <button class="btn-cancel btn-right-round" (click)="cancelEditHandler($event)">キャンセル</button>
   </div>
-  <div *ngIf="!item.isEdit" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
+  <div *ngIf="!item.isEdit && !item.isCollapsed" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
 </div>

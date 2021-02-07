@@ -65,6 +65,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() changeListStatusEmitter = new EventEmitter();
   @Output() changeUrlEmitter = new EventEmitter();
   @Output() selectAllEmitter = new EventEmitter();
+  @Output() searchAllEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -109,6 +110,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   isSaveStatus: boolean;
   public isSearched: boolean;
   public isSearchChecked: boolean;
+  public searchAllStatus;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -132,6 +134,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isTreeSearch = true;
     this.isSearched = false;
     this.originalResList = [];
+    this.searchAllStatus = 0;
 
     setTimeout(this.setSaveStatus.bind(this), 2000);
 
@@ -956,6 +959,14 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
         return false; // Prevent bubbling
       }));
+
+      // 小
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.res_sinshuku, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.setTreeMenuStatus();
+        }
+        return false;
+      }));
     }
   }
 
@@ -1291,6 +1302,37 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.resList[index].resBackgroundColor = $event.resBackgroundColor;
     }
     this.changeStatus();
+  }
+
+  private setTreeMenuStatus() {
+
+    if (this.hovered < this.resList.length && (this.resList[this.hovered + 1]?.isAdded || this.resList[this.hovered]?.isAdded)) {
+      this.resList[this.hovered].isCollapsed = !this.resList[this.hovered].isCollapsed;
+      if (this.resList[this.hovered].isAdded) {
+        let i = this.hovered;
+        do {
+          i--;
+          this.resList[i].isCollapsed = !this.resList[i].isCollapsed;
+        }
+        while (this.resList[i]?.isAdded && i > -1);
+        i = this.hovered + 1;
+        while (this.resList[i]?.isAdded && i < this.resList.length) {
+          this.resList[i].isCollapsed = !this.resList[i].isCollapsed;
+          i++;
+        }
+      } else if (this.resList[this.hovered + 1]) {
+        for (let i = this.hovered + 1; i < this.resList.length; i++) {
+          if (!this.resList[i]?.isAdded) {
+            break;
+          }
+          this.resList[i].isCollapsed = !this.resList[i].isCollapsed;
+        }
+      }
+
+    } else {
+      this.resList[this.hovered].isCollapsed = !this.resList[this.hovered].isCollapsed;
+    }
+    this.cdRef.detectChanges();
   }
 
   mouseEnterHandler(index: number) {
@@ -2197,6 +2239,20 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.searchChangeStatus();
   }
 
+  public searchAll(){
+    if (this.searchAllStatus === 1){
+      this.searchAllStatus = 2;
+    } else {
+      this.searchAllStatus = 1;
+    }
+    this.btnSearchHandler();
+  }
+
+  public cancelSearchAll(){
+    this.searchAllStatus = 0;
+    this.btnSearchChangeHandler();
+  }
+
   cancelAllStatus(item: ResItem) {
     if (this.isSearchChecked) {
       this.isSearchChecked = false;
@@ -2292,10 +2348,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   insertRes(item: any) {
-    // const index = this.resList.indexOf(item);
-    // const cloneItem = Object.assign({}, item);
     item.isInserted = !item.isInserted;
-    // this.insertResToList(index, cloneItem);
   }
 
   txtSearchSelectHander($event: TypeaheadMatch) {
@@ -2310,5 +2363,17 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   btnTreeSearchFocusInHandler() {
     this.isKeyPressed = false;
+  }
+
+  btnSearchAllChangeHandler() {
+    this.searchAllEmitter.emit({
+      isSearch: false
+    });
+  }
+
+  btnSearchAllHandler() {
+    this.searchAllEmitter.emit({
+      isSearch: true
+    });
   }
 }

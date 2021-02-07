@@ -348,7 +348,7 @@ export class ResService {
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https?:)/ig,
       `$1 class="swipe" rel="${rel}" title="" target="_blank"$2`);
 
-      content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->((<br>)+<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
+      content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->((<br>)*<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
       (match) => {
         return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`;
       });
