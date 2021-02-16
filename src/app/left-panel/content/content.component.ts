@@ -66,6 +66,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() changeUrlEmitter = new EventEmitter();
   @Output() selectAllEmitter = new EventEmitter();
   @Output() searchAllEmitter = new EventEmitter();
+  @Output() changeResCountEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -184,33 +185,6 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscribers.displaySelectRes = this.resService.displaySelectRes.subscribe(((value) => {
-
-      if (value.tabIndex === this.tabIndex && value.token){
-        if (value.display){
-          this.setResMenu(value.resMenu);
-          if (value.display !== this.isSelectRes) {
-            this.isSelectRes = true;
-            this.btnShowSelectHandler();
-          }
-        } else{
-          if (value.display !== this.isSelectRes) {
-            this.isSelectRes = false;
-            this.btnShowSelectHandler();
-          }
-        }
-
-        this.isSearched = false;
-        this.isSearchChecked = false;
-        this.searchChangeStatus();
-
-        this.btnNotice.checked = false;
-        this.btnNoticeChangeHandler();
-        value.token = false;
-      }
-
-    }));
-
     this.subscribers.saveResStatus = this.resService.saveResStatus.subscribe((value) => {
 
       if ((value.tabIndex === this.tabIndex || value.isAllTabSave) && this.resList.length > 0 && value.token && this.isSaveStatus) {
@@ -324,7 +298,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.saveResStatus.unsubscribe();
     this.subscribers.status.unsubscribe();
     this.subscribers.resMenu.unsubscribe();
-    this.subscribers.displaySelectRes.unsubscribe();
     this.subscribers.sortRes.unsubscribe();
     this.resList.length = 0;
 
@@ -1215,7 +1188,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.changeStatus();
   }
 
-  changeStatus() {
+  private changeStatus() {
     this.selectCount = this.resList.filter(item => item.resSelect === 'select').length;
     this.candi1Count = this.resList.filter(item => item.resSelect === 'candi1').length;
     this.candi2Count = this.resList.filter(item => item.resSelect === 'candi2').length;
@@ -1223,6 +1196,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.candi4Count = this.resList.filter(item => item.resSelect === 'candi4').length;
 
     this.cdRef.detectChanges();
+    this.changeResCountEmitter.emit();
+
     this.resService.setSelectedRes({
       select: this.selectCount,
       candi1: this.candi1Count,
@@ -1234,6 +1209,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       rightToken: true,
       statusToken: true
     });
+
   }
 
   selectedId(id: any, $event: any) {
@@ -1582,6 +1558,9 @@ export class ContentComponent implements OnInit, OnDestroy {
               }
             }
             i = j;
+            if (tmpResList[i].isSearched) {
+              tmpResList[i].isFiltered = true;
+            }
           } else if (i < tmpResList.length - 1 && tmpResList[i + 1]) {
             let j = i + 1;
             while (j < tmpResList.length && tmpResList[j].isAdded) {
@@ -2187,7 +2166,6 @@ export class ContentComponent implements OnInit, OnDestroy {
         });
       }
       let tmpResList = [...this.originalResList];
-      console.log(this.originalResList);
       if (this.isSearchChecked) {
         tmpResList = this.getAbstractRes(tmpResList);
       }
@@ -2272,9 +2250,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   txtSearchKeyPressHandler($event: KeyboardEvent){
-    // if ($event.code === 'Tab') {
     this.isKeyPressed = true;
-    // }
   }
 
   setResMenu(value) {
@@ -2375,5 +2351,27 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.searchAllEmitter.emit({
       isSearch: true
     });
+  }
+
+  public showSelectedRes(display: boolean){
+    if (display){
+      this.setResMenu(1);
+      if (display !== this.isSelectRes) {
+        this.isSelectRes = true;
+        this.btnShowSelectHandler();
+      }
+    } else{
+      if (display !== this.isSelectRes) {
+        this.isSelectRes = false;
+        this.btnShowSelectHandler();
+      }
+    }
+
+    this.isSearched = false;
+    this.isSearchChecked = false;
+    this.searchChangeStatus();
+
+    this.btnNotice.checked = false;
+    this.btnNoticeChangeHandler();
   }
 }

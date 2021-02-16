@@ -306,6 +306,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
               rightToken: true,
               statusToken: true
             });
+
+            this.changeResCount();
           }
         });
       }
@@ -324,12 +326,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe((value) => {
 
       if (value.token) {
-        for (let i = 0; i < this.tabs.length; i++) {
-          this.resService.setDisplaySelectedRes({
-            tabIndex: i,
-            token: true,
-            display: value.display
-          });
+        for (const item of this.contentComponent) {
+          item.showSelectedRes(value.display);
         }
       }
       value.token = false;
@@ -453,6 +451,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       index = this.tabs.length - 1;
     }
     this.cdr.detectChanges();
+    this.changeResCount();
     if (this.tabs.length > index && this.tabs.length > 0) {
       this.tabChangedHandler(index);
     } else {
@@ -706,8 +705,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4Html}`;
     }
 
-    if (tabUrl !== '')
+    if (tabUrl !== '') {
       htmlTag += `\n${tabUrl}`;
+    }
 
     htmlTag = `\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}\n\n${htmlTag}\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}`;
 
@@ -767,5 +767,29 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  public changeResCount() {
+    const allCount = {
+      select : 0,
+      candi1 : 0,
+      candi2 : 0,
+      candi3 : 0,
+      candi4 : 0
+    };
+
+    for (const tab of this.tabs) {
+      allCount.select += tab.resList.filter(item => item.resSelect === 'select').length;
+      allCount.candi1 += tab.resList.filter(item => item.resSelect === 'candi1').length;
+      allCount.candi2 += tab.resList.filter(item => item.resSelect === 'candi2').length;
+      allCount.candi3 += tab.resList.filter(item => item.resSelect === 'candi3').length;
+      allCount.candi4 += tab.resList.filter(item => item.resSelect === 'candi4').length;
+    }
+
+    this.resService.setChangeResCount({
+      allTabCount: allCount,
+      token: true
+    });
+
   }
 }

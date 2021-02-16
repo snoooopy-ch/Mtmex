@@ -55,10 +55,10 @@ export class ResService {
   printAllHtmlOnStatus = this.printAllHtmlOnStatusSource.asObservable();
   btnAllSelCommandSource = new BehaviorSubject<any>({});
   btnAllSelCommand = this.btnAllSelCommandSource.asObservable();
-  bsDisplaySelectedRes = new BehaviorSubject<any>({});
-  displaySelectRes = this.bsDisplaySelectedRes.asObservable();
   bsDisplayAllSelectedRes = new BehaviorSubject<any>({});
   displayAllSelectRes = this.bsDisplayAllSelectedRes.asObservable();
+  public bsChangeResCount = new BehaviorSubject<any>({});
+  public changeResCount = this.bsChangeResCount.asObservable();
 
 
   constructor() {
@@ -183,12 +183,13 @@ export class ResService {
     this.printAllHtmlOnStatusSource.next(value);
   }
 
-  setDisplaySelectedRes(value: any) {
-    this.bsDisplaySelectedRes.next(value);
-  }
 
   setDisplayAllSelectedRes(value: any) {
     this.bsDisplayAllSelectedRes.next(value);
+  }
+
+  public setChangeResCount(value: any){
+    this.bsChangeResCount.next(value);
   }
 
   async printHtmlTag(resList: ResItem[], options) {
