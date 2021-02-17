@@ -12,7 +12,7 @@ export class ResService {
   settings = new BehaviorSubject<any>({});
   searchListSource = new BehaviorSubject<any>({});
   status = new BehaviorSubject<any>({});
-  loadResStatus = new BehaviorSubject<any>({});
+  loadResStatuses = new BehaviorSubject<any>({});
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
   removeHideIdSource = new BehaviorSubject<any>({});
@@ -84,8 +84,9 @@ export class ResService {
     electron.ipcRenderer.on('getSearchList', (event, value) => {
       this.searchListSource.next(value);
     });
-    electron.ipcRenderer.on('getStatus', (event, value) => {
-      this.loadResStatus.next(value);
+
+    electron.ipcRenderer.on('getStatuses', (event, value) => {
+      this.loadResStatuses.next(value);
     });
   }
 
