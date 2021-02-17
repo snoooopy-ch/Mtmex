@@ -208,6 +208,10 @@ function getResList(filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuo
   }
   adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
 
+  // remove suretai string by setting
+  const re = new RegExp(settings.suretai_jogai.replace(/,/g, '|'), 'gi');
+  sreTitle = sreTitle.replace(re, '');
+
   if (loadedTitles.indexOf(sreTitle) !== -1) {
     let response = dialog.showMessageBoxSync(win, {
       buttons: ["Yes", "No"],

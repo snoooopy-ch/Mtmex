@@ -16,6 +16,11 @@
   <button class="border-round" (click)="btnAllSelSideBarClickHandler()">実行</button>
 </div>
 <div class="width-100">
+  <div class="sure-specific half-height">
+    <button class="sure-specific-btn btn-left-round" (click)="setDefaultPathHandler(3)">dat4</button>
+    <button class="sure-specific-btn" (click)="setDefaultPathHandler(4)">dat5</button>
+    <button class="sure-specific-btn btn-right-round" (click)="setDefaultPathHandler(5)">dat6</button>
+  </div>
   <div class="sure-specific">
     <button class="sure-specific-btn btn-left-round" (click)="setDefaultPathHandler(0)">dat1</button>
     <button class="sure-specific-btn" (click)="setDefaultPathHandler(1)">dat2</button>
@@ -23,7 +28,7 @@
   </div>
   <input type="text" [(ngModel)]="txtDataFilePath">
   <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
-  <button class="border-round load-multi-path" (click)="btnLoadMultiFiles()">dat直接読み込み</button>
+  <button class="border-round load-multi-path" (click)="btnLoadMultiFiles()">dat選択読み込み</button>
 </div>
 <div class="res-order">
   <div class="reading-mode">
@@ -106,8 +111,8 @@
   <textarea id="txt-html-tag" [(ngModel)]="htmlTag"></textarea>
 </div>
 <div class="save-container">
-  <button id="btn-save" class="btn-left-round" (click)="saveCurrentRes()">保存</button>
-  <button id="btn-load" class="btn-right-round" (click)="loadCurrentRes()">復元</button>
+  <button class="btn-left-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
+  <button class="btn-right-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
 </div>
 <div class="setting-panel">
   <button class="btn-left-round btn-right-round" style="width: 100%;" (click)="btnSelectResHandler()">実行</button>
@@ -117,8 +122,9 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select">選択</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                          value="cancel-select">選択解除</label>
+        <label class="canel-radio text-red">
+          <input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-allselect">全解除
+        </label>
       </td>
     </tr>
     <tr>
@@ -127,7 +133,7 @@
       </td>
       <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                          value="cancel-candi1">予備1 解除</label>
+                                          value="cancel-select">選択解除</label>
       </td>
     </tr>
     <tr>
@@ -136,8 +142,7 @@
       </td>
       <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                          value="cancel-candi2">予備2 解除</label>
-
+                                          value="cancel-candi1">予備1 解除</label>
       </td>
     </tr>
     <tr>
@@ -146,7 +151,7 @@
       </td>
       <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                          value="cancel-candi3">予備3 解除</label>
+                                          value="cancel-candi2">予備2 解除</label>
       </td>
     </tr>
     <tr>
@@ -155,7 +160,7 @@
       </td>
       <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                          value="cancel-candi4">予備4 解除</label>
+                                          value="cancel-candi3">予備3 解除</label>
       </td>
     </tr>
     <tr>
@@ -163,8 +168,8 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select-image">画像選択</label>
       </td>
       <td>
-        <label class="canel-radio text-red"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                                   value="cancel-allselect">全解除</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi4">予備4 解除</label>
       </td>
     </tr>
     <tr>
@@ -196,15 +201,13 @@
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi4-image">画像予備4</label>
       </td>
       <td>
-
+        <label class="canel-radio text-red">
+          <input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="cancel-allselect">全解除
+        </label>
       </td>
     </tr>
   </table>
   <button class="btn-left-round btn-right-round" style="width: 100%;" (click)="btnSelectResHandler()">実行</button>
-</div>
-<div class="sort-group">
-  <label><input type="radio" name="opt-sort" [(ngModel)]="sortCommand" value="num-sort">レスNo順にソート</label>
-  <button class="btn-left-round btn-right-round" style="width: 100%;" (click)="btnSortResHandler()">実行</button>
 </div>
 <div class="menu-group">
   <button class="btn-left-round" (click)="btnSetResMenuHandler(1)">メニュー１</button>
@@ -220,12 +223,24 @@
 </div>
 <div class="width-100">
   <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
+</div>
+<div class="save-container mt-1">
+  <button class="btn-left-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
+  <button class="btn-right-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
+</div>
+<div class="width-100">
+  <button class="border-round btn-print-all-tag" (click)="printAllHtmlTagHandler()">全タブ出力</button>
+  <button class="border-round btn-print-html-tag" (click)="printHtmlTagHandler()">出力</button>
   <label>注意レス</label>
   <input type="text" [(ngModel)]="txtRemarkRes">
   <label>非表示レス</label>
   <input type="text" [(ngModel)]="txtHideRes">
-  <button class="border-round btn-print-all-tag" (click)="printAllHtmlTagHandler()">全タブ出力</button>
-  <button class="border-round btn-print-html-tag" (click)="printHtmlTagHandler()">出力</button>
+</div>
+<div class="sort-group">
+  <label><input type="radio" name="opt-sort" [(ngModel)]="sortCommand" value="num-sort">レスNo順にソート</label>
+  <button class="btn-left-round btn-right-round w-100" (click)="btnSortResHandler()">実行</button>
+</div>
+<div class="width-100">
   <label>非表示のID</label>
   <div class="hidden-ids-container">
     <button class="btn-show-id" *ngFor="let id of hiddenIds;" (click)="ShowIdHandler(id)">[X]{{id}}</button>

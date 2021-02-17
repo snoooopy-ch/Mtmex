@@ -24,4 +24,12 @@ label.full-width{
       }
     }
   }
+
+  .sure-specific{
+    &.half-height{
+      button{
+        height: 28px;
+      }
+    }
+  }
 }

@@ -658,6 +658,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           replacedName: this.settings.namae_ato,
           isSurroundImage: pSurroundImage,
           gazouReplaceUrl: pGazouReplaceUrl,
+          insertPrefix: this.settings.sounyuu_mae,
+          insertSuffix: this.settings.sounyuu_usiro
         });
 
         tabName = '';
