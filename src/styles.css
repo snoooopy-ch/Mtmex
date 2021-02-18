@@ -431,6 +431,7 @@ app-res .row-4 a {
 
 .main-container app-left-panel .btn-print-all-tag {
   width: 95px;
+  min-width: 65px;
   background-color: #cc99FF;
   border:solid 1px #cc99FF;
 
@@ -692,7 +693,7 @@ app-res .row-4 a {
 }
 
 .main-container app-right-panel .width-100 .btn-print-html-tag {
-  height: 100px;
+  height: 75px;
   background-color: lightsalmon;
   border:solid 1px lightsalmon;
 }
@@ -704,7 +705,7 @@ app-res .row-4 a {
 }
 
 .main-container app-right-panel .width-100 .btn-print-all-tag {
-  height: 55px;
+  height: 75px;
   background-color: #cc99FF;
   border:solid 1px #cc99FF;
 }
@@ -827,7 +828,7 @@ input[type='radio']:checked:before {
   display: none;
 }
 
-#btn-load {
+.btn-load {
   background-color: #bfffff;
 }
 

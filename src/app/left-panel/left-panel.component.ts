@@ -249,63 +249,73 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     });
 
-    this.subscribers.loadStatus = this.resService.loadResStatus.subscribe((value) => {
+    this.subscribers.loadStatus = this.resService.loadResStatuses.subscribe((value) => {
       if (this.tabGroup === undefined) {
         return;
       }
-      if (value.data.resList !== undefined) {
+      if (value.data.length > 0) {
         this.zone.run(() => {
-          const loadResList = [];
-          for (const res of value.data.resList) {
-            const resItem = Object.assign({}, res);
-            if (!Number.isInteger(res.resColor)) {
-              continue;
-            }
-            if (Number(res.resColor) === 0) {
-              resItem.resColor = '#000';
-            } else {
-              resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
-            }
+          let index = 1;
+          for (const loadData of value.data) {
+            setTimeout( (() => {
+              const loadResList = [];
+              for (const res of loadData.resList) {
+                const resItem = Object.assign({}, res);
+                if (!Number.isInteger(res.resColor)) {
+                  continue;
+                }
+                if (Number(res.resColor) === 0) {
+                  resItem.resColor = '#000';
+                } else {
+                  resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
+                }
 
-            resItem.resFontSize = this.resSizeList[Number(res.resFontSize) - 1].value;
-            resItem.resBackgroundColor = this.backgroundColors[res.resBackgroundColor];
-            resItem.resHovergroundColor = this.hovergroundColors[res.resHovergroundColor];
-            resItem.idColor = this.idStyles[Number(res.idColor)].color;
-            resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
-            loadResList.push(resItem);
-          }
-          if (loadResList.length > 0) {
-            const originSreTitle = value.data.title.replace(/__[\w,\s-]{10}/ig, '');
-            this.addTab(value.data.title, loadResList, originSreTitle, value.data.filePath);
-            this.selectedTabIndex = this.tabs.length - 1;
-            value.tabIndex = this.selectedTabIndex;
-            this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
+                resItem.resFontSize = this.resSizeList[Number(res.resFontSize) - 1].value;
+                resItem.resBackgroundColor = this.backgroundColors[res.resBackgroundColor];
+                resItem.resHovergroundColor = this.hovergroundColors[res.resHovergroundColor];
+                resItem.idColor = this.idStyles[Number(res.idColor)].color;
+                resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
+                loadResList.push(resItem);
+              }
+              loadData.resList.length = 0;
+              if (loadResList.length > 0) {
+                const originSreTitle = loadData.title.replace(/__[\w,\s-]{10}/ig, '');
 
-            this.resService.setTotalRes({
-              tabIndex: this.selectedTabIndex,
-              totalCount: value.data.resList.length,
-              title: this.tabs[this.selectedTabIndex].title,
-              rightToken: true,
-              statusToken: true
-            });
+                this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath);
+                this.selectedTabIndex = this.tabs.length - 1;
+                value.tabIndex = this.selectedTabIndex;
+                this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
 
-            const selectCount = value.data.resList.filter(item => item.resSelect === 'select').length;
-            const candi1Count = value.data.resList.filter(item => item.resSelect === 'candi1').length;
-            const candi2Count = value.data.resList.filter(item => item.resSelect === 'candi2').length;
-            const candi3Count = value.data.resList.filter(item => item.resSelect === 'candi3').length;
-            const candi4Count = value.data.resList.filter(item => item.resSelect === 'candi4').length;
+                this.resService.setTotalRes({
+                  tabIndex: this.selectedTabIndex,
+                  totalCount: loadResList.length,
+                  title: this.tabs[this.selectedTabIndex].title,
+                  rightToken: true,
+                  statusToken: true
+                });
 
-            this.resService.setSelectedRes({
-              select: selectCount,
-              candi1: candi1Count,
-              candi2: candi2Count,
-              candi3: candi3Count,
-              candi4: candi4Count,
-              tabIndex: this.selectedTabIndex,
-              title: this.tabs[this.selectedTabIndex].title,
-              rightToken: true,
-              statusToken: true
-            });
+                const selectCount = loadResList.filter(item => item.resSelect === 'select').length;
+                const candi1Count = loadResList.filter(item => item.resSelect === 'candi1').length;
+                const candi2Count = loadResList.filter(item => item.resSelect === 'candi2').length;
+                const candi3Count = loadResList.filter(item => item.resSelect === 'candi3').length;
+                const candi4Count = loadResList.filter(item => item.resSelect === 'candi4').length;
+
+                this.resService.setSelectedRes({
+                  select: selectCount,
+                  candi1: candi1Count,
+                  candi2: candi2Count,
+                  candi3: candi3Count,
+                  candi4: candi4Count,
+                  tabIndex: this.selectedTabIndex,
+                  title: this.tabs[this.selectedTabIndex].title,
+                  rightToken: true,
+                  statusToken: true
+                });
+
+                this.changeResCount();
+              }
+            }).bind(this), 1000 * index);
+            index++;
           }
         });
       }
@@ -324,12 +334,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe((value) => {
 
       if (value.token) {
-        for (let i = 0; i < this.tabs.length; i++) {
-          this.resService.setDisplaySelectedRes({
-            tabIndex: i,
-            token: true,
-            display: value.display
-          });
+        for (const item of this.contentComponent) {
+          item.showSelectedRes(value.display);
         }
       }
       value.token = false;
@@ -448,11 +454,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     const originSreTitle = this.tabs[index].originSreTitle;
     this.resService.removeTab(originSreTitle);
     this.tabs[index].resList.length = 0;
+    this.tabs[index].originalResList.length = 0;
     this.tabs.splice(index, 1);
     if (this.tabs.length - 1 < index) {
       index = this.tabs.length - 1;
     }
     this.cdr.detectChanges();
+    this.changeResCount();
     if (this.tabs.length > index && this.tabs.length > 0) {
       this.tabChangedHandler(index);
     } else {
@@ -659,6 +667,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           replacedName: this.settings.namae_ato,
           isSurroundImage: pSurroundImage,
           gazouReplaceUrl: pGazouReplaceUrl,
+          insertPrefix: this.settings.sounyuu_mae,
+          insertSuffix: this.settings.sounyuu_usiro
         });
 
         tabName = '';
@@ -706,8 +716,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4Html}`;
     }
 
-    if (tabUrl !== '')
+    if (tabUrl !== '') {
       htmlTag += `\n${tabUrl}`;
+    }
 
     htmlTag = `\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}\n\n${htmlTag}\n★●合計レス数: ${allCount}\n★●選択レス数: ${selectedCount}\n★●予備選択数: ${yobiCount}`;
 
@@ -767,5 +778,29 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  public changeResCount() {
+    const allCount = {
+      select : 0,
+      candi1 : 0,
+      candi2 : 0,
+      candi3 : 0,
+      candi4 : 0
+    };
+
+    for (const tab of this.tabs) {
+      allCount.select += tab.resList.filter(item => item.resSelect === 'select').length;
+      allCount.candi1 += tab.resList.filter(item => item.resSelect === 'candi1').length;
+      allCount.candi2 += tab.resList.filter(item => item.resSelect === 'candi2').length;
+      allCount.candi3 += tab.resList.filter(item => item.resSelect === 'candi3').length;
+      allCount.candi4 += tab.resList.filter(item => item.resSelect === 'candi4').length;
+    }
+
+    this.resService.setChangeResCount({
+      allTabCount: allCount,
+      token: true
+    });
+
   }
 }

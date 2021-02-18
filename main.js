@@ -14,7 +14,7 @@ let searchListPath = 'SearchList.txt';
 let stateComments = ['#datパス', '#指定したdatパス', '#チェックボックス', '#文字色', '#注意レス', '#非表示レス', '#名前欄の置換',
   '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
 let curComment = '';
-let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2','sentaku_idou3','sentaku_idou4', 'Left_highlight', 'res_mouse_click', 'youtube'
+let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2', 'sentaku_idou3', 'sentaku_idou4', 'Left_highlight', 'res_mouse_click', 'youtube'
   , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save', 'twitter_url', 'youtube_url', 'yobi_kabu_shuturyoku', 'fukugen_uwagaki'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];
@@ -77,7 +77,7 @@ function createWindow() {
     },
     {
       label: '　　　　　出力　　　　　|',
-      click: function() {
+      click: function () {
         win.webContents.send("printHtmlMenuClick");
       }
     },
@@ -208,6 +208,10 @@ function getResList(filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuo
   }
   adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor);
 
+  // remove suretai string by setting
+  const re = new RegExp(settings.suretai_jogai.replace(/,/g, '|'), 'gi');
+  sreTitle = sreTitle.replace(re, '');
+
   if (loadedTitles.indexOf(sreTitle) !== -1) {
     let response = dialog.showMessageBoxSync(win, {
       buttons: ["Yes", "No"],
@@ -250,7 +254,7 @@ ipcMain.on("loadMultiRes", (event, filePaths, isResSort, isMultiAnchor, isReplac
                             notMoveFutureAnchor, remarkRes, hideRes) => {
   let index = 0;
   for (const filePath of filePaths) {
-    setTimeout(getResList, 1000*index, filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor, remarkRes, hideRes);
+    setTimeout(getResList, 1000 * index, filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor, remarkRes, hideRes);
     index++;
   }
 
@@ -277,7 +281,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
   }
   for (let resItem of resList) {
     if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
-      const re = new RegExp(sreTitle.replace(/\?/gi,'\\?'), 'gi');
+      const re = new RegExp(sreTitle.replace(/\?/gi, '\\?'), 'gi');
       resItem.content = resItem.content.replace(re, '');
       resItem.id = resItem.id.replace(re, '');
       resItem.name = resItem.name.replace(re, '');
@@ -300,11 +304,11 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
   let tmpResList = [];
   if (isResSort || isReplaceRes) {
     for (let i = 0; i < resList.length; i++) {
-      if (isResSort && !notMoveFutureAnchor){
+      if (isResSort && !notMoveFutureAnchor) {
         resList[i].anchors = resList[i].anchors.concat(resList[i].futureAnchors);
       }
       if (resList[i].anchors.length > 0 || resList[i].futureAnchors.length > 0) {
-        if (!isReplaceRes &&(resList[i].anchors.indexOf(1) !== -1 && resList[i].anchors.length === 1)) {
+        if (!isReplaceRes && (resList[i].anchors.indexOf(1) !== -1 && resList[i].anchors.length === 1)) {
           continue;
         }
         if (resList[i].num === 1) {
@@ -333,21 +337,21 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
           if (resList[i].num === anchor) {
             if (isReplaceRes) {
 
-                if (isMultiAnchor && resItem.anchors.length < settings.anker) {
-                  const rc = addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
-                    isContinuousAnchor, resList[i].anchorLevel);
-                  if (resItem.futureAnchors.length < 1 && rc) {
-                    resItem.isAdded = true;
-                    resItem.anchorLevel = resList[i].anchorLevel + 1;
-                  }
-                } else {
-                  if (!resItem.isAdded) {
-                    addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
-                      isContinuousAnchor, resList[i].anchorLevel);
-                    resItem.isAdded = true;
-                    resItem.anchorLevel = resList[i].anchorLevel + 1;
-                  }
+              if (isMultiAnchor && resItem.anchors.length < settings.anker) {
+                const rc = addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                  isContinuousAnchor, resList[i].anchorLevel);
+                if (resItem.futureAnchors.length < 1 && rc) {
+                  resItem.isAdded = true;
+                  resItem.anchorLevel = resList[i].anchorLevel + 1;
                 }
+              } else {
+                if (!resItem.isAdded) {
+                  addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
+                    isContinuousAnchor, resList[i].anchorLevel);
+                  resItem.isAdded = true;
+                  resItem.anchorLevel = resList[i].anchorLevel + 1;
+                }
+              }
             } else {
               if (resList[i].num !== 1) {
                 if (isMultiAnchor && resItem.anchors.length < settings.anker) {
@@ -360,7 +364,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
                 } else {
                   if (!resItem.isAdded) {
                     addAnchorRes(i + 1, resItem, anchor, isMultiAnchor && resItem.anchors.length < settings.anker,
-                      isContinuousAnchor,resList[i].anchorLevel);
+                      isContinuousAnchor, resList[i].anchorLevel);
                     resItem.isAdded = true;
                     resItem.anchorLevel = resList[i].anchorLevel + 1;
                   }
@@ -439,23 +443,23 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
   }
   // 複数アンカーを分割
   if (isMultiAnchor) {
-    if(isContinuousAnchor && item.continuousAnchors.indexOf(anchor) !== -1){
+    if (isContinuousAnchor && item.continuousAnchors.indexOf(anchor) !== -1) {
       let newItem = Object.assign({}, item);
       const strAnchor = `&gt;&gt;${anchor}`;
-      const re = new RegExp(strAnchor,'gi');
-      if(re.test(item.continuousContent) === false){
-        newItem.content = `&gt;&gt;${anchor}<br>` + item.continuousContent.replace(/&gt;&gt;\d+/gi,'');
-      }else{
+      const re = new RegExp(strAnchor, 'gi');
+      if (re.test(item.continuousContent) === false) {
+        newItem.content = `&gt;&gt;${anchor}<br>` + item.continuousContent.replace(/&gt;&gt;\d+/gi, '');
+      } else {
         newItem.content = item.continuousContent;
       }
       newItem.isAdded = true;
       newItem.anchorLevel = anchorLevel + 1;
-      item.content = item.content.replace(`&gt;&gt;${anchor}<br>`,'');
-      item.content = item.content.replace(`&gt;&gt;${anchor}`,'');
-      item.content = item.content.replace(item.continuousContent,'');
+      item.content = item.content.replace(`&gt;&gt;${anchor}<br>`, '');
+      item.content = item.content.replace(`&gt;&gt;${anchor}`, '');
+      item.content = item.content.replace(item.continuousContent, '');
       resList.splice(i, 0, newItem);
       result = true;
-    }else if(item.continuousAnchors.indexOf(anchor) === -1) {
+    } else if (item.continuousAnchors.indexOf(anchor) === -1) {
       let newItem = Object.assign({}, item);
       let tmpItems = newItem.content.split('<br>');
       let anchorContent = '';
@@ -463,7 +467,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
       let isAdded = false;
       let spliter = '&gt;&gt;' + anchor;
       let row = 0;
-      if(newItem.content.length > 0) {
+      if (newItem.content.length > 0) {
         for (let tmpItem of tmpItems) {
           if (row > 0 && isAdded) {
             anchorContent += '<br>';
@@ -490,7 +494,7 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
 
         }
       }
-      if(isAdded && anchorExists) {
+      if (isAdded && anchorExists) {
         newItem.content = anchorContent;
         item.content = item.content.replace(newItem.content, '');
         newItem.isAdded = true;
@@ -498,8 +502,8 @@ function addAnchorRes(index, item, anchor, isMultiAnchor, isContinuousAnchor, an
         resList.splice(i, 0, newItem);
         result = true;
       }
-    }else {
-      if(resList.indexOf(item) === -1) {
+    } else {
+      if (resList.indexOf(item) === -1) {
 
         resList.splice(i, 0, item);
         result = true;
@@ -542,7 +546,7 @@ function readLines(line) {
   if (words.length > 4 && num === 0) {
     sreTitle = words[4].replace(/\r|\r|\r\n/gi, '');
     sreTitle = sreTitle.trim();
-    if(sreTitle.length === 0){
+    if (sreTitle.length === 0) {
       sreTitle = '_';
     }
   }
@@ -589,7 +593,7 @@ function readLines(line) {
     futureAnchors: [],
     isNotice: false,
     continuousAnchors: [],
-    continuousContent:'',
+    continuousContent: '',
     anchorLevel: 0,
     isCollapsed: false,
   };
@@ -660,10 +664,10 @@ function readLines(line) {
     let anchors = anchor_str.match(/&gt;&gt;\d+/g);
     if (anchors !== null) {
       for (const anchor of anchors) {
-　        const anchorNum = parseInt(anchor.replace(/&gt;&gt;/g, ''));
-        if(anchorNum > resItem.num){
+        const anchorNum = parseInt(anchor.replace(/&gt;&gt;/g, ''));
+        if (anchorNum > resItem.num) {
           resItem.futureAnchors.push(anchorNum);
-        }else{
+        } else {
           resItem.anchors.push(anchorNum);
         }
       }
@@ -672,7 +676,7 @@ function readLines(line) {
     let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
     let replaced_lines = [];
     let index = 0;
-    const re = new RegExp(sreTitle.replace(/\?/gi,'\\?'), 'gi');
+    const re = new RegExp(sreTitle.replace(/\?/gi, '\\?'), 'gi');
     for (let tmp_item of tmp_items) {
       if (index > 0)
         resItem.content += '<br>';
@@ -708,35 +712,35 @@ function readLines(line) {
     }
     const strReContinue = /^\s*&gt;&gt;\d+\s*$/gi;
     let isAddContinue = false;
-    for(let i=0; i<replaced_lines.length; i++){
-      if(new RegExp(strReContinue).test(replaced_lines[i])){
+    for (let i = 0; i < replaced_lines.length; i++) {
+      if (new RegExp(strReContinue).test(replaced_lines[i])) {
         const continuousAnchor = parseInt(replaced_lines[i].replace(/&gt;&gt;/g, ''));
         const next = i + 1;
-        if (next < replaced_lines.length){
-          if(new RegExp(/^\s*&gt;&gt;\d+/,'gi').test(replaced_lines[next])){
+        if (next < replaced_lines.length) {
+          if (new RegExp(/^\s*&gt;&gt;\d+/, 'gi').test(replaced_lines[next])) {
             resItem.continuousAnchors.push(continuousAnchor);
             isAddContinue = true;
             continue;
           }
         }
-        const prev = i -1;
-        if (prev >= 0){
-          if(new RegExp(strReContinue).test(replaced_lines[prev])){
+        const prev = i - 1;
+        if (prev >= 0) {
+          if (new RegExp(strReContinue).test(replaced_lines[prev])) {
             resItem.continuousAnchors.push(continuousAnchor);
             isAddContinue = true;
           }
         }
-      }else{
-        if (i > 0 && new RegExp(strReContinue).test(replaced_lines[i-1]) && isAddContinue){
+      } else {
+        if (i > 0 && new RegExp(strReContinue).test(replaced_lines[i - 1]) && isAddContinue) {
           let anchorString = replaced_lines[i].match(/^\s*&gt;&gt;\d+/g);
 
-          if(anchorString !== null) {
+          if (anchorString !== null) {
             const continuousAnchor = parseInt(anchorString[0].replace(/&gt;&gt;/g, ''));
             resItem.continuousAnchors.push(continuousAnchor);
           }
           let continueContent = replaced_lines[i];
-          for (let j=i+1; j < replaced_lines.length; j++){
-            if(new RegExp(/^\s*&gt;&gt;\d+/g).test(replaced_lines[j])){
+          for (let j = i + 1; j < replaced_lines.length; j++) {
+            if (new RegExp(/^\s*&gt;&gt;\d+/g).test(replaced_lines[j])) {
               isAddContinue = false;
               break;
             }
@@ -757,7 +761,7 @@ ipcMain.on("loadSettings", (event) => {
 
 function getSettings() {
 
-  if(!fs.existsSync(settingPath)) {
+  if (!fs.existsSync(settingPath)) {
     dialog.showErrorBox('設定', '設定ファイルを読めません。');
     return;
   }
@@ -824,7 +828,7 @@ function getSettings() {
         settings['hihyouji'] = lineArgs[1];
       } else if (curComment === '#注目レスの閾値') {
         settings['noticeCount'] = lineArgs[1].split(';');
-      } else if (curComment === '#未来アンカー'){
+      } else if (curComment === '#未来アンカー') {
         settings[lineArgs[0]] = lineArgs[1].replace(/;/g, '|');
       } else {
         if (yesNoKeys.indexOf(lineArgs[0]) !== -1) {
@@ -850,10 +854,10 @@ function getSettings() {
   });
 
   let searchList = [];
-  if(fs.existsSync(searchListPath)) {
+  if (fs.existsSync(searchListPath)) {
     let data = fs.readFileSync(searchListPath);
     let strTmp = '' + data;
-    if(strTmp.length > 0){
+    if (strTmp.length > 0) {
       searchList = strTmp.split('\n');
     }
   }
@@ -893,56 +897,45 @@ ipcMain.on("loadStatus", (event, filePath) => {
 
 function loadStatus(filePaths) {
   let index = 1;
+  let loadResults = [];
   for (const filePath of filePaths) {
     if (!fs.existsSync(filePath)) {
       dialog.showErrorBox('復元', '復元。');
       return;
     }
     let jsonString = fs.readFileSync(filePath);
-    // fs.readFile(filePath, 'utf8', (err, jsonString) => {
-    //   if (err) {
-    //     dialog.showErrorBox('復元', '復元。');
-    //     return
-    //   }
-      try {
-        let loadData = JSON.parse(jsonString);
-        loadData.title = filePath.replace(/^(.*)\\(.*)(\..*)$/ig, `$2`);
-        loadData.filePath = filePath;
-        if (loadedTitles.indexOf(loadData.title) !== -1) {
-          let response = dialog.showMessageBoxSync(win, {
-            buttons: ["Yes", "No"],
-            message: '同じタブがあります、datを読み込みますか'
-          });
-          if (response === 0) {
-            loadedTitles.push(loadData.title);
-            let suffix = uuidv4();
-            suffix = suffix.replace(/-/g, '').substr(0, 10);
-            loadData.title = `${loadData.title}__${suffix}`;
-            setTimeout(()=>{
-              win.webContents.send("getStatus", {data: loadData});
-            },1000*index);
-            // setTimeout(win.webContents.send, 1000*index, "getStatus", {data: loadData});
-            // win.webContents.send("getStatus", {data: loadData});
-          }
-        } else {
+    try {
+      let loadData = JSON.parse(jsonString);
+      loadData.title = filePath.replace(/^(.*)\\(.*)(\..*)$/ig, `$2`);
+      loadData.filePath = filePath;
+      if (loadedTitles.indexOf(loadData.title) !== -1) {
+        let response = dialog.showMessageBoxSync(win, {
+          buttons: ["Yes", "No"],
+          message: '同じタブがあります、datを読み込みますか'
+        });
+        if (response === 0) {
           loadedTitles.push(loadData.title);
-          setTimeout(()=>{
-            win.webContents.send("getStatus", {data: loadData});
-          },1000*index);
-          // setTimeout(win.webContents.send, 1000*index, "getStatus", {data: loadData});
-          // win.webContents.send("getStatus", {data: loadData});
+          let suffix = uuidv4();
+          suffix = suffix.replace(/-/g, '').substr(0, 10);
+          loadData.title = `${loadData.title}__${suffix}`;
         }
-
-      } catch (err) {
-        console.log('Error parsing JSON string:', err)
+      } else {
+        loadedTitles.push(loadData.title);
       }
-    // });
+      loadResults = [...loadResults, loadData];
+    } catch (err) {
+      console.log('Error parsing JSON string:', err)
+    }
     index++;
   }
+  if (loadResults.length > 0) {
+    win.webContents.send("getStatuses", {data: loadResults});
+  }
+
 }
 
 ipcMain.on("saveSearchList", (event, searchList) => {
-  if(searchList !== undefined && searchList.length > 0) {
+  if (searchList !== undefined && searchList.length > 0) {
     let data = searchList.join('\n');
 
     fs.writeFile('SearchList.txt', data, (err) => {

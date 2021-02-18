@@ -47,7 +47,7 @@
 <div *ngIf="suffixNumber?.length>0">
   <a href="{{titleUrl}}{{suffixNumber}}" class="light-blue">{{titleUrl}}{{suffixNumber}}</a>
 </div>
-<virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="100"
+<virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="50"
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true"
 [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 193 : 173)) + 'px)'}">
 

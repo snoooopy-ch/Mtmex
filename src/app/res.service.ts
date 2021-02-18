@@ -12,16 +12,29 @@ export class ResService {
   settings = new BehaviorSubject<any>({});
   searchListSource = new BehaviorSubject<any>({});
   status = new BehaviorSubject<any>({});
-  loadResStatus = new BehaviorSubject<any>({});
+  loadResStatuses = new BehaviorSubject<any>({});
   hideIdSource = new BehaviorSubject<string[]>([]);
   LoadHiddenIds = this.hideIdSource.asObservable();
   removeHideIdSource = new BehaviorSubject<any>({});
   loadRemoveHideIds = this.removeHideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
   scrollPos = this.scrollPosSource.asObservable();
-  selectedResSource = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, tabIndex: 0});
-  selectedRes = this.selectedResSource.asObservable();
-  bsSelectedTab = new BehaviorSubject<any>({select: 0, candi1: 0, candi2: 0, candi3: 0, candi4: 0, totalCount: 0, tabIndex: 0});
+  public selectedResSource = new BehaviorSubject<any>({
+    select: 0,
+    candi1: 0,
+    candi2: 0,
+    candi3: 0,
+    candi4: 0,
+    tabIndex: 0});
+  public selectedRes = this.selectedResSource.asObservable();
+  public bsSelectedTab = new BehaviorSubject<any>({
+    select: 0,
+    candi1: 0,
+    candi2: 0,
+    candi3: 0,
+    candi4: 0,
+    totalCount: 0,
+    tabIndex: 0});
   selectedTab = this.bsSelectedTab.asObservable();
   bsMoveRes = new BehaviorSubject<any>({tabIndex: 0, moveKind: ''});
   moveRes = this.bsMoveRes.asObservable();
@@ -55,10 +68,10 @@ export class ResService {
   printAllHtmlOnStatus = this.printAllHtmlOnStatusSource.asObservable();
   btnAllSelCommandSource = new BehaviorSubject<any>({});
   btnAllSelCommand = this.btnAllSelCommandSource.asObservable();
-  bsDisplaySelectedRes = new BehaviorSubject<any>({});
-  displaySelectRes = this.bsDisplaySelectedRes.asObservable();
   bsDisplayAllSelectedRes = new BehaviorSubject<any>({});
   displayAllSelectRes = this.bsDisplayAllSelectedRes.asObservable();
+  public bsChangeResCount = new BehaviorSubject<any>({});
+  public changeResCount = this.bsChangeResCount.asObservable();
 
 
   constructor() {
@@ -71,8 +84,9 @@ export class ResService {
     electron.ipcRenderer.on('getSearchList', (event, value) => {
       this.searchListSource.next(value);
     });
-    electron.ipcRenderer.on('getStatus', (event, value) => {
-      this.loadResStatus.next(value);
+
+    electron.ipcRenderer.on('getStatuses', (event, value) => {
+      this.loadResStatuses.next(value);
     });
   }
 
@@ -183,12 +197,13 @@ export class ResService {
     this.printAllHtmlOnStatusSource.next(value);
   }
 
-  setDisplaySelectedRes(value: any) {
-    this.bsDisplaySelectedRes.next(value);
-  }
 
   setDisplayAllSelectedRes(value: any) {
     this.bsDisplayAllSelectedRes.next(value);
+  }
+
+  public setChangeResCount(value: any){
+    this.bsChangeResCount.next(value);
   }
 
   async printHtmlTag(resList: ResItem[], options) {

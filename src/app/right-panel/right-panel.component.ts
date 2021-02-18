@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { Clipboard } from '@angular/cdk/clipboard';
+import {Clipboard} from '@angular/cdk/clipboard';
 import {ResService} from '../res.service';
 import {Subject, timer} from 'rxjs';
 import {takeUntil, repeatWhen} from 'rxjs/operators';
@@ -16,7 +16,7 @@ const electron = (window as any).require('electron');
 @Component({
   selector: 'app-right-panel',
   templateUrl: './right-panel.component.html',
-  styleUrls: ['./right-panel.component.css']
+  styleUrls: ['./right-panel.component.scss']
 })
 export class RightPanelComponent implements OnInit, OnDestroy {
   txtDataFilePath = '';
@@ -52,6 +52,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   private readonly stopTimer = new Subject<void>();
   private readonly startTimer = new Subject<void>();
   isSaveOfLoadFile: boolean;
+  public allTabCount: any;
 
   constructor(private resService: ResService,
               private cdRef: ChangeDetectorRef,
@@ -60,9 +61,17 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.hiddenIds = [];
     this.isReplaceName = true;
     this.isSurroundImage = false;
+    this.allTabCount = {
+      select: 0,
+      candi1: 0,
+      candi2: 0,
+      candi3: 0,
+      candi4: 0
+    };
   }
 
   ngOnInit(): void {
+
     this.isSaveOfLoadFile = true;
     this.subscribers.LoadHiddenIds = this.resService.LoadHiddenIds.subscribe((hiddenIds) => {
       this.hiddenIds = hiddenIds;
@@ -72,11 +81,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.subscribers.settings = this.resService.settings.subscribe((value) => {
       this.settings = value;
 
-      if (this.settings.AutoSave){
+      if (this.settings.AutoSave) {
         const min = Number(this.settings.min);
         this.timer = timer(30000, min * 60000);
-        // subscribing to a observable returns a subscription object
-        this.subscribers.statusTimer =  this.timer.pipe(
+        this.subscribers.statusTimer = this.timer.pipe(
           takeUntil(this.stopTimer),
           repeatWhen(() => this.startTimer)
         ).subscribe(t => {
@@ -96,19 +104,19 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.txtHideRes = this.settings.hihyouji;
       }
 
-      if (this.settings.default_dat_folder_path !== undefined){
+      if (this.settings.default_dat_folder_path !== undefined) {
         this.loadDatPath = this.settings.default_dat_folder_path;
       }
 
-      if (this.settings.default_status_folder_path !== undefined){
+      if (this.settings.default_status_folder_path !== undefined) {
         this.loadStatusPath = this.settings.default_status_folder_path;
       }
 
-      if (this.settings.t_media2_mtm_URL !== undefined){
+      if (this.settings.t_media2_mtm_URL !== undefined) {
         this.gazouReplaceUrl = this.settings.t_media2_mtm_URL;
       }
 
-      if (this.settings.yobi_kabu_shuturyoku !== undefined){
+      if (this.settings.yobi_kabu_shuturyoku !== undefined) {
         this.isOutputCandiBelow = this.settings.yobi_kabu_shuturyoku;
       }
 
@@ -116,7 +124,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       this.setHotKeys();
     });
 
-    this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value ) => {
+    this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value) => {
       this.tabIndex = value.tabIndex;
       this.selectCount = value.select;
       this.candi1Count = value.candi1;
@@ -141,10 +149,19 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.subscribers.changeResCount = this.resService.changeResCount.subscribe((value) => {
+
+      if (value?.token) {
+        this.allTabCount = value.allTabCount;
+        this.cdRef.detectChanges();
+        value.token = false;
+      }
+    });
+
     this.subscribers.totalRes = this.resService.totalRes.subscribe((value) => {
-      if (this.tabIndex === value.tabIndex && value.rightToken){
+      if (this.tabIndex === value.tabIndex && value.rightToken) {
         this.totalCount = value.totalCount;
-        if (value.title !== undefined){
+        if (value.title !== undefined) {
           this.title = value.title;
         }
         this.cdRef.detectChanges();
@@ -152,21 +169,21 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscribers.printHtml = this.resService.printHtml.subscribe( (value) => {
-      if (this.tabIndex === value.tabIndex){
+    this.subscribers.printHtml = this.resService.printHtml.subscribe((value) => {
+      if (this.tabIndex === value.tabIndex) {
         this.htmlTag = value.html;
         this.clipboard.copy(this.htmlTag);
       }
     });
 
-    this.subscribers.printHtmlOnStatus = this.resService.printHtmlOnStatus.subscribe( (value) => {
-      if (value !== undefined && value === 0){
+    this.subscribers.printHtmlOnStatus = this.resService.printHtmlOnStatus.subscribe((value) => {
+      if (value !== undefined && value === 0) {
         this.printHtmlTagHandler();
       }
     });
 
-    this.subscribers.printAllHtmlOnStatus = this.resService.printAllHtmlOnStatus.subscribe( (value) => {
-      if (value !== undefined && value === 0){
+    this.subscribers.printAllHtmlOnStatus = this.resService.printAllHtmlOnStatus.subscribe((value) => {
+      if (value !== undefined && value === 0) {
         this.printAllHtmlTagHandler();
       }
     });
@@ -187,7 +204,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
 
     this.subscribers.btnAllSelCommand = this.resService.btnAllSelCommand.subscribe((value) => {
-      if (value !== undefined && value === 'select'){
+      if (value !== undefined && value === 'select') {
         this.resService.setSelectCommand({
           tabIndex: this.tabIndex,
           command: value,
@@ -241,7 +258,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   /**
    * Unsubscribe the completed service subscribers
    */
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscribers.LoadHiddenIds.unsubscribe();
     this.subscribers.settings.unsubscribe();
     this.subscribers.selectedTab.unsubscribe();
@@ -253,11 +270,13 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.subscribers.printHtmlOnStatus.unsubscribe();
     this.subscribers.printAllHtmlOnStatus.unsubscribe();
     this.subscribers.btnAllSelCommandSource.unsubscribe();
+    this.subscribers.changeResCount.unsubscribe();
   }
 
-  @HostListener('window:beforeunload', [ '$event' ])
+  @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event) {
-    this.resService.saveSettings({dataFilePath: this.txtDataFilePath,
+    this.resService.saveSettings({
+      dataFilePath: this.txtDataFilePath,
       remarkRes: this.txtRemarkRes,
       hideRes: this.txtHideRes,
       isResSort: this.isResSort,
@@ -270,9 +289,11 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       tMedia2MtmURL: this.gazouReplaceUrl
     });
   }
+
   start(): void {
     this.startTimer.next();
   }
+
   stop(): void {
     this.stopTimer.next();
   }
@@ -287,18 +308,18 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.start();
   }
 
-  getRemarkRes(){
+  getRemarkRes() {
     let remarkRes = this.txtRemarkRes;
-    if (remarkRes.endsWith(';')){
+    if (remarkRes.endsWith(';')) {
       remarkRes = remarkRes.substr(0, remarkRes.length - 1);
     }
     remarkRes = remarkRes.replace(/;/gi, '|');
     return remarkRes;
   }
 
-  getHideRes(){
+  getHideRes() {
     let hideRes = this.txtHideRes;
-    if (hideRes.endsWith(';')){
+    if (hideRes.endsWith(';')) {
       hideRes = hideRes.substr(0, hideRes.length - 1);
     }
     hideRes = hideRes.replace(/;/gi, '|');
@@ -311,16 +332,16 @@ export class RightPanelComponent implements OnInit, OnDestroy {
    */
   ShowIdHandler(id: string) {
     let exists = false;
-    for (let i = 0; i < this.hiddenIds.length; i++){
-      if (this.hiddenIds[i] === id){
+    for (let i = 0; i < this.hiddenIds.length; i++) {
+      if (this.hiddenIds[i] === id) {
         this.hiddenIds.splice(i, 1);
         exists = true;
         break;
       }
     }
-    if (exists){
+    if (exists) {
       this.cdRef.detectChanges();
-      this.resService.removeHiddenIds ({
+      this.resService.removeHiddenIds({
         hiddenIds: this.hiddenIds,
         tabIndex: this.tabIndex,
         token: true
@@ -367,7 +388,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       isReplaceName: this.isReplaceName,
       isSurroundImage: this.isSurroundImage,
       gazouReplaceUrl: this.gazouReplaceUrl,
-      token: true});
+      token: true
+    });
   }
 
   printAllHtmlTagHandler() {
@@ -376,17 +398,20 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       isReplaceName: this.isReplaceName,
       isSurroundImage: this.isSurroundImage,
       gazouReplaceUrl: this.gazouReplaceUrl,
-      token: true});
+      token: true
+    });
   }
 
   saveCurrentRes() {
-    electron.remote.dialog.showSaveDialog(null, {title: 'レス状態保存',
-      filters: [{ name: '状態保存パイル', extensions: ['txt'] }]}).then(result => {
-      if (!result.canceled){
+    electron.remote.dialog.showSaveDialog(null, {
+      title: 'レス状態保存',
+      filters: [{name: '状態保存パイル', extensions: ['txt']}]
+    }).then(result => {
+      if (!result.canceled) {
         let filePath;
-        if (!result.filePath.endsWith('.txt')){
+        if (!result.filePath.endsWith('.txt')) {
           filePath = result.filePath + '.txt';
-        }else{
+        } else {
           filePath = result.filePath;
         }
         this.saveAppStatus(filePath, true);
@@ -396,7 +421,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveAppStatus(selectedPath, isMessage){
+  saveAppStatus(selectedPath, isMessage) {
     if (this.isSaveOfLoadFile) {
       this.resService.setSaveResStatus({
         tabIndex: this.tabIndex,
@@ -424,11 +449,13 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
 
   loadCurrentRes() {
-    electron.remote.dialog.showOpenDialog(null, {title: 'レス状態復元',
+    electron.remote.dialog.showOpenDialog(null, {
+      title: 'レス状態復元',
       properties: ['openFile', 'multiSelections'],
       defaultPath: this.loadStatusPath,
-      filters: [{ name: '復元パイル', extensions: ['txt'] }]}).then(result => {
-      if (!result.canceled){
+      filters: [{name: '復元パイル', extensions: ['txt']}]
+    }).then(result => {
+      if (!result.canceled) {
         if (result.filePaths.length > 0) {
           this.stop();
           this.loadStatusPath = result.filePaths[0].substr(0, result.filePaths[0].lastIndexOf('\\'));
@@ -454,7 +481,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
           }
         ]
       }).then(async result => {
-      if (!result.canceled){
+      if (!result.canceled) {
         const remarkRes = this.getHideRes();
         const hideRes = this.getHideRes();
         if (result.filePaths.length > 0) {
