@@ -20,9 +20,9 @@
          (ngModelChange)="txtSearchChangeHandler($event)">
   <button type="button" class="btn-short yellow" (click)="btnImageSearchHandler()" tabindex="-1">画像</button>
   <button type="button" class="btn-long" (click)="btnSearchHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>抽出</button>
-  <mat-button-toggle-group name="btn-search" [multiple]="true">
-    <mat-button-toggle class="btn-long border-round" [ngClass]="{'searched': isSearched}"  #btnSearchStatus (change)="btnSearchChangeHandler()">抽出解除</mat-button-toggle>
-  </mat-button-toggle-group>
+  <button class="btn-long light-green" [ngClass]="{'searched': isSearched, 'search-checked': isSearchChecked }" (click)="btnSearchChangeHandler()">抽出解除</button>
+  <button type="button" class="btn-long" (click)="btnSearchAllHandler()">全タブ抽出</button>
+  <button class="btn-long light-green" (click)="btnSearchAllChangeHandler()" [ngClass]="{'searched': searchAllStatus === 2, 'search-checked':  searchAllStatus === 1 }">全タブ抽出解除</button>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="btnNoticeChangeHandler()" #btnNotice>注目レス</mat-button-toggle>
   </mat-button-toggle-group>
@@ -38,6 +38,8 @@
   <button class="btn-short" [ngStyle]="{'width': '100px'}" (click)="btnAllSelHeaderClickHandler()">実行</button>
   <button class="btn-print-all-tag border-round" (click)="printAllHtmlTagHandler()">全タブ出力</button>
   <button class="btn-print-html-tag border-round" (click)="printHtmlTagHandler()">出力</button>
+  <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select" (click)="selectAllChangeHandler()">選択＿＿＿</label>
+  <button class="btn-short" [ngStyle]="{'width': '100px'}" (click)="btnAllSelHeaderClickHandler()">実行</button>
   <label>URL</label>
   <input type="text" [(ngModel)]="txtURL" (ngModelChange)="txtUrlChangeHandler()">
 </div>

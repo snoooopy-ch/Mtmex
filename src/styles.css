@@ -197,7 +197,7 @@ label {
 }
 
 .main-container app-left-panel app-content .extract .btn-long {
-  min-width: 149px;
+  min-width: 98px;
   width: 14%;
   height: 29px;
   font-size: 14px
@@ -856,7 +856,18 @@ input[type='radio']:checked:before {
   white-space:pre;
 }
 
-.main-container app-left-panel app-content .searched button{
+.light-green{
+  background: #efffbf;
+}
+
+.main-container app-left-panel app-content .search-checked{
+  background-color: #0366b6;
+  color: #fff;
+}
+
+.main-container app-left-panel app-content .searched{
   background: #ffa500;
   border: 1px solid #ffa500;
 }
+
+

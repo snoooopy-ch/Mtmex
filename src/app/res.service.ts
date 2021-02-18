@@ -269,7 +269,6 @@ export class ResService {
   }
 
   async printAllHtmlTag(resList: ResItem[], options) {
-
     let htmlTag = ``;
 
     const tabName = `★■●${options.tabName}●■★\n`;
@@ -349,7 +348,7 @@ export class ResService {
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https?:)/ig,
       `$1 class="swipe" rel="${rel}" title="" target="_blank"$2`);
 
-      content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->((<br>)+<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
+      content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->((<br>)*<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
       (match) => {
         return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`;
       });
@@ -491,7 +490,9 @@ export class ResService {
       }
       htmlTag += `"><!-- res_s -->`;
       if (res.isInserted) {
-        htmlTag += options.insertPrefix;
+        if (options.insertPrefix) {
+          htmlTag += options.insertPrefix;
+        }
       }
       let suffix = '';
       if (res.resFontSize === options.resSizeList[1].value || res.resFontSize === options.resSizeList[2].value ){
@@ -519,7 +520,9 @@ export class ResService {
       }
       htmlTag += `"><!-- res_s -->`;
       if (res.isInserted) {
-        htmlTag += options.insertPrefix;
+        if (options.insertPrefix) {
+          htmlTag += options.insertPrefix;
+        }
       }
       if (res.idColor !== '#000') {
         htmlTag += `<!-- ${res.idClassNoSelect}_s -->`;
@@ -544,7 +547,9 @@ export class ResService {
       }
 
       if (res.isInserted) {
-        htmlTag += options.insertSuffix;
+        if (options.insertPrefix) {
+          htmlTag += options.insertPrefix;
+        }
       }
       htmlTag += `<!-- res_e -->`;
 

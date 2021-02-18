@@ -590,7 +590,8 @@ function readLines(line) {
     isNotice: false,
     continuousAnchors: [],
     continuousContent:'',
-    anchorLevel: 0
+    anchorLevel: 0,
+    isCollapsed: false,
   };
 
   num++;
@@ -891,12 +892,18 @@ ipcMain.on("loadStatus", (event, filePath) => {
 });
 
 function loadStatus(filePaths) {
+  let index = 1;
   for (const filePath of filePaths) {
-    fs.readFile(filePath, 'utf8', (err, jsonString) => {
-      if (err) {
-        dialog.showErrorBox('復元', '復元。');
-        return
-      }
+    if (!fs.existsSync(filePath)) {
+      dialog.showErrorBox('復元', '復元。');
+      return;
+    }
+    let jsonString = fs.readFileSync(filePath);
+    // fs.readFile(filePath, 'utf8', (err, jsonString) => {
+    //   if (err) {
+    //     dialog.showErrorBox('復元', '復元。');
+    //     return
+    //   }
       try {
         let loadData = JSON.parse(jsonString);
         loadData.title = filePath.replace(/^(.*)\\(.*)(\..*)$/ig, `$2`);
@@ -911,17 +918,26 @@ function loadStatus(filePaths) {
             let suffix = uuidv4();
             suffix = suffix.replace(/-/g, '').substr(0, 10);
             loadData.title = `${loadData.title}__${suffix}`;
-            win.webContents.send("getStatus", {data: loadData});
+            setTimeout(()=>{
+              win.webContents.send("getStatus", {data: loadData});
+            },1000*index);
+            // setTimeout(win.webContents.send, 1000*index, "getStatus", {data: loadData});
+            // win.webContents.send("getStatus", {data: loadData});
           }
         } else {
           loadedTitles.push(loadData.title);
-          win.webContents.send("getStatus", {data: loadData});
+          setTimeout(()=>{
+            win.webContents.send("getStatus", {data: loadData});
+          },1000*index);
+          // setTimeout(win.webContents.send, 1000*index, "getStatus", {data: loadData});
+          // win.webContents.send("getStatus", {data: loadData});
         }
 
       } catch (err) {
         console.log('Error parsing JSON string:', err)
       }
-    });
+    // });
+    index++;
   }
 }
 
