@@ -562,8 +562,8 @@ export class ResService {
       }
 
       if (res.isInserted) {
-        if (options.insertPrefix) {
-          htmlTag += options.insertPrefix;
+        if (options.insertSuffix) {
+          htmlTag += options.insertSuffix;
         }
       }
       htmlTag += `<!-- res_e -->`;

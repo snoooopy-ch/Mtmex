@@ -52,10 +52,10 @@
 [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 193 : 173)) + 'px)'}">
 
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
-             [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
-             'border-left': resItem.isAdded ? leftBorder : '', 'width': 'calc(100% - '+ (resItem.anchorLevel*resLeftMargin) +'px)',
-             'margin-left.px': resItem.isAdded ? (resItem.anchorLevel*resLeftMargin) : '',
-             'border-top': resItem.isRemark ? topBorder : resTopBar}"
+    [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
+               'border-left': resItem.isAdded ? leftBorder : '', 'width': 'calc(100% - '+ (resItem.anchorLevel*resLeftMargin) +'px)',
+               'margin-left.px': resItem.isAdded ? (resItem.anchorLevel*resLeftMargin) : '',
+               'border-top': resItem.isRemark ? topBorder : resTopBar}"
              (duplicateResEmitter)="duplicateRes(resItem)"
              (deleteResEmitter)="deleteRes(resItem)"
              (hideResEmitter)="hideRes(resItem.id)"
