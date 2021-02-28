@@ -2183,6 +2183,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     } else {
       if (this.originalResList?.length > 0) {
+
         let tmpResList = [...this.originalResList];
         if (this.isSearchChecked) {
           tmpResList = this.getAbstractRes(tmpResList);
@@ -2370,11 +2371,5 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.isSearched = false;
-    this.isSearchChecked = false;
-    this.searchChangeStatus();
-
-    this.btnNotice.checked = false;
-    this.btnNoticeChangeHandler();
   }
 }
