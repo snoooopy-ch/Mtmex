@@ -280,8 +280,12 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
               loadData.resList.length = 0;
               if (loadResList.length > 0) {
                 const originSreTitle = loadData.title.replace(/__[\w,\s-]{10}/ig, '');
-
-                this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath);
+                const numberSuffixes = originSreTitle.match(/_(\d+)/gi);
+                let suffixNumber;
+                if (numberSuffixes?.length > 0) {
+                  suffixNumber = numberSuffixes[0].replace(/_/i, '');
+                }
+                this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath, suffixNumber);
                 this.selectedTabIndex = this.tabs.length - 1;
                 value.tabIndex = this.selectedTabIndex;
                 this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);

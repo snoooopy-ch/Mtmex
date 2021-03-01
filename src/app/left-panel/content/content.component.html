@@ -45,11 +45,19 @@
 </div>
 <h3 #tabTitle>{{tabName}}</h3>
 <div *ngIf="suffixNumber?.length>0">
-  <a href="{{titleUrl}}{{suffixNumber}}" class="light-blue">{{titleUrl}}{{suffixNumber}}</a>
+  <div *ngIf="titleUrl.suretai_url?.length>0">
+  <a href="{{titleUrl.suretai_url}}{{suffixNumber}}" class="light-blue" >{{titleUrl.suretai_url}}{{suffixNumber}}</a>
+  </div>
+  <div *ngIf="titleUrl.suretai_url2?.length>0">
+  <a href="{{titleUrl.suretai_url2}}{{suffixNumber}}" class="light-blue" >{{titleUrl.suretai_url2}}{{suffixNumber}}</a>
+  </div>
+  <div *ngIf="titleUrl.suretai_url3?.length>0">
+  <a href="{{titleUrl.suretai_url3}}{{suffixNumber}}" class="light-blue" >{{titleUrl.suretai_url3}}{{suffixNumber}}</a>
+  </div>
 </div>
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="50"
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true"
-[ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 193 : 173)) + 'px)'}">
+[ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 232 : 173)) + 'px)'}">
 
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
     [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),

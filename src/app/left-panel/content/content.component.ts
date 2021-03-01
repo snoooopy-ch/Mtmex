@@ -89,7 +89,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() insertPrefix: string;
   @Input() insertSuffix: string;
   @Input() suffixNumber: string;
-  @Input() titleUrl: string;
+  @Input() titleUrl: any;
 
   public subscribers: any = {};
   private isChangedSearch: boolean;
