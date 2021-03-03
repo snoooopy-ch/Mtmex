@@ -18,6 +18,7 @@
         {{tabItem.title}}
       </div>
     </ng-template>
+<!--    *ngIf="selectedTabIndex === index"-->
     <app-content [resList]="tabItem.resList"
                  [tabName]="tabItem.title"
                  [txtURL]="tabItem.url"
@@ -58,6 +59,7 @@
                  (selectAllEmitter)="changeSelectAll($event)"
                  (searchAllEmitter)="changeSearchAll($event)"
                  (changeResCountEmitter)="changeResCount()"
+                 (finishedRenderEmitter)="finishedRender()"
                  [resSizeList]="resSizeList"
                  [searchKeyword]="searchKeyword"
                  [searchOption]="searchOption"

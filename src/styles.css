@@ -388,8 +388,8 @@ app-res .row-4 a {
   color: #3981e6;
 }
 
-.main-container app-left-panel app-status {
-  bottom: 2px;
+.main-container app-status {
+  margin-top: 5px;
   border: 1px solid lightgrey;
   width: 100%;
   padding: 5px;
@@ -441,7 +441,7 @@ app-res .row-4 a {
   background-color: white;
   color: #cc99FF;
 }
-.main-container app-left-panel app-status .status-title {
+.main-container app-status .status-title {
   color: red;
   font-size: 16px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -867,8 +867,8 @@ input[type='radio']:checked:before {
 }
 
 .main-container app-left-panel app-content .searched{
-  background: #ffa500;
-  border: 1px solid #ffa500;
+  background: #ff0000;
+  border: 1px solid #ff0000;
 }
 
 
