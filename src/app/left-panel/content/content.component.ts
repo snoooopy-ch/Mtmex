@@ -925,7 +925,6 @@ export class ContentComponent implements OnInit, OnDestroy {
       // 挿入
       this.hotkeysService.add(new Hotkey(this.subHotKeys.sounyuu, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
-          console.log('@@@@', this.hovered);
           const item = this.resList[this.hovered];
           this.insertRes(item);
           this.cdRef.detectChanges();
@@ -933,7 +932,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         return false; // Prevent bubbling
       }));
 
-      // 小
+      //
       this.hotkeysService.add(new Hotkey(this.subHotKeys.res_sinshuku, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.setTreeMenuStatus();
@@ -1449,7 +1448,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   clearSearchStatus(resList: ResItem[]) {
-    for (const res of this.resList) {
+    for (const res of resList) {
       res.content = res.content.replace(/(<span[^<]+>)/ig, '');
       res.content = res.content.replace(/<\/span>/ig, '');
       res.numBackground = 'transparent';
@@ -1629,6 +1628,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   private searchChangeStatus() {
 
     if (this.isSearchChecked) {
+
       if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
         this.isSearchChecked = false;
       } else {
@@ -1646,6 +1646,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       if (this.isSelectRes) {
         tmpResList = this.getSelectedRes(tmpResList);
       }
+      this.resList = [];
       this.resList = tmpResList;
       this.changeListStatusEmitter.emit({
         tabIndex: this.tabIndex,
@@ -1674,16 +1675,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.isSearchChecked = false;
     this.searchChangeStatus();
     this.virtualScroller.scrollToIndex(0);
-  }
-
-  getNoticeRes(tmpResList: ResItem[]) {
-    let result = [];
-    for (const res of tmpResList) {
-      if (res.isNotice) {
-        result = [...result, res];
-      }
-    }
-    return result;
   }
 
   btnNoticeChangeHandler() {
@@ -1748,6 +1739,17 @@ export class ContentComponent implements OnInit, OnDestroy {
         statusToken: true
       });
     }
+  }
+
+  getNoticeRes(tmpResList: ResItem[]) {
+    let result = [];
+    for (const res of tmpResList) {
+      if (res.isNotice) {
+        result = [...result, res];
+      }
+    }
+    tmpResList.length = 0;
+    return result;
   }
 
   txtSearchKeyUpHandler($event: KeyboardEvent) {
@@ -2153,6 +2155,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         result = [...result, resItem];
       }
     }
+    tmpResList.length = 0;
     return result;
   }
 
@@ -2226,7 +2229,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.btnSearchHandler();
   }
 
-  public cancelSearchAll(){
+  public cancelSearchAll(): void{
     this.searchAllStatus = 0;
     this.btnSearchChangeHandler();
   }
