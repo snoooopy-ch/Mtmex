@@ -71,7 +71,7 @@
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime]=0
                   [enableUnequalChildrenSizes]="true"
                   [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 232 : 173)) + 'px)'}">
-
+<!--  (selectedTreeResEmitter)="selectedTreeRes(resList.indexOf(resItem), $event)"-->
   <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
            [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
                'border-left': resItem.isAdded ? leftBorder : '', 'width': 'calc(100% - '+ (resItem.anchorLevel*resLeftMargin) +'px)',
@@ -94,7 +94,7 @@
            (insertResEmitter)="insertRes(resItem)"
            [tabIndex]="tabIndex"
            [ngClass]="{'hide-res':!resItem.isShow}"
-           (mouseenter)="mouseEnterHandler(resList.indexOf(resItem))"
+           (mouseenter)="mouseEnterHandler(resItem)"
            (mouseleave)="mouseLeaveHandler()"
            (click)="mouseClickHandler()"
            *ngFor="let resItem of resListContainer.viewPortItems; let index = index ;"
