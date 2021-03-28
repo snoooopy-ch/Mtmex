@@ -15,7 +15,7 @@ let stateComments = ['#datパス', '#指定したdatパス', '#チェックボ�
   '#投稿日・IDの置換', '#注目レスの閾値', '#ボタンの色'];
 let curComment = '';
 let yesNoKeys = ['shuturyoku', 'sentaku_idou1', 'sentaku_idou2', 'sentaku_idou3', 'sentaku_idou4', 'Left_highlight', 'res_mouse_click', 'youtube'
-  , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save', 'twitter_url', 'youtube_url', 'yobi_kabu_shuturyoku', 'fukugen_uwagaki'];
+  , 'twitter', 'AutoSave', 'gif_stop', 'all_tab_save', 'twitter_url', 'youtube_url', 'yobi_kabu_shuturyoku', 'fukugen_uwagaki', 'sentaku_res_gamen_off_zengamen_kaijo'];
 let selectKeys = ['res_menu'];
 const onOffKeys = ['jogai'];
 let settings;
@@ -913,11 +913,14 @@ function loadStatus(filePaths) {
           buttons: ["Yes", "No"],
           message: '同じタブがあります、datを読み込みますか'
         });
+
         if (response === 0) {
           loadedTitles.push(loadData.title);
           let suffix = uuidv4();
           suffix = suffix.replace(/-/g, '').substr(0, 10);
           loadData.title = `${loadData.title}__${suffix}`;
+        } else {
+          continue;
         }
       } else {
         loadedTitles.push(loadData.title);
