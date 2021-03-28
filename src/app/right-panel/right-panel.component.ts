@@ -363,7 +363,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   btnSelectResHandler() {
     this.resService.setSelectCommand({
       tabIndex: this.tabIndex,
-      command: this.selectCommand,
+      command: this.selectCommand === 'cancel-allselect-1' ? 'cancel-allselect' : this.selectCommand,
       token: true,
     });
     this.selectCommand = '';

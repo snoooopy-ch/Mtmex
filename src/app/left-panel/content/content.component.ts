@@ -1,10 +1,11 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component, ElementRef, EventEmitter,
   Input, OnDestroy,
-  OnInit, Output,
-  ViewChild
+  OnInit, Output, QueryList,
+  ViewChild, ViewChildren
 } from '@angular/core';
 import {CdkDragDrop, CdkDragStart, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ResItem} from '../../models/res-item';
@@ -25,7 +26,7 @@ declare var $: any;
   styleUrls: ['./content.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContentComponent implements OnInit, OnDestroy {
+export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() tabName = 'New Tab';
   @Input() resList: ResItem[];
   @Input() tabIndex;
@@ -36,6 +37,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   @ViewChild('txtSearch') txtSearch: ElementRef;
   @ViewChild('btnTreeSearch') btnTreeSearch: ElementRef;
   @ViewChild('btnSearch') btnSearch: ElementRef;
+  @ViewChildren('resViews')
+  public resViews: QueryList<any>;
 
   hovered: number;
   draggable: number;
@@ -67,6 +70,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Output() selectAllEmitter = new EventEmitter();
   @Output() searchAllEmitter = new EventEmitter();
   @Output() changeResCountEmitter = new EventEmitter();
+  @Output() finishedRenderEmitter = new EventEmitter();
   @Input() searchOption;
   @Input() searchKeyword = '';
   @Input() moveOption;
@@ -89,7 +93,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input() insertPrefix: string;
   @Input() insertSuffix: string;
   @Input() suffixNumber: string;
-  @Input() titleUrl: string;
+  @Input() titleUrl: any;
 
   public subscribers: any = {};
   private isChangedSearch: boolean;
@@ -175,6 +179,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.subscribers.selectedTab = this.resService.selectedTab.subscribe((value) => {
       if (value.tabIndex === this.tabIndex) {
         this.tabIndex = value.tabIndex;
+        // this.resList = value.resList;
         this.setHotKeys();
       }
     });
@@ -304,6 +309,16 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (this.originalResList !== undefined) {
       this.originalResList.length = 0;
     }
+  }
+
+  ngAfterViewInit() {
+    console.log('test');
+    this.resViews.changes.subscribe(t => {
+      if (!this.originalResList.length) {
+        this.originalResList = [...this.resList];
+      }
+      this.finishedRenderEmitter.emit();
+    });
   }
 
   setSaveStatus() {
@@ -1188,11 +1203,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   private changeStatus() {
-    this.selectCount = this.resList.filter(item => item.resSelect === 'select').length;
-    this.candi1Count = this.resList.filter(item => item.resSelect === 'candi1').length;
-    this.candi2Count = this.resList.filter(item => item.resSelect === 'candi2').length;
-    this.candi3Count = this.resList.filter(item => item.resSelect === 'candi3').length;
-    this.candi4Count = this.resList.filter(item => item.resSelect === 'candi4').length;
+    this.selectCount = this.originalResList.filter(item => item.resSelect === 'select').length;
+    this.candi1Count = this.originalResList.filter(item => item.resSelect === 'candi1').length;
+    this.candi2Count = this.originalResList.filter(item => item.resSelect === 'candi2').length;
+    this.candi3Count = this.originalResList.filter(item => item.resSelect === 'candi3').length;
+    this.candi4Count = this.originalResList.filter(item => item.resSelect === 'candi4').length;
 
     this.cdRef.detectChanges();
     this.changeResCountEmitter.emit();
@@ -2183,6 +2198,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
     } else {
       if (this.originalResList?.length > 0) {
+
         let tmpResList = [...this.originalResList];
         if (this.isSearchChecked) {
           tmpResList = this.getAbstractRes(tmpResList);
@@ -2370,11 +2386,5 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.isSearched = false;
-    this.isSearchChecked = false;
-    this.searchChangeStatus();
-
-    this.btnNotice.checked = false;
-    this.btnNoticeChangeHandler();
   }
 }

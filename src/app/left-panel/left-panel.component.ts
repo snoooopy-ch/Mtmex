@@ -16,6 +16,7 @@ import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 import {ResItem} from '../models/res-item';
 import {ContentComponent} from './content/content.component';
+import {retry} from "rxjs/operators";
 
 const electron = (window as any).require('electron');
 declare var jQuery: any;
@@ -72,6 +73,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   searchList: any[];
   isYoutubeUrl: boolean;
   isTwitterUrl: boolean;
+  private isWait: boolean;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -257,64 +259,70 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.zone.run(() => {
           let index = 1;
           for (const loadData of value.data) {
-            setTimeout( (() => {
-              const loadResList = [];
-              for (const res of loadData.resList) {
-                const resItem = Object.assign({}, res);
-                if (!Number.isInteger(res.resColor)) {
-                  continue;
-                }
-                if (Number(res.resColor) === 0) {
-                  resItem.resColor = '#000';
-                } else {
-                  resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
-                }
-
-                resItem.resFontSize = this.resSizeList[Number(res.resFontSize) - 1].value;
-                resItem.resBackgroundColor = this.backgroundColors[res.resBackgroundColor];
-                resItem.resHovergroundColor = this.hovergroundColors[res.resHovergroundColor];
-                resItem.idColor = this.idStyles[Number(res.idColor)].color;
-                resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
-                loadResList.push(resItem);
+            this.isWait = true;
+            const loadResList = [];
+            for (const res of loadData.resList) {
+              const resItem = Object.assign({}, res);
+              if (!Number.isInteger(res.resColor)) {
+                continue;
               }
-              loadData.resList.length = 0;
-              if (loadResList.length > 0) {
-                const originSreTitle = loadData.title.replace(/__[\w,\s-]{10}/ig, '');
-
-                this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath);
-                this.selectedTabIndex = this.tabs.length - 1;
-                value.tabIndex = this.selectedTabIndex;
-                this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
-
-                this.resService.setTotalRes({
-                  tabIndex: this.selectedTabIndex,
-                  totalCount: loadResList.length,
-                  title: this.tabs[this.selectedTabIndex].title,
-                  rightToken: true,
-                  statusToken: true
-                });
-
-                const selectCount = loadResList.filter(item => item.resSelect === 'select').length;
-                const candi1Count = loadResList.filter(item => item.resSelect === 'candi1').length;
-                const candi2Count = loadResList.filter(item => item.resSelect === 'candi2').length;
-                const candi3Count = loadResList.filter(item => item.resSelect === 'candi3').length;
-                const candi4Count = loadResList.filter(item => item.resSelect === 'candi4').length;
-
-                this.resService.setSelectedRes({
-                  select: selectCount,
-                  candi1: candi1Count,
-                  candi2: candi2Count,
-                  candi3: candi3Count,
-                  candi4: candi4Count,
-                  tabIndex: this.selectedTabIndex,
-                  title: this.tabs[this.selectedTabIndex].title,
-                  rightToken: true,
-                  statusToken: true
-                });
-
-                this.changeResCount();
+              if (Number(res.resColor) === 0) {
+                resItem.resColor = '#000';
+              } else {
+                resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
               }
-            }).bind(this), 1000 * index);
+
+              resItem.resFontSize = this.resSizeList[Number(res.resFontSize) - 1].value;
+              resItem.resBackgroundColor = this.backgroundColors[res.resBackgroundColor];
+              resItem.resHovergroundColor = this.hovergroundColors[res.resHovergroundColor];
+              resItem.idColor = this.idStyles[Number(res.idColor)].color;
+              resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
+              loadResList.push(resItem);
+            }
+            loadData.resList.length = 0;
+            if (loadResList.length > 0) {
+              const originSreTitle = loadData.title.replace(/__[\w,\s-]{10}/ig, '');
+              const numberSuffixes = originSreTitle.match(/_(\d+)/gi);
+              let suffixNumber;
+              if (numberSuffixes?.length > 0) {
+                suffixNumber = numberSuffixes[0].replace(/_/i, '');
+              }
+              this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath, suffixNumber);
+              setTimeout(this.finishedRender, 1000);
+
+              this.selectedTabIndex = this.tabs.length - 1;
+              value.tabIndex = this.selectedTabIndex;
+              this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
+
+              this.resService.setTotalRes({
+                tabIndex: this.selectedTabIndex,
+                totalCount: loadResList.length,
+                title: this.tabs[this.selectedTabIndex].title,
+                rightToken: true,
+                statusToken: true
+              });
+
+              const selectCount = loadResList.filter(item => item.resSelect === 'select').length;
+              const candi1Count = loadResList.filter(item => item.resSelect === 'candi1').length;
+              const candi2Count = loadResList.filter(item => item.resSelect === 'candi2').length;
+              const candi3Count = loadResList.filter(item => item.resSelect === 'candi3').length;
+              const candi4Count = loadResList.filter(item => item.resSelect === 'candi4').length;
+
+              this.resService.setSelectedRes({
+                select: selectCount,
+                candi1: candi1Count,
+                candi2: candi2Count,
+                candi3: candi3Count,
+                candi4: candi4Count,
+                tabIndex: this.selectedTabIndex,
+                title: this.tabs[this.selectedTabIndex].title,
+                rightToken: true,
+                statusToken: true
+              });
+
+              this.changeResCount();
+            }
+
             index++;
           }
         });
@@ -373,6 +381,15 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.status.unsubscribe();
     this.subscribers.loadStatus.unsubscribe();
     this.subscribers.allPrint.unsubscribe();
+  }
+
+  async waitFor() {
+    while (true) {
+      if (!this.isWait) {
+        return;
+      }
+      await null;
+    }
   }
 
   setHotKeys() {
@@ -500,6 +517,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       tabIndex: this.selectedTabIndex,
       title: this.tabs[this.selectedTabIndex].title,
       hiddenIds: this.tabs[this.selectedTabIndex].hiddenIds,
+      resList: this.tabs[this.selectedTabIndex].resList
     });
     const pos = {
       index: this.selectedTabIndex,
@@ -782,11 +800,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   public changeResCount() {
     const allCount = {
-      select : 0,
-      candi1 : 0,
-      candi2 : 0,
-      candi3 : 0,
-      candi4 : 0
+      select: 0,
+      candi1: 0,
+      candi2: 0,
+      candi3: 0,
+      candi4: 0
     };
 
     for (const tab of this.tabs) {
@@ -802,5 +820,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       token: true
     });
 
+  }
+
+  finishedRender() {
+    this.isWait = false;
+    console.log('emitted');
   }
 }

@@ -22,14 +22,14 @@
   <button type="button" class="btn-long" (click)="btnSearchHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>抽出</button>
   <button class="btn-long light-green" [ngClass]="{'searched': isSearched, 'search-checked': isSearchChecked }" (click)="btnSearchChangeHandler()">抽出解除</button>
   <button type="button" class="btn-long" (click)="btnSearchAllHandler()">全タブ抽出</button>
-  <button class="btn-long light-green" (click)="btnSearchAllChangeHandler()" [ngClass]="{'searched': searchAllStatus === 2, 'search-checked':  searchAllStatus === 1 }">全タブ抽出解除</button>
+  <button class="btn-long light-green" (click)="btnSearchAllChangeHandler()">全タブ抽出解除</button>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="btnNoticeChangeHandler()" #btnNotice>注目レス</mat-button-toggle>
   </mat-button-toggle-group>
   <button type="button" class="btn-long toggle-select" [(ngModel)]="isSelectRes" btnCheckbox (click)="btnShowSelectHandler()">選択レス表示</button>
 </div>
 <div class="content-url">
-  <h3 class="status lbl-sts-main-of-total">{{selectCount}}/{{resList.length}}</h3>
+  <h3 class="status lbl-sts-main-of-total">{{selectCount}}/{{originalResList.length}}</h3>
   <h3 class="status">{{candi1Count}}</h3>
   <h3 class="status">{{candi2Count}}</h3>
   <h3 class="status">{{candi3Count}}</h3>
@@ -45,11 +45,19 @@
 </div>
 <h3 #tabTitle>{{tabName}}</h3>
 <div *ngIf="suffixNumber?.length>0">
-  <a href="{{titleUrl}}{{suffixNumber}}" class="light-blue">{{titleUrl}}{{suffixNumber}}</a>
+  <div *ngIf="titleUrl.suretai_url?.length>0">
+  <a href="{{titleUrl.suretai_url}}{{suffixNumber}}" class="light-blue" >{{titleUrl.suretai_url}}{{suffixNumber}}</a>
+  </div>
+  <div *ngIf="titleUrl.suretai_url2?.length>0">
+  <a href="{{titleUrl.suretai_url2}}{{suffixNumber}}" class="light-blue" >{{titleUrl.suretai_url2}}{{suffixNumber}}</a>
+  </div>
+  <div *ngIf="titleUrl.suretai_url3?.length>0">
+  <a href="{{titleUrl.suretai_url3}}{{suffixNumber}}" class="light-blue" >{{titleUrl.suretai_url3}}{{suffixNumber}}</a>
+  </div>
 </div>
 <virtual-scroller class="res-content" #resListContainer [items]="resList" (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="50"
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime] = 0 [enableUnequalChildrenSizes]="true"
-[ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 193 : 173)) + 'px)'}">
+[ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 232 : 173)) + 'px)'}">
 
     <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
     [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
@@ -91,6 +99,16 @@
              [cancelAllColor] = "cancelAllColor"
              (cdkDragStarted)="resDragStartedHandler($event, resItem)"
              [cdkDragDisabled]="getDraggable(resList.indexOf(resItem))"
-             cdkDragLockAxis="y" cdkDrag>
+             cdkDragLockAxis="y" cdkDrag #resViews>
     </app-res>
+
 </virtual-scroller>
+<app-status [tabInfo] = "{
+      tabTitle: tabName,
+      selectCount: selectCount,
+      candi1Count: candi1Count,
+      candi2Count: candi2Count,
+      candi3Count: candi3Count,
+      candi4Count: candi4Count,
+      totalCount: originalResList.length}">
+</app-status>
