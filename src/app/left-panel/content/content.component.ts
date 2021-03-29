@@ -119,6 +119,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   public isSearched: boolean;
   public isSearchChecked: boolean;
   public searchAllStatus;
+  private isCancelOtherAction: boolean;
 
   constructor(private cdRef: ChangeDetectorRef, private resService: ResService, private hotkeysService: HotkeysService) {
     this.hiddenIds = [];
@@ -144,6 +145,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isSearched = false;
     this.originalResList = [];
     this.searchAllStatus = 0;
+    this.isCancelOtherAction = false;
 
     setTimeout(this.setSaveStatus.bind(this), 2000);
 
@@ -1550,6 +1552,8 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0
       && this.resList.length !== this.originalResList.length) {
       tmpResList = [...this.originalResList];
+    } else{
+      tmpResList = this.resList;
     }
 
     if (this.btnNotice.checked) {
@@ -1571,7 +1575,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     let result = [];
 
     for (let i = 0; i < tmpResList.length; i++) {
-      if (tmpResList[i].isSearched) {
+      if (tmpResList[i]?.isSearched) {
         tmpResList[i].isFiltered = true;
         if (this.isTreeSearch) {
           if (tmpResList[i].isAdded) {
@@ -1591,7 +1595,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
               }
             }
             i = j;
-            if (tmpResList[i].isSearched) {
+            if (tmpResList[i]?.isSearched) {
               tmpResList[i].isFiltered = true;
             }
           } else if (i < tmpResList.length - 1 && tmpResList[i + 1]) {
@@ -2218,12 +2222,18 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
       let tmpResList = [...this.originalResList];
-      if (this.isSearchChecked) {
-        tmpResList = this.getAbstractRes(tmpResList);
-      }
 
-      if (this.btnNotice.checked) {
-        tmpResList = this.getNoticeRes(tmpResList);
+      if (this.isCancelOtherAction && this.isCancelAllAction) {
+        this.isSearchChecked = false;
+        this.btnNotice.checked = false;
+      } else {
+        if (this.isSearchChecked) {
+          tmpResList = this.getAbstractRes(tmpResList);
+        }
+
+        if (this.btnNotice.checked) {
+          tmpResList = this.getNoticeRes(tmpResList);
+        }
       }
 
       tmpResList = this.getSelectedRes(tmpResList);
@@ -2411,7 +2421,9 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.setResMenu(1);
       if (display !== this.isSelectRes) {
         this.isSelectRes = true;
+        this.isCancelOtherAction = true;
         this.btnShowSelectHandler();
+        this.isCancelOtherAction = false;
       }
     } else{
       if (display !== this.isSelectRes) {
