@@ -1659,7 +1659,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.originalResList.length,
+      totalCount: this.resList.length,
       title: this.tabName,
       rightToken: true,
       statusToken: true
@@ -1707,7 +1707,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isChangedSearch = true;
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
-        totalCount: this.originalResList.length,
+        totalCount: this.resList.length,
         title: this.tabName,
         rightToken: true,
         statusToken: true
@@ -1757,7 +1757,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
-        totalCount: this.originalResList.length,
+        totalCount: this.resList.length,
         title: this.tabName,
         rightToken: true,
         statusToken: true
@@ -1782,7 +1782,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.changeStatus();
       this.resService.setTotalRes({
         tabIndex: this.tabIndex,
-        totalCount: this.originalResList.length,
+        totalCount: this.resList.length,
         title: this.tabName,
         rightToken: true,
         statusToken: true
@@ -2185,7 +2185,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.changeStatus();
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.originalResList.length,
+      totalCount: this.resList.length,
       title: this.tabName,
       rightToken: true,
       statusToken: true
@@ -2256,7 +2256,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.originalResList.length,
+      totalCount: this.resList.length,
       title: this.tabName,
       rightToken: true,
       statusToken: true
@@ -2363,7 +2363,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.resService.setTotalRes({
       tabIndex: this.tabIndex,
-      totalCount: this.originalResList.length,
+      totalCount: this.resList.length,
       title: this.tabName,
       rightToken: true,
       statusToken: true

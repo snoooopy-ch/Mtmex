@@ -336,7 +336,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             index++;
           }
 
-          setTimeout(this.cancelInitialStyle.bind(this), 2000);
+          setTimeout(this.cancelInitialStyle.bind(this), index * 650);
         });
       }
     });
@@ -592,7 +592,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
       index++;
     }
-    this.tabs[fromIndex].active = false;
+    // this.tabs[fromIndex].active = false;
     this.cdr.detectChanges();
     const activeTab = this.contentComponent.find((e, i) => i === this.selectedTabIndex);
     activeTab.setHotKeys();
@@ -813,20 +813,23 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
+    let count = 0;
     if (this.contentComponent.length) {
       if ($event.isSearch) {
         this.isAllTab = true;
         for (const child of this.contentComponent) {
           child.searchAll();
+          count++;
         }
       } else {
         this.isAllTab = true;
         for (const child of this.contentComponent) {
           child.cancelSearchAll();
+          count++;
         }
       }
     }
-    setTimeout(this.cancelInitialStyle.bind(this), 2000);
+    setTimeout(this.cancelInitialStyle.bind(this), count * 650);
   }
 
   private cancelInitialStyle(){
@@ -849,11 +852,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     };
 
     for (const tab of this.tabs) {
-      allCount.select += tab.resList.filter(item => item.resSelect === 'select').length;
-      allCount.candi1 += tab.resList.filter(item => item.resSelect === 'candi1').length;
-      allCount.candi2 += tab.resList.filter(item => item.resSelect === 'candi2').length;
-      allCount.candi3 += tab.resList.filter(item => item.resSelect === 'candi3').length;
-      allCount.candi4 += tab.resList.filter(item => item.resSelect === 'candi4').length;
+      allCount.select += tab.originalResList.filter(item => item.resSelect === 'select').length;
+      allCount.candi1 += tab.originalResList.filter(item => item.resSelect === 'candi1').length;
+      allCount.candi2 += tab.originalResList.filter(item => item.resSelect === 'candi2').length;
+      allCount.candi3 += tab.originalResList.filter(item => item.resSelect === 'candi3').length;
+      allCount.candi4 += tab.originalResList.filter(item => item.resSelect === 'candi4').length;
     }
 
     this.resService.setChangeResCount({
