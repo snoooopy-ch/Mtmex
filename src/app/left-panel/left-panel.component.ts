@@ -269,74 +269,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           });
           this.isAllTab = true;
           let index = 1;
+          let allResCount = 1;
           for (const loadData of value.data) {
-            this.isWait = true;
-            const loadResList = [];
-            for (const res of loadData.resList) {
-              const resItem = Object.assign({}, res);
-              if (!Number.isInteger(res.resColor)) {
-                continue;
-              }
-              if (Number(res.resColor) === 0) {
-                resItem.resColor = '#000';
-              } else {
-                resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
-              }
-
-              resItem.resFontSize = this.resSizeList[Number(res.resFontSize) - 1].value;
-              resItem.resBackgroundColor = this.backgroundColors[res.resBackgroundColor];
-              resItem.resHovergroundColor = this.hovergroundColors[res.resHovergroundColor];
-              resItem.idColor = this.idStyles[Number(res.idColor)].color;
-              resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
-              loadResList.push(resItem);
-            }
-            loadData.resList.length = 0;
-            if (loadResList.length > 0) {
-              const originSreTitle = loadData.title.replace(/(_|-)[\w,\s-]{10}/ig, '');
-              const numberSuffixes = originSreTitle.match(/(_|-)(\d+)/gi);
-              let suffixNumber;
-              if (numberSuffixes?.length > 0) {
-                suffixNumber = numberSuffixes[0].replace(/(_|-)/i, '');
-              }
-              this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath, suffixNumber);
-
-              this.selectedTabIndex = this.tabs.length - 1;
-              value.tabIndex = this.selectedTabIndex;
-              this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
-
-              this.resService.setTotalRes({
-                tabIndex: this.selectedTabIndex,
-                totalCount: loadResList.length,
-                title: this.tabs[this.selectedTabIndex].title,
-                rightToken: true,
-                statusToken: true
-              });
-
-              const selectCount = loadResList.filter(item => item.resSelect === 'select').length;
-              const candi1Count = loadResList.filter(item => item.resSelect === 'candi1').length;
-              const candi2Count = loadResList.filter(item => item.resSelect === 'candi2').length;
-              const candi3Count = loadResList.filter(item => item.resSelect === 'candi3').length;
-              const candi4Count = loadResList.filter(item => item.resSelect === 'candi4').length;
-
-              this.resService.setSelectedRes({
-                select: selectCount,
-                candi1: candi1Count,
-                candi2: candi2Count,
-                candi3: candi3Count,
-                candi4: candi4Count,
-                tabIndex: this.selectedTabIndex,
-                title: this.tabs[this.selectedTabIndex].title,
-                rightToken: true,
-                statusToken: true
-              });
-
-              this.changeResCount();
-            }
-
+            setTimeout(this.loadStatusFile.bind(this, loadData), allResCount * 2);
+            allResCount += loadData.resList.length;
             index++;
           }
-
-          setTimeout(this.cancelInitialStyle.bind(this), index * 650);
+          allResCount += 1000;
+          setTimeout(this.cancelInitialStyle.bind(this), allResCount * 2);
         });
       }
     });
@@ -456,6 +396,70 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         });
         return false;
       }));
+    }
+  }
+
+  private loadStatusFile(loadData){
+    const loadResList = [];
+    for (const res of loadData.resList) {
+      const resItem = Object.assign({}, res);
+      if (!Number.isInteger(res.resColor)) {
+        continue;
+      }
+      if (Number(res.resColor) === 0) {
+        resItem.resColor = '#000';
+      } else {
+        resItem.resColor = this.settings.characterColors[Number(res.resColor) - 1];
+      }
+
+      resItem.resFontSize = this.resSizeList[Number(res.resFontSize) - 1].value;
+      resItem.resBackgroundColor = this.backgroundColors[res.resBackgroundColor];
+      resItem.resHovergroundColor = this.hovergroundColors[res.resHovergroundColor];
+      resItem.idColor = this.idStyles[Number(res.idColor)].color;
+      resItem.idBackgroundColor = this.idStyles[Number(res.idColor)].background;
+      loadResList.push(resItem);
+    }
+    loadData.resList.length = 0;
+    if (loadResList.length > 0) {
+      const originSreTitle = loadData.title.replace(/(_|-)[\w,\s-]{10}/ig, '');
+      const numberSuffixes = originSreTitle.match(/(_|-)(\d+)/gi);
+      let suffixNumber;
+      if (numberSuffixes?.length > 0) {
+        suffixNumber = numberSuffixes[0].replace(/(_|-)/i, '');
+      }
+      this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath, suffixNumber);
+
+      this.selectedTabIndex = this.tabs.length - 1;
+      // value.tabIndex = this.selectedTabIndex;
+      this.titleService.setTitle(`${this.tabs[this.selectedTabIndex].title} - スレ編集`);
+
+      this.resService.setTotalRes({
+        tabIndex: this.selectedTabIndex,
+        totalCount: loadResList.length,
+        title: this.tabs[this.selectedTabIndex].title,
+        rightToken: true,
+        statusToken: true
+      });
+
+      const selectCount = loadResList.filter(item => item.resSelect === 'select').length;
+      const candi1Count = loadResList.filter(item => item.resSelect === 'candi1').length;
+      const candi2Count = loadResList.filter(item => item.resSelect === 'candi2').length;
+      const candi3Count = loadResList.filter(item => item.resSelect === 'candi3').length;
+      const candi4Count = loadResList.filter(item => item.resSelect === 'candi4').length;
+
+      this.resService.setSelectedRes({
+        select: selectCount,
+        candi1: candi1Count,
+        candi2: candi2Count,
+        candi3: candi3Count,
+        candi4: candi4Count,
+        tabIndex: this.selectedTabIndex,
+        title: this.tabs[this.selectedTabIndex].title,
+        rightToken: true,
+        statusToken: true
+      });
+
+      this.changeResCount();
     }
   }
 
