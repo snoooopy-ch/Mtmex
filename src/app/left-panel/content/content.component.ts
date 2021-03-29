@@ -23,8 +23,8 @@ declare var $: any;
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./content.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() tabName = 'New Tab';
@@ -94,6 +94,9 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() insertSuffix: string;
   @Input() suffixNumber: string;
   @Input() titleUrl: any;
+  public
+  @Input() isCancelAllAction: boolean;
+
 
   public subscribers: any = {};
   private isChangedSearch: boolean;
@@ -108,7 +111,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   currentScrollIndex: number;
   originalResList: ResItem[];
   isTreeSearch: boolean;
-  isSelectRes: any;
+  isSelectRes: boolean;
   private isKeyPressed: boolean;
   private searchedFiled: number;
   private isBackup: boolean;
@@ -133,6 +136,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isBackup = true;
     this.isSaveStatus = false;
     this.isSearchChecked = false;
+    this.isSelectRes = false;
   }
 
   ngOnInit(): void {
@@ -312,7 +316,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log('test');
+
     this.resViews.changes.subscribe(t => {
       if (!this.originalResList.length) {
         this.originalResList = [...this.resList];
@@ -1484,8 +1488,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.isChangedSearch = true;
   }
 
-  searchResText(isOnlySearch) {
-    const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
+  private saveSearchList(){
     if (this.searchList.indexOf(this.searchKeyword.trim()) === -1) {
       if (this.searchList.length >= this.searchWordMax) {
         this.searchList.splice(this.searchList.length - 1, 1);
@@ -1499,50 +1502,66 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.searchListEmitter.emit({
       searchList: this.searchList
     });
+  }
 
+  private getSearchRegexp(keyword){
     let re;
     if (keyword === 'sta' || keyword === 'twi' || keyword === 'twit'){
       re = new RegExp(`(?<!<[^>]*)${keyword}`, 'gi');
     } else {
       re = new RegExp(`(?![^<>]*>)(${keyword})(?![&gt;])`, 'gi');
     }
+    return re;
+  }
 
-
-    if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0
-      && this.resList.length !== this.originalResList.length) {
-      this.resList = [...this.originalResList];
-    }
-
-    if (this.btnNotice.checked) {
-      this.resList = this.getNoticeRes(this.resList);
-    }
-
-    if (this.isSelectRes) {
-      this.resList = this.getSelectedRes(this.resList);
-    }
-
-    for (let i = 0; i < this.resList.length; i++) {
-      this.resList[i].originalIndex = i;
+  private setSearchWordStyle(re, tmpResList: ResItem[]){
+    for (let i = 0; i < tmpResList.length; i++) {
+      tmpResList[i].originalIndex = i;
       if (this.searchOption === 'num') {
-        if (re.test(String(this.resList[i].num))) {
+        if (re.test(String(tmpResList[i].num))) {
           // this.resList[i].num = this.resList[i].num.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-          this.resList[i].isSearched = true;
-          this.resList[i].numBackground = this.hitColor;
+          tmpResList[i].isSearched = true;
+          tmpResList[i].numBackground = this.hitColor;
         }
       } else {
-        if (this.resList[i].content.match(re) !== null) {
-          this.resList[i].content = this.resList[i].content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-          this.resList[i].isSearched = true;
+        if (tmpResList[i].content.match(re) !== null) {
+          tmpResList[i].content = tmpResList[i].content.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+          tmpResList[i].isSearched = true;
         }
         if (this.searchOption === 'all') {
-          if (this.resList[i].name.match(re) || this.resList[i].id.match(re)) {
-            this.resList[i].id = this.resList[i].id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-            this.resList[i].name = this.resList[i].name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
-            this.resList[i].isSearched = true;
+          if (tmpResList[i].name.match(re) || tmpResList[i].id.match(re)) {
+            tmpResList[i].id = tmpResList[i].id.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+            tmpResList[i].name = tmpResList[i].name.replace(re, `<span style="background-color: ${this.hitColor};">$&</span>`);
+            tmpResList[i].isSearched = true;
           }
         }
       }
     }
+  }
+
+  searchResText(isOnlySearch) {
+    const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
+    this.saveSearchList();
+
+    let re = this.getSearchRegexp(keyword);
+
+    let tmpResList = [];
+
+    if (!isOnlySearch && this.originalResList !== undefined && this.originalResList.length > 0
+      && this.resList.length !== this.originalResList.length) {
+      tmpResList = [...this.originalResList];
+    }
+
+    if (this.btnNotice.checked) {
+      tmpResList = this.getNoticeRes(this.resList);
+    }
+
+    if (this.isSelectRes) {
+      tmpResList = this.getSelectedRes(this.resList);
+    }
+
+    this.setSearchWordStyle(re, tmpResList);
+    this.resList = tmpResList;
     this.startInRes = 0;
     this.searchedRes = 0;
     this.isChangedSearch = false;
@@ -1594,6 +1613,12 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   abstractRes() {
+
+    const keyword = this.searchKeyword.trim().replace(/\s+/gi, '|');
+    this.saveSearchList();
+
+    let re = this.getSearchRegexp(keyword);
+
     if ((!this.btnNotice.checked && !this.isSelectRes && this.isBackup) || this.originalResList === undefined) {
       this.originalResList = [...this.resList];
       this.changeListEmitter.emit({
@@ -1604,17 +1629,26 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     let tmpResList = [...this.originalResList];
 
+    this.clearSearchStatus(tmpResList);
+    this.startInRes = 0;
+    this.searchedRes = 0;
+
     if (this.btnNotice.checked) {
-      tmpResList = this.getNoticeRes(tmpResList);
+      tmpResList = this.getNoticeRes(this.resList);
     }
 
     if (this.isSelectRes) {
-      tmpResList = this.getSelectedRes(tmpResList);
+      tmpResList = this.getSelectedRes(this.resList);
     }
+
+    this.setSearchWordStyle(re, tmpResList);
+
+    this.startInRes = 0;
+    this.searchedRes = 0;
+    this.isChangedSearch = false;
 
     tmpResList = this.getAbstractRes(tmpResList);
 
-    this.resList = [];
     this.resList = tmpResList;
     this.changeListStatusEmitter.emit({
       tabIndex: this.tabIndex,
@@ -1647,8 +1681,8 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.searchKeyword === undefined || this.searchKeyword.length === 0 || this.searchKeyword.match(/^\s+$/) !== null) {
         this.isSearchChecked = false;
       } else {
-        this.cancelSearchResText();
-        this.searchResText(false);
+        // this.cancelSearchResText();
+        // this.searchResText(false);
         this.abstractRes();
       }
     } else {
@@ -2200,12 +2234,17 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.originalResList?.length > 0) {
 
         let tmpResList = [...this.originalResList];
-        if (this.isSearchChecked) {
-          tmpResList = this.getAbstractRes(tmpResList);
-        }
+        if (this.isCancelAllAction) {
+          this.isSearchChecked = false;
+          this.btnNotice.checked = false;
+        }else {
+          if (this.isSearchChecked) {
+            tmpResList = this.getAbstractRes(tmpResList);
+          }
 
-        if (this.btnNotice.checked) {
-          tmpResList = this.getNoticeRes(tmpResList);
+          if (this.btnNotice.checked) {
+            tmpResList = this.getNoticeRes(tmpResList);
+          }
         }
 
         this.resList = tmpResList;
@@ -2227,6 +2266,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   btnSearchHandler() {
+
     if (this.isSearchChecked) {
       this.isSearchChecked = false;
       this.searchChangeStatus();
@@ -2237,16 +2277,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public searchAll(){
-    if (this.searchAllStatus === 1){
-      this.searchAllStatus = 2;
-    } else {
-      this.searchAllStatus = 1;
-    }
     this.btnSearchHandler();
   }
 
   public cancelSearchAll(): void{
-    this.searchAllStatus = 0;
     this.btnSearchChangeHandler();
   }
 
@@ -2373,6 +2407,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public showSelectedRes(display: boolean){
+    console.log(this.isSelectRes, display)
     if (display){
       this.setResMenu(1);
       if (display !== this.isSelectRes) {

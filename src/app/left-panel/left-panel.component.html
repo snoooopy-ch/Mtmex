@@ -6,6 +6,7 @@
        [active]="tabItem.active"
        (selectTab)="tabChangedHandler(index)"
        (deselect)="tabItem.active = false"
+       [ngClass]="{'d-initial': isAllTab && selectedTabIndex !== index}"
       >
     <ng-template tabHeading>
       <div data-id="{{index}}"
@@ -70,10 +71,12 @@
                  [replacedName]="settings.namae_ato"
                  [insertPrefix]="settings.sounyuu_mae"
                  [insertSuffix]="settings.sounyuu_usiro"
+                 [isCancelAllAction]="settings.sentaku_res_gamen_off_zengamen_kaijo"
                  [titleUrl]="{suretai_url: settings.suretai_url, suretai_url2: settings.suretai_url2, suretai_url3: settings.suretai_url3 }"
                  [isReplaceStatusFile]="settings.fukugen_uwagaki"
                  [statusFilePath]="tabItem.statusFilePath"
                  [imageWidth]="imageWidth"
+
                  [tabIndex]="index">
     </app-content>
     <app-status [tabIndex]="index"></app-status>

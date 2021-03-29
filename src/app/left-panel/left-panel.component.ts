@@ -25,7 +25,7 @@ declare var $: any;
 @Component({
   selector: 'app-left-panel',
   templateUrl: './left-panel.component.html',
-  styleUrls: ['./left-panel.component.css'],
+  styleUrls: ['./left-panel.component.scss'],
 })
 export class LeftPanelComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: TabsetComponent;
@@ -74,10 +74,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   isYoutubeUrl: boolean;
   isTwitterUrl: boolean;
   private isWait: boolean;
+  public isAllTab: boolean;
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
-
+    this.isAllTab = false;
   }
 
   ngOnInit(): void {
@@ -213,6 +214,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         return;
       }
       this.zone.run(() => {
+        $.LoadingOverlay('show', {
+          imageColor: '#ffa07a',
+        });
+        this.isAllTab = true;
         const numberSuffixes = value.originSreTitle.match(/_(\d+)/gi);
         let suffixNumber;
         if (numberSuffixes?.length > 0) {
@@ -247,6 +252,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           rightToken: true,
           statusToken: true
         });
+
+        setTimeout(this.cancelInitialStyle.bind(this), 100);
       });
 
     });
@@ -257,6 +264,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
       if (value.data.length > 0) {
         this.zone.run(() => {
+          $.LoadingOverlay('show', {
+            imageColor: '#ffa07a',
+          });
+          this.isAllTab = true;
           let index = 1;
           for (const loadData of value.data) {
             this.isWait = true;
@@ -288,7 +299,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
                 suffixNumber = numberSuffixes[0].replace(/_/i, '');
               }
               this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath, suffixNumber);
-              setTimeout(this.finishedRender, 1000);
 
               this.selectedTabIndex = this.tabs.length - 1;
               value.tabIndex = this.selectedTabIndex;
@@ -325,6 +335,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
             index++;
           }
+
+          setTimeout(this.cancelInitialStyle.bind(this), 2000);
         });
       }
     });
@@ -342,9 +354,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe((value) => {
 
       if (value.token) {
+        $.LoadingOverlay('show', {
+          imageColor: '#ffa07a',
+        });
+        this.isAllTab = true;
         for (const item of this.contentComponent) {
           item.showSelectedRes(value.display);
         }
+        setTimeout(this.cancelInitialStyle.bind(this), 2000);
       }
       value.token = false;
     });
@@ -785,18 +802,34 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   changeSearchAll($event: any) {
+    $.LoadingOverlay('show', {
+      imageColor: '#ffa07a',
+    });
     if (this.contentComponent.length) {
       if ($event.isSearch) {
+        this.isAllTab = true;
         for (const child of this.contentComponent) {
           child.searchAll();
         }
       } else {
+        this.isAllTab = true;
         for (const child of this.contentComponent) {
           child.cancelSearchAll();
         }
       }
     }
+    setTimeout(this.cancelInitialStyle.bind(this), 2000);
   }
+
+  private cancelInitialStyle(){
+    this.isAllTab = false;
+    $.LoadingOverlay('hide');
+    if(!this.tabs[this.selectedTabIndex].active){
+      this.tabs[this.selectedTabIndex].active = true;
+      this.cdr.detectChanges();
+    }
+  }
+
 
   public changeResCount() {
     const allCount = {
@@ -824,6 +857,5 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   finishedRender() {
     this.isWait = false;
-    console.log('emitted');
-  }
+   }
 }
