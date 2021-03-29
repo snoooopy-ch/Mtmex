@@ -218,10 +218,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           imageColor: '#ffa07a',
         });
         this.isAllTab = true;
-        const numberSuffixes = value.originSreTitle.match(/_(\d+)/gi);
+        const numberSuffixes = value.originSreTitle.match(/(_|-)(\d+)/gi);
         let suffixNumber;
         if (numberSuffixes?.length > 0) {
-          suffixNumber = numberSuffixes[0].replace(/_/i, '');
+          suffixNumber = numberSuffixes[0].replace(/(_|-)/i, '');
         }
         this.addTab(value.sreTitle, value.resList, value.originSreTitle, '', suffixNumber);
         this.selectedTabIndex = this.tabs.length - 1;
@@ -253,7 +253,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           statusToken: true
         });
 
-        setTimeout(this.cancelInitialStyle.bind(this), 100);
+        setTimeout(this.cancelInitialStyle.bind(this), 2000);
       });
 
     });
@@ -292,11 +292,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             }
             loadData.resList.length = 0;
             if (loadResList.length > 0) {
-              const originSreTitle = loadData.title.replace(/__[\w,\s-]{10}/ig, '');
-              const numberSuffixes = originSreTitle.match(/_(\d+)/gi);
+              const originSreTitle = loadData.title.replace(/(_|-)[\w,\s-]{10}/ig, '');
+              const numberSuffixes = originSreTitle.match(/(_|-)(\d+)/gi);
               let suffixNumber;
               if (numberSuffixes?.length > 0) {
-                suffixNumber = numberSuffixes[0].replace(/_/i, '');
+                suffixNumber = numberSuffixes[0].replace(/(_|-)/i, '');
               }
               this.addTab(loadData.title, loadResList, originSreTitle, loadData.filePath, suffixNumber);
 
@@ -530,7 +530,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       candi2: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi2').length,
       candi3: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi3').length,
       candi4: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi4').length,
-      totalCount: this.tabs[this.selectedTabIndex].resList.length,
+      totalCount: this.tabs[this.selectedTabIndex].originalResList.length,
       tabIndex: this.selectedTabIndex,
       title: this.tabs[this.selectedTabIndex].title,
       hiddenIds: this.tabs[this.selectedTabIndex].hiddenIds,
@@ -567,6 +567,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   onDragEnd($event: DragEvent) {
     const toIndex = this.previousTabId;
     const fromIndex = this.currentTabId;
+    $.LoadingOverlay('show', {
+      imageColor: '#ffa07a',
+    });
+    this.isAllTab = true;
     // const tabListItems = this.tabs;
     moveItemInArray(this.tabs, fromIndex, toIndex);
     moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
@@ -588,7 +592,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
       index++;
     }
-    // this.tabs[fromIndex].active = false;
+    this.tabs[fromIndex].active = false;
+    this.cdr.detectChanges();
+    const activeTab = this.contentComponent.find((e, i) => i === this.selectedTabIndex);
+    activeTab.setHotKeys();
+    setTimeout(this.cancelInitialStyle.bind(this), 1000);
   }
 
   onDragover($event: DragEvent) {
