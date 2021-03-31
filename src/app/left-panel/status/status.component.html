@@ -1,14 +1,42 @@
-<div class="status-label-content">
-<h3 class="status lbl-sts-main-of-total">{{tabInfo.selectCount}}/{{tabInfo.totalCount}}</h3>
-<h3 class="status">{{tabInfo.candi1Count}}</h3>
-<h3 class="status">{{tabInfo.candi2Count}}</h3>
-<h3 class="status">{{tabInfo.candi3Count}}</h3>
-<h3 class="status">{{tabInfo.candi4Count}}</h3>
-  <div class="status-title">
-    {{tabInfo.tabTitle}}
+<div class="row-1">
+  <div class="total-status">
+    <h3 class="status lbl-sts-main-of-total">{{tabInfo.selectCount}}/{{tabInfo.totalCount}}</h3>
+    <h3 class="status">{{tabInfo.candi1Count}}</h3>
+    <h3 class="status">{{tabInfo.candi2Count}}</h3>
+    <h3 class="status">{{tabInfo.candi3Count}}</h3>
+    <h3 class="status">{{tabInfo.candi4Count}}</h3>
+    <div class="status-title">
+      {{tabInfo.tabTitle}}
+    </div>
   </div>
+<div>
+  <button class="">全タブ選択画面OFF</button>
 </div>
-<div style="display: flex;">
-<button class="btn-print-all-tag border-round" (click)="printAllHtmlTagHandler()">全タブ出力</button>
-<button class="btn-print-html-tag border-round" (click)="printHtmlTagHandler()">出力</button>
+</div>
+<div class="row-2">
+  <div class="status-label-content">
+    <h3 class="status lbl-sts-main-of-total">{{tabInfo.selectCount}}</h3>
+    <h3 class="status">{{tabInfo.candi1Count}}</h3>
+    <h3 class="status">{{tabInfo.candi2Count}}</h3>
+    <h3 class="status">{{tabInfo.candi3Count}}</h3>
+    <h3 class="status">{{tabInfo.candi4Count}}</h3>
+  </div>
+  <div class="">
+    <button type="button" class="btn-long font-weight-bold light-green" [ngClass]="{'searched': tabInfo.isSearched, 'search-checked': tabInfo.isSearchChecked }"
+            (click)="btnAbstractAndCancelHandler()" #btnSearch>
+      抽出/抽出解除
+    </button>
+    <button type="button" class="btn-long font-weight-bold light-green" (click)="btnSearchAllHandler()">全タブ抽出</button>
+    <button class="btn-long light-green font-weight-bold" (click)="btnSearchAllChangeHandler()">全タブ抽出解除</button>
+    <button type="button" class="btn-long toggle-select" [(ngModel)]="tabInfo.isNoticed" btnCheckbox
+            (click)="btnNoticeChangeHandler()">
+      注目レス
+    </button>
+    <button type="button" class="btn-long toggle-select" [(ngModel)]="tabInfo.isSelectRes" btnCheckbox
+            (click)="btnShowSelectHandler()">選択レス表示
+    </button>
+    <button class="btn-print-all-tag border-round" (click)="printAllHtmlTagHandler()">全タブ出力</button>
+    <button class="btn-print-html-tag border-round" (click)="printHtmlTagHandler()">出力</button>
+  </div>
+
 </div>

@@ -35,4 +35,24 @@ export class StatusComponent implements OnInit {
   printAllHtmlTagHandler() {
     this.resService.setPrintAllHtmlOnStatusSource(0);
   }
+
+  btnAbstractAndCancelHandler() {
+
+  }
+
+  btnSearchAllHandler() {
+
+  }
+
+  btnSearchAllChangeHandler() {
+
+  }
+
+  btnNoticeChangeHandler() {
+
+  }
+
+  btnShowSelectHandler() {
+
+  }
 }

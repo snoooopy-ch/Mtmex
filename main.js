@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, Menu, MenuItem, globalShortcut} = require('electron');
 const fs = require('fs');
 const encoding = require('encoding-japanese');
 const {v4: uuidv4} = require('uuid');
@@ -84,8 +84,8 @@ function createWindow() {
     {
       label: 'View',
       submenu: [
-        {role: 'reload'},
-        {role: 'forcereload'},
+        // {role: 'reload'},
+        // {role: 'forcereload'},
         {role: 'toggledevtools'},
         {type: 'separator'},
         {role: 'resetzoom'},
@@ -138,6 +138,13 @@ app.on('activate', function () {
     createWindow()
   }
 });
+
+app.on('browser-window-blur', function () {
+  globalShortcut.unregister('CommandOrControl+R');
+  globalShortcut.unregister('Control+R');
+  globalShortcut.unregister('CommandOrControl+Shift+R');
+  globalShortcut.unregister('Control+Shift+R');
+})
 
 
 /**
@@ -801,55 +808,15 @@ function getSettings() {
         settings['autoSavePath'] = line.replace(/pass:/gi, '').trim();
         continue;
       }
-      let chunks = line.split(':');
-      let lineArgs = [chunks.shift(), chunks.join(':')];
-
-      if (curComment === '#datパス') {
-        settings['dataPath'] = line;
-      } else if (curComment === '#指定したdatパス') {
-        settings['defaultPath'].push(lineArgs[1]);
-      } else if (curComment === '#チェックボックス') {
-        if (lineArgs[0] === '1') {
-          settings['isResSort'] = lineArgs[1] === 'on';
-        } else if (lineArgs[0] === '2') {
-          settings['isMultiAnchor'] = lineArgs[1] === 'on';
-        } else if (lineArgs[0] === '3') {
-          settings['isContinuousAnchor'] = lineArgs[1] === 'on';
-        } else if (lineArgs[0] === '4') {
-          settings['notMoveFutureAnchor'] = lineArgs[1] === 'on';
-        } else if (lineArgs[0] === '5') {
-          settings['isReplaceRes'] = lineArgs[1] === 'on';
-        }
-      } else if (curComment === '#文字色') {
-        settings['characterColors'].push(lineArgs[1]);
-      } else if (curComment === '#注意レス') {
-        settings['chuui'] = lineArgs[1];
-      } else if (curComment === '#非表示レス') {
-        settings['hihyouji'] = lineArgs[1];
-      } else if (curComment === '#注目レスの閾値') {
-        settings['noticeCount'] = lineArgs[1].split(';');
-      } else if (curComment === '#未来アンカー') {
-        settings[lineArgs[0]] = lineArgs[1].replace(/;/g, '|');
-      } else {
-        if (yesNoKeys.indexOf(lineArgs[0]) !== -1) {
-          settings[lineArgs[0]] = (lineArgs[1] === 'yes' || lineArgs[1] === 'yes;');
-        } else if (onOffKeys.indexOf(lineArgs[0]) !== -1) {
-          settings[lineArgs[0]] = (lineArgs[1] === 'on' || lineArgs[1] === 'on;');
-        } else if (selectKeys.indexOf(lineArgs[0]) !== -1) {
-          settings[lineArgs[0]] = lineArgs[1];
-        } else {
-          if (lineArgs.length > 1) {
-            settings[lineArgs[0]] = lineArgs[1].replace(/;/g, '');
-          } else {
-            settings[lineArgs[0]] = '';
-          }
-        }
-      }
+      getLineParam(line);
     }
     remaining = remaining.substring(last);
   });
 
   input.on('end', function () {
+    if (remaining.length > 1){
+      getLineParam(remaining);
+    }
     win.webContents.send("getSettings", settings);
   });
 
@@ -862,6 +829,53 @@ function getSettings() {
     }
   }
   win.webContents.send("getSearchList", searchList);
+}
+
+function getLineParam(line){
+  let chunks = line.split(':');
+  let lineArgs = [chunks.shift(), chunks.join(':')];
+
+  if (curComment === '#datパス') {
+    settings['dataPath'] = line;
+  } else if (curComment === '#指定したdatパス') {
+    settings['defaultPath'].push(lineArgs[1]);
+  } else if (curComment === '#チェックボックス') {
+    if (lineArgs[0] === '1') {
+      settings['isResSort'] = lineArgs[1] === 'on';
+    } else if (lineArgs[0] === '2') {
+      settings['isMultiAnchor'] = lineArgs[1] === 'on';
+    } else if (lineArgs[0] === '3') {
+      settings['isContinuousAnchor'] = lineArgs[1] === 'on';
+    } else if (lineArgs[0] === '4') {
+      settings['notMoveFutureAnchor'] = lineArgs[1] === 'on';
+    } else if (lineArgs[0] === '5') {
+      settings['isReplaceRes'] = lineArgs[1] === 'on';
+    }
+  } else if (curComment === '#文字色') {
+    settings['characterColors'].push(lineArgs[1]);
+  } else if (curComment === '#注意レス') {
+    settings['chuui'] = lineArgs[1];
+  } else if (curComment === '#非表示レス') {
+    settings['hihyouji'] = lineArgs[1];
+  } else if (curComment === '#注目レスの閾値') {
+    settings['noticeCount'] = lineArgs[1].split(';');
+  } else if (curComment === '#未来アンカー') {
+    settings[lineArgs[0]] = lineArgs[1].replace(/;/g, '|');
+  } else {
+    if (yesNoKeys.indexOf(lineArgs[0]) !== -1) {
+      settings[lineArgs[0]] = (lineArgs[1] === 'yes' || lineArgs[1] === 'yes;');
+    } else if (onOffKeys.indexOf(lineArgs[0]) !== -1) {
+      settings[lineArgs[0]] = (lineArgs[1] === 'on' || lineArgs[1] === 'on;');
+    } else if (selectKeys.indexOf(lineArgs[0]) !== -1) {
+      settings[lineArgs[0]] = lineArgs[1];
+    } else {
+      if (lineArgs.length > 1) {
+        settings[lineArgs[0]] = lineArgs[1].replace(/;/g, '');
+      } else {
+        settings[lineArgs[0]] = '';
+      }
+    }
+  }
 }
 
 ipcMain.on("saveStatus", (event, saveData) => {

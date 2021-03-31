@@ -241,6 +241,10 @@
   <label><input type="radio" name="opt-sort" [(ngModel)]="sortCommand" value="num-sort">レスNo順にソート</label>
   <button class="btn-left-round btn-right-round w-100" (click)="btnSortResHandler()">実行</button>
 </div>
+<div class="bottom-move-res">
+    <button (click)="moveResViewHandler('top')">▲</button>
+    <button (click)="moveResViewHandler('bottom')">▼</button>
+</div>
 <div class="width-100">
   <label>非表示のID</label>
   <div class="hidden-ids-container">
