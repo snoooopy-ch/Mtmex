@@ -73,7 +73,7 @@
                   (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="50"
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime]=0
                   [enableUnequalChildrenSizes]="true"
-                  [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 232 : 173)) + 'px)'}">
+                  [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 263 : 204)) + 'px)'}">
 <!--  (selectedTreeResEmitter)="selectedTreeRes(resList.indexOf(resItem), $event)"-->
   <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
            [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
@@ -119,7 +119,13 @@
   </app-res>
 
 </virtual-scroller>
-<app-status [tabInfo]="{
+<app-status
+  (abstractAndCancelEmitter)="btnAbstractAndCancelHandler"
+  (searchAllEmitter)="btnSearchAllHandler"
+  (searchAllCancelEmitter)="btnSearchAllChangeHandler"
+  (noticeChangeEmitter)="btnNoticeChangeHandler"
+  (showSelectEmitter)="btnShowSelectHandler"
+  [tabInfo]="{
       tabTitle: tabName,
       selectCount: selectCount,
       candi1Count: candi1Count,

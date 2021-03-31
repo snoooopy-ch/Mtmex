@@ -865,7 +865,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     this.resService.setChangeResCount({
       allTabCount: allCount,
-      token: true
+      rightToken: true,
+      statusToken: true
     });
 
   }
