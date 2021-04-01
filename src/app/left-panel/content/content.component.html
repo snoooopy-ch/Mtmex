@@ -21,14 +21,12 @@
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
   <button type="button" class="btn-short yellow" (click)="btnImageSearchHandler()" tabindex="-1">画像</button>
-  <button type="button" class="btn-long" (click)="btnSearchHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
-    抽出
+  <button type="button" class="btn-long font-weight-bold light-green" [ngClass]="{'searched': isSearched, 'search-checked': isSearchChecked }"
+          (click)="btnAbstractAndCancelHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
+    抽出/抽出解除
   </button>
-  <button class="btn-long light-green" [ngClass]="{'searched': isSearched, 'search-checked': isSearchChecked }"
-          (click)="btnSearchChangeHandler()">抽出解除
-  </button>
-  <button type="button" class="btn-long" (click)="btnSearchAllHandler()">全タブ抽出</button>
-  <button class="btn-long light-green" (click)="btnSearchAllChangeHandler()">全タブ抽出解除</button>
+  <button type="button" class="btn-long font-weight-bold light-green" (click)="btnSearchAllHandler()">全タブ抽出</button>
+  <button class="btn-long light-green font-weight-bold" (click)="btnSearchAllChangeHandler()">全タブ抽出解除</button>
   <mat-button-toggle-group name="btn-notice" [multiple]="true">
     <mat-button-toggle class="btn-long border-round" (change)="btnNoticeChangeHandler()" #btnNotice>注目レス
     </mat-button-toggle>
@@ -51,6 +49,11 @@
   <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select"
                 (click)="selectAllChangeHandler()">選択＿＿＿</label>
   <button class="btn-short" [ngStyle]="{'width': '100px'}" (click)="btnAllSelHeaderClickHandler()">実行</button>
+  <button type="button" class="btn-short light-green" (click)="btnAbstractHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
+    抽出
+  </button>
+  <button class="btn-middle" (click)="btnCancelAbstractHandler()">抽出解除
+  </button>
   <label>URL</label>
   <input type="text" [(ngModel)]="txtURL" (ngModelChange)="txtUrlChangeHandler()">
 </div>
@@ -70,7 +73,7 @@
                   (vsUpdate)="vsResContainerUpdateHandler($event)" [bufferAmount]="50"
                   cdkDropList (cdkDropListDropped)="resDropHandler($event)" [scrollAnimationTime]=0
                   [enableUnequalChildrenSizes]="true"
-                  [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 232 : 173)) + 'px)'}">
+                  [ngStyle]="{'height': 'calc(100vh - ' + (tabTitle.offsetHeight + (suffixNumber?.length > 0 ? 263 : 204)) + 'px)'}">
 <!--  (selectedTreeResEmitter)="selectedTreeRes(resList.indexOf(resItem), $event)"-->
   <app-res [item]="resItem" [resIndex]="resList.indexOf((resItem))"
            [ngStyle]="{'background-color':hovered !== (resList.indexOf(resItem)) ? resItem.resBackgroundColor: getHoverColor(resItem.resBackgroundColor),
@@ -116,12 +119,21 @@
   </app-res>
 
 </virtual-scroller>
-<app-status [tabInfo]="{
+<app-status
+  (abstractAndCancelEmitter)="btnAbstractAndCancelHandler"
+  (searchAllEmitter)="btnSearchAllHandler"
+  (searchAllCancelEmitter)="btnSearchAllChangeHandler"
+  (noticeChangeEmitter)="btnNoticeChangeHandler"
+  (showSelectEmitter)="btnShowSelectHandler"
+  [tabInfo]="{
       tabTitle: tabName,
       selectCount: selectCount,
       candi1Count: candi1Count,
       candi2Count: candi2Count,
       candi3Count: candi3Count,
       candi4Count: candi4Count,
+      isSearched: isSearched,
+      isSearchChecked: isSearchChecked,
+      isSelected: isSelectRes,
       totalCount: resList.length}">
 </app-status>

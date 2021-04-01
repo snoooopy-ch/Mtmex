@@ -198,7 +198,7 @@ label {
 }
 
 .main-container app-left-panel app-content .extract .btn-long {
-  min-width: 98px;
+  min-width: 118px;
   width: 14%;
   height: 29px;
   font-size: 14px
@@ -395,16 +395,14 @@ app-res .row-4 a {
   width: 100%;
   padding: 5px;
   max-width: 968px;
-  display: flex;
-  justify-content: space-between;
+  display: block;
 }
 .main-container app-left-panel .status-label-content{
   display: flex;
-  width: 750px;
 }
 .main-container app-left-panel .status {
   text-align: center;
-  margin: 0 5px;
+  margin: 0 2px;
   border: 1px solid lightgrey;
   padding: 0 10px;
   font-size: 24px;
@@ -416,7 +414,7 @@ app-res .row-4 a {
 }
 
 .main-container app-left-panel app-content .lbl-sts-main-of-total {
-  margin: 0 5px 0 0;
+  margin: 0 2px 0 0;
 }
 
 .main-container app-left-panel .btn-print-html-tag {
@@ -859,7 +857,7 @@ input[type='radio']:checked:before {
 }
 
 .light-green{
-  background: #efffbf;
+  background: #e2efda;
 }
 
 .main-container app-left-panel app-content .search-checked{

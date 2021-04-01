@@ -151,10 +151,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
 
     this.subscribers.changeResCount = this.resService.changeResCount.subscribe((value) => {
 
-      if (value?.token) {
+      if (value?.rightToken) {
         this.allTabCount = value.allTabCount;
         this.cdRef.detectChanges();
-        value.token = false;
+        value.rightToken = false;
       }
     });
 

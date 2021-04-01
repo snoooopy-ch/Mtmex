@@ -1670,7 +1670,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  btnSearchChangeHandler(){
+  btnCancelAbstractHandler(){
     this.isSearched = false;
     if (this.isSearchChecked) {
       this.isSearchChecked = false;
@@ -2275,7 +2275,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdRef.detectChanges();
   }
 
-  btnSearchHandler() {
+  btnAbstractHandler() {
 
     if (this.isSearchChecked) {
       this.isSearchChecked = false;
@@ -2287,11 +2287,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public searchAll(){
-    this.btnSearchHandler();
+    this.btnAbstractHandler();
   }
 
   public cancelSearchAll(): void{
-    this.btnSearchChangeHandler();
+    this.btnCancelAbstractHandler();
   }
 
   cancelAllStatus(item: ResItem) {
@@ -2432,5 +2432,13 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
+  }
+
+  btnAbstractAndCancelHandler() {
+    if (this.isSearched || this.isSearchChecked){
+      this.btnCancelAbstractHandler();
+    } else{
+      this.btnAbstractHandler();
+    }
   }
 }

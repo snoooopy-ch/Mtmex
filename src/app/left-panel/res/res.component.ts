@@ -178,6 +178,7 @@ export class ResComponent implements OnInit {
 
   saveResHandler(event) {
     event.stopPropagation();
+    console.log(this.resContent);
     this.resContent = this.resContent.replace(/<\/a><br>/gi, '<\/a>');
     this.resContent = this.resContent.replace(/(<\/h3><p>)|(<\/p><p>)/gi, '<br>');
     this.resContent = this.resContent.replace(/(<p>&nbsp;)|(&nbsp;<\/p>)/gi, '<br>');
@@ -215,7 +216,7 @@ export class ResComponent implements OnInit {
       this.resContent += tmpItem;
       index++;
     }
-
+    console.log(this.resContent);
     let remarkRes = this.txtRemarkRes;
     if (remarkRes.endsWith(';')){
       remarkRes = remarkRes.substr(0, remarkRes.length - 1);

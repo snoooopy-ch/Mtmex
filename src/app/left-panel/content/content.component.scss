@@ -12,11 +12,6 @@
 app-res:last-child{border:none;}
 .res-content.cdk-drop-list-dragging app-res:not(.cdk-drag-placeholder){transition:transform 250ms cubic-bezier(0, 0, 0.2, 1);}
 
-:host ::ng-deep .mat-button-toggle{
-  width: 29px;
-  height: 29px;
-}
-
 .light-blue{
   color: #3981e6;
 }
@@ -34,6 +29,15 @@ app-res:last-child{border:none;}
   background: yellow;
 }
 
+:host{
+  ::ng-deep .mat-button-toggle{
+    width: 29px;
+    height: 29px;
+  }
+  .btn-middle {
+    min-width: 60px;
+  }
+}
 
 
 
