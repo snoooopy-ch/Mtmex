@@ -10,11 +10,22 @@
   }
 
   .btn-long{
-    min-width: 111px;
+    //min-width: 100px;
+    width: 15%;
   }
   .colored{
     h3 {
       background-color: #ffe5cc;
     }
+  }
+
+  .toggle-select {
+      margin: 0 0 0 2px;
+      background-color: #fff;
+      border: 1px solid #0366b6;
+      &.active{
+        background-color: #0366b6;
+        color: #fff;
+      }
   }
 }
