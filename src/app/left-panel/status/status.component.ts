@@ -22,8 +22,8 @@ export class StatusComponent implements OnInit {
   public noticeChangeEmitter = new EventEmitter();
   @Output()
   public showSelectEmitter = new EventEmitter();
+  @Input()
   public allTabCount: any;
-  public subscribers: any = {};
 
   constructor(private resService: ResService, private cdRef: ChangeDetectorRef) {
     this.tabInfo = {
@@ -45,14 +45,6 @@ export class StatusComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscribers.changeResCount = this.resService.changeResCount.subscribe((value) => {
-
-      if (value?.statusToken) {
-        this.allTabCount = value.allTabCount;
-        this.cdRef.detectChanges();
-        value.statusToken = false;
-      }
-    });
   }
 
 
@@ -77,11 +69,11 @@ export class StatusComponent implements OnInit {
   }
 
   btnNoticeChangeHandler() {
-    this.noticeChangeEmitter.emit();
+    this.noticeChangeEmitter.emit(this.tabInfo.isNotice);
   }
 
   btnShowSelectHandler() {
-    this.showSelectEmitter.emit();
+    this.showSelectEmitter.emit(this.tabInfo.isSelectRes);
   }
 
   btnSetAllUnselectedHandler() {

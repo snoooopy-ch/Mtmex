@@ -60,6 +60,8 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() subHotKeys;
   @Input() btnBackgroundColors;
   @Input() leftHightlight;
+  @Input()
+  public allTabCount: any;
   @Output() filteredEmitter = new EventEmitter();
   @Output() searchStatusEmitter = new EventEmitter();
   @Output() scrollIndexEmitter = new EventEmitter();
@@ -1730,6 +1732,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.virtualScroller.scrollToIndex(0);
   }
 
+  btnBottomNoticeChange($event){
+    this.btnNotice.checked = $event;
+    this.btnNoticeChangeHandler();
+  }
+
   btnNoticeChangeHandler() {
     if (this.btnNotice.checked) {
       if ((!this.isSearchChecked && !this.isSelectRes) || this.originalResList === undefined) {
@@ -2210,6 +2217,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     tmpResList.length = 0;
     return result;
+  }
+
+  btnBottomShowSelectHandler($event){
+    this.isSelectRes = $event;
+    this.btnShowSelectHandler()
   }
 
   btnShowSelectHandler() {

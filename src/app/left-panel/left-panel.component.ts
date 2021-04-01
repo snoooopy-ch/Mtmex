@@ -75,10 +75,18 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   isTwitterUrl: boolean;
   private isWait: boolean;
   public isAllTab: boolean;
+  public allCount: { select: number; candi3: number; candi4: number; candi1: number; candi2: number };
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
     this.isAllTab = false;
+    this.allCount = {
+      select: 0,
+      candi1: 0,
+      candi2: 0,
+      candi3: 0,
+      candi4: 0
+    };
   }
 
   ngOnInit(): void {
@@ -847,24 +855,18 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
 
   public changeResCount() {
-    const allCount = {
-      select: 0,
-      candi1: 0,
-      candi2: 0,
-      candi3: 0,
-      candi4: 0
-    };
+
 
     for (const tab of this.tabs) {
-      allCount.select += tab.originalResList.filter(item => item.resSelect === 'select').length;
-      allCount.candi1 += tab.originalResList.filter(item => item.resSelect === 'candi1').length;
-      allCount.candi2 += tab.originalResList.filter(item => item.resSelect === 'candi2').length;
-      allCount.candi3 += tab.originalResList.filter(item => item.resSelect === 'candi3').length;
-      allCount.candi4 += tab.originalResList.filter(item => item.resSelect === 'candi4').length;
+      this.allCount.select += tab.originalResList.filter(item => item.resSelect === 'select').length;
+      this.allCount.candi1 += tab.originalResList.filter(item => item.resSelect === 'candi1').length;
+      this.allCount.candi2 += tab.originalResList.filter(item => item.resSelect === 'candi2').length;
+      this.allCount.candi3 += tab.originalResList.filter(item => item.resSelect === 'candi3').length;
+      this.allCount.candi4 += tab.originalResList.filter(item => item.resSelect === 'candi4').length;
     }
 
     this.resService.setChangeResCount({
-      allTabCount: allCount,
+      allTabCount: this.allCount,
       rightToken: true,
       statusToken: true
     });

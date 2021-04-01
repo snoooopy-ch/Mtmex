@@ -120,11 +120,12 @@
 
 </virtual-scroller>
 <app-status
-  (abstractAndCancelEmitter)="btnAbstractAndCancelHandler"
-  (searchAllEmitter)="btnSearchAllHandler"
-  (searchAllCancelEmitter)="btnSearchAllChangeHandler"
-  (noticeChangeEmitter)="btnNoticeChangeHandler"
-  (showSelectEmitter)="btnShowSelectHandler"
+  (abstractAndCancelEmitter)="btnAbstractAndCancelHandler()"
+  (searchAllEmitter)="btnSearchAllHandler()"
+  (searchAllCancelEmitter)="btnSearchAllChangeHandler()"
+  (noticeChangeEmitter)="btnBottomNoticeChange($event)"
+  (showSelectEmitter)="btnBottomShowSelectHandler($event)"
+  [allTabCount]="allTabCount"
   [tabInfo]="{
       tabTitle: tabName,
       selectCount: selectCount,
@@ -134,6 +135,7 @@
       candi4Count: candi4Count,
       isSearched: isSearched,
       isSearchChecked: isSearchChecked,
-      isSelected: isSelectRes,
+      isSelectRes: isSelectRes,
+      isNotice: btnNotice.checked,
       totalCount: resList.length}">
 </app-status>
