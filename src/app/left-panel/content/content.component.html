@@ -5,10 +5,10 @@
     <mat-button-toggle value="context" class="btn-right-round toggle-context">本文</mat-button-toggle>
 
   </mat-button-toggle-group>
-  <button type="button" class="toggle-tree" [(ngModel)]="isTreeSearch" (focusin)="btnTreeSearchFocusInHandler()"
-          btnCheckbox #btnTreeSearch>ツリー
-  </button>
 
+  <button type="button" class="btn-short light-green" (click)="btnAbstractHandler()" (focusin)="btnTreeSearchFocusInHandler()" #btnSearch>
+    抽出
+  </button>
   <input type="text" [(ngModel)]="searchKeyword" #txtSearch
          [typeahead]="searchList"
          [typeaheadMinLength]="0"
@@ -20,9 +20,12 @@
          (keydown)="txtSearchKeyPressHandler($event)"
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
+  <button type="button" class="toggle-tree" [(ngModel)]="isTreeSearch"  (focusin)="btnSearchFocusInHandler()"
+          btnCheckbox #btnTreeSearch>ツリー
+  </button>
   <button type="button" class="btn-short yellow" (click)="btnImageSearchHandler()" tabindex="-1">画像</button>
   <button type="button" class="btn-long font-weight-bold light-green" [ngClass]="{'searched': isSearched, 'search-checked': isSearchChecked }"
-          (click)="btnAbstractAndCancelHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
+          (click)="btnAbstractAndCancelHandler()">
     抽出/抽出解除
   </button>
   <button type="button" class="btn-long font-weight-bold light-green" (click)="btnSearchAllHandler()">全タブ抽出</button>

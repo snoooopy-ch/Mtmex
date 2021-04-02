@@ -70,13 +70,13 @@ function createWindow() {
       ]
     }] : []),
     {
-      label: '全タブ出力(”画像をdivで囲む"を無視)|',
+      label: '全タブ出力(”画像をdivで囲む"を無視)    |',
       click: function () {
         win.webContents.send("printAllHtmlMenuClick");
       }
     },
     {
-      label: '出力(”画像をdivで囲む"を無視)|',
+      label: '出力(”画像をdivで囲む"を無視)    |',
       click: function () {
         win.webContents.send("printHtmlMenuClick");
       }

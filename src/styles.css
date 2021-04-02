@@ -211,8 +211,8 @@ label {
 }
 
 .main-container app-left-panel app-content .extract input[type="text"] {
-  min-width: 342px;
-  width: 342px;
+  min-width: 302px;
+  width: 302px;
   height: 29px;
   margin: 0 3px;
 }
