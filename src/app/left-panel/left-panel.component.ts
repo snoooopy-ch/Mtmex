@@ -856,7 +856,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
   public changeResCount() {
 
-
+    this.allCount = {
+      select: 0,
+      candi1: 0,
+      candi2: 0,
+      candi3: 0,
+      candi4: 0
+    };
     for (const tab of this.tabs) {
       this.allCount.select += tab.originalResList.filter(item => item.resSelect === 'select').length;
       this.allCount.candi1 += tab.originalResList.filter(item => item.resSelect === 'candi1').length;
