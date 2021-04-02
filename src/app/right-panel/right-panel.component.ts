@@ -53,6 +53,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   private readonly startTimer = new Subject<void>();
   isSaveOfLoadFile: boolean;
   public allTabCount: any;
+  private isIgnoreDivInclude = false;
 
   constructor(private resService: ResService,
               private cdRef: ChangeDetectorRef,
@@ -214,11 +215,15 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
 
     electron.ipcRenderer.on('printAllHtmlMenuClick', (event) => {
+      this.isIgnoreDivInclude = true;
       this.printAllHtmlTagHandler();
+      this.isIgnoreDivInclude = false;
     });
 
     electron.ipcRenderer.on('printHtmlMenuClick', (event) => {
+      this.isIgnoreDivInclude = true;
       this.printHtmlTagHandler();
+      this.isIgnoreDivInclude = false;
     });
   }
 
@@ -386,7 +391,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.setPrintCommand({
       tabIndex: this.tabIndex,
       isReplaceName: this.isReplaceName,
-      isSurroundImage: this.isSurroundImage,
+      isSurroundImage: this.isSurroundImage && !this.isIgnoreDivInclude,
       gazouReplaceUrl: this.gazouReplaceUrl,
       token: true
     });
@@ -396,7 +401,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.setPrintAllCommand({
       isOutputCandiBelow: this.isOutputCandiBelow,
       isReplaceName: this.isReplaceName,
-      isSurroundImage: this.isSurroundImage,
+      isSurroundImage: this.isSurroundImage && !this.isIgnoreDivInclude,
       gazouReplaceUrl: this.gazouReplaceUrl,
       token: true
     });
