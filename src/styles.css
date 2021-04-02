@@ -155,7 +155,7 @@ label {
 }
 
 .main-container app-left-panel app-content input[type="text"] {
-  width: 50%;
+  width: 25%;
   height: 26px;
 }
 
@@ -828,7 +828,7 @@ input[type='radio']:checked:before {
 }
 
 .btn-load {
-  background-color: #bfffff;
+  background-color: #ffff00;
 }
 
 .lbl-input-container {

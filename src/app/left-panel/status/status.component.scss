@@ -28,4 +28,9 @@
         color: #fff;
       }
   }
+  .row-1{
+    .status-label-content{
+      width: calc(100% - 194px);
+    }
+  }
 }

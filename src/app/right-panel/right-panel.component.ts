@@ -53,6 +53,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   private readonly startTimer = new Subject<void>();
   isSaveOfLoadFile: boolean;
   public allTabCount: any;
+  private isIgnoreDivInclude = false;
 
   constructor(private resService: ResService,
               private cdRef: ChangeDetectorRef,
@@ -214,11 +215,15 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     });
 
     electron.ipcRenderer.on('printAllHtmlMenuClick', (event) => {
+      this.isIgnoreDivInclude = true;
       this.printAllHtmlTagHandler();
+      this.isIgnoreDivInclude = false;
     });
 
     electron.ipcRenderer.on('printHtmlMenuClick', (event) => {
+      this.isIgnoreDivInclude = true;
       this.printHtmlTagHandler();
+      this.isIgnoreDivInclude = false;
     });
   }
 
@@ -247,8 +252,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     }
 
     // 全タブ選択画面OFF
-    if (this.settings.all_tab_sentaku_off !== undefined) {
-      this.hotkeysService.add(new Hotkey(this.settings.all_tab_sentaku_off.toLowerCase(), (event: KeyboardEvent): boolean => {
+    if (this.settings.zengamen_off !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.zengamen_off.toLowerCase(), (event: KeyboardEvent): boolean => {
         this.btnSetAllUnselectedHandler(null);
         return false;
       }));
@@ -386,7 +391,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.setPrintCommand({
       tabIndex: this.tabIndex,
       isReplaceName: this.isReplaceName,
-      isSurroundImage: this.isSurroundImage,
+      isSurroundImage: this.isSurroundImage && !this.isIgnoreDivInclude,
       gazouReplaceUrl: this.gazouReplaceUrl,
       token: true
     });
@@ -396,7 +401,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.setPrintAllCommand({
       isOutputCandiBelow: this.isOutputCandiBelow,
       isReplaceName: this.isReplaceName,
-      isSurroundImage: this.isSurroundImage,
+      isSurroundImage: this.isSurroundImage && !this.isIgnoreDivInclude,
       gazouReplaceUrl: this.gazouReplaceUrl,
       token: true
     });
@@ -525,5 +530,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       display: false,
       token: true
     });
+  }
+
+  btnLoadDefaultFiles() {
+    const remarkRes = this.getHideRes();
+    const hideRes = this.getHideRes();
+    this.loadDatPath = this.settings.defaultPath[0];
+    this.resService.loadMultiRes(this.settings.defaultPath, this.isResSort, this.isMultiAnchor && this.isResSort,
+      this.isReplaceRes, this.isContinuousAnchor && this.isMultiAnchor && this.isResSort,
+      this.notMoveFutureAnchor, remarkRes, hideRes);
   }
 }

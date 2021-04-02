@@ -868,6 +868,16 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
         return false; // Prevent bubbling
       }));
 
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.chuushutu, (event: KeyboardEvent): boolean => {
+          this.btnAbstractHandler();
+        return false; // Prevent bubbling
+      }));
+
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.chuushutu_chuushutukaijo, (event: KeyboardEvent): boolean => {
+        this.btnAbstractAndCancelHandler();
+        return false; // Prevent bubbling
+      }));
+
       // 検索バーにフォーカス移動
       this.hotkeysService.add(new Hotkey('ctrl+f', (event: KeyboardEvent): boolean => {
         this.txtSearch.nativeElement.focus();
@@ -2235,9 +2245,12 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       let tmpResList = [...this.originalResList];
 
-      if (this.isCancelOtherAction && this.isCancelAllAction) {
+      if (!this.isCancelAllAction) {
         this.isSearchChecked = false;
+        this.isSearched = false;
         this.btnNotice.checked = false;
+        this.clearSearchStatus(tmpResList);
+        this.filteredEmitter.emit(false);
       } else {
         if (this.isSearchChecked) {
           tmpResList = this.getAbstractRes(tmpResList);
@@ -2256,9 +2269,12 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.originalResList?.length > 0) {
 
         let tmpResList = [...this.originalResList];
-        if (this.isCancelAllAction) {
+        if (!this.isCancelAllAction) {
           this.isSearchChecked = false;
+          this.isSearched = false;
           this.btnNotice.checked = false;
+          this.clearSearchStatus(tmpResList);
+          this.filteredEmitter.emit(false);
         }else {
           if (this.isSearchChecked) {
             tmpResList = this.getAbstractRes(tmpResList);
@@ -2307,8 +2323,9 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   cancelAllStatus(item: ResItem) {
-    if (this.isSearchChecked) {
+    if (this.isSearchChecked || this.isSearched) {
       this.isSearchChecked = false;
+      this.isSearched = false;
     }
     if (this.btnNotice.checked) {
       this.btnNotice.checked = false;
@@ -2317,11 +2334,15 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isSelectRes = false;
     }
     if (this.originalResList !== undefined && this.originalResList.length > 0 && this.resList.length !== this.originalResList.length) {
+      this.clearSearchStatus(this.originalResList);
       this.resList = [...this.originalResList];
     }
-    const index = this.resList.indexOf(item);
 
-    this.virtualScroller.scrollToIndex(index);
+    if (item !== null) {
+      const index = this.resList.indexOf(item);
+
+      this.virtualScroller.scrollToIndex(index);
+    }
   }
 
   txtSearchKeyPressHandler($event: KeyboardEvent){
@@ -2433,15 +2454,14 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.setResMenu(1);
       if (display !== this.isSelectRes) {
         this.isSelectRes = true;
-        this.isCancelOtherAction = true;
         this.btnShowSelectHandler();
-        this.isCancelOtherAction = false;
       }
     } else{
-      if (display !== this.isSelectRes) {
-        this.isSelectRes = false;
-        this.btnShowSelectHandler();
-      }
+      // if (display !== this.isSelectRes) {
+      //   this.isSelectRes = false;
+      //   this.btnShowSelectHandler();
+      // }
+      this.cancelAllStatus(null);
     }
 
   }
