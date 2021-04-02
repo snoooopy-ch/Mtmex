@@ -154,7 +154,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'
           , 'menu1', 'menu2', 'menu3', 'res_most_up', 'res_most_down', 'sentaku_off1', 'sentaku_off2', 'sounyuu'
-          , 'all_tab_chuushutu', 'all_tab_chuushutu_kaijo', 'res_sinshuku'];
+          , 'all_tab_chuushutu', 'all_tab_chuushutu_kaijo', 'res_sinshuku', 'chuushutu', 'chuushutu_chuushutukaijo'];
         for (const key of arrayKeys) {
           if (this.settings[key].toLowerCase() === 'insert') {
             this.subHotKeys[key] = 'ins';
@@ -302,14 +302,18 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.subscribers.displayAllSelectRes = this.resService.displayAllSelectRes.subscribe((value) => {
 
       if (value.token) {
-        $.LoadingOverlay('show', {
-          imageColor: '#ffa07a',
-        });
-        this.isAllTab = true;
+        if(this.contentComponent.length > 1) {
+          $.LoadingOverlay('show', {
+            imageColor: '#ffa07a',
+          });
+          this.isAllTab = true;
+        }
         for (const item of this.contentComponent) {
           item.showSelectedRes(value.display);
         }
-        setTimeout(this.cancelInitialStyle.bind(this), 2000);
+        if(this.contentComponent.length > 1) {
+          setTimeout(this.cancelInitialStyle.bind(this), 2000);
+        }
       }
       value.token = false;
     });
@@ -822,13 +826,17 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   changeSearchAll($event: any) {
-    $.LoadingOverlay('show', {
-      imageColor: '#ffa07a',
-    });
+    if (this.contentComponent.length > 1) {
+      $.LoadingOverlay('show', {
+        imageColor: '#ffa07a',
+      });
+    }
     let count = 0;
     if (this.contentComponent.length) {
       if ($event.isSearch) {
-        this.isAllTab = true;
+        if (this.contentComponent.length > 1) {
+          this.isAllTab = true;
+        }
         for (const child of this.contentComponent) {
           child.searchAll();
           count++;
@@ -841,7 +849,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         }
       }
     }
-    setTimeout(this.cancelInitialStyle.bind(this), count * 650);
+    if (this.contentComponent.length > 1) {
+      setTimeout(this.cancelInitialStyle.bind(this), count * 650);
+    }
   }
 
   private cancelInitialStyle(){

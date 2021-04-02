@@ -247,8 +247,8 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     }
 
     // 全タブ選択画面OFF
-    if (this.settings.all_tab_sentaku_off !== undefined) {
-      this.hotkeysService.add(new Hotkey(this.settings.all_tab_sentaku_off.toLowerCase(), (event: KeyboardEvent): boolean => {
+    if (this.settings.zengamen_off !== undefined) {
+      this.hotkeysService.add(new Hotkey(this.settings.zengamen_off.toLowerCase(), (event: KeyboardEvent): boolean => {
         this.btnSetAllUnselectedHandler(null);
         return false;
       }));

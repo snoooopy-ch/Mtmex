@@ -43,13 +43,13 @@
   <h3 class="status">{{candi4Count}}</h3>
   <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select"
                 (click)="selectAllChangeHandler()">選択＿＿＿</label>
-  <button class="btn-short" [ngStyle]="{'width': '100px'}" (click)="btnAllSelHeaderClickHandler()">実行</button>
+  <button class="btn-short" (click)="btnAllSelHeaderClickHandler()">実行</button>
   <button class="btn-print-all-tag border-round" (click)="printAllHtmlTagHandler()">全タブ出力</button>
   <button class="btn-print-html-tag border-round" (click)="printHtmlTagHandler()">出力</button>
   <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select"
                 (click)="selectAllChangeHandler()">選択＿＿＿</label>
-  <button class="btn-short" [ngStyle]="{'width': '100px'}" (click)="btnAllSelHeaderClickHandler()">実行</button>
-  <button type="button" class="btn-short light-green" (click)="btnAbstractHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
+  <button class="btn-short" (click)="btnAllSelHeaderClickHandler()">実行</button>
+  <button type="button" class="btn-middle light-green" (click)="btnAbstractHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
     抽出
   </button>
   <button class="btn-middle" (click)="btnCancelAbstractHandler()">抽出解除
