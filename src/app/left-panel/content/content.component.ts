@@ -1829,11 +1829,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.isKeyPressed && $event.shiftKey && $event.code === 'Tab') {
       this.isKeyPressed = false;
-      this.btnTreeSearch.nativeElement.focus();
+      this.btnSearch.nativeElement.focus();
       return;
     } else if (this.isKeyPressed && $event.code === 'Tab') {
       this.isKeyPressed = false;
-      this.btnSearch.nativeElement.focus();
+      this.btnTreeSearch.nativeElement.focus();
       return;
     } else if ($event.ctrlKey && $event.shiftKey && $event.code === 'Enter') {
       this.isSearchChecked = !this.isSearchChecked;
