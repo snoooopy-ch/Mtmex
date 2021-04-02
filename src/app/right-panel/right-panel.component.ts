@@ -526,4 +526,13 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       token: true
     });
   }
+
+  btnLoadDefaultFiles() {
+    const remarkRes = this.getHideRes();
+    const hideRes = this.getHideRes();
+    this.loadDatPath = this.settings.defaultPath[0];
+    this.resService.loadMultiRes(this.settings.defaultPath, this.isResSort, this.isMultiAnchor && this.isResSort,
+      this.isReplaceRes, this.isContinuousAnchor && this.isMultiAnchor && this.isResSort,
+      this.notMoveFutureAnchor, remarkRes, hideRes);
+  }
 }

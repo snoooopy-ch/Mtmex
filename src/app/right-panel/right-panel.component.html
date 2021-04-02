@@ -28,11 +28,12 @@
   </div>
   <input type="text" [(ngModel)]="txtDataFilePath">
   <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
+  <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～6読み込み</button>
   <button class="border-round load-multi-path" (click)="btnLoadMultiFiles()">dat選択読み込み</button>
 </div>
 <div class="save-container mt-1">
-  <button class="btn-left-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
-  <button class="btn-right-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
+  <button class="btn-left-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
+  <button class="btn-right-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
 </div>
 <div class="res-order">
   <div class="reading-mode">
@@ -224,10 +225,11 @@
 </div>
 <div class="width-100">
   <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
+  <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～6読み込み</button>
 </div>
 <div class="save-container mt-1">
-  <button class="btn-left-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
-  <button class="btn-right-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
+  <button class="btn-left-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
+  <button class="btn-right-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
 </div>
 <div class="width-100 mt-2">
   <button class="border-round btn-print-all-tag" (click)="printAllHtmlTagHandler()">全タブ出力</button>
