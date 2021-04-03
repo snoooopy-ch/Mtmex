@@ -2245,7 +2245,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       let tmpResList = [...this.originalResList];
 
-      if (!this.isCancelAllAction) {
+      if (this.isCancelAllAction) {
         this.isSearchChecked = false;
         this.isSearched = false;
         this.btnNotice.checked = false;
@@ -2269,7 +2269,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.originalResList?.length > 0) {
 
         let tmpResList = [...this.originalResList];
-        if (!this.isCancelAllAction) {
+        if (this.isCancelAllAction) {
           this.isSearchChecked = false;
           this.isSearched = false;
           this.btnNotice.checked = false;
@@ -2455,7 +2455,13 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       if (display !== this.isSelectRes) {
         this.isSelectRes = true;
         this.btnShowSelectHandler();
+      } else {
+        this.isSelectRes = false;
+        this.btnShowSelectHandler();
+        this.isSelectRes = true;
+        this.btnShowSelectHandler();
       }
+
     } else{
       // if (display !== this.isSelectRes) {
       //   this.isSelectRes = false;
