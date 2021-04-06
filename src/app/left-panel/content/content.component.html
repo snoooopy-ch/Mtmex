@@ -20,12 +20,12 @@
          (keydown)="txtSearchKeyPressHandler($event)"
          (keyup)="txtSearchKeyUpHandler($event)"
          (ngModelChange)="txtSearchChangeHandler($event)">
-  <button type="button" class="toggle-tree" [(ngModel)]="isTreeSearch"  (focusin)="btnSearchFocusInHandler()"
-          btnCheckbox #btnTreeSearch>ツリー
+  <button type="button" class="toggle-tree" [(ngModel)]="isTreeSearch"
+          btnCheckbox tabindex="-1">ツリー
   </button>
   <button type="button" class="btn-short yellow" (click)="btnImageSearchHandler()" tabindex="-1">画像</button>
   <button type="button" class="btn-long font-weight-bold light-green" [ngClass]="{'searched': isSearched, 'search-checked': isSearchChecked }"
-          (click)="btnAbstractAndCancelHandler()">
+          (click)="btnAbstractAndCancelHandler()" (focusin)="btnSearchFocusInHandler()" #btnTreeSearch>
     抽出/抽出解除
   </button>
   <button type="button" class="btn-long font-weight-bold light-green" (click)="btnSearchAllHandler()">全タブ抽出</button>
