@@ -66,8 +66,10 @@ export class ResComponent implements OnInit {
   resContent = '';
   @Input() characterColors;
 
-  constructor(private cdRef: ChangeDetectorRef, private ref: ElementRef, private resService: ResService) {
+  private isEditorChanged;
 
+  constructor(private cdRef: ChangeDetectorRef, private ref: ElementRef, private resService: ResService) {
+    this.isEditorChanged = false;
   }
 
   ngOnInit(): void {
@@ -178,8 +180,9 @@ export class ResComponent implements OnInit {
 
   saveResHandler(event) {
     event.stopPropagation();
-    console.log(this.resContent);
-    this.resContent = this.resContent.replace(/<\/a><br>/gi, '<\/a>');
+    if (this.isEditorChanged) {
+      this.resContent = this.resContent.replace(/<\/a><br>/gi, '<\/a>');
+    }
     this.resContent = this.resContent.replace(/(<\/h3><p>)|(<\/p><p>)/gi, '<br>');
     this.resContent = this.resContent.replace(/(<p>&nbsp;)|(&nbsp;<\/p>)/gi, '<br>');
     this.resContent = this.resContent.replace(/(<img[^<]+>)|(<a[^<]+>)|(<\/a>)/ig, '');
@@ -216,7 +219,7 @@ export class ResComponent implements OnInit {
       this.resContent += tmpItem;
       index++;
     }
-    console.log(this.resContent);
+
     let remarkRes = this.txtRemarkRes;
     if (remarkRes.endsWith(';')){
       remarkRes = remarkRes.substr(0, remarkRes.length - 1);
@@ -230,6 +233,7 @@ export class ResComponent implements OnInit {
       }
     }
     this.item.isEdit = false;
+    this.isEditorChanged = false;
     this.cdRef.detectChanges();
 
     $('a.res-link').click((event) => {
@@ -515,5 +519,9 @@ export class ResComponent implements OnInit {
   btnInsertClickHandler($event: MouseEvent) {
     $event.stopPropagation();
     this.insertResEmitter.emit();
+  }
+
+  editorKeyUpHandler($event: KeyboardEvent) {
+    this.isEditorChanged = true;
   }
 }

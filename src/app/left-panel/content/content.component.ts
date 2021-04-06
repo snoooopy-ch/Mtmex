@@ -96,8 +96,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() insertSuffix: string;
   @Input() suffixNumber: string;
   @Input() titleUrl: any;
-  public
-  @Input() isCancelAllAction: boolean;
+  @Input()
+  public isCancelAllAction: boolean;
+  @Input()
+  public isSelectAllAction: boolean;
 
 
   public subscribers: any = {};
@@ -2245,7 +2247,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       let tmpResList = [...this.originalResList];
 
-      if (this.isCancelAllAction) {
+      if (this.isSelectAllAction) {
         this.isSearchChecked = false;
         this.isSearched = false;
         this.btnNotice.checked = false;

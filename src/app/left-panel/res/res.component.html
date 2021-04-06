@@ -126,6 +126,7 @@
     <ckeditor class="row-4" [editor]="Editor"
               [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar', 'MediaEmbed'] }"
               [(ngModel)]="resContent"
+              (keyup)="editorKeyUpHandler($event)"
               (click)="clickCKEditor($event)" >
     </ckeditor>
     <button class="btn-save btn-left-round" (click)="saveResHandler($event)">保存する</button>
