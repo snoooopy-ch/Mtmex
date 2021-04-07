@@ -308,8 +308,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           });
           this.isAllTab = true;
         }
+        let count = 0;
         for (const item of this.contentComponent) {
           item.showSelectedRes(value.display);
+          if (!value.display){
+            this.tabs[0].isFiltered = false;
+          }
+          count++;
         }
         if(this.contentComponent.length > 1) {
           setTimeout(this.cancelInitialStyle.bind(this), 2000);
@@ -844,6 +849,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       } else {
         this.isAllTab = true;
         for (const child of this.contentComponent) {
+          this.tabs[count].isFiltered = false;
           child.cancelSearchAll();
           count++;
         }
