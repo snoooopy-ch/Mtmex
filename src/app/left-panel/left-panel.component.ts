@@ -225,7 +225,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         $.LoadingOverlay('show', {
           imageColor: '#ffa07a',
         });
-        this.isAllTab = true;
+        // this.isAllTab = true;
         const numberSuffixes = value.originSreTitle.match(/(_|-)(\d+)/gi);
         let suffixNumber;
         if (numberSuffixes?.length > 0) {
@@ -260,8 +260,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           rightToken: true,
           statusToken: true
         });
-
-        setTimeout(this.cancelInitialStyle.bind(this), 2000);
+        this.cancelInitialStyle();
+        // setTimeout(this.cancelInitialStyle.bind(this), 2000);
       });
 
     });
@@ -275,7 +275,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           $.LoadingOverlay('show', {
             imageColor: '#ffa07a',
           });
-          this.isAllTab = true;
+          // this.isAllTab = true;
           let index = 1;
           let allResCount = 1;
           for (const loadData of value.data) {
@@ -284,7 +284,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
             index++;
           }
           allResCount += 1000;
-          setTimeout(this.cancelInitialStyle.bind(this), allResCount * 2);
+          this.cancelInitialStyle();
+          // setTimeout(this.cancelInitialStyle.bind(this), allResCount * 2);
         });
       }
     });
@@ -306,7 +307,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           $.LoadingOverlay('show', {
             imageColor: '#ffa07a',
           });
-          this.isAllTab = true;
+          // this.isAllTab = true;
         }
         let count = 0;
         for (const item of this.contentComponent) {
@@ -317,7 +318,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           count++;
         }
         if(this.contentComponent.length > 1) {
-          setTimeout(this.cancelInitialStyle.bind(this), 2000);
+          this.cancelInitialStyle();
+          // setTimeout(this.cancelInitialStyle.bind(this), 2000);
         }
       }
       value.token = false;
@@ -591,7 +593,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     $.LoadingOverlay('show', {
       imageColor: '#ffa07a',
     });
-    this.isAllTab = true;
+    // this.isAllTab = true;
     // const tabListItems = this.tabs;
     moveItemInArray(this.tabs, fromIndex, toIndex);
     moveItemInArray(this.tabGroup.tabs, fromIndex, toIndex);
@@ -617,7 +619,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
     const activeTab = this.contentComponent.find((e, i) => i === this.selectedTabIndex);
     activeTab.setHotKeys();
-    setTimeout(this.cancelInitialStyle.bind(this), 1000);
+    this.cancelInitialStyle();
+    // setTimeout(this.cancelInitialStyle.bind(this), 1000);
   }
 
   onDragover($event: DragEvent) {
@@ -840,14 +843,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     if (this.contentComponent.length) {
       if ($event.isSearch) {
         if (this.contentComponent.length > 1) {
-          this.isAllTab = true;
+          // this.isAllTab = true;
         }
         for (const child of this.contentComponent) {
           child.searchAll();
           count++;
         }
       } else {
-        this.isAllTab = true;
+        // this.isAllTab = true;
         for (const child of this.contentComponent) {
           this.tabs[count].isFiltered = false;
           child.cancelSearchAll();
@@ -856,12 +859,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       }
     }
     if (this.contentComponent.length > 1) {
-      setTimeout(this.cancelInitialStyle.bind(this), count * 650);
+      this.cancelInitialStyle();
+      // setTimeout(this.cancelInitialStyle.bind(this), count * 650);
     }
   }
 
   private cancelInitialStyle(){
-    this.isAllTab = false;
+    // this.isAllTab = false;
     $.LoadingOverlay('hide');
     if(!this.tabs[this.selectedTabIndex].active){
       this.tabs[this.selectedTabIndex].active = true;

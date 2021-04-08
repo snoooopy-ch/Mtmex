@@ -7,4 +7,22 @@
   .d-initial{
     display: initial;
   }
+
+  .tab-content{
+    position: relative;
+  }
+
+  .tab-content>.tab-pane {
+    display: inherit;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background: white;
+  }
+
+  .tab-content>.active{
+    display: inline-block;
+    z-index: 2;
+  }
 }
