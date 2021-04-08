@@ -313,7 +313,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         for (const item of this.contentComponent) {
           item.showSelectedRes(value.display);
           if (!value.display){
-            this.tabs[0].isFiltered = false;
+            this.tabs[count].isFiltered = false;
           }
           count++;
         }
