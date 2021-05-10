@@ -2339,7 +2339,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.clearSearchStatus(this.originalResList);
       this.resList = [...this.originalResList];
     }
-
+    this.filteredEmitter.emit(this.isSearchChecked);
     if (item !== null) {
       const index = this.resList.indexOf(item);
 

@@ -10,7 +10,7 @@
     <div class="label-res-kaihei">
 <!--      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"-->
 <!--        [ngStyle]="{'color': item.isNotice ? '#f00' : '#000'}">{{item.num}}</h4>      -->
-      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"
+      <h4 class="label-res-id-num border border-danger"
           [ngStyle]="{'background-color': item.numBackground}">{{item.num}}</h4>
       <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
     </div>
@@ -39,12 +39,15 @@
       <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
              [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
              [(ngModel)]="item.resSelect" value="candi4" (click)="candi4ClickHandler($event)">4</label>
-    <h4 class="label-res-name" [ngClass]="{'red': item.isInserted}" [innerHTML]="item.name | safeHtml" (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
-    <h4 class="res-date" (click)="item.isFiltered ? selectedNumHandler() : false">{{item.date}}</h4>
-    <h4 class="label-res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}"
-        (click)="item.isFiltered ? selectedNumHandler() : false">ID:</h4>
-    <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}" [innerHTML]="item.id | safeHtml"
-        (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
+    <h4 class="label-res-name border border-danger"
+        [ngClass]="{'red': item.isInserted}" [innerHTML]="item.name | safeHtml"></h4>
+    <h4 class="res-date border border-danger">{{item.date}}</h4>
+    <h4 class="label-res-id border border-danger border-right-0"
+        [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}">ID:</h4>
+<!--        (click)="item.isFiltered ? selectedNumHandler() : false">ID:</h4>-->
+    <h4 class="res-id border border-danger border-left-0"
+        [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}"
+        [innerHTML]="item.id | safeHtml"></h4>
     <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
     <button class="btn-cancel-all" (click)="btnCancelAllStatus($event)" [ngStyle]="{'background-color': cancelAllColor}"></button>
 
