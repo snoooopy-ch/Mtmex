@@ -17,6 +17,11 @@
 </div>
 <div class="width-100">
   <div class="sure-specific half-height">
+    <button class="sure-specific-btn btn-left-round" (click)="setDefaultPathHandler(6)">dat7</button>
+    <button class="sure-specific-btn" (click)="setDefaultPathHandler(7)">dat8</button>
+    <button class="sure-specific-btn btn-right-round" (click)="setDefaultPathHandler(8)">dat9</button>
+  </div>
+  <div class="sure-specific half-height">
     <button class="sure-specific-btn btn-left-round" (click)="setDefaultPathHandler(3)">dat4</button>
     <button class="sure-specific-btn" (click)="setDefaultPathHandler(4)">dat5</button>
     <button class="sure-specific-btn btn-right-round" (click)="setDefaultPathHandler(5)">dat6</button>
@@ -28,7 +33,7 @@
   </div>
   <input type="text" [(ngModel)]="txtDataFilePath">
   <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
-  <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～6読み込み</button>
+  <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～9読み込み</button>
   <button class="border-round load-multi-path" (click)="btnLoadMultiFiles()">dat選択読み込み</button>
 </div>
 <div class="save-container mt-1">
@@ -225,7 +230,7 @@
 </div>
 <div class="width-100">
   <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
-  <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～6読み込み</button>
+  <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～9読み込み</button>
 </div>
 <div class="save-container mt-1">
   <button class="btn-left-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>

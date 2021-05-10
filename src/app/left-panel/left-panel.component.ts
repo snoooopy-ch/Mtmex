@@ -279,11 +279,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           let index = 1;
           let allResCount = 1;
           for (const loadData of value.data) {
-            setTimeout(this.loadStatusFile.bind(this, loadData), allResCount * 2);
+            this.loadStatusFile(loadData);
             allResCount += loadData.resList.length;
             index++;
           }
-          allResCount += 1000;
+
           this.cancelInitialStyle();
           // setTimeout(this.cancelInitialStyle.bind(this), allResCount * 2);
         });

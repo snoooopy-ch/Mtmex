@@ -290,7 +290,7 @@ function adjustResList(isResSort, isMultiAnchor, isReplaceRes, isContinuousAncho
   }
   for (let resItem of resList) {
     if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
-      const re = new RegExp(sreTitle.replace(/\?/gi, '\\?'), 'gi');
+      const re = new RegExp(sreTitle.replace(/\?/gi, '\\?').replace(/\*/gi,'\\*'), 'gi');
       resItem.content = resItem.content.replace(re, '');
       resItem.id = resItem.id.replace(re, '');
       resItem.name = resItem.name.replace(re, '');
@@ -555,6 +555,20 @@ function readLines(line) {
   if (words.length > 4 && num === 0) {
     sreTitle = words[4].replace(/\r|\r|\r\n/gi, '');
     sreTitle = sreTitle.trim();
+    for (let i = 1; i < 41; i++) {
+      let search = settings[`dat_yomikomi_suretai_henkan${i}_mae`];
+      if (search === undefined || search.length < 1) {
+        continue;
+      }
+      search = search.replace(/\(/gi, '\\(');
+      search = search.replace(/\)/gi, '\\)');
+      const re = new RegExp(search, 'gi');
+      let replacement = settings[`dat_yomikomi_suretai_henkan${i}_ato`];
+      if (replacement === undefined || replacement.length < 1) {
+        continue;
+      }
+      sreTitle = sreTitle.replace(re, replacement);
+    }
     if (sreTitle.length === 0) {
       sreTitle = '_';
     }
@@ -568,9 +582,9 @@ function readLines(line) {
     search = search.replace(/\)/gi, '\\)');
     const re = new RegExp(search, 'gi');
     let replacement = settings[`toukoubi_ato${i}`];
-    words[2] = words[2].replace(re, replacement);
+    words[2] = words[2]?.replace(re, replacement);
   }
-  let date_and_id = words[2].split(' ID:');
+  let date_and_id = words[2]?.split(' ID:');
   let resItem = {
     num: -1,
     name: '',
@@ -621,8 +635,10 @@ function readLines(line) {
     let replacement = settings[`namae_ato${i}`];
     resItem.name = resItem.name.replace(re, replacement);
   }
-  resItem.date = date_and_id[0].replace(/(<([^>]+)>)/ig, '');
-  resItem.id = date_and_id[1] === undefined ? '' : date_and_id[1];
+  if (date_and_id) {
+    resItem.date = date_and_id[0].replace(/(<([^>]+)>)/ig, '');
+    resItem.id = date_and_id[1] === undefined ? '' : date_and_id[1];
+  }
   resItem.resMenu = settings['res_menu'];
   resItem.moveMarkColor = settings['res_move'];
   resItem.isMenuOpen = false;
@@ -654,24 +670,24 @@ function readLines(line) {
       }
       const re = new RegExp(`(?![^<>]*>)${search}`, 'gi');
       let replacement = settings[`honbun_ato${i}`];
-      tmp_str = tmp_str.replace(re, replacement);
+      tmp_str = tmp_str?.replace(re, replacement);
     }
-    tmp_str = tmp_str.replace(/<hr>|<br \/>/ig, '<br>');
+    tmp_str = tmp_str?.replace(/<hr>|<br \/>/ig, '<br>');
     const future_str = settings.mirai_anker.replace(/;/g, '|');
     const reFuture = new RegExp(`(${future_str})[^&]+&gt;&gt;\\d+|&gt;&gt;\\d+[^&]+(${future_str})`, 'gi');
 
-    let f_anchors = tmp_str.match(reFuture);
+    let f_anchors = tmp_str?.match(reFuture);
 
-    if (f_anchors !== null) {
+    if (f_anchors) {
       for (let f_anchor of f_anchors) {
         f_anchor = f_anchor.replace(/[^&]*&gt;&gt;(\d+)/gi, '$1');
         f_anchor = f_anchor.replace(/&gt;&gt;(\d+)([^&]*)/gi, '$1');
         resItem.futureAnchors.push(parseInt(f_anchor));
       }
     }
-    let anchor_str = tmp_str.replace(reFuture, '');
-    let anchors = anchor_str.match(/&gt;&gt;\d+/g);
-    if (anchors !== null) {
+    let anchor_str = tmp_str?.replace(reFuture, '');
+    let anchors = anchor_str?.match(/&gt;&gt;\d+/g);
+    if (anchors) {
       for (const anchor of anchors) {
         const anchorNum = parseInt(anchor.replace(/&gt;&gt;/g, ''));
         if (anchorNum > resItem.num) {
@@ -682,42 +698,44 @@ function readLines(line) {
       }
     }
 
-    let tmp_items = tmp_str.split(/<br>\s|<br>/ig);
+    let tmp_items = tmp_str?.split(/<br>\s|<br>/ig);
     let replaced_lines = [];
     let index = 0;
-    const re = new RegExp(sreTitle.replace(/\?/gi, '\\?'), 'gi');
-    for (let tmp_item of tmp_items) {
-      if (index > 0)
-        resItem.content += '<br>';
-      tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
-      tmp_item = tmp_item.replace(/(http|ttp):/ig, 'http:');
-      tmp_item = tmp_item.replace(/(http|ttp)s:/ig, 'https:');
-      if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
-        tmp_item = tmp_item.replace(re, '');
-      }
-
-      var expUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-      var expGifUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]\.gif)/ig;
-      var expImgUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]\.(jpg|jpeg|png|bmp))/ig;
-
-      if (new RegExp(expUrl).test(tmp_item)) {
-        if (new RegExp(expGifUrl).test(tmp_item)) {
-          if (settings.gif_stop) {
-            tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb gif-pause" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link" class="res-img-link res-gif-link">$1</a>`);
-          } else {
-            tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link">$1</a>`);
-          }
-          resItem.hasImage = true;
-        } else if (new RegExp(expImgUrl).test(tmp_item)) {
-          tmp_item = tmp_item.replace(expImgUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link">$1</a>`);
-          resItem.hasImage = true;
-        } else {
-          tmp_item = tmp_item.replace(expUrl, `<a class="res-link" href="$1">$1</a>`);
+    const re = new RegExp(sreTitle.replace(/\?/gi, '\\?').replace(/\*/gi,'\\*'), 'gi');
+    if (tmp_items) {
+      for (let tmp_item of tmp_items) {
+        if (index > 0)
+          resItem.content += '<br>';
+        tmp_item = tmp_item.replace(/(<([^>]+)>)/ig, '');
+        tmp_item = tmp_item.replace(/(http|ttp):/ig, 'http:');
+        tmp_item = tmp_item.replace(/(http|ttp)s:/ig, 'https:');
+        if (settings.jogai && sreTitle !== undefined && sreTitle.length > 0) {
+          tmp_item = tmp_item.replace(re, '');
         }
+
+        var expUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        var expGifUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]\.gif)/ig;
+        var expImgUrl = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]\.(jpg|jpeg|png|bmp))/ig;
+
+        if (new RegExp(expUrl).test(tmp_item)) {
+          if (new RegExp(expGifUrl).test(tmp_item)) {
+            if (settings.gif_stop) {
+              tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb gif-pause" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link" class="res-img-link res-gif-link">$1</a>`);
+            } else {
+              tmp_item = tmp_item.replace(expGifUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link res-gif-link">$1</a>`);
+            }
+            resItem.hasImage = true;
+          } else if (new RegExp(expImgUrl).test(tmp_item)) {
+            tmp_item = tmp_item.replace(expImgUrl, `<img src="$1" class="res-img-thumb" alt="" width="${settings.pict_hyouji}px"><a href="$1" class="res-img-link">$1</a>`);
+            resItem.hasImage = true;
+          } else {
+            tmp_item = tmp_item.replace(expUrl, `<a class="res-link" href="$1">$1</a>`);
+          }
+        }
+        resItem.content += tmp_item;
+        replaced_lines.push(tmp_item);
+        index++;
       }
-      resItem.content += tmp_item;
-      replaced_lines.push(tmp_item);
-      index++;
     }
     const strReContinue = /^\s*&gt;&gt;\d+\s*$/gi;
     let isAddContinue = false;

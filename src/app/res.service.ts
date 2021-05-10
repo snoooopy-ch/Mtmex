@@ -358,25 +358,25 @@ export class ResService {
       (match) => {
         return `<div>` + match + `</div><!-- div end -->`;
       });
-      console.log('111111111', content);
+
       const rel = this.generateRelValue(res.num);
 
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https?:)/ig,
       `$1 class="swipe" rel="${rel}" title="" target="_blank"$2`);
-      console.log('222222222', content);
+
       content = content.replace(/<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->((<br>)*<div><a href="https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)" class="swipe" rel="[^"]*" title="" target="_blank">https?:?\/\/[^>]*\.(?:png|jpg|jpeg|gif)<\/a><\/div><!-- div end -->)*/ig,
       (match) => {
         return `<div class="t_media2_mtm">` + match + `</div><!-- t_media2_mtm end -->`;
       });
-      console.log('333333333333', content);
+
       if (options.gazouReplaceUrl !== undefined && options.gazouReplaceUrl !== '') {
         content = content.replace(/(https?:\/\/[^"><]*)(\/[^"<>]*(\.jpg|\.gif|\.jpeg|\.png|\.bmp))/ig, `${options.gazouReplaceUrl}$2`);
       }
-      console.log('444444444444', content);
+
     } else {
       content = content.replace(/(\.jpg"|\.gif"|\.jpeg"|\.png"|\.bmp")(>https?:)/ig,
       `$1 target="_blank" class="image"$2`);
-      console.log('555555555', content);
+
     }
 
     const tmpContent = content.split('<br>');
