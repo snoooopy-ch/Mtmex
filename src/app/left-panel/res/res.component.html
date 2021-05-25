@@ -1,136 +1,160 @@
 <div class="res-container" (click)="clickResContainer($event)">
-  <div class="row-1">
-    <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor}">
-      <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-        <path d="M0 0h24v24H0z" fill="none"></path>
-      </svg>
-    </div>
-<!--    <div class="label-res-kaihei" (click)="clickResMenuKaihei($event)">-->
-    <div class="label-res-kaihei">
-<!--      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"-->
-<!--        [ngStyle]="{'color': item.isNotice ? '#f00' : '#000'}">{{item.num}}</h4>      -->
-      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"
-          [ngStyle]="{'background-color': item.numBackground}">{{item.num}}</h4>
-      <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
-    </div>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+        <div class="row-1">
+                <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)"
+                        (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor}">
+                        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                        d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                                </path>
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                        </svg>
+                </div>
+                <!--    <div class="label-res-kaihei" (click)="clickResMenuKaihei($event)">-->
+                <div class="label-res-kaihei">
+                        <!--      <h4 class="label-res-id-num" (click)="item.isFiltered ? selectedNumHandler() : false"-->
+                        <!--        [ngStyle]="{'color': item.isNotice ? '#f00' : '#000'}">{{item.num}}</h4>      -->
+                        <h4 class="label-res-id-num" [ngStyle]="{'background-color': item.numBackground}">{{item.num}}
+                        </h4>
+                        <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">
+                                ({{item.idNum}}/{{item.idTotal}})</h4>
+                </div>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
         'color': leftHightlight? item.idColor : '#464646'}">
-      <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="select" (click)="selectClickHandler($event)">選</label>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="select"
+                                (click)="selectClickHandler($event)">選</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
         'color': leftHightlight? item.idColor : '#464646'}">
-      <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="candi1" (click)="candi1ClickHandler($event)">1</label>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi1"
+                                (click)="candi1ClickHandler($event)">1</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
         'color': leftHightlight? item.idColor : '#464646'}">
-      <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="candi2" (click)="candi2ClickHandler($event)">2</label>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi2"
+                                (click)="candi2ClickHandler($event)">2</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
         'color': leftHightlight? item.idColor : '#464646'}">
-      <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="candi3" (click)="candi3ClickHandler($event)">3</label>
-    <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi3"
+                                (click)="candi3ClickHandler($event)">3</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
         'color': leftHightlight? item.idColor : '#464646'}">
-      <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
-             [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
-             [(ngModel)]="item.resSelect" value="candi4" (click)="candi4ClickHandler($event)">4</label>
-    <h4 class="label-res-name" [ngClass]="{'red': item.isInserted}" [innerHTML]="item.name | safeHtml" (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
-    <h4 class="res-date" (click)="item.isFiltered ? selectedNumHandler() : false">{{item.date}}</h4>
-    <h4 class="label-res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}"
-        (click)="item.isFiltered ? selectedNumHandler() : false">ID:</h4>
-    <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}" [innerHTML]="item.id | safeHtml"
-        (click)="item.isFiltered ? selectedNumHandler() : false"></h4>
-    <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">({{item.idNum}}/{{item.idTotal}})</h4>
-    <button class="btn-cancel-all" (click)="btnCancelAllStatus($event)" [ngStyle]="{'background-color': cancelAllColor}"></button>
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi4"
+                                (click)="candi4ClickHandler($event)">4</label>
+                <h4 class="label-res-name" [ngClass]="{'red': item.isInserted}" [innerHTML]="item.name | safeHtml"></h4>
+                <h4 class="res-date border">{{item.date}}</h4>
+                <h4 class="label-res-id border"
+                        [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}">ID:</h4>
+                <!--        (click)="item.isFiltered ? selectedNumHandler() : false">ID:</h4>-->
+                <h4 class="res-id border"
+                        [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}"
+                        [innerHTML]="item.id | safeHtml"></h4>
+                <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">
+                        ({{item.idNum}}/{{item.idTotal}})</h4>
+                <button class="btn-cancel-all" (click)="btnCancelAllStatus($event)"
+                        [ngStyle]="{'background-color': cancelAllColor}"></button>
 
-  </div>
-  <div class="row-2" *ngIf="((item.isMenuOpen == true || item.resMenu == 3) && !item.isCollapsed)">
-    <button class="btn-move btn-left-round" (click)="upOneHandler($event)">↑</button>
-    <button class="btn-move btn-right-round" (click)="downOneHandler($event)">↓</button>
-    <label class="radio-container" *ngFor="let sizeItem of resSizeList" (click)="lblResFontHandler($event)">
-      <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resFontSize"
-             value="{{sizeItem.value}}" (change)="sizeChangeHandler($event)">{{sizeItem.name}}
-    </label>
+        </div>
+        <div class="row-2" *ngIf="((item.isMenuOpen == true || item.resMenu == 3) && !item.isCollapsed)">
+                <button class="btn-move btn-left-round" (click)="upOneHandler($event)">↑</button>
+                <button class="btn-move btn-right-round" (click)="downOneHandler($event)">↓</button>
+                <label class="radio-container" *ngFor="let sizeItem of resSizeList" (click)="lblResFontHandler($event)">
+                        <input type="radio" name="res-font-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resFontSize"
+                                value="{{sizeItem.value}}" (change)="sizeChangeHandler($event)">{{sizeItem.name}}
+                </label>
 
-    <label class="radio-container">
-      <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="item.resColor" [checked]=true (change)="colorChangeHandler($event)" value="#000">
-      なし
-    </label>
-    <button class="btn-edit-text" (click)="btnInsertClickHandler($event)" >挿入</button>
-    <label class="radio-container" *ngFor="let colorItem of characterColors">
-      <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}"
-             [(ngModel)]="item.resColor" (change)="colorChangeHandler($event)" [value]="colorItem">
-      <span [ngStyle]="{'background-color':colorItem}"></span>
-    </label>
+                <label class="radio-container">
+                        <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resColor"
+                                [checked]=true (change)="colorChangeHandler($event)" value="#000">
+                        なし
+                </label>
+                <button class="btn-edit-text" (click)="btnInsertClickHandler($event)">挿入</button>
+                <label class="radio-container" *ngFor="let colorItem of characterColors">
+                        <input type="radio" name="res-color-{{tabIndex}}-{{resIndex}}" [(ngModel)]="item.resColor"
+                                (change)="colorChangeHandler($event)" [value]="colorItem">
+                        <span [ngStyle]="{'background-color':colorItem}"></span>
+                </label>
 
-    <button class="btn-move btn-left-round" (click)="toTopHandler($event)">▲</button>
-    <button class="btn-move btn-right-round" (click)="toBottomHandler($event)">▼</button>
-  </div >
-  <div class="row-3" *ngIf="((item.isMenuOpen == true || item.resMenu >= 2) && !item.isCollapsed)">
-    <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)" (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor, 'margin':'0'}">
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
-    </div>
-    <button class="btn-tree-main btn-left-round" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_sentaku}"
-            (click)="treeSelectHandler($event, 1)">T選択</button>
-    <button class="btn-tree-candi1" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku1}"
-            (click)="treeSelectHandler($event, 2)">T1</button>
-    <button class="btn-tree-candi2" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku2}"
-            (click)="treeSelectHandler($event, 3)">T2</button>
-    <button class="btn-tree-candi2" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku3}"
-            (click)="treeSelectHandler($event, 4)">T3</button>
-    <button class="btn-tree-candi2" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku4}"
-            (click)="treeSelectHandler($event, 5)">T4</button>
-    <button class="btn-cancel-tree" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_kaijo}"
-            (click)="treeSelectHandler($event, 0)">T解</button>
-    <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku1}"
-            (click)="catchIdHandler($event, 1)">ID1</button>
-    <button class="btn-catch-id2" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku2}"
-            (click)="catchIdHandler($event, 2)">ID2</button>
-    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku3}"
-            (click)="catchIdHandler($event, 3)">ID3</button>
-    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku4}"
-            (click)="catchIdHandler($event, 4)">ID4</button>
-    <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro1}"
-            (click)="btnChangeIdColorHandler($event, 1)">色1</button>
-    <button class="btn-catch-id2" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro2}"
-            (click)="btnChangeIdColorHandler($event, 2)">色2</button>
-    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro3}"
-            (click)="btnChangeIdColorHandler($event, 3)">色3</button>
-    <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro4}"
-            (click)="btnChangeIdColorHandler($event, 4)">色4</button>
-    <button class="btn-cancel-selected-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_kaijo}"
-            (click)="cancelSelectedIdHandler($event)">ID選</button>
-    <button class="btn-cancel-only-catch-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro_delete}"
-            (click)="cancelOnlyCatchIdHandler($event)">ID色</button>
-    <button class="btn-cancel-select-and-catch-id" [ngStyle]="{'background-color':btnBackgroundColors.color_id_kaijo_iro_delete}"
-            (click)="cancelSelectAndCatchIdHandler($event)">ID選択+色</button>
-    <button class="btn-hide-res" [ngStyle]="{'background-color':btnBackgroundColors.color_id_hihyouji}"
-            (click)="hideHandler($event)">非</button>
-    <button class="btn-copy-res" [ngStyle]="{'background-color':btnBackgroundColors.color_copy}"
-            (click)="duplicateHandler($event)">複</button>
-    <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
-            (click)="editShowHandler($event)" >編集</button>
-    <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
-            (click)="btnDeleteHandler($event)" >消</button>
-  </div>
-  <div class="row-4" *ngIf="item.isEdit && !item.isCollapsed" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}">
-    <ckeditor class="row-4" [editor]="Editor"
-              [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar', 'MediaEmbed'] }"
-              [(ngModel)]="resContent"
-              (keyup)="editorKeyUpHandler($event)"
-              (click)="clickCKEditor($event)" >
-    </ckeditor>
-    <button class="btn-save btn-left-round" (click)="saveResHandler($event)">保存する</button>
-    <button class="btn-cancel btn-right-round" (click)="cancelEditHandler($event)">キャンセル</button>
-  </div>
-  <div *ngIf="!item.isEdit && !item.isCollapsed" class="row-4" [innerHTML]="item.content | safeHtml" [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
+                <button class="btn-move btn-left-round" (click)="toTopHandler($event)">▲</button>
+                <button class="btn-move btn-right-round" (click)="toBottomHandler($event)">▼</button>
+        </div>
+        <div class="row-3" *ngIf="((item.isMenuOpen == true || item.resMenu >= 2) && !item.isCollapsed)">
+                <div class="drag-handle" cdkDragHandle (mousedown)="setDraggable(true)"
+                        (mouseleave)="setDraggable(false)" [ngStyle]="{'color': item.moveMarkColor, 'margin':'0'}">
+                        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                        d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                                </path>
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                        </svg>
+                </div>
+                <button class="btn-tree-main btn-left-round"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_sentaku}"
+                        (click)="treeSelectHandler($event, 1)">T選択</button>
+                <button class="btn-tree-candi1"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku1}"
+                        (click)="treeSelectHandler($event, 2)">T1</button>
+                <button class="btn-tree-candi2"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku2}"
+                        (click)="treeSelectHandler($event, 3)">T2</button>
+                <button class="btn-tree-candi2"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku3}"
+                        (click)="treeSelectHandler($event, 4)">T3</button>
+                <button class="btn-tree-candi2"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku4}"
+                        (click)="treeSelectHandler($event, 5)">T4</button>
+                <button class="btn-cancel-tree" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_kaijo}"
+                        (click)="treeSelectHandler($event, 0)">T解</button>
+                <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku1}"
+                        (click)="catchIdHandler($event, 1)">ID1</button>
+                <button class="btn-catch-id2" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku2}"
+                        (click)="catchIdHandler($event, 2)">ID2</button>
+                <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku3}"
+                        (click)="catchIdHandler($event, 3)">ID3</button>
+                <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku4}"
+                        (click)="catchIdHandler($event, 4)">ID4</button>
+                <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro1}"
+                        (click)="btnChangeIdColorHandler($event, 1)">色1</button>
+                <button class="btn-catch-id2" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro2}"
+                        (click)="btnChangeIdColorHandler($event, 2)">色2</button>
+                <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro3}"
+                        (click)="btnChangeIdColorHandler($event, 3)">色3</button>
+                <button class="btn-catch-id3" [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro4}"
+                        (click)="btnChangeIdColorHandler($event, 4)">色4</button>
+                <button class="btn-cancel-selected-id"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_id_kaijo}"
+                        (click)="cancelSelectedIdHandler($event)">ID選</button>
+                <button class="btn-cancel-only-catch-id"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_id_iro_delete}"
+                        (click)="cancelOnlyCatchIdHandler($event)">ID色</button>
+                <button class="btn-cancel-select-and-catch-id"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_id_kaijo_iro_delete}"
+                        (click)="cancelSelectAndCatchIdHandler($event)">ID選択+色</button>
+                <button class="btn-hide-res" [ngStyle]="{'background-color':btnBackgroundColors.color_id_hihyouji}"
+                        (click)="hideHandler($event)">非</button>
+                <button class="btn-copy-res" [ngStyle]="{'background-color':btnBackgroundColors.color_copy}"
+                        (click)="duplicateHandler($event)">複</button>
+                <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
+                        (click)="editShowHandler($event)">編集</button>
+                <button class="btn-edit-text" [ngStyle]="{'background-color':btnBackgroundColors.color_edit}"
+                        (click)="btnDeleteHandler($event)">消</button>
+        </div>
+        <div class="row-4" *ngIf="item.isEdit && !item.isCollapsed"
+                [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}">
+                <ckeditor class="row-4" [editor]="Editor"
+                        [config]="{toolbar: [], removePlugins: ['Image','ImageCaption','ImageStyle','ImageTextAlternative','ImageToolbar', 'MediaEmbed'] }"
+                        [(ngModel)]="resContent" (keyup)="editorKeyUpHandler($event)" (click)="clickCKEditor($event)">
+                </ckeditor>
+                <button class="btn-save btn-left-round" (click)="saveResHandler($event)">保存する</button>
+                <button class="btn-cancel btn-right-round" (click)="cancelEditHandler($event)">キャンセル</button>
+        </div>
+        <div *ngIf="!item.isEdit && !item.isCollapsed" class="row-4" [innerHTML]="item.content | safeHtml"
+                [ngStyle]="{'font-size': item.resFontSize, 'color': item.resColor}"> </div>
 </div>
