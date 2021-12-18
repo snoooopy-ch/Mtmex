@@ -49,12 +49,11 @@
                                 [(ngModel)]="item.resSelect" value="candi4"
                                 (click)="candi4ClickHandler($event)">4</label>
                 <h4 class="label-res-name" [ngClass]="{'red': item.isInserted}" [innerHTML]="item.name | safeHtml"></h4>
-                <h4 class="res-date border">{{item.date}}</h4>
-                <h4 class="label-res-id border"
+                <h4 class="res-date">{{item.date}}</h4>
+                <h4 class="label-res-id"
                         [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}">ID:</h4>
                 <!--        (click)="item.isFiltered ? selectedNumHandler() : false">ID:</h4>-->
-                <h4 class="res-id border"
-                        [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}"
+                <h4 class="res-id" [ngStyle]="{'background-color': item.idBackgroundColor, 'color': item.idColor}"
                         [innerHTML]="item.id | safeHtml"></h4>
                 <h4 class="label-res-cal1" [ngStyle]="{'color': item.idTotal >= idRed ? '#f00' : '#000'}">
                         ({{item.idNum}}/{{item.idTotal}})</h4>
