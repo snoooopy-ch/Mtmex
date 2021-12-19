@@ -25,6 +25,10 @@ export class ResService {
     candi2: 0,
     candi3: 0,
     candi4: 0,
+    candi5: 0,
+    candi6: 0,
+    candi7: 0,
+    candi8: 0,
     tabIndex: 0});
   public selectedRes = this.selectedResSource.asObservable();
   public bsSelectedTab = new BehaviorSubject<any>({
@@ -33,6 +37,10 @@ export class ResService {
     candi2: 0,
     candi3: 0,
     candi4: 0,
+    candi5: 0,
+    candi6: 0,
+    candi7: 0,
+    candi8: 0,
     totalCount: 0,
     tabIndex: 0});
   selectedTab = this.bsSelectedTab.asObservable();
@@ -56,6 +64,8 @@ export class ResService {
   allResMenu = this.bsAllResMenu.asObservable();
   resSortSource = new BehaviorSubject<any>({});
   sortRes = this.resSortSource.asObservable();
+  sinshukuCancelSource = new BehaviorSubject<any>({});
+  cancelSinshuku = this.sinshukuCancelSource.asObservable();
   surroundImageSource = new BehaviorSubject<any>({});
   surroundImage = this.surroundImageSource.asObservable();
   replaceNameSource = new BehaviorSubject<any>({});
@@ -189,6 +199,10 @@ export class ResService {
     this.resSortSource.next(value);
   }
 
+  setCancelSinshuku(value: any) {
+    this.sinshukuCancelSource.next(value);
+  }
+
   setPrintHtmlOnStatus(value: any) {
     this.printHtmlOnStatusSource.next(value);
   }
@@ -271,6 +285,54 @@ export class ResService {
       yobi += `<div class="yobi4">予備選択4</div>\n${yobi4}`;
     }
 
+    let yobi5 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi5'){
+        exists = true;
+        yobi5 += await this.printRes(res, options);
+      }
+    }
+
+    if (yobi5.length > 0){
+      yobi += `<div class="yobi5">予備選択5</div>\n${yobi5}`;
+    }
+
+    let yobi6 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi6'){
+        exists = true;
+        yobi6 += await this.printRes(res, options);
+      }
+    }
+
+    if (yobi6.length > 0){
+      yobi += `<div class="yobi6">予備選択6</div>\n${yobi5}`;
+    }
+
+    let yobi7 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi7'){
+        exists = true;
+        yobi7 += await this.printRes(res, options);
+      }
+    }
+
+    if (yobi7.length > 0){
+      yobi += `<div class="yobi7">予備選択7</div>\n${yobi7}`;
+    }
+
+    let yobi8 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi8'){
+        exists = true;
+        yobi8 += await this.printRes(res, options);
+      }
+    }
+
+    if (yobi8.length > 0){
+      yobi += `<div class="yobi8">予備選択8</div>\n${yobi8}`;
+    }
+
     if (!exists){
       htmlTag = '';
     }
@@ -332,11 +394,45 @@ export class ResService {
       }
     }
 
+    let yobi5 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi5'){
+        exists = true;
+        yobi5 += await this.printRes(res, options);
+      }
+    }
+
+    let yobi6 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi6'){
+        exists = true;
+        yobi6 += await this.printRes(res, options);
+      }
+    }
+
+    let yobi7 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi7'){
+        exists = true;
+        yobi7 += await this.printRes(res, options);
+      }
+    }
+
+    let yobi8 = ``;
+    for (const res of resList){
+      if (res.resSelect === 'candi8'){
+        exists = true;
+        yobi8 += await this.printRes(res, options);
+      }
+    }
+
     if (!exists){
       htmlTag = '';
     }
 
-    return {allHtml: htmlTag, yobi1Html: yobi1, yobi2Html: yobi2, yobi3Html: yobi3, yobi4Html: yobi4, tabName: tabName,  tabUrl: tabUrl};
+    return {allHtml: htmlTag, yobi1Html: yobi1, yobi2Html: yobi2, yobi3Html: yobi3, yobi4Html: yobi4, 
+      yobi5Html: yobi5, yobi6Html: yobi6, yobi7Html: yobi7, yobi8Html: yobi8, 
+      tabName: tabName,  tabUrl: tabUrl};
   }
 
   async printRes(res: ResItem, options){

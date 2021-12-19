@@ -140,6 +140,14 @@ export class ResComponent implements OnInit {
         this.candi3ClickHandler(event);
       } else if (this.item.resSelect === 'candi4'){
         this.candi4ClickHandler(event);
+      } else if (this.item.resSelect === 'candi5'){
+        this.candi5ClickHandler(event);
+      } else if (this.item.resSelect === 'candi6'){
+        this.candi6ClickHandler(event);
+      } else if (this.item.resSelect === 'candi7'){
+        this.candi7ClickHandler(event);
+      } else if (this.item.resSelect === 'candi8'){
+        this.candi8ClickHandler(event);
       }
     }
   }
@@ -410,6 +418,66 @@ export class ResComponent implements OnInit {
     } else {
       this.item.resSelect = 'candi4';
       colorIndex = 5;
+    }
+    this.setResStyle(colorIndex);
+    event.target.blur();
+    this.cdRef.detectChanges();
+  }
+
+  candi5ClickHandler(event) {
+    event.stopPropagation();
+    let colorIndex = 0;
+    if (this.item.resSelect === 'candi5') {
+      this.item.resSelect = 'none';
+      colorIndex = 0;
+    } else {
+      this.item.resSelect = 'candi5';
+      colorIndex = 6;
+    }
+    this.setResStyle(colorIndex);
+    event.target.blur();
+    this.cdRef.detectChanges();
+  }
+
+  candi6ClickHandler(event) {
+    event.stopPropagation();
+    let colorIndex = 0;
+    if (this.item.resSelect === 'candi6') {
+      this.item.resSelect = 'none';
+      colorIndex = 0;
+    } else {
+      this.item.resSelect = 'candi6';
+      colorIndex = 7;
+    }
+    this.setResStyle(colorIndex);
+    event.target.blur();
+    this.cdRef.detectChanges();
+  }
+
+  candi7ClickHandler(event) {
+    event.stopPropagation();
+    let colorIndex = 0;
+    if (this.item.resSelect === 'candi7') {
+      this.item.resSelect = 'none';
+      colorIndex = 0;
+    } else {
+      this.item.resSelect = 'candi7';
+      colorIndex = 8;
+    }
+    this.setResStyle(colorIndex);
+    event.target.blur();
+    this.cdRef.detectChanges();
+  }
+
+  candi8ClickHandler(event) {
+    event.stopPropagation();
+    let colorIndex = 0;
+    if (this.item.resSelect === 'candi8') {
+      this.item.resSelect = 'none';
+      colorIndex = 0;
+    } else {
+      this.item.resSelect = 'candi8';
+      colorIndex = 9;
     }
     this.setResStyle(colorIndex);
     event.target.blur();

@@ -30,6 +30,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   candi2Count = 0;
   candi3Count = 0;
   candi4Count = 0;
+  candi5Count = 0;
+  candi6Count = 0;
+  candi7Count = 0;
+  candi8Count = 0;
   totalCount = 0;
   selectCommand = '';
   selectCommandWithButton = '';
@@ -43,6 +47,7 @@ export class RightPanelComponent implements OnInit, OnDestroy {
   isContinuousAnchor: any;
   notMoveFutureAnchor: any;
   sortCommand: any;
+  sinshukuCancelCommand: any;
   loadDatPath: string;
   loadStatusPath: string;
   isReplaceName: boolean;
@@ -67,7 +72,11 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       candi1: 0,
       candi2: 0,
       candi3: 0,
-      candi4: 0
+      candi4: 0,
+      candi5: 0,
+      candi6: 0,
+      candi7: 0,
+      candi8: 0
     };
   }
 
@@ -132,6 +141,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       this.candi2Count = value.candi2;
       this.candi3Count = value.candi3;
       this.candi4Count = value.candi4;
+      this.candi5Count = value.candi5;
+      this.candi6Count = value.candi6;
+      this.candi7Count = value.candi7;
+      this.candi8Count = value.candi8;
       this.totalCount = value.totalCount;
       this.title = value.title;
       this.hiddenIds = value.hiddenIds;
@@ -145,6 +158,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         this.candi2Count = value.candi2;
         this.candi3Count = value.candi3;
         this.candi4Count = value.candi4;
+        this.candi5Count = value.candi5;
+        this.candi6Count = value.candi6;
+        this.candi7Count = value.candi7;
+        this.candi8Count = value.candi8;
         this.cdRef.detectChanges();
         value.rightToken = false;
       }
@@ -447,6 +464,10 @@ export class RightPanelComponent implements OnInit, OnDestroy {
         candi2Count: this.candi2Count,
         candi3Count: this.candi3Count,
         candi4Count: this.candi4Count,
+        candi5Count: this.candi5Count,
+        candi6Count: this.candi6Count,
+        candi7Count: this.candi7Count,
+        candi8Count: this.candi8Count,
         isSaveOfLoadFile: this.isSaveOfLoadFile
       });
     }
@@ -516,6 +537,16 @@ export class RightPanelComponent implements OnInit, OnDestroy {
       });
     }
     this.sortCommand = '';
+  }
+
+  btnSinshukuCancelResHandler() {
+    if (this.sinshukuCancelCommand === 'num-cancel-shinshuku') {
+      this.resService.setCancelSinshuku({
+        tabIndex: this.tabIndex,
+        token: true
+      });
+    }
+    this.sinshukuCancelCommand = '';
   }
 
   btnSetAllSelectedHandler($event) {

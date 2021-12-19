@@ -112,6 +112,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   candi2Count: number;
   candi3Count: number;
   candi4Count: number;
+  candi5Count: number;
+  candi6Count: number;
+  candi7Count: number;
+  candi8Count: number;
   currentScrollIndex: number;
   originalResList: ResItem[];
   isTreeSearch: boolean;
@@ -137,6 +141,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.candi2Count = 0;
     this.candi3Count = 0;
     this.candi4Count = 0;
+    this.candi5Count = 0;
+    this.candi6Count = 0;
+    this.candi7Count = 0;
+    this.candi8Count = 0;
     this.currentScrollIndex = 0;
     this.isBackup = true;
     this.isSaveStatus = false;
@@ -169,6 +177,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.candi2Count = value.candi2;
         this.candi3Count = value.candi3;
         this.candi4Count = value.candi4;
+        this.candi5Count = value.candi5;
+        this.candi6Count = value.candi6;
+        this.candi7Count = value.candi7;
+        this.candi8Count = value.candi8;
         this.cdRef.detectChanges();
       }
     });
@@ -228,7 +240,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
             || i.resSelect === 'candi1'
             || i.resSelect === 'candi2'
             || i.resSelect === 'candi3'
-            || i.resSelect === 'candi4').length < 1) {
+            || i.resSelect === 'candi4'
+            || i.resSelect === 'candi5'
+            || i.resSelect === 'candi6'
+            || i.resSelect === 'candi7'
+            || i.resSelect === 'candi8').length < 1) {
           return;
         }
         for (const res of saveResList) {
@@ -279,6 +295,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.candi2Count = value.data.candi2Count;
         this.candi3Count = value.data.candi3Count;
         this.candi4Count = value.data.candi4Count;
+        this.candi5Count = value.data.candi5Count;
+        this.candi6Count = value.data.candi6Count;
+        this.candi7Count = value.data.candi7Count;
+        this.candi8Count = value.data.candi8Count;
       }
     });
 
@@ -293,6 +313,16 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.tabIndex === value.tabIndex && value.token) {
         this.resList.sort((a, b) => {
           return a.num - b.num;
+        });
+        this.cdRef.detectChanges();
+        value.token = false;
+      }
+    });
+
+    this.subscribers.cancelSinshuku = this.resService.cancelSinshuku.subscribe((value) => {
+      if (this.tabIndex === value.tabIndex && value.token) {
+        this.resList.forEach(res => {
+          res.isCollapsed = false;
         });
         this.cdRef.detectChanges();
         value.token = false;
@@ -314,6 +344,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscribers.status.unsubscribe();
     this.subscribers.resMenu.unsubscribe();
     this.subscribers.sortRes.unsubscribe();
+    this.subscribers.cancelSinshuku.unsubscribe();
     this.resList.length = 0;
 
     if (this.originalResList !== undefined) {
@@ -412,6 +443,70 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
             this.resList[this.hovered].resBackgroundColor = this.backgroundColors[5];
             this.selectedRes(this.resList[this.hovered],
               {selected: 'candi4'});
+          }
+        }
+        return false;
+      }));
+
+      // 予備選択ボタン5
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi5, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi5') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'none'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[6];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'candi5'});
+          }
+        }
+        return false;
+      }));
+
+      // 予備選択ボタン6
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi6, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi6') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'none'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[7];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'candi6'});
+          }
+        }
+        return false;
+      }));
+
+      // 予備選択ボタン7
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi7, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi7') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'none'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[8];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'candi7'});
+          }
+        }
+        return false;
+      }));
+
+      // 予備選択ボタン8
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.yobi8, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          if (this.resList[this.hovered].resSelect === 'candi8') {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[0];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'none'});
+          } else {
+            this.resList[this.hovered].resBackgroundColor = this.backgroundColors[9];
+            this.selectedRes(this.resList[this.hovered],
+              {selected: 'candi8'});
           }
         }
         return false;
@@ -601,6 +696,42 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi4, (event: KeyboardEvent): boolean => {
         if (this.hovered >= 0) {
           this.selectedTreeRes(this.hovered, {select: 5, resBackgroundColor: this.backgroundColors[5]});
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ツリー予備選択5（T5）
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi5, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 6, resBackgroundColor: this.backgroundColors[6]});
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ツリー予備選択6（T6）
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi6, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 7, resBackgroundColor: this.backgroundColors[7]});
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ツリー予備選択7（T7）
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi7, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 8, resBackgroundColor: this.backgroundColors[8]});
+          this.cdRef.detectChanges();
+        }
+        return false;
+      }));
+
+      // ツリー予備選択8（T4）
+      this.hotkeysService.add(new Hotkey(this.subHotKeys.tree_yobi8, (event: KeyboardEvent): boolean => {
+        if (this.hovered >= 0) {
+          this.selectedTreeRes(this.hovered, {select: 9, resBackgroundColor: this.backgroundColors[9]});
           this.cdRef.detectChanges();
         }
         return false;
@@ -999,7 +1130,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
             || (item.resSelect === 'candi1' && this.moveOption.sentaku_idou1)
             || (item.resSelect === 'candi2' && this.moveOption.sentaku_idou2)
             || (item.resSelect === 'candi3' && this.moveOption.sentaku_idou3)
-            || (item.resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
+            || (item.resSelect === 'candi4' && this.moveOption.sentaku_idou4)
+            || (item.resSelect === 'candi5' && this.moveOption.sentaku_idou5)
+            || (item.resSelect === 'candi6' && this.moveOption.sentaku_idou6)
+            || (item.resSelect === 'candi7' && this.moveOption.sentaku_idou7)
+            || (item.resSelect === 'candi8' && this.moveOption.sentaku_idou8)) {
             this.virtualScroller.scrollToIndex(index);
             this.currentScrollIndex = index;
             break;
@@ -1015,7 +1150,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
               || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)
               || (this.resList[i].resSelect === 'candi3' && this.moveOption.sentaku_idou3)
-              || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
+              || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)
+              || (this.resList[i].resSelect === 'candi5' && this.moveOption.sentaku_idou5)
+              || (this.resList[i].resSelect === 'candi6' && this.moveOption.sentaku_idou6)
+              || (this.resList[i].resSelect === 'candi7' && this.moveOption.sentaku_idou7)
+              || (this.resList[i].resSelect === 'candi8' && this.moveOption.sentaku_idou8)) {
               this.currentScrollIndex = i;
               this.virtualScroller.scrollToIndex(i);
               break;
@@ -1030,7 +1169,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
               || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
               || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)
               || (this.resList[i].resSelect === 'candi3' && this.moveOption.sentaku_idou3)
-              || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
+              || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)
+              || (this.resList[i].resSelect === 'candi5' && this.moveOption.sentaku_idou5)
+              || (this.resList[i].resSelect === 'candi6' && this.moveOption.sentaku_idou6)
+              || (this.resList[i].resSelect === 'candi7' && this.moveOption.sentaku_idou7)
+              || (this.resList[i].resSelect === 'candi8' && this.moveOption.sentaku_idou8)) {
               this.virtualScroller.scrollToIndex(i);
               this.currentScrollIndex = i;
               break;
@@ -1051,7 +1194,11 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
             || (this.resList[i].resSelect === 'candi1' && this.moveOption.sentaku_idou1)
             || (this.resList[i].resSelect === 'candi2' && this.moveOption.sentaku_idou2)
             || (this.resList[i].resSelect === 'candi3' && this.moveOption.sentaku_idou3)
-            || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)) {
+            || (this.resList[i].resSelect === 'candi4' && this.moveOption.sentaku_idou4)
+            || (this.resList[i].resSelect === 'candi5' && this.moveOption.sentaku_idou5)
+            || (this.resList[i].resSelect === 'candi6' && this.moveOption.sentaku_idou6)
+            || (this.resList[i].resSelect === 'candi7' && this.moveOption.sentaku_idou7)
+            || (this.resList[i].resSelect === 'candi8' && this.moveOption.sentaku_idou8)) {
             this.currentScrollIndex = i;
             this.virtualScroller.scrollToIndex(i);
             break;
@@ -1228,6 +1375,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
     this.candi2Count = this.originalResList.filter(item => item.resSelect === 'candi2').length;
     this.candi3Count = this.originalResList.filter(item => item.resSelect === 'candi3').length;
     this.candi4Count = this.originalResList.filter(item => item.resSelect === 'candi4').length;
+    this.candi5Count = this.originalResList.filter(item => item.resSelect === 'candi5').length;
+    this.candi6Count = this.originalResList.filter(item => item.resSelect === 'candi6').length;
+    this.candi7Count = this.originalResList.filter(item => item.resSelect === 'candi7').length;
+    this.candi8Count = this.originalResList.filter(item => item.resSelect === 'candi8').length;
 
     this.cdRef.detectChanges();
     this.changeResCountEmitter.emit();
@@ -1238,6 +1389,10 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
       candi2: this.candi2Count,
       candi3: this.candi3Count,
       candi4: this.candi4Count,
+      candi5: this.candi5Count,
+      candi6: this.candi6Count,
+      candi7: this.candi7Count,
+      candi8: this.candi8Count,
       tabIndex: this.tabIndex,
       title: this.tabName,
       rightToken: true,
@@ -1275,7 +1430,7 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectedTreeRes(index: number, $event: any) {
-    const selectKeys = ['none', 'select', 'candi1', 'candi2', 'candi3', 'candi4'];
+    const selectKeys = ['none', 'select', 'candi1', 'candi2', 'candi3', 'candi4', 'candi5', 'candi6', 'candi7', 'candi8'];
     if (index < this.resList.length && (this.resList[index + 1]?.isAdded || this.resList[index]?.isAdded)) {
       this.resList[index].resSelect = selectKeys[$event.select];
       this.resList[index].resBackgroundColor = $event.resBackgroundColor;
@@ -1403,6 +1558,22 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
             res.resSelect = 'candi4';
             res.resBackgroundColor = this.backgroundColors[5];
             break;
+          case 'candi5':
+            res.resSelect = 'candi5';
+            res.resBackgroundColor = this.backgroundColors[6];
+            break;
+          case 'candi6':
+            res.resSelect = 'candi6';
+            res.resBackgroundColor = this.backgroundColors[7];
+            break;
+          case 'candi7':
+            res.resSelect = 'candi7';
+            res.resBackgroundColor = this.backgroundColors[8];
+            break;
+          case 'candi8':
+            res.resSelect = 'candi8';
+            res.resBackgroundColor = this.backgroundColors[9];
+            break;
           case 'select-image':
             if (res.hasImage) {
               res.resSelect = 'select';
@@ -1433,6 +1604,30 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
               res.resBackgroundColor = this.backgroundColors[5];
             }
             break;
+          case 'candi5-image':
+            if (res.hasImage) {
+              res.resSelect = 'candi5';
+              res.resBackgroundColor = this.backgroundColors[6];
+            }
+            break;
+          case 'candi6-image':
+            if (res.hasImage) {
+              res.resSelect = 'candi6';
+              res.resBackgroundColor = this.backgroundColors[7];
+            }
+            break;
+          case 'candi7-image':
+            if (res.hasImage) {
+              res.resSelect = 'candi7';
+              res.resBackgroundColor = this.backgroundColors[8];
+            }
+            break;
+          case 'candi8-image':
+            if (res.hasImage) {
+              res.resSelect = 'candi8';
+              res.resBackgroundColor = this.backgroundColors[9];
+            }
+            break;
           case 'cancel-select':
             if (res.resSelect === 'select') {
               res.resSelect = 'none';
@@ -1459,6 +1654,30 @@ export class ContentComponent implements OnInit, OnDestroy, AfterViewInit {
             break;
           case 'cancel-candi4':
             if (res.resSelect === 'candi4') {
+              res.resSelect = 'none';
+              res.resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi5':
+            if (res.resSelect === 'candi5') {
+              res.resSelect = 'none';
+              res.resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi6':
+            if (res.resSelect === 'candi6') {
+              res.resSelect = 'none';
+              res.resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi7':
+            if (res.resSelect === 'candi7') {
+              res.resSelect = 'none';
+              res.resBackgroundColor = this.backgroundColors[0];
+            }
+            break;
+          case 'cancel-candi8':
+            if (res.resSelect === 'candi8') {
               res.resSelect = 'none';
               res.resBackgroundColor = this.backgroundColors[0];
             }

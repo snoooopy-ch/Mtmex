@@ -19,35 +19,59 @@
                                 ({{item.idNum}}/{{item.idTotal}})</h4>
                 </div>
                 <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
-        'color': leftHightlight? item.idColor : '#464646'}">
+                        'color': leftHightlight? item.idColor : '#464646'}">
                         <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
                                 [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
                                 [(ngModel)]="item.resSelect" value="select"
                                 (click)="selectClickHandler($event)">選</label>
                 <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
-        'color': leftHightlight? item.idColor : '#464646'}">
+                        'color': leftHightlight? item.idColor : '#464646'}">
                         <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
                                 [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
                                 [(ngModel)]="item.resSelect" value="candi1"
                                 (click)="candi1ClickHandler($event)">1</label>
                 <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
-        'color': leftHightlight? item.idColor : '#464646'}">
+                        'color': leftHightlight? item.idColor : '#464646'}">
                         <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
                                 [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
                                 [(ngModel)]="item.resSelect" value="candi2"
                                 (click)="candi2ClickHandler($event)">2</label>
                 <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
-        'color': leftHightlight? item.idColor : '#464646'}">
+                        'color': leftHightlight? item.idColor : '#464646'}">
                         <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
                                 [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
                                 [(ngModel)]="item.resSelect" value="candi3"
                                 (click)="candi3ClickHandler($event)">3</label>
                 <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
-        'color': leftHightlight? item.idColor : '#464646'}">
+                        'color': leftHightlight? item.idColor : '#464646'}">
                         <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
                                 [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
                                 [(ngModel)]="item.resSelect" value="candi4"
                                 (click)="candi4ClickHandler($event)">4</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        'color': leftHightlight? item.idColor : '#464646'}">
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi5"
+                                (click)="candi5ClickHandler($event)">5</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        'color': leftHightlight? item.idColor : '#464646'}">
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi6"
+                                (click)="candi6ClickHandler($event)">6</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        'color': leftHightlight? item.idColor : '#464646'}">
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi7"
+                                (click)="candi7ClickHandler($event)">7</label>
+                <label class="radio-container select-label" [ngStyle]="{'background-color': leftHightlight? item.idBackgroundColor : 'transparent',
+                        'color': leftHightlight? item.idColor : '#464646'}">
+                        <input type="radio" name="res-select-{{tabIndex}}-{{resIndex}}"
+                                [ngStyle]="{'border-color': leftHightlight? item.idColor : '#464646'}"
+                                [(ngModel)]="item.resSelect" value="candi8"
+                                (click)="candi8ClickHandler($event)">8</label>
                 <h4 class="label-res-name" [ngClass]="{'red': item.isInserted}" [innerHTML]="item.name | safeHtml"></h4>
                 <h4 class="res-date">{{item.date}}</h4>
                 <h4 class="label-res-id"
@@ -109,6 +133,18 @@
                 <button class="btn-tree-candi2"
                         [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku4}"
                         (click)="treeSelectHandler($event, 5)">T4</button>
+                <button class="btn-tree-candi2"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku5}"
+                        (click)="treeSelectHandler($event, 6)">T5</button>
+                <button class="btn-tree-candi2"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku6}"
+                        (click)="treeSelectHandler($event, 7)">T6</button>
+                <button class="btn-tree-candi2"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku7}"
+                        (click)="treeSelectHandler($event, 8)">T7</button>
+                <button class="btn-tree-candi2"
+                        [ngStyle]="{'background-color':btnBackgroundColors.color_tree_yobi_sentaku8}"
+                        (click)="treeSelectHandler($event, 9)">T8</button>
                 <button class="btn-cancel-tree" [ngStyle]="{'background-color':btnBackgroundColors.color_tree_kaijo}"
                         (click)="treeSelectHandler($event, 0)">T解</button>
                 <button class="btn-catch-id1" [ngStyle]="{'background-color':btnBackgroundColors.color_id_sentaku1}"

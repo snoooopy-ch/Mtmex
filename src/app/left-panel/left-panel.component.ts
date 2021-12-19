@@ -75,7 +75,16 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   isTwitterUrl: boolean;
   private isWait: boolean;
   public isAllTab: boolean;
-  public allCount: { select: number; candi3: number; candi4: number; candi1: number; candi2: number };
+  public allCount: { 
+    select: number; 
+    candi3: number; 
+    candi4: number; 
+    candi1: number; 
+    candi2: number; 
+    candi5: number; 
+    candi6: number; 
+    candi7: number; 
+    candi8: number };
 
   constructor(private resService: ResService, private cdr: ChangeDetectorRef, private titleService: Title,
               private hotkeysService: HotkeysService, private zone: NgZone) {
@@ -85,7 +94,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       candi1: 0,
       candi2: 0,
       candi3: 0,
-      candi4: 0
+      candi4: 0,
+      candi5: 0,
+      candi6: 0,
+      candi7: 0,
+      candi8: 0
     };
   }
 
@@ -102,13 +115,23 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.settings.YobiSentaku1_back,
         this.settings.YobiSentaku2_back,
         this.settings.YobiSentaku3_back,
-        this.settings.YobiSentaku4_back];
+        this.settings.YobiSentaku4_back,
+        this.settings.YobiSentaku5_back,
+        this.settings.YobiSentaku6_back,
+        this.settings.YobiSentaku7_back,
+        this.settings.YobiSentaku8_back,
+      ];
       this.hovergroundColors = [this.settings.Mouseover,
         this.settings.Sentaku_MouseOver,
         this.settings.Yobi1_MouseOver,
         this.settings.Yobi2_MouseOver,
         this.settings.Yobi3_MouseOver,
-        this.settings.Yobi4_MouseOver];
+        this.settings.Yobi4_MouseOver,
+        this.settings.Yobi5_MouseOver,
+        this.settings.Yobi6_MouseOver,
+        this.settings.Yobi7_MouseOver,
+        this.settings.Yobi8_MouseOver,
+      ];
       this.leftBorder = `6px solid ${this.settings.Left_border}`;
       this.resLeftMargin = this.settings.anker_left;
       this.idStyles = [{color: '#000', background: 'transparent', classNoSelect: ''},
@@ -147,9 +170,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.leftHightlight = this.settings.Left_highlight;
       this.subHotKeys = [];
       if (value.hasOwnProperty('sentaku_no1')) {
-        const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'yobi3', 'yobi4', 'up', 'down'
+        const arrayKeys = ['sentaku_no1', 'sentaku_no2', 'sentaku_no3', 'yobi1', 'yobi2', 'yobi3', 'yobi4', 'yobi5', 'yobi6', 'yobi7', 'yobi8', 'up', 'down'
           , 'big0', 'big1', 'big2', 'nasi', 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8'
-          , 'color9', 'color10', 'tree_sentaku', 'tree_yobi1', 'tree_yobi2', 'tree_yobi3', 'tree_yobi4', 'tree_kaijo'
+          , 'color9', 'color10', 'tree_sentaku', 'tree_yobi1', 'tree_yobi2', 'tree_yobi3', 'tree_yobi4'
+          , 'tree_yobi5', 'tree_yobi6', 'tree_yobi7', 'tree_yobi8', 'tree_kaijo'
           , 'id1', 'id2', 'id3', 'id4', 'id_iro1', 'id_iro2', 'id_iro3', 'id_iro4', 'id_kaijo', 'id_irokesi', 'id_kaijo_irokesi'
           , 'id_hihyouji', 'henshuu', 'sakujo', 'menu_kaihei', 'chuumoku', 'chuushutu_kaijo', 'res_area_move_top', 'res_area_move_bottom'
           , 'res_area_move1a', 'res_area_move1b', 'res_area_move2a', 'res_area_move2b', 'sentaku_res_gamen'
@@ -204,6 +228,13 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.txtRemarkRes = this.settings.chuui;
       }
 
+      console.log('top_bar');
+      console.log(this.settings.top_bar);
+      console.log(this.settings.sentaku_idou1);
+      console.log(this.settings.chuui);
+      console.log(this.settings['font-size3']);
+      console.log(JSON.stringify(this.settings));
+
       if (this.settings.top_bar !== undefined) {
         this.resTopBar = `1px solid ${this.settings.top_bar}`;
       }
@@ -248,6 +279,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         const candi2Count = value.resList.filter(item => item.resSelect === 'candi2').length;
         const candi3Count = value.resList.filter(item => item.resSelect === 'candi3').length;
         const candi4Count = value.resList.filter(item => item.resSelect === 'candi4').length;
+        const candi5Count = value.resList.filter(item => item.resSelect === 'candi5').length;
+        const candi6Count = value.resList.filter(item => item.resSelect === 'candi6').length;
+        const candi7Count = value.resList.filter(item => item.resSelect === 'candi7').length;
+        const candi8Count = value.resList.filter(item => item.resSelect === 'candi8').length;
 
         this.resService.setSelectedRes({
           select: selectCount,
@@ -255,6 +290,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           candi2: candi2Count,
           candi3: candi3Count,
           candi4: candi4Count,
+          candi5: candi5Count,
+          candi6: candi6Count,
+          candi7: candi7Count,
+          candi8: candi8Count,
           tabIndex: this.selectedTabIndex,
           title: this.tabs[this.selectedTabIndex].title,
           rightToken: true,
@@ -465,6 +504,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       const candi2Count = loadResList.filter(item => item.resSelect === 'candi2').length;
       const candi3Count = loadResList.filter(item => item.resSelect === 'candi3').length;
       const candi4Count = loadResList.filter(item => item.resSelect === 'candi4').length;
+      const candi5Count = loadResList.filter(item => item.resSelect === 'candi5').length;
+      const candi6Count = loadResList.filter(item => item.resSelect === 'candi6').length;
+      const candi7Count = loadResList.filter(item => item.resSelect === 'candi7').length;
+      const candi8Count = loadResList.filter(item => item.resSelect === 'candi8').length;
 
       this.resService.setSelectedRes({
         select: selectCount,
@@ -472,6 +515,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         candi2: candi2Count,
         candi3: candi3Count,
         candi4: candi4Count,
+        candi5: candi5Count,
+        candi6: candi6Count,
+        candi7: candi7Count,
+        candi8: candi8Count,
         tabIndex: this.selectedTabIndex,
         title: this.tabs[this.selectedTabIndex].title,
         rightToken: true,
@@ -527,6 +574,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         candi2: 0,
         candi3: 0,
         candi4: 0,
+        candi5: 0,
+        candi6: 0,
+        candi7: 0,
+        candi8: 0,
         tabIndex: 0,
         title: '',
         rightToken: true,
@@ -553,6 +604,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       candi2: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi2').length,
       candi3: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi3').length,
       candi4: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi4').length,
+      candi5: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi5').length,
+      candi6: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi6').length,
+      candi7: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi7').length,
+      candi8: this.tabs[this.selectedTabIndex].resList.filter(item => item.resSelect === 'candi8').length,
       totalCount: this.tabs[this.selectedTabIndex].originalResList.length,
       tabIndex: this.selectedTabIndex,
       title: this.tabs[this.selectedTabIndex].title,
@@ -606,6 +661,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
           candi2: this.tabs[index].resList.filter(item => item.resSelect === 'candi2').length,
           candi3: this.tabs[index].resList.filter(item => item.resSelect === 'candi3').length,
           candi4: this.tabs[index].resList.filter(item => item.resSelect === 'candi4').length,
+          candi5: this.tabs[index].resList.filter(item => item.resSelect === 'candi5').length,
+          candi6: this.tabs[index].resList.filter(item => item.resSelect === 'candi6').length,
+          candi7: this.tabs[index].resList.filter(item => item.resSelect === 'candi7').length,
+          candi8: this.tabs[index].resList.filter(item => item.resSelect === 'candi8').length,
           totalCount: this.tabs[index].resList.length,
           tabIndex: index,
           title: this.tabs[index].title
@@ -705,6 +764,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
     let yobi2Html = '';
     let yobi3Html = '';
     let yobi4Html = '';
+    let yobi5Html = '';
+    let yobi6Html = '';
+    let yobi7Html = '';
+    let yobi8Html = '';
     let index = 0;
     let currentTab = 0;
     let allCount = 0;
@@ -744,7 +807,9 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         }
 
         if (oneHtmlTag.allHtml.length > 0 || oneHtmlTag.yobi1Html.length > 0 || oneHtmlTag.yobi2Html.length > 0
-          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0 || oneHtmlTag.tabUrl !== '') {
+          || oneHtmlTag.yobi3Html.length > 0 || oneHtmlTag.yobi4Html.length > 0 || oneHtmlTag.yobi5Html.length > 0 
+          || oneHtmlTag.yobi6Html.length > 0|| oneHtmlTag.yobi7Html.length > 0 
+          || oneHtmlTag.yobi8Html.length > 0 || oneHtmlTag.tabUrl !== '') {
           tabUrl += oneHtmlTag.tabUrl;
         }
 
@@ -754,6 +819,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         yobi2Html += oneHtmlTag.yobi2Html;
         yobi3Html += oneHtmlTag.yobi3Html;
         yobi4Html += oneHtmlTag.yobi4Html;
+        yobi5Html += oneHtmlTag.yobi5Html;
+        yobi6Html += oneHtmlTag.yobi6Html;
+        yobi7Html += oneHtmlTag.yobi7Html;
+        yobi8Html += oneHtmlTag.yobi8Html;
 
       }
       if (tabItem.active) {
@@ -781,6 +850,22 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
 
     if (yobi4Html.length > 0) {
       htmlTag += `<div class="yobi4">予備選択4</div>\n${yobi4Html}`;
+    }
+
+    if (yobi5Html.length > 0) {
+      htmlTag += `<div class="yobi5">予備選択1</div>\n${yobi5Html}`;
+    }
+
+    if (yobi6Html.length > 0) {
+      htmlTag += `<div class="yobi6">予備選択2</div>\n${yobi6Html}`;
+    }
+
+    if (yobi7Html.length > 0) {
+      htmlTag += `<div class="yobi7">予備選択3</div>\n${yobi7Html}`;
+    }
+
+    if (yobi8Html.length > 0) {
+      htmlTag += `<div class="yobi8">予備選択8</div>\n${yobi8Html}`;
     }
 
     if (tabUrl !== '') {
@@ -881,7 +966,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       candi1: 0,
       candi2: 0,
       candi3: 0,
-      candi4: 0
+      candi4: 0,
+      candi5: 0,
+      candi6: 0,
+      candi7: 0,
+      candi8: 0
     };
     for (const tab of this.tabs) {
       this.allCount.select += tab.originalResList.filter(item => item.resSelect === 'select').length;
@@ -889,6 +978,10 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.allCount.candi2 += tab.originalResList.filter(item => item.resSelect === 'candi2').length;
       this.allCount.candi3 += tab.originalResList.filter(item => item.resSelect === 'candi3').length;
       this.allCount.candi4 += tab.originalResList.filter(item => item.resSelect === 'candi4').length;
+      this.allCount.candi5 += tab.originalResList.filter(item => item.resSelect === 'candi5').length;
+      this.allCount.candi6 += tab.originalResList.filter(item => item.resSelect === 'candi6').length;
+      this.allCount.candi7 += tab.originalResList.filter(item => item.resSelect === 'candi7').length;
+      this.allCount.candi8 += tab.originalResList.filter(item => item.resSelect === 'candi8').length;
     }
 
     this.resService.setChangeResCount({

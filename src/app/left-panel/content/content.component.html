@@ -44,6 +44,10 @@
   <h3 class="status">{{candi2Count}}</h3>
   <h3 class="status">{{candi3Count}}</h3>
   <h3 class="status">{{candi4Count}}</h3>
+  <h3 class="status">{{candi5Count}}</h3>
+  <h3 class="status">{{candi6Count}}</h3>
+  <h3 class="status">{{candi7Count}}</h3>
+  <h3 class="status">{{candi8Count}}</h3>
   <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select"
                 (click)="selectAllChangeHandler()">選択＿＿＿</label>
   <button class="btn-middle" (click)="btnAllSelHeaderClickHandler()">実行</button>
@@ -136,6 +140,10 @@
       candi2Count: candi2Count,
       candi3Count: candi3Count,
       candi4Count: candi4Count,
+      candi5Count: candi5Count,
+      candi6Count: candi6Count,
+      candi7Count: candi7Count,
+      candi8Count: candi8Count,
       isSearched: isSearched,
       isSearchChecked: isSearchChecked,
       isSelectRes: isSelectRes,

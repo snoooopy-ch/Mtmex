@@ -75,7 +75,7 @@ label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 1220px;
+  max-width: 1370px;
 }
 
 .main-container app-left-panel {
@@ -212,8 +212,8 @@ label {
 }
 
 .main-container app-left-panel app-content .extract input[type="text"] {
-  min-width: 302px;
-  width: 302px;
+  min-width: 452px;
+  width: 452px;
   height: 29px;
   margin: 0 3px;
 }
@@ -268,8 +268,8 @@ app-res div .label-res-cal1 {
 }
 
 app-res div .radio-container {
-  margin: 0;
-  padding: 0 5px;
+  margin: 0 1px;
+  padding: 0 9px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -395,7 +395,7 @@ app-res .row-4 a {
   border: 1px solid lightgrey;
   width: 100%;
   padding: 5px;
-  max-width: 968px;
+  max-width: 1118px;
   display: block;
 }
 .main-container app-left-panel .status-label-content{

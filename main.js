@@ -25,9 +25,9 @@ let loadedTitles = [];
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1238,
+    width: 1388,
     height: 948,
-    minWidth: 1238,
+    minWidth: 1388,
     title: 'スレ編集',
     backgroundColor: '#ffffff',
     icon: `${__dirname}\\src\\assets\\yellow_circle.png`,
@@ -834,6 +834,7 @@ function getSettings() {
       }
       getLineParam(line);
     }
+    console.log(JSON.stringify(settings));
     remaining = remaining.substring(last);
   });
 

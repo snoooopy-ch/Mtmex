@@ -82,6 +82,12 @@
     <h3>{{allTabCount.select}}</h3>
   </div>
   <div class="res-count colored">
+    <h3>{{allTabCount.candi5}}</h3>
+    <h3>{{allTabCount.candi6}}</h3>
+    <h3>{{allTabCount.candi7}}</h3>
+    <h3>{{allTabCount.candi8}}</h3>
+  </div>
+  <div class="res-count colored">
     <h3>{{allTabCount.candi1}}</h3>
     <h3>{{allTabCount.candi2}}</h3>
     <h3>{{allTabCount.candi3}}</h3>
@@ -89,6 +95,12 @@
   </div>
   <div class="res-total">
     <h3 id="lbl-main-of-total">{{selectCount}}/{{totalCount}}</h3>
+  </div>
+  <div class="res-count">
+    <h3>{{candi5Count}}</h3>
+    <h3>{{candi6Count}}</h3>
+    <h3>{{candi7Count}}</h3>
+    <h3>{{candi8Count}}</h3>
   </div>
   <div class="res-count">
     <h3>{{candi1Count}}</h3>
@@ -126,7 +138,6 @@
   <table>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select">選択</label>
       </td>
       <td>
         <label class="canel-radio text-red">
@@ -136,25 +147,86 @@
     </tr>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi1">予備1</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select">選択</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                          value="cancel-select">選択解除</label>
       </td>
     </tr>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi2">予備2</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi1">予備1</label>
       </td>
       <td>
-        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
-                                          value="cancel-candi1">予備1 解除</label>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi2">予備2</label>
       </td>
     </tr>
     <tr>
       <td>
         <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi3">予備3</label>
+      </td>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi4">予備4</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi5">予備6</label>
+      </td>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi6">予備6</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi7">予備7</label>
+      </td>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi8">予備8</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select-image">画像選択</label>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi1-image">画像予備1</label>
+      </td>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi2-image">画像予備2</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi3-image">画像予備3</label>
+      </td>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi4-image">画像予備4</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi5-image">画像予備5</label>
+      </td>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi6-image">画像予備6</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi7-image">画像予備7</label>
+      </td>
+      <td>
+        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi8-image">画像予備8</label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi1">予備1 解除</label>
       </td>
       <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
@@ -163,16 +235,8 @@
     </tr>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi4">予備4</label>
-      </td>
-      <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
                                           value="cancel-candi3">予備3 解除</label>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="select-image">画像選択</label>
       </td>
       <td>
         <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
@@ -181,31 +245,26 @@
     </tr>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi1-image">画像予備1</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi5">予備5 解除</label>
       </td>
       <td>
-
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi2-image">画像予備2</label>
-      </td>
-      <td>
-
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi6">予備6 解除</label>
       </td>
     </tr>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi3-image">画像予備3</label>
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi7">予備7 解除</label>
       </td>
       <td>
-
+        <label class="canel-radio"><input type="radio" name="opt-select" [(ngModel)]="selectCommand"
+                                          value="cancel-candi8">予備8 解除</label>
       </td>
     </tr>
     <tr>
       <td>
-        <label><input type="radio" name="opt-select" [(ngModel)]="selectCommand" value="candi4-image">画像予備4</label>
       </td>
       <td>
         <label class="canel-radio text-red">
@@ -216,25 +275,31 @@
   </table>
   <button class="btn-left-round btn-right-round" style="width: 100%;" (click)="btnSelectResHandler()">実行</button>
 </div>
-<div class="menu-group">
-  <button class="btn-left-round" (click)="btnSetResMenuHandler(1)">メニュー１</button>
-  <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
-  <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
+<div class="sort-group">
+  <label><input type="radio" name="opt-cancel-sinshuku" [(ngModel)]="sinshukuCancelCommand" value="num-cancel-shinshuku">レスの伸縮を全解除</label>
+  <button class="btn-left-round btn-right-round w-100" (click)="btnSinshukuCancelResHandler()">実行</button>
 </div>
-<div class="d-flex mt-1">
-  <button class="btn-left-round btn-all-select" (click)="btnSetAllSelectedHandler($event)">全タブ選択画面ON<br>メニュ-1</button>
-  <button class="btn-right-round btn-all-unselect" (click)="btnSetAllUnselectedHandler($event)">全画面OFF</button>
-</div>
-<div class="mt-1">
-  <label class="full-width"><input type="checkbox" [(ngModel)]="isSaveOfLoadFile">復元ファイル自動生成を行う</label>
-</div>
-<div class="width-100">
-  <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
-  <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～9読み込み</button>
-</div>
-<div class="save-container mt-1">
-  <button class="btn-left-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
-  <button class="btn-right-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
+<div style="display: none">
+  <div class="menu-group">
+    <button class="btn-left-round" (click)="btnSetResMenuHandler(1)">メニュー１</button>
+    <button class="" (click)="btnSetResMenuHandler(2)">メニュー2</button>
+    <button class="btn-right-round" (click)="btnSetResMenuHandler(3)">メニュー3</button>
+  </div>
+  <div class="d-flex mt-1">
+    <button class="btn-left-round btn-all-select" (click)="btnSetAllSelectedHandler($event)">全タブ選択画面ON<br>メニュ-1</button>
+    <button class="btn-right-round btn-all-unselect" (click)="btnSetAllUnselectedHandler($event)">全画面OFF</button>
+  </div>
+  <div class="mt-1">
+    <label class="full-width"><input type="checkbox" [(ngModel)]="isSaveOfLoadFile">復元ファイル自動生成を行う</label>
+  </div>
+  <div class="width-100">
+    <button class="border-round load-path" (click)="btnLoadSingleFile(txtDataFilePath)">上バスのdat読み入み</button>
+    <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～9読み込み</button>
+  </div>
+  <div class="save-container mt-1">
+    <button class="btn-left-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
+    <button class="btn-right-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
+  </div>
 </div>
 <div class="width-100 mt-2">
   <button class="border-round btn-print-all-tag" (click)="printAllHtmlTagHandler()">全タブ出力</button>

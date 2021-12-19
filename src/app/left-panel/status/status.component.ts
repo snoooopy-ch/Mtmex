@@ -33,6 +33,10 @@ export class StatusComponent implements OnInit {
       candi2Count: 0,
       candi3Count: 0,
       candi4Count: 0,
+      candi5Count: 0,
+      candi6Count: 0,
+      candi7Count: 0,
+      candi8Count: 0,
       totalCount: 0
     };
     this.allTabCount = {
@@ -40,7 +44,11 @@ export class StatusComponent implements OnInit {
       candi1: 0,
       candi2: 0,
       candi3: 0,
-      candi4: 0
+      candi4: 0,
+      candi5: 0,
+      candi6: 0,
+      candi7: 0,
+      candi8: 0
     };
   }
 
