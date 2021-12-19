@@ -228,13 +228,6 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         this.txtRemarkRes = this.settings.chuui;
       }
 
-      console.log('top_bar');
-      console.log(this.settings.top_bar);
-      console.log(this.settings.sentaku_idou1);
-      console.log(this.settings.chuui);
-      console.log(this.settings['font-size3']);
-      console.log(JSON.stringify(this.settings));
-
       if (this.settings.top_bar !== undefined) {
         this.resTopBar = `1px solid ${this.settings.top_bar}`;
       }

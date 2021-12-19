@@ -834,7 +834,6 @@ function getSettings() {
       }
       getLineParam(line);
     }
-    console.log(JSON.stringify(settings));
     remaining = remaining.substring(last);
   });
 
