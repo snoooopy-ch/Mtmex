@@ -192,7 +192,8 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
       this.btnBackgroundColors = [];
       if (value.hasOwnProperty('color_tree_sentaku')) {
         const colorKeys = ['color_tree_sentaku', 'color_tree_yobi_sentaku1', 'color_tree_yobi_sentaku2', 'color_tree_yobi_sentaku3',
-          'color_tree_yobi_sentaku4', 'color_tree_kaijo', 'color_id_sentaku1', 'color_id_sentaku2', 'color_id_sentaku3',
+          'color_tree_yobi_sentaku4', 'color_tree_yobi_sentaku5', 'color_tree_yobi_sentaku6', 'color_tree_yobi_sentaku7',
+          'color_tree_yobi_sentaku8', 'color_tree_kaijo', 'color_id_sentaku1', 'color_id_sentaku2', 'color_id_sentaku3',
           'color_id_sentaku4', 'color_id_iro1', 'color_id_iro2', 'color_id_iro3', 'color_id_iro4', 'color_id_kaijo',
           'color_id_iro_delete', 'color_id_kaijo_iro_delete', 'color_id_hihyouji', 'color_copy', 'color_edit'];
         for (const key of colorKeys) {
@@ -221,7 +222,11 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         sentaku_idou1: this.settings.sentaku_idou1,
         sentaku_idou2: this.settings.sentaku_idou2,
         sentaku_idou3: this.settings.sentaku_idou3,
-        sentaku_idou4: this.settings.sentaku_idou4
+        sentaku_idou4: this.settings.sentaku_idou4,
+        sentaku_idou5: this.settings.sentaku_idou5,
+        sentaku_idou6: this.settings.sentaku_idou6,
+        sentaku_idou7: this.settings.sentaku_idou7,
+        sentaku_idou8: this.settings.sentaku_idou8
       };
 
       if (this.settings.chuui !== undefined) {
