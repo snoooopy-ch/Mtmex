@@ -456,6 +456,7 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
   }
 
   private loadStatusFile(loadData){
+    console.log('loadStatusFile')
     const loadResList = [];
     for (const res of loadData.resList) {
       const resItem = Object.assign({}, res);
@@ -520,11 +521,14 @@ export class LeftPanelComponent implements OnInit, OnDestroy {
         tabIndex: this.selectedTabIndex,
         title: this.tabs[this.selectedTabIndex].title,
         rightToken: true,
-        statusToken: true
+        statusToken: true,
+        isLoaded: true
       });
+
 
       this.changeResCount();
     }
+    
   }
 
   @HostListener('window:beforeunload', ['$event'])

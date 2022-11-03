@@ -20,6 +20,7 @@ const electron = (window as any).require('electron');
 })
 export class RightPanelComponent implements OnInit, OnDestroy {
   txtDataFilePath = '';
+  txtSpecialFileReadPath = '';
   isResSort = false;
   isMultiAnchor = false;
   isReplaceRes = false;
@@ -328,6 +329,14 @@ export class RightPanelComponent implements OnInit, OnDestroy {
     this.resService.loadRes(filePath, this.isResSort, this.isMultiAnchor && this.isResSort, this.isReplaceRes,
       this.isContinuousAnchor && this.isMultiAnchor && this.isResSort, this.notMoveFutureAnchor, remarkRes, hideRes);
     this.start();
+  }
+
+  loadResFromSpecialFile(txtSpecialFileReadPath) {
+    if (txtSpecialFileReadPath.length > 0) {
+      this.stop();
+      this.resService.loadStatusFromSpecialFile(txtSpecialFileReadPath);
+      this.start();
+    }
   }
 
   getRemarkRes() {

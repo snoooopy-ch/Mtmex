@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import {ResItem} from './models/res-item';
 
 const electron = (window as any).require('electron');
@@ -19,17 +19,7 @@ export class ResService {
   loadRemoveHideIds = this.removeHideIdSource.asObservable();
   scrollPosSource = new BehaviorSubject<any>({index: 1, pos: 0, isTab: false});
   scrollPos = this.scrollPosSource.asObservable();
-  public selectedResSource = new BehaviorSubject<any>({
-    select: 0,
-    candi1: 0,
-    candi2: 0,
-    candi3: 0,
-    candi4: 0,
-    candi5: 0,
-    candi6: 0,
-    candi7: 0,
-    candi8: 0,
-    tabIndex: 0});
+  public selectedResSource = new ReplaySubject<any>(50);
   public selectedRes = this.selectedResSource.asObservable();
   public bsSelectedTab = new BehaviorSubject<any>({
     select: 0,
@@ -104,6 +94,10 @@ export class ResService {
           notMoveFutureAnchor: boolean, remarkRes, hideRes) {
     electron.ipcRenderer.send('loadRes', url, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor,
       remarkRes, hideRes);
+  }
+
+  loadStatusFromSpecialFile(filePath: string) {
+    electron.ipcRenderer.send('loadStatusFromSpecialFile', filePath);
   }
 
   loadMultiRes(filePaths, isResSort: boolean, isMultiAnchor: boolean, isReplaceRes: boolean, isContinuousAnchor: boolean,

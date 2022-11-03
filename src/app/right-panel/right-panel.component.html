@@ -12,7 +12,7 @@
 </div>
 <div class="select-container">
   <label class="lbl-input-container"><input type="radio" name="opt-select-side" [(ngModel)]="selectCommandWithButton"
-                                            value="select">選択＿＿＿</label>
+                                            value="select">全レス選択</label>
   <button class="border-round" (click)="btnAllSelSideBarClickHandler()">実行</button>
 </div>
 <div class="width-100">
@@ -36,8 +36,14 @@
   <button class="border-round load-default-files" (click)="btnLoadDefaultFiles()">dat1～9読み込み</button>
   <button class="border-round load-multi-path" (click)="btnLoadMultiFiles()">dat選択読み込み</button>
 </div>
+<div class="width-100 mt-1">
+  <input type="text" [(ngModel)]="txtSpecialFileReadPath">
+  <button class="border-round btn-load" 
+    (click)="loadResFromSpecialFile(txtSpecialFileReadPath)"
+    style="height: 35px">上パスの復元読み込み</button>
+</div>
 <div class="save-container mt-1">
-  <button class="btn-left-round w-75 btn-load" (click)="loadCurrentRes()">復元</button>
+  <button class="btn-left-round w-75 btn-load" (click)="loadCurrentRes()">復元選択読み込み</button>
   <button class="btn-right-round w-25 btn-save" (click)="saveCurrentRes()">保存</button>
 </div>
 <div class="res-order">

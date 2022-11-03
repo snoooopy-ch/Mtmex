@@ -259,6 +259,15 @@ ipcMain.on("loadRes", (event, filePath, isResSort, isMultiAnchor, isReplaceRes, 
   getResList(filePath, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor, notMoveFutureAnchor, remarkRes, hideRes);
 });
 
+ipcMain.on("loadStatusFromSpecialFile", (event, filePath, ) => {
+  if (!fs.existsSync(filePath)) {
+    dialog.showErrorBox("読み込み", "ファイルを読めません。")
+    return;
+  }
+
+  loadStatus([filePath])
+});
+
 ipcMain.on("loadMultiRes", (event, filePaths, isResSort, isMultiAnchor, isReplaceRes, isContinuousAnchor,
   notMoveFutureAnchor, remarkRes, hideRes) => {
   let index = 0;

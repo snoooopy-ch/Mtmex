@@ -39,6 +39,7 @@
   </button>
 </div>
 <div class="content-url">
+  <div class="colored"><h3 class="status lbl-sts-main-of-total" style="background-color: #ffe5cc;">{{allTabCount.select}}</h3></div>
   <h3 class="status lbl-sts-main-of-total">{{selectCount}}/{{resList.length}}</h3>
   <h3 class="status">{{candi1Count}}</h3>
   <h3 class="status">{{candi2Count}}</h3>
@@ -49,17 +50,12 @@
   <h3 class="status">{{candi7Count}}</h3>
   <h3 class="status">{{candi8Count}}</h3>
   <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select"
-                (click)="selectAllChangeHandler()">選択＿＿＿</label>
+                (click)="selectAllChangeHandler()">全レス選択</label>
   <button class="btn-middle" (click)="btnAllSelHeaderClickHandler()">実行</button>
-  <button class="btn-print-all-tag border-round" (click)="printAllHtmlTagHandler()">全タブ出力</button>
-  <button class="btn-print-html-tag border-round" (click)="printHtmlTagHandler()">出力</button>
-  <label><input type="radio" name="selectAll-{{tabIndex}}" [(ngModel)]="selectCommandWithHeader" value="select"
-                (click)="selectAllChangeHandler()">選択＿＿＿</label>
-  <button class="btn-middle" (click)="btnAllSelHeaderClickHandler()">実行</button>
-  <button type="button" class="btn-middle light-green" (click)="btnAbstractHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
+  <button type="button" class="btn-middle-wide light-green" (click)="btnAbstractHandler()" (focusin)="btnSearchFocusInHandler()" #btnSearch>
     抽出
   </button>
-  <button class="btn-middle" (click)="btnCancelAbstractHandler()">抽出解除
+  <button class="btn-middle-wide" (click)="btnCancelAbstractHandler()">抽出解除
   </button>
   <label>URL</label>
   <input type="text" [(ngModel)]="txtURL" (ngModelChange)="txtUrlChangeHandler()">
